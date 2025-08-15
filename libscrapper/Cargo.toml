@@ -1,0 +1,13 @@
+[package]
+name = "libscrapper"
+version = "0.1.0"
+edition = "2024"
+
+[[bin]]
+name = "test_bin"
+path = "./src/testbin.rs"
+
+[dependencies]
+html5ever = "0.35.0"
+reqwest = { version = "0.12.23" , features = ["blocking","json"]}
+scraper = "0.23.1"

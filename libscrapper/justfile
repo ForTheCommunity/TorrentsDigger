@@ -1,0 +1,6 @@
+c:
+	clear; cargo check
+t:
+	clear; cargo test
+tb:
+	clear; cargo run --bin test_bin
