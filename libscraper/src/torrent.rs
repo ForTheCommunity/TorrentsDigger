@@ -6,8 +6,8 @@ pub struct Torrent {
     pub torrent_file: String,
     pub magnet_link: String,
     pub size: String,
-    pub date: i64,
+    pub date: String,
     pub seeders: i64,
     pub leechers: i64,
-    pub approved: i64,
+    pub total_downloads: i64,
 }

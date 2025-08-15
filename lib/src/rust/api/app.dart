@@ -6,10 +6,5 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-
-            
-
-            Future<void>  digTorrent({required String torrentName }) => RustLib.instance.api.crateApiAppDigTorrent(torrentName: torrentName);
-
-            
-            
+Future<void> digTorrent({required String torrentName}) =>
+    RustLib.instance.api.crateApiAppDigTorrent(torrentName: torrentName);

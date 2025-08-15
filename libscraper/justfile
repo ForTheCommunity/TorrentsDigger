@@ -1,6 +1,6 @@
 c:
 	clear; cargo check
 t:
-	clear; cargo test
+	clear; cargo test -- --nocapture
 tb:
 	clear; cargo run --bin test_bin

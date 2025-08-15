@@ -1,7 +1,7 @@
-use crate::nyaa_dot_si::{NyaaCategories, NyaaFilter};
+use crate::sources::nyaa_dot_si::{NyaaCategories, NyaaFilter};
 
 pub mod blocking_request;
-pub mod nyaa_dot_si;
+pub mod sources;
 pub mod torrent;
 
 pub fn request_url_builder_nyaa(
