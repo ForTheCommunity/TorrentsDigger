@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:torrents_digger/configs/colors.dart';
 import 'package:torrents_digger/dig_torrent/search_torrent.dart';
 import 'package:torrents_digger/dig_torrent/sources_and_categories.dart';
+import 'package:torrents_digger/src/rust/api/app.dart';
 import 'package:torrents_digger/ui/widgets/sources_and_categories_dropdown.dart';
 import 'package:torrents_digger/ui/widgets/search_bar_widget.dart';
+import 'package:torrents_digger/ui/widgets/torrent_list_widget.dart';
 
 class MainUi extends StatefulWidget {
   const MainUi({super.key});
@@ -21,11 +23,12 @@ class _MainUiState extends State<MainUi> {
 
   late Map<String, List<String>> _sourcesCategoryMap;
   bool _isSourcesCategoriesDataLoaded = false;
+  bool _isSearching = false;
+  List<InternalTorrent> _torrentsList = [];
 
   @override
   void initState() {
     super.initState();
-    // setting initial values for the dropdowns
     // Fetch the data asynchronously when the widget is initialized
     _fetchSourcesAndCategories();
   }
@@ -53,13 +56,20 @@ class _MainUiState extends State<MainUi> {
   }
 
   // search function that passes all data
-  void _onSearchPressed() {
+  Future<void> _onSearchPressed() async {
     debugPrint("BUTTON PRESSED");
-    searchTorrent(
+    setState(() {
+      _isSearching = true;
+    });
+    final results = await searchTorrent(
       torrentName: _searchController.text,
       source: _selectedSource,
       category: _selectedCategory,
     );
+    setState(() {
+      _torrentsList = results;
+      _isSearching = false;
+    });
   }
 
   @override
@@ -101,6 +111,21 @@ class _MainUiState extends State<MainUi> {
                         categoryMap: _sourcesCategoryMap,
                       )
                     : const Center(child: CircularProgressIndicator()),
+                const SizedBox(height: 25),
+                if (_isSearching)
+                  const Center(child: CircularProgressIndicator())
+                else if (_torrentsList.isNotEmpty)
+                  TorrentListWidget(torrents: _torrentsList)
+                else
+                  const Center(
+                    child: Text(
+                      'No Torrent Available With This Name.',
+                      style: TextStyle(
+                        color: AppColors.categoryLabelColor,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),

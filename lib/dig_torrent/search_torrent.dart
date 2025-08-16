@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:torrents_digger/src/rust/api/app.dart';
 
-void searchTorrent({
+Future<List<InternalTorrent>> searchTorrent({
   required String torrentName,
   required String source,
   required String category,
@@ -16,7 +16,5 @@ void searchTorrent({
     source: source,
     category: category,
   );
-
-  InternalTorrent tN1 = torrents.first;
-  debugPrint("First Torrent in The List -> ${tN1.name}");
+  return torrents;
 }

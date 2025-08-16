@@ -26,4 +26,17 @@ class AppColors {
 
   static const sourceLabelColor = Color.fromRGBO(0, 255, 247, 1);
   static const categoryLabelColor = Color.fromRGBO(0, 255, 247, 1);
+  static const cardColor = Color.fromRGBO(33, 33, 33, 1);
+
+  static const cardPrimaryTextColor = Color.fromRGBO(255, 255, 255, 1);
+  static const cardSecondaryTextColor = Color.fromRGBO(202, 188, 188, 1);
+
+  static const leechersIconColor = Color.fromRGBO(255, 0, 0, 1);
+  static const leechersTextColor = Color.fromRGBO(223, 33, 33, 1);
+  static const seedersIconColor = Color.fromRGBO(0, 255, 38, 1);
+  static const seedersTextColor = Color.fromRGBO(18, 204, 46, 1);
+
+  static const magnetBackgroundColor = Color.fromRGBO(0, 0, 0, 0.6);
+  static const magnetForegroundColor = Color.fromRGBO(68, 255, 0, 0.9);
+  static const magnetIconColor = Color.fromRGBO(0, 247, 255, 1);
 }

@@ -1,5 +1,5 @@
 name: torrents_digger
-description: "A new Flutter project."
+description: "This App Digs Torrent From Internet."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -37,6 +37,7 @@ dependencies:
   rust_lib_torrents_digger:
     path: rust_builder
   flutter_rust_bridge: 2.11.1
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:

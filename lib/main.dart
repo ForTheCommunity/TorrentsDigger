@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:torrents_digger/configs/colors.dart';
+import 'package:torrents_digger/configs/global_key.dart';
 import 'package:torrents_digger/routes/routes.dart';
 import 'package:torrents_digger/routes/routes_name.dart';
 // import 'package:torrents_digger/src/rust/api/app.dart';
@@ -17,6 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      scaffoldMessengerKey: scaffoldMessengerKey, // Assigning the global key
       title: "Torrents Digger",
       theme: ThemeData(
         brightness: Brightness.dark,
