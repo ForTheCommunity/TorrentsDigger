@@ -1,7 +1,11 @@
 use libscrapper::{
     blocking_request::{search_torrent, SearchInput},
-    sources::nyaa_dot_si::NyaaCategories,
+    sources::{
+        available_sources::get_all_available_sources_and_their_categories,
+        nyaa_dot_si::NyaaCategories,
+    },
 };
+use std::collections::HashMap;
 
 // FRB is unable to translate Torrent Struct from external crate.
 // so Mapping Torrent (ExternalTorrent) Struct With InternalTorrent Struct,
@@ -18,6 +22,10 @@ pub struct InternalTorrent {
     pub seeders: i64,
     pub leechers: i64,
     pub total_downloads: i64,
+}
+
+pub fn get_all_available_sources_categories() -> HashMap<String, Vec<String>> {
+    get_all_available_sources_and_their_categories()
 }
 
 pub fn dig_torrent(

@@ -6,6 +6,9 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+Future<Map<String, List<String>>> getAllAvailableSourcesCategories() =>
+    RustLib.instance.api.crateApiAppGetAllAvailableSourcesCategories();
+
 Future<List<InternalTorrent>> digTorrent({
   required String torrentName,
   required String source,

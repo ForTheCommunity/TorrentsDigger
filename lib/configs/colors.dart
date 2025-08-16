@@ -23,4 +23,7 @@ class AppColors {
     1,
     1,
   );
+
+  static const sourceLabelColor = Color.fromRGBO(0, 255, 247, 1);
+  static const categoryLabelColor = Color.fromRGBO(0, 255, 247, 1);
 }
