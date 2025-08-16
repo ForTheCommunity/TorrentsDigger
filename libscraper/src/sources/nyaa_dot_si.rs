@@ -1,3 +1,4 @@
+use core::fmt;
 use std::error::Error;
 
 use anyhow::Result;
@@ -25,7 +26,7 @@ pub enum NyaaCategories {
     LiveAction,
     LiveActionEnglishTranslated,
     LiveActionNonEnglishTranslated,
-    LiveActionIdolePromotionalVideo,
+    LiveActionIdolPromotionalVideo,
     LiveActionRaw,
     Pictures,
     PicturesGraphics,
@@ -52,7 +53,7 @@ impl NyaaCategories {
                 NyaaCategories::LiveActionNonEnglishTranslated
             }
             "Live Action - Idol/Promotional Video" => {
-                NyaaCategories::LiveActionIdolePromotionalVideo
+                NyaaCategories::LiveActionIdolPromotionalVideo
             }
             "Live Action - Raw" => NyaaCategories::LiveActionRaw,
             "Pictures - Graphics" => NyaaCategories::PicturesGraphics,
@@ -80,7 +81,7 @@ impl NyaaCategories {
             NyaaCategories::LiteratureRaw => "3_3".to_string(),
             NyaaCategories::LiveAction => "4_0".to_string(),
             NyaaCategories::LiveActionEnglishTranslated => "4_1".to_string(),
-            NyaaCategories::LiveActionIdolePromotionalVideo => "4_2".to_string(),
+            NyaaCategories::LiveActionIdolPromotionalVideo => "4_2".to_string(),
             NyaaCategories::LiveActionNonEnglishTranslated => "4_3".to_string(),
             NyaaCategories::LiveActionRaw => "4_4".to_string(),
             NyaaCategories::Pictures => "5_0".to_string(),
@@ -89,6 +90,76 @@ impl NyaaCategories {
             NyaaCategories::Software => "6_0".to_string(),
             NyaaCategories::SoftwareApplications => "6_1".to_string(),
             NyaaCategories::SoftwareGames => "6_2".to_string(),
+        }
+    }
+
+    pub fn all_nyaa_categories() -> Vec<Self> {
+        vec![
+            Self::AllCategories,
+            Self::Anime,
+            Self::AnimeMusicVideo,
+            Self::AnimeEnglishTranslated,
+            Self::AnimeNonEnglishTranslated,
+            Self::AnimeRaw,
+            Self::Audio,
+            Self::AudioLossLess,
+            Self::AudioLossy,
+            Self::Literature,
+            Self::LiteratureEnglishTranslated,
+            Self::LiteratureNonEnglishTranslated,
+            Self::LiteratureRaw,
+            Self::LiveAction,
+            Self::LiveActionEnglishTranslated,
+            Self::LiveActionIdolPromotionalVideo,
+            Self::LiveActionNonEnglishTranslated,
+            Self::LiveActionRaw,
+            Self::Pictures,
+            Self::PicturesGraphics,
+            Self::PicturesPhotos,
+            Self::Software,
+            Self::SoftwareApplications,
+            Self::SoftwareGames,
+        ]
+    }
+}
+
+impl fmt::Display for NyaaCategories {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            NyaaCategories::AllCategories => write!(f, "All Categories"),
+            NyaaCategories::Anime => write!(f, "Anime"),
+            NyaaCategories::AnimeMusicVideo => write!(f, "Anime Music Video"),
+            NyaaCategories::AnimeEnglishTranslated => write!(f, "Anime English Translated"),
+            NyaaCategories::AnimeNonEnglishTranslated => write!(f, "Anime Non English Translated"),
+            NyaaCategories::AnimeRaw => write!(f, "Anime Raw"),
+            NyaaCategories::Audio => write!(f, "Audio"),
+            NyaaCategories::AudioLossLess => write!(f, "Audio Lossless"),
+            NyaaCategories::AudioLossy => write!(f, "Audio Lossy"),
+            NyaaCategories::Literature => write!(f, "Literature"),
+            NyaaCategories::LiteratureEnglishTranslated => {
+                write!(f, "Literature English Translated")
+            }
+            NyaaCategories::LiteratureNonEnglishTranslated => {
+                write!(f, "Literature Non English Translated")
+            }
+            NyaaCategories::LiteratureRaw => write!(f, "Literature Raw"),
+            NyaaCategories::LiveAction => write!(f, "Live Action"),
+            NyaaCategories::LiveActionEnglishTranslated => {
+                write!(f, "Live Action English Translated")
+            }
+            NyaaCategories::LiveActionIdolPromotionalVideo => {
+                write!(f, "Live Action Idol Promotional Video")
+            }
+            NyaaCategories::LiveActionNonEnglishTranslated => {
+                write!(f, "Live Action Non English Translated")
+            }
+            NyaaCategories::LiveActionRaw => write!(f, "Live Action Raw"),
+            NyaaCategories::Pictures => write!(f, "Pictures"),
+            NyaaCategories::PicturesGraphics => write!(f, "Pictures Graphics"),
+            NyaaCategories::PicturesPhotos => write!(f, "Pictures Photos"),
+            NyaaCategories::Software => write!(f, "Software"),
+            NyaaCategories::SoftwareApplications => write!(f, "Software Applications"),
+            NyaaCategories::SoftwareGames => write!(f, "Software Games"),
         }
     }
 }

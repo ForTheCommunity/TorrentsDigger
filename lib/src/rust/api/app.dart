@@ -6,5 +6,63 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-Future<void> digTorrent({required String torrentName}) =>
-    RustLib.instance.api.crateApiAppDigTorrent(torrentName: torrentName);
+Future<List<InternalTorrent>> digTorrent({
+  required String torrentName,
+  required String source,
+  required String category,
+}) => RustLib.instance.api.crateApiAppDigTorrent(
+  torrentName: torrentName,
+  source: source,
+  category: category,
+);
+
+class InternalTorrent {
+  final PlatformInt64 nyaaId;
+  final String name;
+  final String torrentFile;
+  final String magnetLink;
+  final String size;
+  final String date;
+  final PlatformInt64 seeders;
+  final PlatformInt64 leechers;
+  final PlatformInt64 totalDownloads;
+
+  const InternalTorrent({
+    required this.nyaaId,
+    required this.name,
+    required this.torrentFile,
+    required this.magnetLink,
+    required this.size,
+    required this.date,
+    required this.seeders,
+    required this.leechers,
+    required this.totalDownloads,
+  });
+
+  @override
+  int get hashCode =>
+      nyaaId.hashCode ^
+      name.hashCode ^
+      torrentFile.hashCode ^
+      magnetLink.hashCode ^
+      size.hashCode ^
+      date.hashCode ^
+      seeders.hashCode ^
+      leechers.hashCode ^
+      totalDownloads.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is InternalTorrent &&
+          runtimeType == other.runtimeType &&
+          nyaaId == other.nyaaId &&
+          name == other.name &&
+          torrentFile == other.torrentFile &&
+          magnetLink == other.magnetLink &&
+          size == other.size &&
+          date == other.date &&
+          seeders == other.seeders &&
+          leechers == other.leechers &&
+          totalDownloads == other.totalDownloads;
+}

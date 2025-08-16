@@ -51,7 +51,7 @@ fn wire__crate__api__app__dig_torrent_impl(
     rust_vec_len_: i32,
     data_len_: i32,
 ) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
         flutter_rust_bridge::for_generated::TaskInfo {
             debug_name: "dig_torrent",
             port: Some(port_),
@@ -68,17 +68,15 @@ fn wire__crate__api__app__dig_torrent_impl(
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_torrent_name = <String>::sse_decode(&mut deserializer);
+            let api_source = <String>::sse_decode(&mut deserializer);
+            let api_category = <String>::sse_decode(&mut deserializer);
             deserializer.end();
-            move |context| async move {
-                transform_result_sse::<_, ()>(
-                    (move || async move {
-                        let output_ok = Result::<_, ()>::Ok({
-                            crate::api::app::dig_torrent(api_torrent_name).await;
-                        })?;
-                        Ok(output_ok)
-                    })()
-                    .await,
-                )
+            move |context| {
+                transform_result_sse::<_, String>((move || {
+                    let output_ok =
+                        crate::api::app::dig_torrent(api_torrent_name, api_source, api_category)?;
+                    Ok(output_ok)
+                })())
             }
         },
     )
@@ -91,6 +89,51 @@ impl SseDecode for String {
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut inner = <Vec<u8>>::sse_decode(deserializer);
         return String::from_utf8(inner).unwrap();
+    }
+}
+
+impl SseDecode for i64 {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        deserializer.cursor.read_i64::<NativeEndian>().unwrap()
+    }
+}
+
+impl SseDecode for crate::api::app::InternalTorrent {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_nyaaId = <i64>::sse_decode(deserializer);
+        let mut var_name = <String>::sse_decode(deserializer);
+        let mut var_torrentFile = <String>::sse_decode(deserializer);
+        let mut var_magnetLink = <String>::sse_decode(deserializer);
+        let mut var_size = <String>::sse_decode(deserializer);
+        let mut var_date = <String>::sse_decode(deserializer);
+        let mut var_seeders = <i64>::sse_decode(deserializer);
+        let mut var_leechers = <i64>::sse_decode(deserializer);
+        let mut var_totalDownloads = <i64>::sse_decode(deserializer);
+        return crate::api::app::InternalTorrent {
+            nyaa_id: var_nyaaId,
+            name: var_name,
+            torrent_file: var_torrentFile,
+            magnet_link: var_magnetLink,
+            size: var_size,
+            date: var_date,
+            seeders: var_seeders,
+            leechers: var_leechers,
+            total_downloads: var_totalDownloads,
+        };
+    }
+}
+
+impl SseDecode for Vec<crate::api::app::InternalTorrent> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(<crate::api::app::InternalTorrent>::sse_decode(deserializer));
+        }
+        return ans_;
     }
 }
 
@@ -111,11 +154,6 @@ impl SseDecode for u8 {
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         deserializer.cursor.read_u8().unwrap()
     }
-}
-
-impl SseDecode for () {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {}
 }
 
 impl SseDecode for i32 {
@@ -160,10 +198,71 @@ fn pde_ffi_dispatcher_sync_impl(
 
 // Section: rust2dart
 
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::app::InternalTorrent {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.nyaa_id.into_into_dart().into_dart(),
+            self.name.into_into_dart().into_dart(),
+            self.torrent_file.into_into_dart().into_dart(),
+            self.magnet_link.into_into_dart().into_dart(),
+            self.size.into_into_dart().into_dart(),
+            self.date.into_into_dart().into_dart(),
+            self.seeders.into_into_dart().into_dart(),
+            self.leechers.into_into_dart().into_dart(),
+            self.total_downloads.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::app::InternalTorrent
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::app::InternalTorrent>
+    for crate::api::app::InternalTorrent
+{
+    fn into_into_dart(self) -> crate::api::app::InternalTorrent {
+        self
+    }
+}
+
 impl SseEncode for String {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <Vec<u8>>::sse_encode(self.into_bytes(), serializer);
+    }
+}
+
+impl SseEncode for i64 {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        serializer.cursor.write_i64::<NativeEndian>(self).unwrap();
+    }
+}
+
+impl SseEncode for crate::api::app::InternalTorrent {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i64>::sse_encode(self.nyaa_id, serializer);
+        <String>::sse_encode(self.name, serializer);
+        <String>::sse_encode(self.torrent_file, serializer);
+        <String>::sse_encode(self.magnet_link, serializer);
+        <String>::sse_encode(self.size, serializer);
+        <String>::sse_encode(self.date, serializer);
+        <i64>::sse_encode(self.seeders, serializer);
+        <i64>::sse_encode(self.leechers, serializer);
+        <i64>::sse_encode(self.total_downloads, serializer);
+    }
+}
+
+impl SseEncode for Vec<crate::api::app::InternalTorrent> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::api::app::InternalTorrent>::sse_encode(item, serializer);
+        }
     }
 }
 
@@ -182,11 +281,6 @@ impl SseEncode for u8 {
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         serializer.cursor.write_u8(self).unwrap();
     }
-}
-
-impl SseEncode for () {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {}
 }
 
 impl SseEncode for i32 {

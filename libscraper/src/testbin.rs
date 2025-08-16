@@ -1,20 +1,14 @@
+use std::{collections::HashMap, ops::Index};
+
 use libscrapper::{
     blocking_request::{SearchInput, search_torrent},
-    request_url_builder_nyaa,
-    sources::nyaa_dot_si::{NyaaCategories, NyaaFilter},
+    sources::{
+        available_sources::AllAvailableSources,
+        nyaa_dot_si::{NyaaCategories, NyaaFilter},
+    },
 };
-use scraper::html;
 
 fn main() {
-    let torrent_query_name = "naruto";
-    let filter = NyaaFilter::NoFilter;
-    let category = NyaaCategories::Anime;
-    let _page = 1;
-
-    let nyaa_req_url = request_url_builder_nyaa(torrent_query_name, &filter, &category, &_page);
-
-    // TODO
-
     // sending request .... http client...
     let search_input: SearchInput = SearchInput::new(
         "Naruto".to_string(),
@@ -32,4 +26,31 @@ fn main() {
             println!("Error Occurred : {:?}", error);
         }
     }
+
+    // testing nyaa categories
+    let all_nyaa_categories = NyaaCategories::all_nyaa_categories();
+    println!("Raw Vector --->> {:?}", all_nyaa_categories);
+    println!("All Available Nyaa Categories : ");
+
+    for (index, a_category) in all_nyaa_categories.iter().enumerate() {
+        println!("{}. {}", index + 1, a_category);
+    }
+
+    // Hashmap
+    let all_available_sources: Vec<String> = AllAvailableSources::get_all_available_sources();
+    let all_nyaa_categories: Vec<NyaaCategories> = NyaaCategories::all_nyaa_categories();
+
+    // creating HashMap to store available sources with their categories
+    let mut sources_categories: HashMap<String, Vec<String>> = HashMap::new();
+
+    // Inserting NyaaDotSi
+    let nyaa_categories_as_strings_vector: Vec<String> = all_nyaa_categories
+        .iter()
+        .map(|category| category.to_string())
+        .collect();
+    sources_categories.insert(
+        AllAvailableSources::NyaaDotSi.to_string(),
+        nyaa_categories_as_strings_vector,
+    );
+    println!("HashMap : {:?}", sources_categories);
 }
