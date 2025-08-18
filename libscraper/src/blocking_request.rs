@@ -2,7 +2,7 @@ use std::error::Error;
 
 use anyhow::Result;
 use rand::{rng, seq::IndexedRandom};
-use reqwest::blocking::{Client, Response};
+use ureq::{Body, http::Response};
 
 use crate::{
     request_url_builder_nyaa,
@@ -50,10 +50,7 @@ impl SearchInput {
     }
 }
 
-fn send_request(url: String) -> Result<Response, Box<dyn Error>> {
-    // blocking HTTP client
-    let http_client = Client::new();
-
+fn send_request(url: String) -> Result<Response<Body>, Box<dyn Error>> {
     // List of User-Agent strings
     let user_agents = [
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
@@ -66,10 +63,10 @@ fn send_request(url: String) -> Result<Response, Box<dyn Error>> {
     let mut rng = rng();
     let user_agent = user_agents.choose(&mut rng).unwrap().to_owned();
 
-    let response = http_client
-        .get(url)
+    let response = ureq::get(url)
         .header("User-Agent", user_agent)
-        .send()?;
+        .call()
+        .unwrap();
 
     Ok(response)
 }
@@ -90,21 +87,27 @@ mod tests {
             "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1",
         ];
 
-        let response = send_request(url);
-        let body = response.unwrap().text().unwrap();
+        let mut response = send_request(url).unwrap();
+        let body = response.body_mut().read_to_string().unwrap();
 
-        // Parse the User-Agent from the JSON response
-        let user_agent_key = "\"user-agent\": \"";
-        let start_index = body.find(user_agent_key).unwrap() + user_agent_key.len();
-        let end_index = body[start_index..].find('\"').unwrap() + start_index;
-        let user_agent_from_response = &body[start_index..end_index];
+        // parsing json
+        let parsed_json_response: serde_json::Value =
+            serde_json::from_str(&body).expect("Failed to parse JSON");
 
-        // Assert that the User-Agent from the response is one of the expected User-Agents
-        println!("USER AGENT FROM RESPONSE BODY ->>>> {}", body);
+        let user_agent = parsed_json_response["user-agent"]
+            .as_str()
+            .expect("User agent not found");
+
+        // Check if the user agent matches any in the expected list
+        let user_agent_matches = expected_user_agents
+            .iter()
+            .any(|&expected| expected == user_agent);
+
+        // Use assert_eq! to check if the user agent is in the expected list
         assert!(
-            expected_user_agents.contains(&user_agent_from_response),
-            "Unexpected User-Agent: {}",
-            user_agent_from_response
+            user_agent_matches,
+            "User agent '{}' does not match any expected user agents.",
+            user_agent
         );
     }
 }

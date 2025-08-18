@@ -1,4 +1,4 @@
-use std::{collections::HashMap, ops::Index};
+use std::collections::HashMap;
 
 use libscrapper::{
     blocking_request::{SearchInput, search_torrent},
@@ -37,7 +37,7 @@ fn main() {
     }
 
     // Hashmap
-    let all_available_sources: Vec<String> = AllAvailableSources::get_all_available_sources();
+    let _all_available_sources: Vec<String> = AllAvailableSources::get_all_available_sources();
     let all_nyaa_categories: Vec<NyaaCategories> = NyaaCategories::all_nyaa_categories();
 
     // creating HashMap to store available sources with their categories

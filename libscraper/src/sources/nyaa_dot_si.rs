@@ -2,8 +2,9 @@ use core::fmt;
 use std::error::Error;
 
 use anyhow::Result;
-use reqwest::blocking::Response;
+// use reqwest::blocking::Response;
 use scraper::{self, ElementRef, Html, Selector};
+use ureq::{Body, http::Response};
 
 use crate::torrent::Torrent;
 
@@ -215,9 +216,9 @@ impl std::fmt::Display for NyaaError {
 }
 
 // Scraping
-pub fn scrape_and_parse(response: Response) -> Result<Vec<Torrent>, Box<dyn Error>> {
+pub fn scrape_and_parse(mut response: Response<Body>) -> Result<Vec<Torrent>, Box<dyn Error>> {
     // Scraping
-    let html_response = response.text()?;
+    let html_response = response.body_mut().read_to_string().unwrap();
     let document = Html::parse_document(&html_response);
 
     // selectors
