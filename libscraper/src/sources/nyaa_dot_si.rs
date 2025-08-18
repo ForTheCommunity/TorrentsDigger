@@ -264,11 +264,20 @@ pub fn scrape_and_parse(mut response: Response<Body>) -> Result<Vec<Torrent>, Bo
         let name = a_name[name_index]
             .value()
             .attr("title")
-            .unwrap()
+            .unwrap_or("Name title attribute missing")
             .to_string();
 
-        let torrent_file = torrent_data[0].attr("href").unwrap().to_string();
-        let magnet_link = torrent_data[1].attr("href").unwrap().to_string();
+        let torrent_file = torrent_data[0]
+            .attr("href")
+            .unwrap_or("Torrent href attribute missing")
+            .to_string();
+
+        let magnet_link = if torrent_data.len() > 1 {
+            torrent_data[1].attr("href").unwrap_or_default().to_string()
+        } else {
+            String::from("Magnet link not available")
+        };
+
         let size = table_data_vec[3].inner_html().to_string();
         let date = table_data_vec[4].inner_html().to_string();
         let seeders = table_data_vec[5].inner_html().parse::<i64>()?;

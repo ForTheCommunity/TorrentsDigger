@@ -32,7 +32,7 @@ class TorrentListWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
             Text(
               torrent.name,
               style: TextStyle(
@@ -41,7 +41,7 @@ class TorrentListWidget extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
             Row(
               children: [
                 Icon(
@@ -56,7 +56,7 @@ class TorrentListWidget extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 5),
+            SizedBox(height: 10),
             Row(
               children: [
                 Icon(
@@ -74,9 +74,8 @@ class TorrentListWidget extends StatelessWidget {
                 ),
               ],
             ),
-
+            SizedBox(height: 10),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   children: [
@@ -109,6 +108,30 @@ class TorrentListWidget extends StatelessWidget {
                     ),
                   ],
                 ),
+              ],
+            ),
+            SizedBox(height: 10),
+            Row(
+              children: [
+                Icon(
+                  Icons.download_for_offline,
+                  size: 20,
+                  color: AppColors.cardSecondaryTextColor,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  'Total Downloads : ${torrent.totalDownloads}',
+                  style: TextStyle(
+                    color: AppColors.cardSecondaryTextColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
                 ElevatedButton(
                   onPressed: () async {
                     final Uri magnetUri = Uri.parse(torrent.magnetLink);
@@ -149,23 +172,6 @@ class TorrentListWidget extends StatelessWidget {
                         ),
                       ),
                     ],
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Icon(
-                  Icons.download_for_offline,
-                  size: 20,
-                  color: AppColors.cardSecondaryTextColor,
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  'Total Downloads : ${torrent.totalDownloads}',
-                  style: TextStyle(
-                    color: AppColors.cardSecondaryTextColor,
-                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ],

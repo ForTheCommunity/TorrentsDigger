@@ -1,4 +1,4 @@
-package com.example.torrents_digger
+package org.forthecommunity.torrentsdigger
 
 import io.flutter.embedding.android.FlutterActivity
 
