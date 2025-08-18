@@ -35,8 +35,11 @@ class AppColors {
   static const leechersTextColor = Color.fromRGBO(223, 33, 33, 1);
   static const seedersIconColor = Color.fromRGBO(0, 255, 38, 1);
   static const seedersTextColor = Color.fromRGBO(18, 204, 46, 1);
+  static const creationDateIconColor = Color.fromRGBO(18, 204, 46, 1);
+  static const creationDateTextColor = Color.fromRGBO(18, 204, 46, 1);
 
-  static const magnetBackgroundColor = Color.fromRGBO(0, 0, 0, 0.6);
-  static const magnetForegroundColor = Color.fromRGBO(68, 255, 0, 0.9);
+  static const magnetBackgroundColor = Color.fromRGBO(0, 0, 0, 1);
+  static const magnetForegroundColor = Color.fromRGBO(0, 255, 132, 0.888);
   static const magnetIconColor = Color.fromRGBO(0, 247, 255, 1);
+  static const magnetButtonSurfaceTintColor = Color.fromRGBO(247, 0, 255, 1);
 }

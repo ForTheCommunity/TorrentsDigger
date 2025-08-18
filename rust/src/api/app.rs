@@ -33,11 +33,8 @@ pub fn dig_torrent(
     source: String,
     category: String,
 ) -> Result<Vec<InternalTorrent>, String> {
-    println!("[RUST] Searching Torrent : {}", torrent_name);
-
     let _source = source;
     let category = NyaaCategories::to_category(&category);
-
     // currently this is hardcoaded for nyaa only. [TODO]
     let search_query = SearchInput::new(
         torrent_name,

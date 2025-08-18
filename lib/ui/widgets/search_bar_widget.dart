@@ -35,7 +35,7 @@ class SearchBarWidget extends StatelessWidget {
                 onSearchPressed();
               },
               decoration: InputDecoration(
-                hintText: 'Search Anything',
+                hintText: 'Search Torrent',
                 hintStyle: TextStyle(
                   color: AppColors.searchBarPlaceholderColor,
                 ),

@@ -2,7 +2,6 @@ use core::fmt;
 use std::error::Error;
 
 use anyhow::Result;
-// use reqwest::blocking::Response;
 use scraper::{self, ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
 
@@ -40,27 +39,30 @@ pub enum NyaaCategories {
 impl NyaaCategories {
     pub fn to_category(text_category: &str) -> NyaaCategories {
         match text_category {
-            "Anime - Anime Music Video" => NyaaCategories::AnimeMusicVideo,
-            "Anime - English-translated" => NyaaCategories::AnimeEnglishTranslated,
-            "Anime - Non-English-translated" => NyaaCategories::AnimeEnglishTranslated,
-            "Anime - Raw" => NyaaCategories::AnimeRaw,
-            "Audio - Lossless" => NyaaCategories::AudioLossLess,
-            "Audio - Lossy" => NyaaCategories::AudioLossy,
-            "Literature - English-translated" => NyaaCategories::LiteratureEnglishTranslated,
-            "Literature - Non-English-translated" => NyaaCategories::LiteratureNonEnglishTranslated,
-            "Literature - Raw" => NyaaCategories::LiteratureRaw,
-            "Live Action - English-translated" => NyaaCategories::LiveActionEnglishTranslated,
-            "Live Action - Non-English-translated" => {
-                NyaaCategories::LiveActionNonEnglishTranslated
-            }
-            "Live Action - Idol/Promotional Video" => {
-                NyaaCategories::LiveActionIdolPromotionalVideo
-            }
-            "Live Action - Raw" => NyaaCategories::LiveActionRaw,
-            "Pictures - Graphics" => NyaaCategories::PicturesGraphics,
-            "Pictures - Photos" => NyaaCategories::PicturesPhotos,
-            "Software - Applications" => NyaaCategories::SoftwareApplications,
-            "Software - Games" => NyaaCategories::SoftwareGames,
+            "All Categories" => NyaaCategories::AllCategories,
+            "Anime" => NyaaCategories::Anime,
+            "Anime Music Video" => NyaaCategories::AnimeMusicVideo,
+            "Anime English Translated" => NyaaCategories::AnimeEnglishTranslated,
+            "Anime Non English Translated" => NyaaCategories::AnimeNonEnglishTranslated,
+            "Anime Raw" => NyaaCategories::AnimeRaw,
+            "Audio" => NyaaCategories::Audio,
+            "Audio Lossless" => NyaaCategories::AudioLossLess,
+            "Audio Lossy" => NyaaCategories::AudioLossy,
+            "Literature" => NyaaCategories::Literature,
+            "Literature English Translated" => NyaaCategories::LiteratureEnglishTranslated,
+            "Literature Non English Translated" => NyaaCategories::LiteratureNonEnglishTranslated,
+            "Literature Raw" => NyaaCategories::LiteratureRaw,
+            "Live Action" => NyaaCategories::LiveAction,
+            "Live Action English Translated" => NyaaCategories::LiveActionEnglishTranslated,
+            "Live Action Non English Translated" => NyaaCategories::LiveActionNonEnglishTranslated,
+            "Live Action Idol Promotional Video" => NyaaCategories::LiveActionIdolPromotionalVideo,
+            "Live Action Raw" => NyaaCategories::LiveActionRaw,
+            "Pictures" => NyaaCategories::Pictures,
+            "Pictures Graphics" => NyaaCategories::PicturesGraphics,
+            "Pictures Photos" => NyaaCategories::PicturesPhotos,
+            "Software" => NyaaCategories::Software,
+            "Software Applications" => NyaaCategories::SoftwareApplications,
+            "Software Games" => NyaaCategories::SoftwareGames,
             &_ => NyaaCategories::AllCategories,
         }
     }
@@ -148,11 +150,11 @@ impl fmt::Display for NyaaCategories {
             NyaaCategories::LiveActionEnglishTranslated => {
                 write!(f, "Live Action English Translated")
             }
-            NyaaCategories::LiveActionIdolPromotionalVideo => {
-                write!(f, "Live Action Idol Promotional Video")
-            }
             NyaaCategories::LiveActionNonEnglishTranslated => {
                 write!(f, "Live Action Non English Translated")
+            }
+            NyaaCategories::LiveActionIdolPromotionalVideo => {
+                write!(f, "Live Action Idol Promotional Video")
             }
             NyaaCategories::LiveActionRaw => write!(f, "Live Action Raw"),
             NyaaCategories::Pictures => write!(f, "Pictures"),

@@ -60,91 +60,112 @@ class TorrentListWidget extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  Icons.upload_sharp,
-                  size: 16,
-                  color: AppColors.seedersIconColor,
+                  Icons.date_range_sharp,
+                  size: 20,
+                  color: AppColors.cardSecondaryTextColor,
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  'Seeders : ${torrent.seeders}',
-                  style: TextStyle(color: AppColors.seedersTextColor),
-                ),
-                const SizedBox(width: 16),
-                Icon(
-                  Icons.download,
-                  size: 16,
-                  color: AppColors.leechersIconColor,
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  'Leechers : ${torrent.leechers}',
+                  'Created at : ${torrent.date}',
                   style: TextStyle(
-                    color: AppColors.leechersTextColor,
+                    color: AppColors.cardSecondaryTextColor,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 10),
+
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    // borderRadius: BorderRadius.circular(12),
-                    // border: Border.all(
-                    color: AppColors.magnetBackgroundColor,
-                    //   width: 1.0,
-                    // ),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.upload_sharp,
+                      size: 20,
+                      color: AppColors.seedersIconColor,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      'Seeders : ${torrent.seeders}',
+                      style: TextStyle(
+                        color: AppColors.seedersTextColor,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Icon(
+                      Icons.download,
+                      size: 20,
+                      color: AppColors.leechersIconColor,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      'Leechers : ${torrent.leechers}',
+                      style: TextStyle(
+                        color: AppColors.leechersTextColor,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    final Uri magnetUri = Uri.parse(torrent.magnetLink);
+                    if (await canLaunchUrl(magnetUri)) {
+                      await launchUrl(magnetUri);
+                    } else {
+                      scaffoldMessengerKey.currentState?.showSnackBar(
+                        const SnackBar(content: Text('Install Torrent App.')),
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    surfaceTintColor: AppColors.magnetButtonSurfaceTintColor,
+                    backgroundColor: AppColors.magnetBackgroundColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 15,
+                      vertical: 15,
+                    ),
                   ),
-                  child: Padding(
-                    padding: EdgeInsetsGeometry.directional(
-                      start: 15,
-                      end: 15,
-                      top: 3,
-                      bottom: 3,
-                    ),
-                    child: Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () async {
-                            final Uri magnetUri = Uri.parse(torrent.magnetLink);
-                            if (await canLaunchUrl(magnetUri)) {
-                              await launchUrl(magnetUri);
-                            } else {
-                              // Use the global key to show the SnackBar
-                              scaffoldMessengerKey.currentState?.showSnackBar(
-                                SnackBar(content: Text('Install Torrent App.')),
-                              );
-                            }
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12.0,
-                              vertical: 8.0,
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.link,
-                                  size: 30,
-                                  color: AppColors.magnetIconColor,
-                                ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  "Magnet",
-                                  style: TextStyle(
-                                    color: AppColors.magnetForegroundColor,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.link,
+                        size: 30,
+                        color: AppColors.magnetIconColor,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        "Magnet",
+                        style: TextStyle(
+                          color: AppColors.magnetForegroundColor,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Icon(
+                  Icons.download_for_offline,
+                  size: 20,
+                  color: AppColors.cardSecondaryTextColor,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  'Total Downloads : ${torrent.totalDownloads}',
+                  style: TextStyle(
+                    color: AppColors.cardSecondaryTextColor,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
