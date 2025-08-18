@@ -1,0 +1,6 @@
+Torrents Digger searches already available torrents from internet.
+<br>
+<br>
+<b>Note : It only do the job of Fetching ,Scraping & Listing.
+<br>
+Torrents Digger don't host anything , Torrent Digger just list what is already available in the internet.</b>
