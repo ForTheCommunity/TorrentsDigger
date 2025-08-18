@@ -12,6 +12,11 @@ pub fn request_url_builder_nyaa(
 ) -> String {
     //https://nyaa.si/?f=0&c=1_0&q=naruto&s=seeders&o=desc&p=2
 
+    let torrent_name = torrent_name
+        .split_whitespace()
+        .collect::<Vec<&str>>()
+        .join("+");
+
     let root_url = "https://nyaa.si";
     let filter = format!("f={}", filter.filter_to_value());
     let query = format!("q={}", torrent_name);

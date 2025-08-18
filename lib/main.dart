@@ -3,7 +3,6 @@ import 'package:torrents_digger/configs/colors.dart';
 import 'package:torrents_digger/configs/global_key.dart';
 import 'package:torrents_digger/routes/routes.dart';
 import 'package:torrents_digger/routes/routes_name.dart';
-// import 'package:torrents_digger/src/rust/api/app.dart';
 import 'package:torrents_digger/src/rust/frb_generated.dart';
 
 Future<void> main() async {

@@ -23,7 +23,7 @@ class SearchBarWidget extends StatelessWidget {
       child: Row(
         children: [
           Text(
-            "⮞ ",
+            "-> ",
             style: TextStyle(color: AppColors.greenColor, fontSize: 20),
           ),
           const SizedBox(width: 12),
@@ -35,7 +35,7 @@ class SearchBarWidget extends StatelessWidget {
                 onSearchPressed();
               },
               decoration: InputDecoration(
-                hintText: 'Enter What You Want To Search',
+                hintText: 'Search Anything',
                 hintStyle: TextStyle(
                   color: AppColors.searchBarPlaceholderColor,
                 ),

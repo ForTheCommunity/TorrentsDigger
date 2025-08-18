@@ -54,7 +54,11 @@ class TorrentListWidget extends StatelessWidget {
                   torrent.size,
                   style: TextStyle(color: AppColors.cardSecondaryTextColor),
                 ),
-                const SizedBox(width: 16),
+              ],
+            ),
+            SizedBox(height: 5),
+            Row(
+              children: [
                 Icon(
                   Icons.upload_sharp,
                   size: 16,
@@ -81,7 +85,7 @@ class TorrentListWidget extends StatelessWidget {
                 ),
               ],
             ),
-
+            SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -110,9 +114,7 @@ class TorrentListWidget extends StatelessWidget {
                             } else {
                               // Use the global key to show the SnackBar
                               scaffoldMessengerKey.currentState?.showSnackBar(
-                                SnackBar(
-                                  content: Text('Could not launch Magnet Link'),
-                                ),
+                                SnackBar(content: Text('Install Torrent App.')),
                               );
                             }
                           },
