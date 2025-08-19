@@ -105,14 +105,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
-  dart_pubspec_licenses:
-    dependency: transitive
-    description:
-      name: dart_pubspec_licenses
-      sha256: "0617752e2b1d3b28fd874891c7780416c70673ea5ce283f8df4e1c25635eec13"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.3"
   fake_async:
     dependency: transitive
     description:
@@ -163,14 +155,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.0"
-  flutter_oss_licenses:
-    dependency: "direct dev"
-    description:
-      name: flutter_oss_licenses
-      sha256: "44d359662281a4e8c2ee110ab8d9274782e368323fe6fbb389a79adbf81c5899"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.3"
   flutter_rust_bridge:
     dependency: "direct main"
     description:
