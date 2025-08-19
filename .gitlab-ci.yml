@@ -1,0 +1,65 @@
+stages:
+  - build
+  - release
+
+image: instrumentisto/flutter
+
+build_android:
+  stage: build
+  rules:
+    - if: $CI_COMMIT_TAG
+  script:
+    # Install Rust
+    - apt update -y && apt upgrade -y
+    - apt install -y curl git wget unzip
+    - curl https://sh.rustup.rs -sSf | sh -s -- -y
+    - source "$HOME/.cargo/env"
+
+    # Build Android APK
+    - flutter pub get
+    - flutter build apk --release
+
+    # Get app name and version
+    - export APP_NAME=$(grep 'name:' pubspec.yaml | head -1 | awk '{print $2}' | sed 's/-/_/g' | sed 's/\r//g')
+    - export APP_VERSION=$(grep 'version:' pubspec.yaml | head -1 | awk '{print $2}' | sed 's/+//' | sed 's/ /_/g' | sed 's/\r//g')
+    - export NEW_APK_NAME="${APP_NAME}_${APP_VERSION}.apk"
+
+    # Rename APK
+    - mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/$NEW_APK_NAME
+
+    # Generate SHA256
+    - sha256sum build/app/outputs/flutter-apk/$NEW_APK_NAME > build/app/outputs/flutter-apk/$NEW_APK_NAME.sha256.txt
+
+    # Save .env for release job at the root (important!)
+    - echo "NEW_APK_NAME=$NEW_APK_NAME" > build.env
+
+  artifacts:
+    paths:
+      - build/app/outputs/flutter-apk/*.apk
+      - build/app/outputs/flutter-apk/*.sha256.txt
+      - build.env # make sure dotenv is uploaded
+    expire_in: 1 week
+    reports:
+      dotenv: build.env
+
+create-release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  needs:
+    - job: build_android
+      artifacts: true
+  rules:
+    - if: $CI_COMMIT_TAG
+  script:
+    - echo "Preparing release..."
+    - . build.env # use dot instead of source for POSIX sh compatibility
+  release:
+    tag_name: "$CI_COMMIT_TAG"
+    name: "Release $CI_COMMIT_TAG"
+    description: "Automated GitLab CI/CD release for version $CI_COMMIT_TAG"
+    assets:
+      links:
+        - name: "$NEW_APK_NAME"
+          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/build/app/outputs/flutter-apk/$NEW_APK_NAME?job=build_android"
+        - name: "$NEW_APK_NAME.sha256.txt"
+          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/build/app/outputs/flutter-apk/$NEW_APK_NAME.sha256.txt?job=build_android"
