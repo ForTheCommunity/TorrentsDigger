@@ -22,6 +22,7 @@
     </a>
 </div>
 
+## Download Apk from [Release](https://gitlab.com/ForTheCommunity/torrentsdigger/-/releases) Page.
 
 ### Note -> It only do the job of Fetching ,Scraping & Listing. Torrents Digger don't host anything , Torrent Digger just list what is already available in the internet.
 
