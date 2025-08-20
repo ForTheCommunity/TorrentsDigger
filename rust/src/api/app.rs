@@ -1,10 +1,4 @@
-use libscrapper::{
-    blocking_request::{search_torrent, SearchInput},
-    sources::{
-        available_sources::get_all_available_sources_and_their_categories,
-        nyaa_dot_si::NyaaCategories,
-    },
-};
+use libscrapper::{search_torrent, sources::available_sources::AllAvailableSources};
 use std::collections::HashMap;
 
 // FRB is unable to translate Torrent Struct from external crate.
@@ -25,7 +19,7 @@ pub struct InternalTorrent {
 }
 
 pub fn get_all_available_sources_categories() -> HashMap<String, Vec<String>> {
-    get_all_available_sources_and_their_categories()
+    AllAvailableSources::get_all_available_sources_and_their_categories()
 }
 
 pub fn dig_torrent(
@@ -33,22 +27,12 @@ pub fn dig_torrent(
     source: String,
     category: String,
 ) -> Result<Vec<InternalTorrent>, String> {
-    let _source = source;
-    let category = NyaaCategories::to_category(&category);
-    // currently this is hardcoaded for nyaa only. [TODO]
-    let search_query = SearchInput::new(
-        torrent_name,
-        libscrapper::sources::nyaa_dot_si::NyaaFilter::NoFilter,
-        category,
-        1,
-    );
-
-    match search_torrent(search_query) {
+    match search_torrent(torrent_name, source, category) {
         Ok(torrents) => {
             let internal_torrents: Vec<InternalTorrent> = torrents
                 .into_iter()
                 .map(|t: ExternalTorrent| InternalTorrent {
-                    nyaa_id: t.nyaa_id,
+                    nyaa_id: t.id,
                     name: t.name,
                     torrent_file: t.torrent_file,
                     magnet_link: t.magnet_link,

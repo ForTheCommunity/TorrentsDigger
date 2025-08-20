@@ -5,48 +5,24 @@ use rand::{rng, seq::IndexedRandom};
 use ureq::{Body, http::Response};
 
 use crate::{
-    request_url_builder_nyaa,
-    sources::nyaa_dot_si::{NyaaCategories, NyaaFilter, scrape_and_parse},
+    sources::{
+        available_sources::AllAvailableSources, nyaa_dot_si::NyaaCategories,
+        torrents_csv_dot_com::TorrentsCsvCategories,
+    },
     torrent::Torrent,
 };
 
-pub fn search_torrent(
-    search_input: SearchInput,
+pub fn fetch_torrents(
+    url: String,
+    source: AllAvailableSources,
 ) -> Result<Vec<Torrent>, Box<(dyn std::error::Error + 'static)>> {
-    let request_url = request_url_builder_nyaa(
-        &search_input.torrent_name,
-        &search_input.filter,
-        &search_input.category,
-        &search_input.page_number,
-    );
-
     // sending request
-    let response = send_request(request_url)?;
+    let response = send_request(url)?;
 
     // scrape & parse
-    scrape_and_parse(response)
-}
-
-pub struct SearchInput {
-    torrent_name: String,
-    page_number: i64,
-    filter: NyaaFilter,
-    category: NyaaCategories,
-}
-
-impl SearchInput {
-    pub fn new(
-        torrent_name: String,
-        filter: NyaaFilter,
-        category: NyaaCategories,
-        page_number: i64,
-    ) -> Self {
-        SearchInput {
-            torrent_name,
-            filter,
-            category,
-            page_number,
-        }
+    match source {
+        AllAvailableSources::NyaaDotSi => NyaaCategories::scrape_and_parse(response),
+        AllAvailableSources::TorrentsCsvDotCom => TorrentsCsvCategories::parse_response(response),
     }
 }
 

@@ -7,6 +7,8 @@ use ureq::{Body, http::Response};
 
 use crate::torrent::Torrent;
 
+// https://nyaa.si
+
 // torrent categories
 #[derive(Debug)]
 pub enum NyaaCategories {
@@ -96,7 +98,7 @@ impl NyaaCategories {
         }
     }
 
-    pub fn all_nyaa_categories() -> Vec<Self> {
+    pub fn all_categories() -> Vec<Self> {
         vec![
             Self::AllCategories,
             Self::Anime,
@@ -123,6 +125,115 @@ impl NyaaCategories {
             Self::SoftwareApplications,
             Self::SoftwareGames,
         ]
+    }
+
+    pub fn request_url_builder(
+        torrent_name: &str,
+        filter: &NyaaFilter,
+        category: &NyaaCategories,
+        page_number: &i64,
+    ) -> String {
+        //https://nyaa.si/?f=0&c=1_0&q=naruto&s=seeders&o=desc&p=2
+
+        let torrent_name = torrent_name
+            .split_whitespace()
+            .collect::<Vec<&str>>()
+            .join("+");
+
+        let root_url = "https://nyaa.si";
+        let filter = format!("f={}", filter.filter_to_value());
+        let query = format!("q={}", torrent_name);
+        let category = format!("c={}", category.category_to_value());
+        let high_seeders_filter = "s=seeders&o=desc";
+        let page_number = format!("p={}", page_number);
+        format!(
+            "{}/?{}&{}&{}&{}&{}",
+            root_url, filter, category, query, high_seeders_filter, page_number
+        )
+    }
+    // Scraping
+    pub fn scrape_and_parse(mut response: Response<Body>) -> Result<Vec<Torrent>, Box<dyn Error>> {
+        // Scraping
+        let html_response = response.body_mut().read_to_string()?;
+        let document = Html::parse_document(&html_response);
+
+        // selectors
+        let div_selector = Selector::parse(r#"div[class="table-responsive"]"#)?;
+        let table_selector = Selector::parse(r#"table"#)?;
+        let table_body_selector = Selector::parse("tbody")?;
+        let table_row_selector = Selector::parse(r#"tr"#)?;
+        let table_data_selector = Selector::parse(r#"td"#)?;
+        let anchor_tag_selector = Selector::parse(r#"a"#)?;
+
+        // Vector of Torrent to Store all Torrents
+        let mut all_torrents: Vec<Torrent> = Vec::new();
+
+        let div = document.select(&div_selector).next().unwrap();
+        let table = div.select(&table_selector).next().unwrap();
+        let table_body = table.select(&table_body_selector).next().unwrap();
+
+        // iterating over table rows.
+        for table_row in table_body.select(&table_row_selector) {
+            let table_data_vec: Vec<ElementRef> = table_row.select(&table_data_selector).collect();
+            let a_name: Vec<ElementRef> = table_data_vec[1].select(&anchor_tag_selector).collect();
+            let torrent_data: Vec<ElementRef> =
+                table_data_vec[2].select(&anchor_tag_selector).collect();
+
+            // parsing
+            let id: i64 = a_name[0]
+                .value()
+                .attr("href")
+                .unwrap()
+                .chars()
+                .filter(|c| c.is_digit(10))
+                .collect::<String>()
+                .parse::<i64>()
+                .unwrap();
+
+            let mut name_index = 0;
+            if a_name.len() >= 2 {
+                name_index = 1;
+            }
+
+            let name = a_name[name_index]
+                .value()
+                .attr("title")
+                .unwrap_or("Name title attribute missing")
+                .to_string();
+
+            let torrent_file = torrent_data[0]
+                .attr("href")
+                .unwrap_or("Torrent href attribute missing")
+                .to_string();
+
+            let magnet_link = if torrent_data.len() > 1 {
+                torrent_data[1].attr("href").unwrap_or_default().to_string()
+            } else {
+                String::from("Magnet link not available")
+            };
+
+            let size = table_data_vec[3].inner_html().to_string();
+            let date = table_data_vec[4].inner_html().to_string();
+            let seeders = table_data_vec[5].inner_html().parse::<i64>()?;
+            let leechers = table_data_vec[6].inner_html().parse::<i64>()?;
+            let total_downloads = table_data_vec[7].inner_html().parse::<i64>()?;
+
+            let torrent = Torrent {
+                id,
+                name,
+                torrent_file,
+                magnet_link,
+                size,
+                date,
+                seeders,
+                leechers,
+                total_downloads,
+            };
+
+            all_torrents.push(torrent);
+        }
+
+        Ok(all_torrents)
     }
 }
 
@@ -217,87 +328,26 @@ impl std::fmt::Display for NyaaError {
     }
 }
 
-// Scraping
-pub fn scrape_and_parse(mut response: Response<Body>) -> Result<Vec<Torrent>, Box<dyn Error>> {
-    // Scraping
-    let html_response = response.body_mut().read_to_string().unwrap();
-    let document = Html::parse_document(&html_response);
+// _______________________________________________________________________________________
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-    // selectors
-    let div_selector = Selector::parse(r#"div[class="table-responsive"]"#).unwrap();
-    let table_selector = Selector::parse(r#"table"#)?;
-    let table_body_selector = Selector::parse("tbody")?;
-    let table_row_selector = Selector::parse(r#"tr"#)?;
-    let table_data_selector = Selector::parse(r#"td"#)?;
-    let anchor_tag_selector = Selector::parse(r#"a"#)?;
+    #[test]
+    fn test_request_builder_nyaa() {
+        let torrent_query_name = "naruto";
+        let filter = NyaaFilter::NoFilter;
+        let category = NyaaCategories::Anime;
+        let page_number = 1;
 
-    // Vector of Torrent to Store all Torrents
-    let mut all_torrents: Vec<Torrent> = Vec::new();
-
-    let div = document.select(&div_selector).next().unwrap();
-    let table = div.select(&table_selector).next().unwrap();
-    let table_body = table.select(&table_body_selector).next().unwrap();
-
-    // iterating over table rows.
-    for table_row in table_body.select(&table_row_selector) {
-        let table_data_vec: Vec<ElementRef> = table_row.select(&table_data_selector).collect();
-        let a_name: Vec<ElementRef> = table_data_vec[1].select(&anchor_tag_selector).collect();
-        let torrent_data: Vec<ElementRef> =
-            table_data_vec[2].select(&anchor_tag_selector).collect();
-
-        // parsing
-        let nyaa_id: i64 = a_name[0]
-            .value()
-            .attr("href")
-            .unwrap()
-            .chars()
-            .filter(|c| c.is_digit(10))
-            .collect::<String>()
-            .parse::<i64>()
-            .unwrap();
-
-        let mut name_index = 0;
-        if a_name.len() >= 2 {
-            name_index = 1;
-        }
-
-        let name = a_name[name_index]
-            .value()
-            .attr("title")
-            .unwrap_or("Name title attribute missing")
-            .to_string();
-
-        let torrent_file = torrent_data[0]
-            .attr("href")
-            .unwrap_or("Torrent href attribute missing")
-            .to_string();
-
-        let magnet_link = if torrent_data.len() > 1 {
-            torrent_data[1].attr("href").unwrap_or_default().to_string()
-        } else {
-            String::from("Magnet link not available")
-        };
-
-        let size = table_data_vec[3].inner_html().to_string();
-        let date = table_data_vec[4].inner_html().to_string();
-        let seeders = table_data_vec[5].inner_html().parse::<i64>()?;
-        let leechers = table_data_vec[6].inner_html().parse::<i64>()?;
-        let total_downloads = table_data_vec[7].inner_html().parse::<i64>()?;
-
-        let torrent = Torrent {
-            nyaa_id,
-            name,
-            torrent_file,
-            magnet_link,
-            size,
-            date,
-            seeders,
-            leechers,
-            total_downloads,
-        };
-
-        all_torrents.push(torrent);
+        assert_eq!(
+            "https://nyaa.si/?f=0&c=1_0&q=naruto&s=seeders&o=desc&p=1".to_string(),
+            NyaaCategories::request_url_builder(
+                torrent_query_name,
+                &filter,
+                &category,
+                &page_number
+            )
+        );
     }
-
-    Ok(all_torrents)
 }

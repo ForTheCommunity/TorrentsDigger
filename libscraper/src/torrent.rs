@@ -1,7 +1,7 @@
 // torrent data structure
 #[derive(Debug)]
 pub struct Torrent {
-    pub nyaa_id: i64,
+    pub id: i64,
     pub name: String,
     pub torrent_file: String,
     pub magnet_link: String,
