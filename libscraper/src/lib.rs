@@ -5,6 +5,7 @@ use crate::{
     sources::{
         available_sources::AllAvailableSources,
         nyaa_dot_si::{NyaaCategories, NyaaFilter},
+        sukebei_nyaa_dot_si::{SukebeiNyaaCategories, SukebeiNyaaFilter},
         torrents_csv_dot_com::TorrentsCsvCategories,
     },
 };
@@ -28,6 +29,15 @@ pub fn search_torrent(
                 &1,
             );
             fetch_torrents(url, AllAvailableSources::NyaaDotSi)
+        }
+        AllAvailableSources::SukebeiNyaaDotSi => {
+            let url = SukebeiNyaaCategories::request_url_builder(
+                &torrent_name,
+                &SukebeiNyaaFilter::NoFilter,
+                &SukebeiNyaaCategories::to_category(&category),
+                &1,
+            );
+            fetch_torrents(url, AllAvailableSources::SukebeiNyaaDotSi)
         }
         AllAvailableSources::TorrentsCsvDotCom => {
             let url = TorrentsCsvCategories::request_url_builder_torrents_csv(&torrent_name);

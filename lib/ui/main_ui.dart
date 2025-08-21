@@ -25,6 +25,7 @@ class _MainUiState extends State<MainUi> {
   bool _isSourcesCategoriesDataLoaded = false;
   bool _isSearching = false;
   List<InternalTorrent> _torrentsList = [];
+  String? _errorMessage;
 
   @override
   void initState() {
@@ -60,16 +61,28 @@ class _MainUiState extends State<MainUi> {
     debugPrint("BUTTON PRESSED");
     setState(() {
       _isSearching = true;
+      _errorMessage = null;
+      _torrentsList = [];
     });
-    final results = await searchTorrent(
-      torrentName: _searchController.text,
-      source: _selectedSource,
-      category: _selectedCategory,
-    );
-    setState(() {
-      _torrentsList = results;
-      _isSearching = false;
-    });
+    try {
+      final results = await searchTorrent(
+        torrentName: _searchController.text,
+        source: _selectedSource,
+        category: _selectedCategory,
+      );
+      setState(() {
+        _torrentsList = results;
+        _isSearching = false;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = e.toString();
+      });
+    } finally {
+      setState(() {
+        _isSearching = false;
+      });
+    }
   }
 
   @override
@@ -116,10 +129,21 @@ class _MainUiState extends State<MainUi> {
                   const Center(child: CircularProgressIndicator())
                 else if (_torrentsList.isNotEmpty)
                   TorrentListWidget(torrents: _torrentsList)
+                else if (_errorMessage != null)
+                  Center(
+                    child: Text(
+                      "Error : \n $_errorMessage \n[Errors Are UnHandled at the moment(TODO)]",
+                      style: const TextStyle(
+                        color: AppColors.brightRed,
+                        fontSize: 15,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  )
                 else
                   const Center(
                     child: Text(
-                      'No Torrent Available With This Name.',
+                      'Search Torrent, Get Torrents.',
                       style: TextStyle(
                         color: AppColors.categoryLabelColor,
                         fontSize: 16,

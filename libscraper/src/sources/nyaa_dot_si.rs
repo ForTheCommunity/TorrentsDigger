@@ -39,62 +39,62 @@ pub enum NyaaCategories {
 }
 
 impl NyaaCategories {
-    pub fn to_category(text_category: &str) -> NyaaCategories {
+    pub fn to_category(text_category: &str) -> Self {
         match text_category {
-            "All Categories" => NyaaCategories::AllCategories,
-            "Anime" => NyaaCategories::Anime,
-            "Anime Music Video" => NyaaCategories::AnimeMusicVideo,
-            "Anime English Translated" => NyaaCategories::AnimeEnglishTranslated,
-            "Anime Non English Translated" => NyaaCategories::AnimeNonEnglishTranslated,
-            "Anime Raw" => NyaaCategories::AnimeRaw,
-            "Audio" => NyaaCategories::Audio,
-            "Audio Lossless" => NyaaCategories::AudioLossLess,
-            "Audio Lossy" => NyaaCategories::AudioLossy,
-            "Literature" => NyaaCategories::Literature,
-            "Literature English Translated" => NyaaCategories::LiteratureEnglishTranslated,
-            "Literature Non English Translated" => NyaaCategories::LiteratureNonEnglishTranslated,
-            "Literature Raw" => NyaaCategories::LiteratureRaw,
-            "Live Action" => NyaaCategories::LiveAction,
-            "Live Action English Translated" => NyaaCategories::LiveActionEnglishTranslated,
-            "Live Action Non English Translated" => NyaaCategories::LiveActionNonEnglishTranslated,
-            "Live Action Idol Promotional Video" => NyaaCategories::LiveActionIdolPromotionalVideo,
-            "Live Action Raw" => NyaaCategories::LiveActionRaw,
-            "Pictures" => NyaaCategories::Pictures,
-            "Pictures Graphics" => NyaaCategories::PicturesGraphics,
-            "Pictures Photos" => NyaaCategories::PicturesPhotos,
-            "Software" => NyaaCategories::Software,
-            "Software Applications" => NyaaCategories::SoftwareApplications,
-            "Software Games" => NyaaCategories::SoftwareGames,
-            &_ => NyaaCategories::AllCategories,
+            "All Categories" => Self::AllCategories,
+            "Anime" => Self::Anime,
+            "Anime Music Video" => Self::AnimeMusicVideo,
+            "Anime English Translated" => Self::AnimeEnglishTranslated,
+            "Anime Non English Translated" => Self::AnimeNonEnglishTranslated,
+            "Anime Raw" => Self::AnimeRaw,
+            "Audio" => Self::Audio,
+            "Audio Lossless" => Self::AudioLossLess,
+            "Audio Lossy" => Self::AudioLossy,
+            "Literature" => Self::Literature,
+            "Literature English Translated" => Self::LiteratureEnglishTranslated,
+            "Literature Non English Translated" => Self::LiteratureNonEnglishTranslated,
+            "Literature Raw" => Self::LiteratureRaw,
+            "Live Action" => Self::LiveAction,
+            "Live Action English Translated" => Self::LiveActionEnglishTranslated,
+            "Live Action Non English Translated" => Self::LiveActionNonEnglishTranslated,
+            "Live Action Idol Promotional Video" => Self::LiveActionIdolPromotionalVideo,
+            "Live Action Raw" => Self::LiveActionRaw,
+            "Pictures" => Self::Pictures,
+            "Pictures Graphics" => Self::PicturesGraphics,
+            "Pictures Photos" => Self::PicturesPhotos,
+            "Software" => Self::Software,
+            "Software Applications" => Self::SoftwareApplications,
+            "Software Games" => Self::SoftwareGames,
+            &_ => Self::AllCategories,
         }
     }
 
     pub fn category_to_value(&self) -> String {
         match *self {
-            NyaaCategories::AllCategories => "0_0".to_string(),
-            NyaaCategories::Anime => "1_0".to_string(),
-            NyaaCategories::AnimeMusicVideo => "1_1".to_string(),
-            NyaaCategories::AnimeEnglishTranslated => "1_2".to_string(),
-            NyaaCategories::AnimeNonEnglishTranslated => "1_3".to_string(),
-            NyaaCategories::AnimeRaw => "1_4".to_string(),
-            NyaaCategories::Audio => "2_0".to_string(),
-            NyaaCategories::AudioLossLess => "2_1".to_string(),
-            NyaaCategories::AudioLossy => "2_1".to_string(),
-            NyaaCategories::Literature => "3_0".to_string(),
-            NyaaCategories::LiteratureEnglishTranslated => "3_1".to_string(),
-            NyaaCategories::LiteratureNonEnglishTranslated => "3_2".to_string(),
-            NyaaCategories::LiteratureRaw => "3_3".to_string(),
-            NyaaCategories::LiveAction => "4_0".to_string(),
-            NyaaCategories::LiveActionEnglishTranslated => "4_1".to_string(),
-            NyaaCategories::LiveActionIdolPromotionalVideo => "4_2".to_string(),
-            NyaaCategories::LiveActionNonEnglishTranslated => "4_3".to_string(),
-            NyaaCategories::LiveActionRaw => "4_4".to_string(),
-            NyaaCategories::Pictures => "5_0".to_string(),
-            NyaaCategories::PicturesGraphics => "5_1".to_string(),
-            NyaaCategories::PicturesPhotos => "5_2".to_string(),
-            NyaaCategories::Software => "6_0".to_string(),
-            NyaaCategories::SoftwareApplications => "6_1".to_string(),
-            NyaaCategories::SoftwareGames => "6_2".to_string(),
+            Self::AllCategories => "0_0".to_string(),
+            Self::Anime => "1_0".to_string(),
+            Self::AnimeMusicVideo => "1_1".to_string(),
+            Self::AnimeEnglishTranslated => "1_2".to_string(),
+            Self::AnimeNonEnglishTranslated => "1_3".to_string(),
+            Self::AnimeRaw => "1_4".to_string(),
+            Self::Audio => "2_0".to_string(),
+            Self::AudioLossLess => "2_1".to_string(),
+            Self::AudioLossy => "2_1".to_string(),
+            Self::Literature => "3_0".to_string(),
+            Self::LiteratureEnglishTranslated => "3_1".to_string(),
+            Self::LiteratureNonEnglishTranslated => "3_2".to_string(),
+            Self::LiteratureRaw => "3_3".to_string(),
+            Self::LiveAction => "4_0".to_string(),
+            Self::LiveActionEnglishTranslated => "4_1".to_string(),
+            Self::LiveActionIdolPromotionalVideo => "4_2".to_string(),
+            Self::LiveActionNonEnglishTranslated => "4_3".to_string(),
+            Self::LiveActionRaw => "4_4".to_string(),
+            Self::Pictures => "5_0".to_string(),
+            Self::PicturesGraphics => "5_1".to_string(),
+            Self::PicturesPhotos => "5_2".to_string(),
+            Self::Software => "6_0".to_string(),
+            Self::SoftwareApplications => "6_1".to_string(),
+            Self::SoftwareGames => "6_2".to_string(),
         }
     }
 
@@ -240,40 +240,40 @@ impl NyaaCategories {
 impl fmt::Display for NyaaCategories {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            NyaaCategories::AllCategories => write!(f, "All Categories"),
-            NyaaCategories::Anime => write!(f, "Anime"),
-            NyaaCategories::AnimeMusicVideo => write!(f, "Anime Music Video"),
-            NyaaCategories::AnimeEnglishTranslated => write!(f, "Anime English Translated"),
-            NyaaCategories::AnimeNonEnglishTranslated => write!(f, "Anime Non English Translated"),
-            NyaaCategories::AnimeRaw => write!(f, "Anime Raw"),
-            NyaaCategories::Audio => write!(f, "Audio"),
-            NyaaCategories::AudioLossLess => write!(f, "Audio Lossless"),
-            NyaaCategories::AudioLossy => write!(f, "Audio Lossy"),
-            NyaaCategories::Literature => write!(f, "Literature"),
-            NyaaCategories::LiteratureEnglishTranslated => {
+            Self::AllCategories => write!(f, "All Categories"),
+            Self::Anime => write!(f, "Anime"),
+            Self::AnimeMusicVideo => write!(f, "Anime Music Video"),
+            Self::AnimeEnglishTranslated => write!(f, "Anime English Translated"),
+            Self::AnimeNonEnglishTranslated => write!(f, "Anime Non English Translated"),
+            Self::AnimeRaw => write!(f, "Anime Raw"),
+            Self::Audio => write!(f, "Audio"),
+            Self::AudioLossLess => write!(f, "Audio Lossless"),
+            Self::AudioLossy => write!(f, "Audio Lossy"),
+            Self::Literature => write!(f, "Literature"),
+            Self::LiteratureEnglishTranslated => {
                 write!(f, "Literature English Translated")
             }
-            NyaaCategories::LiteratureNonEnglishTranslated => {
+            Self::LiteratureNonEnglishTranslated => {
                 write!(f, "Literature Non English Translated")
             }
-            NyaaCategories::LiteratureRaw => write!(f, "Literature Raw"),
-            NyaaCategories::LiveAction => write!(f, "Live Action"),
-            NyaaCategories::LiveActionEnglishTranslated => {
+            Self::LiteratureRaw => write!(f, "Literature Raw"),
+            Self::LiveAction => write!(f, "Live Action"),
+            Self::LiveActionEnglishTranslated => {
                 write!(f, "Live Action English Translated")
             }
-            NyaaCategories::LiveActionNonEnglishTranslated => {
+            Self::LiveActionNonEnglishTranslated => {
                 write!(f, "Live Action Non English Translated")
             }
-            NyaaCategories::LiveActionIdolPromotionalVideo => {
+            Self::LiveActionIdolPromotionalVideo => {
                 write!(f, "Live Action Idol Promotional Video")
             }
-            NyaaCategories::LiveActionRaw => write!(f, "Live Action Raw"),
-            NyaaCategories::Pictures => write!(f, "Pictures"),
-            NyaaCategories::PicturesGraphics => write!(f, "Pictures Graphics"),
-            NyaaCategories::PicturesPhotos => write!(f, "Pictures Photos"),
-            NyaaCategories::Software => write!(f, "Software"),
-            NyaaCategories::SoftwareApplications => write!(f, "Software Applications"),
-            NyaaCategories::SoftwareGames => write!(f, "Software Games"),
+            Self::LiveActionRaw => write!(f, "Live Action Raw"),
+            Self::Pictures => write!(f, "Pictures"),
+            Self::PicturesGraphics => write!(f, "Pictures Graphics"),
+            Self::PicturesPhotos => write!(f, "Pictures Photos"),
+            Self::Software => write!(f, "Software"),
+            Self::SoftwareApplications => write!(f, "Software Applications"),
+            Self::SoftwareGames => write!(f, "Software Games"),
         }
     }
 }
@@ -287,18 +287,18 @@ pub enum NyaaFilter {
 impl NyaaFilter {
     pub fn filter_to_value(&self) -> i32 {
         match *self {
-            NyaaFilter::NoFilter => 0,
-            NyaaFilter::TrustedOnly => 1,
-            NyaaFilter::NoRemakes => 2,
+            Self::NoFilter => 0,
+            Self::TrustedOnly => 1,
+            Self::NoRemakes => 2,
         }
     }
 
     pub fn to_filter(filter_str: &str) -> Self {
         match filter_str {
-            "NoFilter" => NyaaFilter::NoFilter,
-            "TrustedOnly" => NyaaFilter::TrustedOnly,
-            "NoRemakes" => NyaaFilter::NoRemakes,
-            _ => NyaaFilter::NoFilter,
+            "NoFilter" => Self::NoFilter,
+            "TrustedOnly" => Self::TrustedOnly,
+            "NoRemakes" => Self::NoRemakes,
+            _ => Self::NoFilter,
         }
     }
 }

@@ -7,7 +7,7 @@ use ureq::{Body, http::Response};
 use crate::{
     sources::{
         available_sources::AllAvailableSources, nyaa_dot_si::NyaaCategories,
-        torrents_csv_dot_com::TorrentsCsvCategories,
+        sukebei_nyaa_dot_si::SukebeiNyaaCategories, torrents_csv_dot_com::TorrentsCsvCategories,
     },
     torrent::Torrent,
 };
@@ -22,6 +22,7 @@ pub fn fetch_torrents(
     // scrape & parse
     match source {
         AllAvailableSources::NyaaDotSi => NyaaCategories::scrape_and_parse(response),
+        AllAvailableSources::SukebeiNyaaDotSi => SukebeiNyaaCategories::scrape_and_parse(response),
         AllAvailableSources::TorrentsCsvDotCom => TorrentsCsvCategories::parse_response(response),
     }
 }

@@ -82,8 +82,8 @@ impl JsonTorrentData {
         let size_str = format!("{:.2} GB", (self.size_bytes as f64) / 1_000_000_000.0);
 
         // Convert Unix timestamp to a human-readable date string
-        let datetime = DateTime::<Utc>::from_timestamp(self.created_unix as i64, 0)
-            .unwrap_or_else(|| Utc::now());
+        let datetime =
+            DateTime::<Utc>::from_timestamp(self.created_unix, 0).unwrap_or_else(Utc::now);
         let date_str = datetime.format("%Y-%m-%d").to_string();
 
         let magnet_link = format!("magnet:?xt=urn:btih:{}&dn={}", self.infohash, self.name);
