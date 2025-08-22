@@ -1,11 +1,11 @@
-use libscrapper::{search_torrent, sources::available_sources::AllAvailableSources};
+use lib_torrent_digger::{search_torrent, sources::available_sources::AllAvailableSources};
 use std::collections::HashMap;
 
 // FRB is unable to translate Torrent Struct from external crate.
 // so Mapping Torrent (ExternalTorrent) Struct With InternalTorrent Struct,
 // using this technique is a Temporary Solution ,
 // This will be / Should be changed in Future.
-use libscrapper::torrent::Torrent as ExternalTorrent;
+use lib_torrent_digger::torrent::Torrent as ExternalTorrent;
 pub struct InternalTorrent {
     pub nyaa_id: i64,
     pub name: String,

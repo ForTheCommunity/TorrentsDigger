@@ -7,7 +7,7 @@ edition = "2021"
 crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
-libscrapper = { path = "../libscraper" }
+lib_torrent_digger = { path = "../lib_torrent_digger" }
 flutter_rust_bridge = "=2.11.1"
 anyhow = "1.0.99"
 

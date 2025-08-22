@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:torrents_digger/configs/colors.dart';
 import 'package:torrents_digger/configs/global_key.dart';
+import 'package:torrents_digger/database/initialize.dart';
 import 'package:torrents_digger/routes/routes.dart';
 import 'package:torrents_digger/routes/routes_name.dart';
 import 'package:torrents_digger/src/rust/frb_generated.dart';
 
 Future<void> main() async {
   await RustLib.init();
+  // Ensuring Flutter is Initialized
+  WidgetsFlutterBinding.ensureInitialized();
+  // Initializing Database
+  await initializeDatabase();
   runApp(const MyApp());
 }
 
@@ -31,7 +36,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      initialRoute: RoutesName.oxidaUi,
+      initialRoute: RoutesName.mainUi,
       onGenerateRoute: Routes.generateRoute,
     );
   }

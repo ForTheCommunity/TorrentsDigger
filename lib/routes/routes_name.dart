@@ -1,4 +1,5 @@
 class RoutesName {
-  static const String splashScreen = "splash_screen";
-  static const String oxidaUi = "oxida_ui";
+  static const String mainUi = "main_ui";
+  static const String settingsUi = "settings_ui";
+  static const String proxySettingUi = "proxy_setting_ui";
 }

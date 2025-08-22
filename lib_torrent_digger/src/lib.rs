@@ -11,6 +11,7 @@ use crate::{
 };
 
 pub mod blocking_request;
+pub mod database;
 pub mod sources;
 pub mod torrent;
 

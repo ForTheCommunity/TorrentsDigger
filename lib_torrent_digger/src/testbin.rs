@@ -2,7 +2,7 @@
 
 use std::collections::HashMap;
 
-use libscrapper::{
+use lib_torrent_digger::{
     blocking_request::fetch_torrents,
     sources::{
         available_sources::AllAvailableSources,

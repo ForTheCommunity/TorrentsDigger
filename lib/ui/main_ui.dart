@@ -3,6 +3,7 @@ import 'package:torrents_digger/configs/colors.dart';
 import 'package:torrents_digger/dig_torrent/search_torrent.dart';
 import 'package:torrents_digger/dig_torrent/sources_and_categories.dart';
 import 'package:torrents_digger/src/rust/api/app.dart';
+import 'package:torrents_digger/ui/widgets/settings_widgets/settings_button.dart';
 import 'package:torrents_digger/ui/widgets/sources_and_categories_dropdown.dart';
 import 'package:torrents_digger/ui/widgets/search_bar_widget.dart';
 import 'package:torrents_digger/ui/widgets/torrent_list_widget.dart';
@@ -88,6 +89,7 @@ class _MainUiState extends State<MainUi> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: SettingButton(),
       backgroundColor: AppColors.pureBlack,
       body: SafeArea(
         child: SingleChildScrollView(
