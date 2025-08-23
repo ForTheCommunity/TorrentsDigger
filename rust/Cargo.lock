@@ -675,7 +675,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
 
 [[package]]
-name = "lib_torrent_digger"
+name = "lib_torrents_digger"
 version = "0.1.0"
 dependencies = [
  "anyhow",
@@ -1097,7 +1097,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "flutter_rust_bridge",
- "lib_torrent_digger",
+ "lib_torrents_digger",
 ]
 
 [[package]]

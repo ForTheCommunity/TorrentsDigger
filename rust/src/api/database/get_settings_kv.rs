@@ -1,4 +1,4 @@
-use lib_torrent_digger::database::settings_kvs::fetch_all_kv;
+use lib_torrents_digger::database::settings_kvs::fetch_all_kv;
 use std::collections::HashMap;
 
 pub fn get_settings_kv() -> HashMap<String, String> {

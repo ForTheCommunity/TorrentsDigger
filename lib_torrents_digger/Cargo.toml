@@ -1,5 +1,5 @@
 [package]
-name = "lib_torrent_digger"
+name = "lib_torrents_digger"
 version = "0.1.0"
 edition = "2024"
 

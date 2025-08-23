@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:torrents_digger/configs/colors.dart';
-import 'package:torrents_digger/configs/global_key.dart';
+import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 import 'package:torrents_digger/database/initialize.dart';
 import 'package:torrents_digger/routes/routes.dart';
 import 'package:torrents_digger/routes/routes_name.dart';

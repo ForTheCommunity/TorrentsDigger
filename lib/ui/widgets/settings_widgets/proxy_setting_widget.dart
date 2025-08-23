@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:torrents_digger/configs/global_key.dart';
+import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 
 enum ProxyProtocol { http, https, socks5 }
 

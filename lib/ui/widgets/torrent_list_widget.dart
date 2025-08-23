@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:torrents_digger/configs/colors.dart';
-import 'package:torrents_digger/configs/global_key.dart';
+import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 import 'package:torrents_digger/src/rust/api/app.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -135,11 +136,20 @@ class TorrentListWidget extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () async {
                     final Uri magnetUri = Uri.parse(torrent.magnetLink);
+                    Clipboard.setData(
+                      ClipboardData(text: magnetUri.toString()),
+                    ).then(
+                      (_) => {
+                        createSnackBar("Magnet Link Copied to Clipboard."),
+                      },
+                    );
+                    // sleep for 2 seconds
+                    await Future.delayed(const Duration(seconds: 2));
                     if (await canLaunchUrl(magnetUri)) {
                       await launchUrl(magnetUri);
                     } else {
-                      scaffoldMessengerKey.currentState?.showSnackBar(
-                        const SnackBar(content: Text('Install Torrent App.')),
+                      createSnackBar(
+                        'Unable to open torrent downloader \n Install Torrent App.',
                       );
                     }
                   },
