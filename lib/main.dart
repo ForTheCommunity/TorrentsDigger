@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:torrents_digger/configs/colors.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
-import 'package:torrents_digger/database/initialize.dart';
+// import 'package:torrents_digger/database/initialize.dart';
 import 'package:torrents_digger/routes/routes.dart';
 import 'package:torrents_digger/routes/routes_name.dart';
 import 'package:torrents_digger/src/rust/frb_generated.dart';
@@ -11,7 +11,7 @@ Future<void> main() async {
   // Ensuring Flutter is Initialized
   WidgetsFlutterBinding.ensureInitialized();
   // Initializing Database
-  await initializeDatabase();
+  // await initializeDatabase();
   runApp(const MyApp());
 }
 
