@@ -128,7 +128,7 @@ impl SukebeiNyaaCategories {
                 .attr("href")
                 .unwrap()
                 .chars()
-                .filter(|c| c.is_digit(10))
+                .filter(|c| c.is_numeric())
                 .collect::<String>()
                 .parse::<i64>()
                 .unwrap();
