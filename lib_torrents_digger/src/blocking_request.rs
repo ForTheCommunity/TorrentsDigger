@@ -15,7 +15,7 @@ use crate::{
 pub fn fetch_torrents(
     url: String,
     source: AllAvailableSources,
-) -> Result<Vec<Torrent>, Box<(dyn std::error::Error + 'static)>> {
+) -> Result<Vec<Torrent>, Box<dyn std::error::Error + 'static>> {
     // sending request
     let response = send_request(url)?;
 

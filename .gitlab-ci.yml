@@ -11,7 +11,7 @@ build_android:
   script:
     # Install Rust
     - apt update -y && apt upgrade -y
-    - apt install -y curl git wget unzip
+    - apt install -y curl git wget unzip libsqlite3-dev
     - curl https://sh.rustup.rs -sSf | sh -s -- -y
     - source "$HOME/.cargo/env"
 
