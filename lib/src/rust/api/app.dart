@@ -16,10 +16,14 @@ Future<List<InternalTorrent>> digTorrent({
   required String torrentName,
   required String source,
   required String category,
+  required String filter,
+  required String sorting,
 }) => RustLib.instance.api.crateApiAppDigTorrent(
   torrentName: torrentName,
   source: source,
   category: category,
+  filter: filter,
+  sorting: sorting,
 );
 
 class InternalQueryOptions {
@@ -51,16 +55,21 @@ class InternalSourceDetails {
   final InternalQueryOptions queryOptions;
   final List<String> categories;
   final List<String> sourceFilters;
+  final List<String> sourceSortings;
 
   const InternalSourceDetails({
     required this.queryOptions,
     required this.categories,
     required this.sourceFilters,
+    required this.sourceSortings,
   });
 
   @override
   int get hashCode =>
-      queryOptions.hashCode ^ categories.hashCode ^ sourceFilters.hashCode;
+      queryOptions.hashCode ^
+      categories.hashCode ^
+      sourceFilters.hashCode ^
+      sourceSortings.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -69,13 +78,12 @@ class InternalSourceDetails {
           runtimeType == other.runtimeType &&
           queryOptions == other.queryOptions &&
           categories == other.categories &&
-          sourceFilters == other.sourceFilters;
+          sourceFilters == other.sourceFilters &&
+          sourceSortings == other.sourceSortings;
 }
 
 class InternalTorrent {
-  final PlatformInt64 nyaaId;
   final String name;
-  final String torrentFile;
   final String magnetLink;
   final String size;
   final String date;
@@ -84,9 +92,7 @@ class InternalTorrent {
   final PlatformInt64 totalDownloads;
 
   const InternalTorrent({
-    required this.nyaaId,
     required this.name,
-    required this.torrentFile,
     required this.magnetLink,
     required this.size,
     required this.date,
@@ -97,9 +103,7 @@ class InternalTorrent {
 
   @override
   int get hashCode =>
-      nyaaId.hashCode ^
       name.hashCode ^
-      torrentFile.hashCode ^
       magnetLink.hashCode ^
       size.hashCode ^
       date.hashCode ^
@@ -112,9 +116,7 @@ class InternalTorrent {
       identical(this, other) ||
       other is InternalTorrent &&
           runtimeType == other.runtimeType &&
-          nyaaId == other.nyaaId &&
           name == other.name &&
-          torrentFile == other.torrentFile &&
           magnetLink == other.magnetLink &&
           size == other.size &&
           date == other.date &&

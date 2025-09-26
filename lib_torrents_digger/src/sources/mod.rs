@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use crate::sources::{
     available_sources::AllAvailableSources,
-    nyaa_dot_si::{NyaaCategories, NyaaFilter},
+    nyaa_dot_si::{NyaaCategories, NyaaFilter, NyaaSortings},
     sukebei_nyaa_dot_si::{SukebeiNyaaCategories, SukebeiNyaaFilter},
     torrents_csv_dot_com::TorrentsCsvCategories,
 };
@@ -47,10 +47,12 @@ pub fn get_source_details() -> HashMap<String, SourceDetails> {
     // Inserting NyaaDotSi
     let nyaa_dot_si_categories_as_strings_vector: Vec<String> = NyaaCategories::all_categories();
     let nyaa_filters = NyaaFilter::all_nyaa_filters();
+    let nyaa_sortings = NyaaSortings::all_nyaa_sortings();
     let nyaa_dot_si_source_details: SourceDetails = SourceDetails {
         source_query_options: NyaaCategories::get_query_options(),
         source_categories: nyaa_dot_si_categories_as_strings_vector,
         source_filters: nyaa_filters,
+        source_sortings: nyaa_sortings.clone(),
     };
     sources_details.insert(
         AllAvailableSources::NyaaDotSi.to_string(),
@@ -61,10 +63,12 @@ pub fn get_source_details() -> HashMap<String, SourceDetails> {
     let sukebei_nyaa_dot_si_categories_as_strings_vector: Vec<String> =
         SukebeiNyaaCategories::all_categories();
     let sukebei_nyaa_filters = SukebeiNyaaFilter::all_sukebei_nyaa_filters();
+    // nyaa sortings is same for sukebei also
     let sukebei_nyaa_dot_si_source_details: SourceDetails = SourceDetails {
         source_query_options: SukebeiNyaaCategories::get_query_options(),
         source_categories: sukebei_nyaa_dot_si_categories_as_strings_vector,
         source_filters: sukebei_nyaa_filters,
+        source_sortings: nyaa_sortings,
     };
     sources_details.insert(
         AllAvailableSources::SukebeiNyaaDotSi.to_string(),
@@ -79,6 +83,7 @@ pub fn get_source_details() -> HashMap<String, SourceDetails> {
         source_query_options: TorrentsCsvCategories::get_query_options(),
         source_categories: torrents_csv_dot_com_categories_as_strings_vector,
         source_filters: torrents_csv_filter,
+        source_sortings: vec!["".to_string()],
     };
     sources_details.insert(
         AllAvailableSources::TorrentsCsvDotCom.to_string(),
@@ -92,4 +97,5 @@ pub struct SourceDetails {
     pub source_query_options: QueryOptions,
     pub source_categories: Vec<String>,
     pub source_filters: Vec<String>,
+    pub source_sortings: Vec<String>,
 }

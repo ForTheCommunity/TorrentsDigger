@@ -9,9 +9,7 @@ use std::collections::HashMap;
 use lib_torrents_digger::sources::SourceDetails as ExternalSourceDetails;
 use lib_torrents_digger::torrent::Torrent as ExternalTorrent;
 pub struct InternalTorrent {
-    pub nyaa_id: i64,
     pub name: String,
-    pub torrent_file: String,
     pub magnet_link: String,
     pub size: String,
     pub date: String,
@@ -30,6 +28,7 @@ pub struct InternalSourceDetails {
     pub query_options: InternalQueryOptions,
     pub categories: Vec<String>,
     pub source_filters: Vec<String>,
+    pub source_sortings: Vec<String>,
 }
 
 pub fn get_all_available_sources_categories() -> HashMap<String, Vec<String>> {
@@ -51,6 +50,7 @@ pub fn fetch_source_details() -> HashMap<String, InternalSourceDetails> {
             query_options: internal_query_options,
             categories: details.source_categories,
             source_filters: details.source_filters,
+            source_sortings: details.source_sortings,
         };
         internal_details.insert(source_name, internal_source_details);
     }
@@ -61,15 +61,15 @@ pub fn dig_torrent(
     torrent_name: String,
     source: String,
     category: String,
+    filter:String,
+    sorting: String,
 ) -> Result<Vec<InternalTorrent>, String> {
-    match search_torrent(torrent_name, source, category) {
+    match search_torrent(torrent_name, source, category,filter,sorting) {
         Ok(torrents) => {
             let internal_torrents: Vec<InternalTorrent> = torrents
                 .into_iter()
                 .map(|t: ExternalTorrent| InternalTorrent {
-                    nyaa_id: t.id,
                     name: t.name,
-                    torrent_file: t.torrent_file,
                     magnet_link: t.magnet_link,
                     size: t.size,
                     date: t.date,

@@ -81,6 +81,8 @@ abstract class RustLibApi extends BaseApi {
     required String torrentName,
     required String source,
     required String category,
+    required String filter,
+    required String sorting,
   });
 
   Future<Map<String, InternalSourceDetails>> crateApiAppFetchSourceDetails();
@@ -108,6 +110,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     required String torrentName,
     required String source,
     required String category,
+    required String filter,
+    required String sorting,
   }) {
     return handler.executeNormal(
       NormalTask(
@@ -116,6 +120,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           sse_encode_String(torrentName, serializer);
           sse_encode_String(source, serializer);
           sse_encode_String(category, serializer);
+          sse_encode_String(filter, serializer);
+          sse_encode_String(sorting, serializer);
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
@@ -128,7 +134,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeErrorData: sse_decode_String,
         ),
         constMeta: kCrateApiAppDigTorrentConstMeta,
-        argValues: [torrentName, source, category],
+        argValues: [torrentName, source, category, filter, sorting],
         apiImpl: this,
       ),
     );
@@ -136,7 +142,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   TaskConstMeta get kCrateApiAppDigTorrentConstMeta => const TaskConstMeta(
     debugName: "dig_torrent",
-    argNames: ["torrentName", "source", "category"],
+    argNames: ["torrentName", "source", "category", "filter", "sorting"],
   );
 
   @override
@@ -327,12 +333,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   InternalSourceDetails dco_decode_internal_source_details(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 3)
-      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    if (arr.length != 4)
+      throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
     return InternalSourceDetails(
       queryOptions: dco_decode_internal_query_options(arr[0]),
       categories: dco_decode_list_String(arr[1]),
       sourceFilters: dco_decode_list_String(arr[2]),
+      sourceSortings: dco_decode_list_String(arr[3]),
     );
   }
 
@@ -340,18 +347,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   InternalTorrent dco_decode_internal_torrent(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 9)
-      throw Exception('unexpected arr length: expect 9 but see ${arr.length}');
+    if (arr.length != 7)
+      throw Exception('unexpected arr length: expect 7 but see ${arr.length}');
     return InternalTorrent(
-      nyaaId: dco_decode_i_64(arr[0]),
-      name: dco_decode_String(arr[1]),
-      torrentFile: dco_decode_String(arr[2]),
-      magnetLink: dco_decode_String(arr[3]),
-      size: dco_decode_String(arr[4]),
-      date: dco_decode_String(arr[5]),
-      seeders: dco_decode_i_64(arr[6]),
-      leechers: dco_decode_i_64(arr[7]),
-      totalDownloads: dco_decode_i_64(arr[8]),
+      name: dco_decode_String(arr[0]),
+      magnetLink: dco_decode_String(arr[1]),
+      size: dco_decode_String(arr[2]),
+      date: dco_decode_String(arr[3]),
+      seeders: dco_decode_i_64(arr[4]),
+      leechers: dco_decode_i_64(arr[5]),
+      totalDownloads: dco_decode_i_64(arr[6]),
     );
   }
 
@@ -516,19 +521,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_queryOptions = sse_decode_internal_query_options(deserializer);
     var var_categories = sse_decode_list_String(deserializer);
     var var_sourceFilters = sse_decode_list_String(deserializer);
+    var var_sourceSortings = sse_decode_list_String(deserializer);
     return InternalSourceDetails(
       queryOptions: var_queryOptions,
       categories: var_categories,
       sourceFilters: var_sourceFilters,
+      sourceSortings: var_sourceSortings,
     );
   }
 
   @protected
   InternalTorrent sse_decode_internal_torrent(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    var var_nyaaId = sse_decode_i_64(deserializer);
     var var_name = sse_decode_String(deserializer);
-    var var_torrentFile = sse_decode_String(deserializer);
     var var_magnetLink = sse_decode_String(deserializer);
     var var_size = sse_decode_String(deserializer);
     var var_date = sse_decode_String(deserializer);
@@ -536,9 +541,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_leechers = sse_decode_i_64(deserializer);
     var var_totalDownloads = sse_decode_i_64(deserializer);
     return InternalTorrent(
-      nyaaId: var_nyaaId,
       name: var_name,
-      torrentFile: var_torrentFile,
       magnetLink: var_magnetLink,
       size: var_size,
       date: var_date,
@@ -746,6 +749,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_internal_query_options(self.queryOptions, serializer);
     sse_encode_list_String(self.categories, serializer);
     sse_encode_list_String(self.sourceFilters, serializer);
+    sse_encode_list_String(self.sourceSortings, serializer);
   }
 
   @protected
@@ -754,9 +758,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     SseSerializer serializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_i_64(self.nyaaId, serializer);
     sse_encode_String(self.name, serializer);
-    sse_encode_String(self.torrentFile, serializer);
     sse_encode_String(self.magnetLink, serializer);
     sse_encode_String(self.size, serializer);
     sse_encode_String(self.date, serializer);

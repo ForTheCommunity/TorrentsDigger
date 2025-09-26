@@ -22,5 +22,5 @@ class SelectFilter extends SourceWidgetEvents {
 
 class SelectSorting extends SourceWidgetEvents {
   final String sorting;
-  SelectSorting({required this.sorting});
+  SelectSorting(this.sorting);
 }

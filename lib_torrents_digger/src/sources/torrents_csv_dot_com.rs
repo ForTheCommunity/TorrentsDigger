@@ -75,7 +75,6 @@ struct JsonRoot {
 
 #[derive(Serialize, Deserialize, Debug)]
 struct JsonTorrentData {
-    rowid: i64,
     infohash: String,
     name: String,
     size_bytes: i64,
@@ -102,9 +101,7 @@ impl JsonTorrentData {
         let total_downloads = self.completed + self.seeders;
 
         Torrent {
-            id: self.rowid,
             name: self.name.clone(),
-            torrent_file: String::from("N/A"),
             magnet_link,
             size: size_str,
             date: date_str,

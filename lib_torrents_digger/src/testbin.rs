@@ -7,7 +7,7 @@ use lib_torrents_digger::{
     sources::{
         available_sources::AllAvailableSources,
         get_source_details,
-        nyaa_dot_si::{NyaaCategories, NyaaFilter},
+        nyaa_dot_si::{NyaaCategories, NyaaFilter, NyaaSortings},
         torrents_csv_dot_com::TorrentsCsvCategories,
     },
 };
@@ -45,6 +45,7 @@ fn test_nyaa_dot_si() {
         "Idaten Jump",
         &NyaaFilter::NoFilter,
         &NyaaCategories::AllCategories,
+        &NyaaSortings::BySeeders,
         &1,
     );
 

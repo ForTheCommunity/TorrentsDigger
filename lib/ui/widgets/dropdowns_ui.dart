@@ -93,8 +93,24 @@ class DropdownsUi extends StatelessWidget {
                 if (state.selectedDetails != null) ...[
                   if (state.selectedDetails!.queryOptions.sortings)
                     Expanded(
-                      child: Text(
-                        "     Sorting Feature will \n     come  in Next Release.",
+                      child: DropdownWidget(
+                        items: state.selectedDetails!.sourceSortings,
+                        selectedValue:
+                            state.selectedSorting != null &&
+                                state.selectedDetails!.sourceSortings.contains(
+                                  state.selectedSorting,
+                                )
+                            ? state.selectedSorting
+                            : null,
+
+                        hintText: "Select Sorting",
+                        onChanged: (value) {
+                          if (value != null) {
+                            context.read<SourceBloc>().add(
+                              SelectSorting(value),
+                            );
+                          }
+                        },
                       ),
                     ),
                 ],

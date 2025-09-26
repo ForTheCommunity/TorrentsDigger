@@ -141,6 +141,7 @@ impl NyaaCategories {
         torrent_name: &str,
         filter: &NyaaFilter,
         category: &NyaaCategories,
+        sorting: &NyaaSortings,
         page_number: &i64,
     ) -> String {
         //https://nyaa.si/?f=0&c=1_0&q=naruto&s=seeders&o=desc&p=2
@@ -154,11 +155,12 @@ impl NyaaCategories {
         let filter = format!("f={}", filter.filter_to_value());
         let query = format!("q={}", torrent_name);
         let category = format!("c={}", category.category_to_value());
-        let high_seeders_filter = "s=seeders&o=desc";
+        //  for now , sorting for High/Desc only.....
+        let sorting = format!("s={}&o=desc", sorting.sorting_to_value());
         let page_number = format!("p={}", page_number);
         format!(
             "{}/?{}&{}&{}&{}&{}",
-            root_url, filter, category, query, high_seeders_filter, page_number
+            root_url, filter, category, query, sorting, page_number
         )
     }
     // Scraping
@@ -190,15 +192,6 @@ impl NyaaCategories {
                 table_data_vec[2].select(&anchor_tag_selector).collect();
 
             // parsing
-            let id: i64 = a_name[0]
-                .value()
-                .attr("href")
-                .unwrap()
-                .chars()
-                .filter(|c| c.is_digit(10))
-                .collect::<String>()
-                .parse::<i64>()
-                .unwrap();
 
             let mut name_index = 0;
             if a_name.len() >= 2 {
@@ -209,11 +202,6 @@ impl NyaaCategories {
                 .value()
                 .attr("title")
                 .unwrap_or("Name title attribute missing")
-                .to_string();
-
-            let torrent_file = torrent_data[0]
-                .attr("href")
-                .unwrap_or("Torrent href attribute missing")
                 .to_string();
 
             let magnet_link = if torrent_data.len() > 1 {
@@ -229,9 +217,7 @@ impl NyaaCategories {
             let total_downloads = table_data_vec[7].inner_html().parse::<i64>()?;
 
             let torrent = Torrent {
-                id,
                 name,
-                torrent_file,
                 magnet_link,
                 size,
                 date,
@@ -329,6 +315,67 @@ impl fmt::Display for NyaaFilter {
     }
 }
 
+pub enum NyaaSortings {
+    ByComments,
+    BySize,
+    ByDate,
+    BySeeders,
+    ByLeechers,
+    ByTotalDownloads,
+}
+
+impl NyaaSortings {
+    pub fn to_sorting(sorting_str: &str) -> Self {
+        match sorting_str {
+            "By Comments" => Self::ByComments,
+            "By Size" => Self::BySize,
+            "By Date" => Self::ByDate,
+            "By Seeders" => Self::BySeeders,
+            "By Leechers" => Self::ByLeechers,
+            "By Total Downloads" => Self::ByTotalDownloads,
+            _ => Self::BySeeders,
+        }
+    }
+
+    pub fn sorting_to_value(&self) -> String {
+        match *self {
+            Self::ByComments => "comments".to_string(),
+            Self::BySize => "size".to_string(),
+            Self::ByDate => "id".to_string(),
+            Self::BySeeders => "seeders".to_string(),
+            Self::ByLeechers => "leechers".to_string(),
+            Self::ByTotalDownloads => "downloads".to_string(),
+        }
+    }
+
+    pub fn all_nyaa_sortings() -> Vec<String> {
+        vec![
+            Self::ByComments,
+            Self::BySize,
+            Self::ByDate,
+            Self::BySeeders,
+            Self::ByLeechers,
+            Self::ByTotalDownloads,
+        ]
+        .iter()
+        .map(|sorting| sorting.to_string())
+        .collect()
+    }
+}
+
+impl fmt::Display for NyaaSortings {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::ByComments => write!(f, "By Comments"),
+            Self::BySize => write!(f, "By Size"),
+            Self::ByDate => write!(f, "By Date"),
+            Self::BySeeders => write!(f, "By Seeders"),
+            Self::ByLeechers => write!(f, "By Leechers"),
+            Self::ByTotalDownloads => write!(f, "By Total Downloads"),
+        }
+    }
+}
+
 #[derive(Debug)]
 pub enum NyaaError {
     PageEnded,
@@ -362,8 +409,9 @@ mod tests {
     #[test]
     fn test_request_builder_nyaa() {
         let torrent_query_name = "naruto";
-        let filter = NyaaFilter::NoFilter;
+        let filter = NyaaFilter::TrustedOnly;
         let category = NyaaCategories::Anime;
+        let sorting = NyaaSortings::BySeeders;
         let page_number = 1;
 
         assert_eq!(
@@ -372,6 +420,7 @@ mod tests {
                 torrent_query_name,
                 &filter,
                 &category,
+                &sorting,
                 &page_number
             )
         );
