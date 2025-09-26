@@ -23,7 +23,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [BlocProvider(create: (_) => SourceBloc())],
+      providers: [
+        BlocProvider(create: (_) => SourceBloc()..add(LoadSources())),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         scaffoldMessengerKey: scaffoldMessengerKey, // Assigning the global key
