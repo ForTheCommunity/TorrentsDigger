@@ -1,7 +1,7 @@
 use core::fmt;
 use std::error::Error;
 
-use crate::torrent::Torrent;
+use crate::{sources::QueryOptions, torrent::Torrent};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use ureq::{Body, http::Response};
@@ -11,6 +11,13 @@ pub enum TorrentsCsvCategories {
 }
 
 impl TorrentsCsvCategories {
+    pub fn get_query_options() -> QueryOptions {
+        QueryOptions {
+            categories: false,
+            sortings: false,
+            filters: false,
+        }
+    }
     pub fn to_category(text_category: &str) -> TorrentsCsvCategories {
         match text_category {
             "All Categories" => TorrentsCsvCategories::AllCategories,
@@ -18,8 +25,11 @@ impl TorrentsCsvCategories {
         }
     }
 
-    pub fn all_categories() -> Vec<Self> {
+    pub fn all_categories() -> Vec<String> {
         vec![Self::AllCategories]
+            .iter()
+            .map(|category| category.to_string())
+            .collect()
     }
 
     pub fn request_url_builder_torrents_csv(torrent_name: &str) -> String {

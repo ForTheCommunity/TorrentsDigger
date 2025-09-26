@@ -9,6 +9,9 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 Future<Map<String, List<String>>> getAllAvailableSourcesCategories() =>
     RustLib.instance.api.crateApiAppGetAllAvailableSourcesCategories();
 
+Future<Map<String, InternalSourceDetails>> fetchSourceDetails() =>
+    RustLib.instance.api.crateApiAppFetchSourceDetails();
+
 Future<List<InternalTorrent>> digTorrent({
   required String torrentName,
   required String source,
@@ -18,6 +21,56 @@ Future<List<InternalTorrent>> digTorrent({
   source: source,
   category: category,
 );
+
+class InternalQueryOptions {
+  final bool categories;
+  final bool sortings;
+  final bool filters;
+
+  const InternalQueryOptions({
+    required this.categories,
+    required this.sortings,
+    required this.filters,
+  });
+
+  @override
+  int get hashCode =>
+      categories.hashCode ^ sortings.hashCode ^ filters.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is InternalQueryOptions &&
+          runtimeType == other.runtimeType &&
+          categories == other.categories &&
+          sortings == other.sortings &&
+          filters == other.filters;
+}
+
+class InternalSourceDetails {
+  final InternalQueryOptions queryOptions;
+  final List<String> categories;
+  final List<String> sourceFilters;
+
+  const InternalSourceDetails({
+    required this.queryOptions,
+    required this.categories,
+    required this.sourceFilters,
+  });
+
+  @override
+  int get hashCode =>
+      queryOptions.hashCode ^ categories.hashCode ^ sourceFilters.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is InternalSourceDetails &&
+          runtimeType == other.runtimeType &&
+          queryOptions == other.queryOptions &&
+          categories == other.categories &&
+          sourceFilters == other.sourceFilters;
+}
 
 class InternalTorrent {
   final PlatformInt64 nyaaId;

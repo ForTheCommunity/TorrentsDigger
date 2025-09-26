@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:torrents_digger/blocs/sources_bloc/source_bloc.dart';
 import 'package:torrents_digger/configs/colors.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 // import 'package:torrents_digger/database/initialize.dart';
@@ -20,24 +22,27 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      scaffoldMessengerKey: scaffoldMessengerKey, // Assigning the global key
-      title: "Torrents Digger",
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: AppColors.pureBlack,
-        appBarTheme: AppBarTheme(
-          backgroundColor: AppColors.pureBlack,
-          titleTextStyle: TextStyle(
-            color: AppColors.greenColor,
-            fontSize: 25,
-            letterSpacing: 5,
+    return MultiBlocProvider(
+      providers: [BlocProvider(create: (_) => SourceBloc())],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        scaffoldMessengerKey: scaffoldMessengerKey, // Assigning the global key
+        title: "Torrents Digger",
+        theme: ThemeData(
+          brightness: Brightness.dark,
+          scaffoldBackgroundColor: AppColors.pureBlack,
+          appBarTheme: AppBarTheme(
+            backgroundColor: AppColors.pureBlack,
+            titleTextStyle: TextStyle(
+              color: AppColors.greenColor,
+              fontSize: 25,
+              letterSpacing: 5,
+            ),
           ),
         ),
+        initialRoute: RoutesName.mainUi,
+        onGenerateRoute: Routes.generateRoute,
       ),
-      initialRoute: RoutesName.mainUi,
-      onGenerateRoute: Routes.generateRoute,
     );
   }
 }

@@ -6,6 +6,7 @@ use lib_torrents_digger::{
     blocking_request::fetch_torrents,
     sources::{
         available_sources::AllAvailableSources,
+        get_source_details,
         nyaa_dot_si::{NyaaCategories, NyaaFilter},
         torrents_csv_dot_com::TorrentsCsvCategories,
     },
@@ -14,6 +15,13 @@ use lib_torrents_digger::{
 fn main() {
     test_nyaa_dot_si();
     test_torrents_csv_dot_com();
+    test_sources_data();
+}
+
+fn test_sources_data() {
+    let source_data = get_source_details();
+    println!("________________SOURCE DATA :");
+    println!("{:?}", source_data);
 }
 
 fn test_torrents_csv_dot_com() {
@@ -61,7 +69,7 @@ fn test_nyaa_dot_si() {
     }
 
     // Hashmap
-    let all_nyaa_categories: Vec<NyaaCategories> = NyaaCategories::all_categories();
+    let all_nyaa_categories: Vec<String> = NyaaCategories::all_categories();
 
     // creating HashMap to store available sources with their categories
     let mut sources_categories: HashMap<String, Vec<String>> = HashMap::new();

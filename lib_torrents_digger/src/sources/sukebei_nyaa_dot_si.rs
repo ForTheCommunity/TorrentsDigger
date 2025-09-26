@@ -5,7 +5,7 @@ use anyhow::Result;
 use scraper::{self, ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
 
-use crate::torrent::Torrent;
+use crate::{sources::QueryOptions, torrent::Torrent};
 
 // https://sukebei.nyaa.si/
 
@@ -25,6 +25,14 @@ pub enum SukebeiNyaaCategories {
 }
 
 impl SukebeiNyaaCategories {
+    pub fn get_query_options() -> QueryOptions {
+        QueryOptions {
+            categories: true,
+            sortings: true,
+            filters: true,
+        }
+    }
+
     pub fn to_category(text_category: &str) -> Self {
         match text_category {
             "All Categories" => Self::AllCategories,
@@ -56,7 +64,7 @@ impl SukebeiNyaaCategories {
         }
     }
 
-    pub fn all_categories() -> Vec<Self> {
+    pub fn all_categories() -> Vec<String> {
         vec![
             Self::AllCategories,
             Self::Art,
@@ -69,6 +77,9 @@ impl SukebeiNyaaCategories {
             Self::RealLifePhotobookAndPictures,
             Self::RealLifeVideos,
         ]
+        .iter()
+        .map(|category| category.to_string())
+        .collect()
     }
 
     pub fn request_url_builder(
@@ -128,7 +139,7 @@ impl SukebeiNyaaCategories {
                 .attr("href")
                 .unwrap()
                 .chars()
-                .filter(|c| c.is_numeric())
+                .filter(|c| c.is_digit(10))
                 .collect::<String>()
                 .parse::<i64>()
                 .unwrap();
@@ -214,10 +225,26 @@ impl SukebeiNyaaFilter {
 
     pub fn to_filter(filter_str: &str) -> Self {
         match filter_str {
-            "NoFilter" => Self::NoFilter,
-            "TrustedOnly" => Self::TrustedOnly,
-            "NoRemakes" => Self::NoRemakes,
+            "No Filter" => Self::NoFilter,
+            "Trusted Only" => Self::TrustedOnly,
+            "No Remakes" => Self::NoRemakes,
             _ => Self::NoFilter,
+        }
+    }
+    pub fn all_sukebei_nyaa_filters() -> Vec<String> {
+        vec![Self::NoFilter, Self::TrustedOnly, Self::NoRemakes]
+            .iter()
+            .map(|filter| filter.to_string())
+            .collect()
+    }
+}
+
+impl fmt::Display for SukebeiNyaaFilter {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::NoFilter => write!(f, "No Filter"),
+            Self::TrustedOnly => write!(f, "Trusted Only"),
+            Self::NoRemakes => write!(f, "No Remakes"),
         }
     }
 }

@@ -1,10 +1,12 @@
-use lib_torrents_digger::{search_torrent, sources::available_sources::AllAvailableSources};
+use lib_torrents_digger::{
+    search_torrent,
+    sources::{available_sources::AllAvailableSources, get_source_details},
+};
 use std::collections::HashMap;
 
 // FRB is unable to translate Torrent Struct from external crate.
 // so Mapping Torrent (ExternalTorrent) Struct With InternalTorrent Struct,
-// using this technique is a Temporary Solution ,
-// This will be / Should be changed in Future.
+use lib_torrents_digger::sources::SourceDetails as ExternalSourceDetails;
 use lib_torrents_digger::torrent::Torrent as ExternalTorrent;
 pub struct InternalTorrent {
     pub nyaa_id: i64,
@@ -18,8 +20,41 @@ pub struct InternalTorrent {
     pub total_downloads: i64,
 }
 
+pub struct InternalQueryOptions {
+    pub categories: bool,
+    pub sortings: bool,
+    pub filters: bool,
+}
+
+pub struct InternalSourceDetails {
+    pub query_options: InternalQueryOptions,
+    pub categories: Vec<String>,
+    pub source_filters: Vec<String>,
+}
+
 pub fn get_all_available_sources_categories() -> HashMap<String, Vec<String>> {
     AllAvailableSources::get_all_available_sources_and_their_categories()
+}
+
+//  Map the external HashMap to an internal HashMap
+pub fn fetch_source_details() -> HashMap<String, InternalSourceDetails> {
+    let source_details: HashMap<String, ExternalSourceDetails> = get_source_details();
+
+    let mut internal_details: HashMap<String, InternalSourceDetails> = HashMap::new();
+    for (source_name, details) in source_details {
+        let internal_query_options = InternalQueryOptions {
+            categories: details.source_query_options.categories,
+            sortings: details.source_query_options.sortings,
+            filters: details.source_query_options.filters,
+        };
+        let internal_source_details = InternalSourceDetails {
+            query_options: internal_query_options,
+            categories: details.source_categories,
+            source_filters: details.source_filters,
+        };
+        internal_details.insert(source_name, internal_source_details);
+    }
+    internal_details
 }
 
 pub fn dig_torrent(
