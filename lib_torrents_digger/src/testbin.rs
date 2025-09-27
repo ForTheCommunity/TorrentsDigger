@@ -1,21 +1,23 @@
-// This Binary is for testing Libscraper library.
+// This Binary is for testing library.
 
 use std::collections::HashMap;
 
 use lib_torrents_digger::{
-    blocking_request::fetch_torrents,
     sources::{
         available_sources::AllAvailableSources,
         get_source_details,
         nyaa_dot_si::{NyaaCategories, NyaaFilter, NyaaSortings},
         torrents_csv_dot_com::TorrentsCsvCategories,
     },
+    sync_request::fetch_torrents,
+    trackers::get_trackers,
 };
 
 fn main() {
     test_nyaa_dot_si();
     test_torrents_csv_dot_com();
     test_sources_data();
+    test_trackers();
 }
 
 fn test_sources_data() {
@@ -85,4 +87,9 @@ fn test_nyaa_dot_si() {
         nyaa_categories_as_strings_vector,
     );
     println!("HashMap : {:?}", sources_categories);
+}
+
+fn test_trackers() {
+    let trackers = get_trackers().unwrap();
+    println!("{:?}", trackers);
 }

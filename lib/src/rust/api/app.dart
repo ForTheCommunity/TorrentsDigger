@@ -6,9 +6,6 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-Future<Map<String, List<String>>> getAllAvailableSourcesCategories() =>
-    RustLib.instance.api.crateApiAppGetAllAvailableSourcesCategories();
-
 Future<Map<String, InternalSourceDetails>> fetchSourceDetails() =>
     RustLib.instance.api.crateApiAppFetchSourceDetails();
 

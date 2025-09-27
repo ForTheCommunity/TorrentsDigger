@@ -45,8 +45,9 @@ class _ProxySettingWidgetState extends State<ProxySettingWidget> {
       //     ),
       //   ),
       // );
-      scaffoldMessengerKey.currentState?.showSnackBar(
-        const SnackBar(content: Text('This Feature is Under Development...')),
+      createSnackBar(
+        message: "This Feature is Under Development...",
+        duration: 3,
       );
       // actual save logic here,
     }

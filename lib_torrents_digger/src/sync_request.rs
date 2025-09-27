@@ -40,10 +40,7 @@ fn send_request(url: String) -> Result<Response<Body>, Box<dyn Error>> {
     let mut rng = rng();
     let user_agent = user_agents.choose(&mut rng).unwrap().to_owned();
 
-    let response = ureq::get(url)
-        .header("User-Agent", user_agent)
-        .call()
-        .unwrap();
+    let response = ureq::get(url).header("User-Agent", user_agent).call()?;
 
     Ok(response)
 }

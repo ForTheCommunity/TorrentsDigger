@@ -140,7 +140,11 @@ class TorrentListWidget extends StatelessWidget {
                       ClipboardData(text: magnetUri.toString()),
                     ).then(
                       (_) => {
-                        createSnackBar("Magnet Link Copied to Clipboard."),
+                        createSnackBar(
+                          message:
+                              "Magnet Link Copied to Clipboard.\nOpening Torrent Downloader...",
+                          duration: 1,
+                        ),
                       },
                     );
                     // sleep for 2 seconds
@@ -149,7 +153,9 @@ class TorrentListWidget extends StatelessWidget {
                       await launchUrl(magnetUri);
                     } else {
                       createSnackBar(
-                        'Unable to open torrent downloader \n Install Torrent App.',
+                        message:
+                            'Unable to open torrent downloader.\nInstall Torrent App.',
+                        duration: 2,
                       );
                     }
                   },

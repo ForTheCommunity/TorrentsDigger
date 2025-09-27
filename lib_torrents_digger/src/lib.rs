@@ -1,19 +1,20 @@
 use std::error::Error;
 
 use crate::{
-    blocking_request::fetch_torrents,
     sources::{
         available_sources::AllAvailableSources,
         nyaa_dot_si::{NyaaCategories, NyaaFilter, NyaaSortings},
         sukebei_nyaa_dot_si::{SukebeiNyaaCategories, SukebeiNyaaFilter},
         torrents_csv_dot_com::TorrentsCsvCategories,
     },
+    sync_request::fetch_torrents,
 };
 
-pub mod blocking_request;
 pub mod database;
 pub mod sources;
+pub mod sync_request;
 pub mod torrent;
+pub mod trackers;
 
 pub fn search_torrent(
     torrent_name: String,

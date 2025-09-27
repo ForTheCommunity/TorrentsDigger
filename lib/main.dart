@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/sources_bloc/source_bloc.dart';
+import 'package:torrents_digger/blocs/torrent_bloc/torrent_bloc.dart';
 import 'package:torrents_digger/configs/colors.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 // import 'package:torrents_digger/database/initialize.dart';
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => SourceBloc()..add(LoadSources())),
+        BlocProvider(create: (_) => TorrentBloc()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

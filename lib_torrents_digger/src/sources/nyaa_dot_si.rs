@@ -5,7 +5,7 @@ use anyhow::Result;
 use scraper::{self, ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
 
-use crate::{sources::QueryOptions, torrent::Torrent};
+use crate::{sources::QueryOptions, torrent::Torrent, trackers::get_trackers};
 
 // https://nyaa.si
 
@@ -106,7 +106,7 @@ impl NyaaCategories {
     }
 
     pub fn all_categories() -> Vec<String> {
-        vec![
+        [
             Self::AllCategories,
             Self::Anime,
             Self::AnimeMusicVideo,
@@ -193,6 +193,16 @@ impl NyaaCategories {
 
             // parsing
 
+            let id: i64 = a_name[0]
+                .value()
+                .attr("href")
+                .unwrap()
+                .chars()
+                .filter(|c| c.is_numeric())
+                .collect::<String>()
+                .parse::<i64>()
+                .unwrap();
+
             let mut name_index = 0;
             if a_name.len() >= 2 {
                 name_index = 1;
@@ -204,11 +214,14 @@ impl NyaaCategories {
                 .unwrap_or("Name title attribute missing")
                 .to_string();
 
-            let magnet_link = if torrent_data.len() > 1 {
+            let mut magnet_link = if torrent_data.len() > 1 {
                 torrent_data[1].attr("href").unwrap_or_default().to_string()
             } else {
                 String::from("Magnet link not available")
             };
+
+            // adding extra trackers
+            magnet_link.push_str(get_trackers()?.as_str());
 
             let size = table_data_vec[3].inner_html().to_string();
             let date = table_data_vec[4].inner_html().to_string();
@@ -217,6 +230,7 @@ impl NyaaCategories {
             let total_downloads = table_data_vec[7].inner_html().parse::<i64>()?;
 
             let torrent = Torrent {
+                id,
                 name,
                 magnet_link,
                 size,
@@ -298,7 +312,7 @@ impl NyaaFilter {
         }
     }
     pub fn all_nyaa_filters() -> Vec<String> {
-        vec![Self::NoFilter, Self::TrustedOnly, Self::NoRemakes]
+        [Self::NoFilter, Self::TrustedOnly, Self::NoRemakes]
             .iter()
             .map(|filter| filter.to_string())
             .collect()
@@ -349,7 +363,7 @@ impl NyaaSortings {
     }
 
     pub fn all_nyaa_sortings() -> Vec<String> {
-        vec![
+        [
             Self::ByComments,
             Self::BySize,
             Self::ByDate,

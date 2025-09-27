@@ -1,7 +1,4 @@
-use lib_torrents_digger::{
-    search_torrent,
-    sources::{available_sources::AllAvailableSources, get_source_details},
-};
+use lib_torrents_digger::{search_torrent, sources::get_source_details};
 use std::collections::HashMap;
 
 // FRB is unable to translate Torrent Struct from external crate.
@@ -31,10 +28,6 @@ pub struct InternalSourceDetails {
     pub source_sortings: Vec<String>,
 }
 
-pub fn get_all_available_sources_categories() -> HashMap<String, Vec<String>> {
-    AllAvailableSources::get_all_available_sources_and_their_categories()
-}
-
 //  Map the external HashMap to an internal HashMap
 pub fn fetch_source_details() -> HashMap<String, InternalSourceDetails> {
     let source_details: HashMap<String, ExternalSourceDetails> = get_source_details();
@@ -61,10 +54,10 @@ pub fn dig_torrent(
     torrent_name: String,
     source: String,
     category: String,
-    filter:String,
+    filter: String,
     sorting: String,
 ) -> Result<Vec<InternalTorrent>, String> {
-    match search_torrent(torrent_name, source, category,filter,sorting) {
+    match search_torrent(torrent_name, source, category, filter, sorting) {
         Ok(torrents) => {
             let internal_torrents: Vec<InternalTorrent> = torrents
                 .into_iter()

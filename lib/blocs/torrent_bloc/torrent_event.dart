@@ -1,0 +1,19 @@
+part of 'torrent_bloc.dart';
+
+@immutable
+sealed class TorrentEvents {}
+
+class SearchTorrents extends TorrentEvents {
+  final String torrentName;
+  final String source;
+  final String filter;
+  final String category;
+  final String sorting;
+  SearchTorrents({
+    required this.torrentName,
+    required this.source,
+    required this.filter,
+    required this.category,
+    required this.sorting,
+  });
+}

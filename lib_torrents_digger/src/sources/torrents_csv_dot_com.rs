@@ -1,7 +1,7 @@
 use core::fmt;
 use std::error::Error;
 
-use crate::{sources::QueryOptions, torrent::Torrent};
+use crate::{sources::QueryOptions, torrent::Torrent, trackers::get_trackers};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use ureq::{Body, http::Response};
@@ -26,7 +26,7 @@ impl TorrentsCsvCategories {
     }
 
     pub fn all_categories() -> Vec<String> {
-        vec![Self::AllCategories]
+        [Self::AllCategories]
             .iter()
             .map(|category| category.to_string())
             .collect()
@@ -75,6 +75,7 @@ struct JsonRoot {
 
 #[derive(Serialize, Deserialize, Debug)]
 struct JsonTorrentData {
+    rowid: i64,
     infohash: String,
     name: String,
     size_bytes: i64,
@@ -95,12 +96,16 @@ impl JsonTorrentData {
             DateTime::<Utc>::from_timestamp(self.created_unix, 0).unwrap_or_else(Utc::now);
         let date_str = datetime.format("%Y-%m-%d").to_string();
 
-        let magnet_link = format!("magnet:?xt=urn:btih:{}&dn={}", self.infohash, self.name);
+        let mut magnet_link = format!("magnet:?xt=urn:btih:{}&dn={}", self.infohash, self.name);
+
+        // adding extra trackers
+        magnet_link.push_str(get_trackers().unwrap().as_str());
 
         // Calculate total downloads
         let total_downloads = self.completed + self.seeders;
 
         Torrent {
+            id: self.rowid,
             name: self.name.clone(),
             magnet_link,
             size: size_str,
