@@ -19,4 +19,5 @@ serde_json = "1.0.142"
 ureq = "3.1.0"
 
 [build-dependencies]
-isahc = "1.7.2"
+rand = "0.9.2"
+ureq = "3.1.2"
