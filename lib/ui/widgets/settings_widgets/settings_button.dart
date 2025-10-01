@@ -9,7 +9,7 @@ class SettingButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton(
       onPressed: () {
-        Navigator.pushNamed(context, RoutesName.settingsUi);
+        Navigator.pushNamed(context, RoutesName.settingsScreen);
       },
       tooltip: 'Settings',
       foregroundColor: AppColors.greenColor,

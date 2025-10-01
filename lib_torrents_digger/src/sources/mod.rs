@@ -2,15 +2,15 @@ use std::collections::HashMap;
 
 use crate::sources::{
     available_sources::AllAvailableSources,
-    nyaa_dot_si::{NyaaCategories, NyaaFilter, NyaaSortings},
-    sukebei_nyaa_dot_si::{SukebeiNyaaCategories, SukebeiNyaaFilter},
-    torrents_csv_dot_com::TorrentsCsvCategories,
+    nyaa::nyaa::{NyaaCategories, NyaaFilter, NyaaSortings},
+    nyaa::sukebei_nyaa::{SukebeiNyaaCategories, SukebeiNyaaFilter},
+    torrents_csv::torrents_csv_dot_com::TorrentsCsvCategories,
 };
 
 pub mod available_sources;
-pub mod nyaa_dot_si;
-pub mod sukebei_nyaa_dot_si;
-pub mod torrents_csv_dot_com;
+pub mod common;
+pub mod nyaa;
+pub mod torrents_csv;
 
 pub enum SourcesIndex {
     NyaaDotSi = 1,

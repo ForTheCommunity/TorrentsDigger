@@ -37,7 +37,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.11.1";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -773372188;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -961203263;
 
 // Section: executor
 
@@ -45,6 +45,75 @@ flutter_rust_bridge::frb_generated_default_handler!();
 
 // Section: wire_funcs
 
+fn wire__crate__api__database__bookmark__bookmark_a_torrent_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "bookmark_a_torrent",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_torrent =
+                <crate::api::internals::InternalTorrent>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| {
+                transform_result_sse::<_, String>((move || {
+                    let output_ok =
+                        crate::api::database::bookmark::bookmark_a_torrent(api_torrent)?;
+                    Ok(output_ok)
+                })())
+            }
+        },
+    )
+}
+fn wire__crate__api__database__bookmark__check_bookmark_existence_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "check_bookmark_existence",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_info_hash = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| {
+                transform_result_sse::<_, String>((move || {
+                    let output_ok =
+                        crate::api::database::bookmark::check_bookmark_existence(api_info_hash)?;
+                    Ok(output_ok)
+                })())
+            }
+        },
+    )
+}
 fn wire__crate__api__app__dig_torrent_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -114,6 +183,38 @@ fn wire__crate__api__app__fetch_source_details_impl(
             move |context| {
                 transform_result_sse::<_, ()>((move || {
                     let output_ok = Result::<_, ()>::Ok(crate::api::app::fetch_source_details())?;
+                    Ok(output_ok)
+                })())
+            }
+        },
+    )
+}
+fn wire__crate__api__database__bookmark__get_all_bookmarks_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "get_all_bookmarks",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            move |context| {
+                transform_result_sse::<_, String>((move || {
+                    let output_ok = crate::api::database::bookmark::get_all_bookmarks()?;
                     Ok(output_ok)
                 })())
             }
@@ -191,6 +292,39 @@ fn wire__crate__api__database__initialize__initialize_torrents_digger_database_i
         },
     )
 }
+fn wire__crate__api__database__bookmark__remove_bookmark_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "remove_bookmark",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_info_hash = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| {
+                transform_result_sse::<_, String>((move || {
+                    let output_ok = crate::api::database::bookmark::remove_bookmark(api_info_hash)?;
+                    Ok(output_ok)
+                })())
+            }
+        },
+    )
+}
 
 // Section: dart2rust
 
@@ -202,11 +336,11 @@ impl SseDecode for std::collections::HashMap<String, String> {
     }
 }
 
-impl SseDecode for std::collections::HashMap<String, crate::api::app::InternalSourceDetails> {
+impl SseDecode for std::collections::HashMap<String, crate::api::internals::InternalSourceDetails> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut inner =
-            <Vec<(String, crate::api::app::InternalSourceDetails)>>::sse_decode(deserializer);
+            <Vec<(String, crate::api::internals::InternalSourceDetails)>>::sse_decode(deserializer);
         return inner.into_iter().collect();
     }
 }
@@ -226,20 +360,13 @@ impl SseDecode for bool {
     }
 }
 
-impl SseDecode for i64 {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        deserializer.cursor.read_i64::<NativeEndian>().unwrap()
-    }
-}
-
-impl SseDecode for crate::api::app::InternalQueryOptions {
+impl SseDecode for crate::api::internals::InternalQueryOptions {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut var_categories = <bool>::sse_decode(deserializer);
         let mut var_sortings = <bool>::sse_decode(deserializer);
         let mut var_filters = <bool>::sse_decode(deserializer);
-        return crate::api::app::InternalQueryOptions {
+        return crate::api::internals::InternalQueryOptions {
             categories: var_categories,
             sortings: var_sortings,
             filters: var_filters,
@@ -247,15 +374,15 @@ impl SseDecode for crate::api::app::InternalQueryOptions {
     }
 }
 
-impl SseDecode for crate::api::app::InternalSourceDetails {
+impl SseDecode for crate::api::internals::InternalSourceDetails {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut var_queryOptions =
-            <crate::api::app::InternalQueryOptions>::sse_decode(deserializer);
+            <crate::api::internals::InternalQueryOptions>::sse_decode(deserializer);
         let mut var_categories = <Vec<String>>::sse_decode(deserializer);
         let mut var_sourceFilters = <Vec<String>>::sse_decode(deserializer);
         let mut var_sourceSortings = <Vec<String>>::sse_decode(deserializer);
-        return crate::api::app::InternalSourceDetails {
+        return crate::api::internals::InternalSourceDetails {
             query_options: var_queryOptions,
             categories: var_categories,
             source_filters: var_sourceFilters,
@@ -264,19 +391,21 @@ impl SseDecode for crate::api::app::InternalSourceDetails {
     }
 }
 
-impl SseDecode for crate::api::app::InternalTorrent {
+impl SseDecode for crate::api::internals::InternalTorrent {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_infoHash = <String>::sse_decode(deserializer);
         let mut var_name = <String>::sse_decode(deserializer);
-        let mut var_magnetLink = <String>::sse_decode(deserializer);
+        let mut var_magnet = <String>::sse_decode(deserializer);
         let mut var_size = <String>::sse_decode(deserializer);
         let mut var_date = <String>::sse_decode(deserializer);
-        let mut var_seeders = <i64>::sse_decode(deserializer);
-        let mut var_leechers = <i64>::sse_decode(deserializer);
-        let mut var_totalDownloads = <i64>::sse_decode(deserializer);
-        return crate::api::app::InternalTorrent {
+        let mut var_seeders = <String>::sse_decode(deserializer);
+        let mut var_leechers = <String>::sse_decode(deserializer);
+        let mut var_totalDownloads = <String>::sse_decode(deserializer);
+        return crate::api::internals::InternalTorrent {
+            info_hash: var_infoHash,
             name: var_name,
-            magnet_link: var_magnetLink,
+            magnet: var_magnet,
             size: var_size,
             date: var_date,
             seeders: var_seeders,
@@ -298,13 +427,15 @@ impl SseDecode for Vec<String> {
     }
 }
 
-impl SseDecode for Vec<crate::api::app::InternalTorrent> {
+impl SseDecode for Vec<crate::api::internals::InternalTorrent> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut len_ = <i32>::sse_decode(deserializer);
         let mut ans_ = vec![];
         for idx_ in 0..len_ {
-            ans_.push(<crate::api::app::InternalTorrent>::sse_decode(deserializer));
+            ans_.push(<crate::api::internals::InternalTorrent>::sse_decode(
+                deserializer,
+            ));
         }
         return ans_;
     }
@@ -322,13 +453,15 @@ impl SseDecode for Vec<u8> {
     }
 }
 
-impl SseDecode for Vec<(String, crate::api::app::InternalSourceDetails)> {
+impl SseDecode for Vec<(String, crate::api::internals::InternalSourceDetails)> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut len_ = <i32>::sse_decode(deserializer);
         let mut ans_ = vec![];
         for idx_ in 0..len_ {
-            ans_.push(<(String, crate::api::app::InternalSourceDetails)>::sse_decode(deserializer));
+            ans_.push(
+                <(String, crate::api::internals::InternalSourceDetails)>::sse_decode(deserializer),
+            );
         }
         return ans_;
     }
@@ -346,11 +479,12 @@ impl SseDecode for Vec<(String, String)> {
     }
 }
 
-impl SseDecode for (String, crate::api::app::InternalSourceDetails) {
+impl SseDecode for (String, crate::api::internals::InternalSourceDetails) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut var_field0 = <String>::sse_decode(deserializer);
-        let mut var_field1 = <crate::api::app::InternalSourceDetails>::sse_decode(deserializer);
+        let mut var_field1 =
+            <crate::api::internals::InternalSourceDetails>::sse_decode(deserializer);
         return (var_field0, var_field1);
     }
 }
@@ -376,6 +510,13 @@ impl SseDecode for () {
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {}
 }
 
+impl SseDecode for usize {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        deserializer.cursor.read_u64::<NativeEndian>().unwrap() as _
+    }
+}
+
 impl SseDecode for i32 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -392,15 +533,39 @@ fn pde_ffi_dispatcher_primary_impl(
 ) {
     // Codec=Pde (Serialization + dispatch), see doc to use other codecs
     match func_id {
-        1 => wire__crate__api__app__dig_torrent_impl(port, ptr, rust_vec_len, data_len),
-        2 => wire__crate__api__app__fetch_source_details_impl(port, ptr, rust_vec_len, data_len),
-        3 => wire__crate__api__database__get_settings_kv__get_settings_kv_impl(
+        1 => wire__crate__api__database__bookmark__bookmark_a_torrent_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        4 => wire__crate__api__database__initialize__initialize_torrents_digger_database_impl(
+        2 => wire__crate__api__database__bookmark__check_bookmark_existence_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        3 => wire__crate__api__app__dig_torrent_impl(port, ptr, rust_vec_len, data_len),
+        4 => wire__crate__api__app__fetch_source_details_impl(port, ptr, rust_vec_len, data_len),
+        5 => wire__crate__api__database__bookmark__get_all_bookmarks_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        6 => wire__crate__api__database__get_settings_kv__get_settings_kv_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        7 => wire__crate__api__database__initialize__initialize_torrents_digger_database_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        8 => wire__crate__api__database__bookmark__remove_bookmark_impl(
             port,
             ptr,
             rust_vec_len,
@@ -425,7 +590,7 @@ fn pde_ffi_dispatcher_sync_impl(
 // Section: rust2dart
 
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::app::InternalQueryOptions {
+impl flutter_rust_bridge::IntoDart for crate::api::internals::InternalQueryOptions {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
             self.categories.into_into_dart().into_dart(),
@@ -436,18 +601,18 @@ impl flutter_rust_bridge::IntoDart for crate::api::app::InternalQueryOptions {
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::app::InternalQueryOptions
+    for crate::api::internals::InternalQueryOptions
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::app::InternalQueryOptions>
-    for crate::api::app::InternalQueryOptions
+impl flutter_rust_bridge::IntoIntoDart<crate::api::internals::InternalQueryOptions>
+    for crate::api::internals::InternalQueryOptions
 {
-    fn into_into_dart(self) -> crate::api::app::InternalQueryOptions {
+    fn into_into_dart(self) -> crate::api::internals::InternalQueryOptions {
         self
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::app::InternalSourceDetails {
+impl flutter_rust_bridge::IntoDart for crate::api::internals::InternalSourceDetails {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
             self.query_options.into_into_dart().into_dart(),
@@ -459,22 +624,23 @@ impl flutter_rust_bridge::IntoDart for crate::api::app::InternalSourceDetails {
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::app::InternalSourceDetails
+    for crate::api::internals::InternalSourceDetails
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::app::InternalSourceDetails>
-    for crate::api::app::InternalSourceDetails
+impl flutter_rust_bridge::IntoIntoDart<crate::api::internals::InternalSourceDetails>
+    for crate::api::internals::InternalSourceDetails
 {
-    fn into_into_dart(self) -> crate::api::app::InternalSourceDetails {
+    fn into_into_dart(self) -> crate::api::internals::InternalSourceDetails {
         self
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::app::InternalTorrent {
+impl flutter_rust_bridge::IntoDart for crate::api::internals::InternalTorrent {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
+            self.info_hash.into_into_dart().into_dart(),
             self.name.into_into_dart().into_dart(),
-            self.magnet_link.into_into_dart().into_dart(),
+            self.magnet.into_into_dart().into_dart(),
             self.size.into_into_dart().into_dart(),
             self.date.into_into_dart().into_dart(),
             self.seeders.into_into_dart().into_dart(),
@@ -485,13 +651,13 @@ impl flutter_rust_bridge::IntoDart for crate::api::app::InternalTorrent {
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::app::InternalTorrent
+    for crate::api::internals::InternalTorrent
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::app::InternalTorrent>
-    for crate::api::app::InternalTorrent
+impl flutter_rust_bridge::IntoIntoDart<crate::api::internals::InternalTorrent>
+    for crate::api::internals::InternalTorrent
 {
-    fn into_into_dart(self) -> crate::api::app::InternalTorrent {
+    fn into_into_dart(self) -> crate::api::internals::InternalTorrent {
         self
     }
 }
@@ -503,10 +669,10 @@ impl SseEncode for std::collections::HashMap<String, String> {
     }
 }
 
-impl SseEncode for std::collections::HashMap<String, crate::api::app::InternalSourceDetails> {
+impl SseEncode for std::collections::HashMap<String, crate::api::internals::InternalSourceDetails> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <Vec<(String, crate::api::app::InternalSourceDetails)>>::sse_encode(
+        <Vec<(String, crate::api::internals::InternalSourceDetails)>>::sse_encode(
             self.into_iter().collect(),
             serializer,
         );
@@ -527,14 +693,7 @@ impl SseEncode for bool {
     }
 }
 
-impl SseEncode for i64 {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        serializer.cursor.write_i64::<NativeEndian>(self).unwrap();
-    }
-}
-
-impl SseEncode for crate::api::app::InternalQueryOptions {
+impl SseEncode for crate::api::internals::InternalQueryOptions {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <bool>::sse_encode(self.categories, serializer);
@@ -543,26 +702,27 @@ impl SseEncode for crate::api::app::InternalQueryOptions {
     }
 }
 
-impl SseEncode for crate::api::app::InternalSourceDetails {
+impl SseEncode for crate::api::internals::InternalSourceDetails {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <crate::api::app::InternalQueryOptions>::sse_encode(self.query_options, serializer);
+        <crate::api::internals::InternalQueryOptions>::sse_encode(self.query_options, serializer);
         <Vec<String>>::sse_encode(self.categories, serializer);
         <Vec<String>>::sse_encode(self.source_filters, serializer);
         <Vec<String>>::sse_encode(self.source_sortings, serializer);
     }
 }
 
-impl SseEncode for crate::api::app::InternalTorrent {
+impl SseEncode for crate::api::internals::InternalTorrent {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.info_hash, serializer);
         <String>::sse_encode(self.name, serializer);
-        <String>::sse_encode(self.magnet_link, serializer);
+        <String>::sse_encode(self.magnet, serializer);
         <String>::sse_encode(self.size, serializer);
         <String>::sse_encode(self.date, serializer);
-        <i64>::sse_encode(self.seeders, serializer);
-        <i64>::sse_encode(self.leechers, serializer);
-        <i64>::sse_encode(self.total_downloads, serializer);
+        <String>::sse_encode(self.seeders, serializer);
+        <String>::sse_encode(self.leechers, serializer);
+        <String>::sse_encode(self.total_downloads, serializer);
     }
 }
 
@@ -576,12 +736,12 @@ impl SseEncode for Vec<String> {
     }
 }
 
-impl SseEncode for Vec<crate::api::app::InternalTorrent> {
+impl SseEncode for Vec<crate::api::internals::InternalTorrent> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
-            <crate::api::app::InternalTorrent>::sse_encode(item, serializer);
+            <crate::api::internals::InternalTorrent>::sse_encode(item, serializer);
         }
     }
 }
@@ -596,12 +756,12 @@ impl SseEncode for Vec<u8> {
     }
 }
 
-impl SseEncode for Vec<(String, crate::api::app::InternalSourceDetails)> {
+impl SseEncode for Vec<(String, crate::api::internals::InternalSourceDetails)> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
-            <(String, crate::api::app::InternalSourceDetails)>::sse_encode(item, serializer);
+            <(String, crate::api::internals::InternalSourceDetails)>::sse_encode(item, serializer);
         }
     }
 }
@@ -616,11 +776,11 @@ impl SseEncode for Vec<(String, String)> {
     }
 }
 
-impl SseEncode for (String, crate::api::app::InternalSourceDetails) {
+impl SseEncode for (String, crate::api::internals::InternalSourceDetails) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <String>::sse_encode(self.0, serializer);
-        <crate::api::app::InternalSourceDetails>::sse_encode(self.1, serializer);
+        <crate::api::internals::InternalSourceDetails>::sse_encode(self.1, serializer);
     }
 }
 
@@ -642,6 +802,16 @@ impl SseEncode for u8 {
 impl SseEncode for () {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {}
+}
+
+impl SseEncode for usize {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        serializer
+            .cursor
+            .write_u64::<NativeEndian>(self as _)
+            .unwrap();
+    }
 }
 
 impl SseEncode for i32 {

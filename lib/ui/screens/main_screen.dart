@@ -9,8 +9,8 @@ import 'package:torrents_digger/ui/widgets/search_bar_widget.dart';
 import 'package:torrents_digger/ui/widgets/settings_widgets/settings_button.dart';
 import 'package:torrents_digger/ui/widgets/torrents_list_ui.dart';
 
-class MainUi extends StatelessWidget {
-  const MainUi({super.key});
+class MainScreen extends StatelessWidget {
+  const MainScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

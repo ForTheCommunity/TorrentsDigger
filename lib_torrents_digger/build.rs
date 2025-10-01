@@ -1,6 +1,5 @@
 use std::{env, fs, path::Path};
-
-use rand::{rng, seq::IndexedRandom};
+use isahc::ReadResponseExt;
 
 fn main() {
     // list of addresses of public active bittorrent tracker servers.
@@ -12,32 +11,9 @@ fn main() {
 
     // downloading tracker file
 
-    // List of User-Agent strings
-    let user_agents = [
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.1 Safari/605.1.15",
-        "Mozilla/5.0 (Linux; Android 10; Pixel 3 XL) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Mobile Safari/537.36",
-        "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1",
-    ];
+    let mut response = isahc::get(url).unwrap();
+    let respnse_body = response.text().unwrap();
 
-    // Select a random User-Agent
-    let mut rng = rng();
-    let user_agent = user_agents.choose(&mut rng).unwrap().to_owned();
-
-    match ureq::get(url).header("User-Agent", user_agent).call() {
-        Ok(mut response) => match response.body_mut().read_to_string() {
-            Ok(response_body) => match fs::write(file_path, response_body) {
-                Ok(_) => {}
-                Err(_) => {
-                    panic!();
-                }
-            },
-            Err(_) => {
-                panic!();
-            }
-        },
-        Err(_) => {
-            panic!();
-        }
-    }
+    // saving trackers to a file.
+    fs::write(file_path, respnse_body).unwrap();
 }

@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:torrents_digger/dig_torrent/search_torrent.dart';
-import 'package:torrents_digger/src/rust/api/app.dart';
+import 'package:torrents_digger/src/rust/api/internals.dart';
 
 part 'torrent_event.dart';
 part 'torrent_state.dart';

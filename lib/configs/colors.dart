@@ -42,4 +42,7 @@ class AppColors {
   static const magnetForegroundColor = Color.fromRGBO(0, 255, 132, 0.888);
   static const magnetIconColor = Color.fromRGBO(0, 247, 255, 1);
   static const magnetButtonSurfaceTintColor = Color.fromRGBO(247, 0, 255, 1);
+
+  static const bookmarkIconColor = Color.fromRGBO(135, 200, 189, 1);
+  static const bookmarkedIconColor = Color.fromRGBO(145, 255, 0, 1);
 }

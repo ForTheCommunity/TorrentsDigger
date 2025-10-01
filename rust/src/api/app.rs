@@ -1,32 +1,10 @@
 use lib_torrents_digger::{search_torrent, sources::get_source_details};
 use std::collections::HashMap;
 
-// FRB is unable to translate Torrent Struct from external crate.
-// so Mapping Torrent (ExternalTorrent) Struct With InternalTorrent Struct,
 use lib_torrents_digger::sources::SourceDetails as ExternalSourceDetails;
 use lib_torrents_digger::torrent::Torrent as ExternalTorrent;
-pub struct InternalTorrent {
-    pub name: String,
-    pub magnet_link: String,
-    pub size: String,
-    pub date: String,
-    pub seeders: i64,
-    pub leechers: i64,
-    pub total_downloads: i64,
-}
 
-pub struct InternalQueryOptions {
-    pub categories: bool,
-    pub sortings: bool,
-    pub filters: bool,
-}
-
-pub struct InternalSourceDetails {
-    pub query_options: InternalQueryOptions,
-    pub categories: Vec<String>,
-    pub source_filters: Vec<String>,
-    pub source_sortings: Vec<String>,
-}
+use crate::api::internals::{InternalQueryOptions, InternalSourceDetails, InternalTorrent};
 
 //  Map the external HashMap to an internal HashMap
 pub fn fetch_source_details() -> HashMap<String, InternalSourceDetails> {
@@ -62,8 +40,9 @@ pub fn dig_torrent(
             let internal_torrents: Vec<InternalTorrent> = torrents
                 .into_iter()
                 .map(|t: ExternalTorrent| InternalTorrent {
+                    info_hash: t.info_hash,
                     name: t.name,
-                    magnet_link: t.magnet_link,
+                    magnet: t.magnet,
                     size: t.size,
                     date: t.date,
                     seeders: t.seeders,
@@ -73,6 +52,7 @@ pub fn dig_torrent(
                 .collect();
             Ok(internal_torrents)
         }
+
         Err(error) => {
             let error_message = format!("{}", error);
             Err(error_message)

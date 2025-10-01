@@ -3,9 +3,9 @@ use std::error::Error;
 use crate::{
     sources::{
         available_sources::AllAvailableSources,
-        nyaa_dot_si::{NyaaCategories, NyaaFilter, NyaaSortings},
-        sukebei_nyaa_dot_si::{SukebeiNyaaCategories, SukebeiNyaaFilter},
-        torrents_csv_dot_com::TorrentsCsvCategories,
+        nyaa::nyaa::{NyaaCategories, NyaaFilter, NyaaSortings},
+        nyaa::sukebei_nyaa::{SukebeiNyaaCategories, SukebeiNyaaFilter},
+        torrents_csv::torrents_csv_dot_com::TorrentsCsvCategories,
     },
     sync_request::fetch_torrents,
 };

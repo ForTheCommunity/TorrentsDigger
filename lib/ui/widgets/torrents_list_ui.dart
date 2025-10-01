@@ -20,7 +20,9 @@ class TorrentsListUi extends StatelessWidget {
               ),
             );
           case TorrentSearchLoading():
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(color: AppColors.greenColor),
+            );
           case TorrentSearchSuccess():
             return state.torrents.isEmpty
                 ? const Center(child: Text("No Torrent Found..."))

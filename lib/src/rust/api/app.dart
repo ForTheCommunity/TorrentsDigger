@@ -4,6 +4,7 @@
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
 import '../frb_generated.dart';
+import 'internals.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 Future<Map<String, InternalSourceDetails>> fetchSourceDetails() =>
@@ -22,102 +23,3 @@ Future<List<InternalTorrent>> digTorrent({
   filter: filter,
   sorting: sorting,
 );
-
-class InternalQueryOptions {
-  final bool categories;
-  final bool sortings;
-  final bool filters;
-
-  const InternalQueryOptions({
-    required this.categories,
-    required this.sortings,
-    required this.filters,
-  });
-
-  @override
-  int get hashCode =>
-      categories.hashCode ^ sortings.hashCode ^ filters.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is InternalQueryOptions &&
-          runtimeType == other.runtimeType &&
-          categories == other.categories &&
-          sortings == other.sortings &&
-          filters == other.filters;
-}
-
-class InternalSourceDetails {
-  final InternalQueryOptions queryOptions;
-  final List<String> categories;
-  final List<String> sourceFilters;
-  final List<String> sourceSortings;
-
-  const InternalSourceDetails({
-    required this.queryOptions,
-    required this.categories,
-    required this.sourceFilters,
-    required this.sourceSortings,
-  });
-
-  @override
-  int get hashCode =>
-      queryOptions.hashCode ^
-      categories.hashCode ^
-      sourceFilters.hashCode ^
-      sourceSortings.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is InternalSourceDetails &&
-          runtimeType == other.runtimeType &&
-          queryOptions == other.queryOptions &&
-          categories == other.categories &&
-          sourceFilters == other.sourceFilters &&
-          sourceSortings == other.sourceSortings;
-}
-
-class InternalTorrent {
-  final String name;
-  final String magnetLink;
-  final String size;
-  final String date;
-  final PlatformInt64 seeders;
-  final PlatformInt64 leechers;
-  final PlatformInt64 totalDownloads;
-
-  const InternalTorrent({
-    required this.name,
-    required this.magnetLink,
-    required this.size,
-    required this.date,
-    required this.seeders,
-    required this.leechers,
-    required this.totalDownloads,
-  });
-
-  @override
-  int get hashCode =>
-      name.hashCode ^
-      magnetLink.hashCode ^
-      size.hashCode ^
-      date.hashCode ^
-      seeders.hashCode ^
-      leechers.hashCode ^
-      totalDownloads.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is InternalTorrent &&
-          runtimeType == other.runtimeType &&
-          name == other.name &&
-          magnetLink == other.magnetLink &&
-          size == other.size &&
-          date == other.date &&
-          seeders == other.seeders &&
-          leechers == other.leechers &&
-          totalDownloads == other.totalDownloads;
-}

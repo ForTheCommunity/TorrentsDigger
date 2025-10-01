@@ -1,20 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:torrents_digger/ui/screens/bookmarks_screen.dart';
 import 'package:torrents_digger/ui/widgets/settings_widgets/proxy_setting_widget.dart';
-import 'package:torrents_digger/ui/widgets/settings_widgets/settings_widget.dart';
-import '../ui/main_ui.dart';
+import 'package:torrents_digger/ui/screens/settings_screen.dart';
+import '../ui/screens/main_screen.dart';
 import 'routes_name.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case RoutesName.mainUi:
-        return MaterialPageRoute(builder: (context) => const MainUi());
-      case RoutesName.settingsUi:
-        return MaterialPageRoute(builder: (context) => const SettingsWidget());
+      case RoutesName.mainScreen:
+        return MaterialPageRoute(builder: (context) => const MainScreen());
+
+      case RoutesName.settingsScreen:
+        return MaterialPageRoute(builder: (context) => const SettingsScreen());
+
       case RoutesName.proxySettingUi:
         return MaterialPageRoute(
           builder: (context) => const ProxySettingWidget(),
         );
+
+      case RoutesName.bookmarksScreen:
+        return MaterialPageRoute(builder: (context) => const BookmarksScreen());
+
       default:
         return MaterialPageRoute(
           builder: (context) {

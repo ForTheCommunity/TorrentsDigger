@@ -6,8 +6,8 @@ use lib_torrents_digger::{
     sources::{
         available_sources::AllAvailableSources,
         get_source_details,
-        nyaa_dot_si::{NyaaCategories, NyaaFilter, NyaaSortings},
-        torrents_csv_dot_com::TorrentsCsvCategories,
+        nyaa::nyaa::{NyaaCategories, NyaaFilter, NyaaSortings},
+        torrents_csv::torrents_csv_dot_com::TorrentsCsvCategories,
     },
     sync_request::fetch_torrents,
     trackers::get_trackers,

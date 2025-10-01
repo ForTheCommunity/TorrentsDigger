@@ -6,8 +6,9 @@ use ureq::{Body, http::Response};
 
 use crate::{
     sources::{
-        available_sources::AllAvailableSources, nyaa_dot_si::NyaaCategories,
-        sukebei_nyaa_dot_si::SukebeiNyaaCategories, torrents_csv_dot_com::TorrentsCsvCategories,
+        available_sources::AllAvailableSources, nyaa::nyaa::NyaaCategories,
+        nyaa::sukebei_nyaa::SukebeiNyaaCategories,
+        torrents_csv::torrents_csv_dot_com::TorrentsCsvCategories,
     },
     torrent::Torrent,
 };

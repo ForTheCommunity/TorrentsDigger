@@ -75,7 +75,7 @@ struct JsonRoot {
 
 #[derive(Serialize, Deserialize, Debug)]
 struct JsonTorrentData {
-    rowid: i64,
+    id: i64,
     infohash: String,
     name: String,
     size_bytes: i64,
@@ -96,23 +96,23 @@ impl JsonTorrentData {
             DateTime::<Utc>::from_timestamp(self.created_unix, 0).unwrap_or_else(Utc::now);
         let date_str = datetime.format("%Y-%m-%d").to_string();
 
-        let mut magnet_link = format!("magnet:?xt=urn:btih:{}&dn={}", self.infohash, self.name);
+        let mut magnet = format!("magnet:?xt=urn:btih:{}&dn={}", self.infohash, self.name);
 
         // adding extra trackers
-        magnet_link.push_str(get_trackers().unwrap().as_str());
+        magnet.push_str(get_trackers().unwrap().as_str());
 
         // Calculate total downloads
         let total_downloads = self.completed + self.seeders;
 
         Torrent {
-            id: self.rowid,
+            info_hash: self.infohash.clone(),
             name: self.name.clone(),
-            magnet_link,
+            magnet,
             size: size_str,
             date: date_str,
-            seeders: self.seeders,
-            leechers: self.leechers,
-            total_downloads,
+            seeders: self.seeders.to_string(),
+            leechers: self.leechers.to_string(),
+            total_downloads: total_downloads.to_string(),
         }
     }
 }

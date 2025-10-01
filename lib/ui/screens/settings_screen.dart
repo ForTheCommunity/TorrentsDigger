@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:torrents_digger/routes/routes_name.dart';
 
-class SettingsWidget extends StatelessWidget {
-  const SettingsWidget({super.key});
+class SettingsScreen extends StatelessWidget {
+  const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class SettingsWidget extends StatelessWidget {
                   children: [
                     IconButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, RoutesName.mainUi);
+                        Navigator.pop(context);
                       },
                       icon: Icon(Icons.arrow_back),
                       iconSize: 30,

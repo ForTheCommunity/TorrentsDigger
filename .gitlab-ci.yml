@@ -22,7 +22,7 @@ build_android:
     # Get app name and version
     - export APP_NAME=$(grep 'name:' pubspec.yaml | head -1 | awk '{print $2}' | sed 's/-/_/g' | sed 's/\r//g')
     - export APP_VERSION=$(grep 'version:' pubspec.yaml | head -1 | awk '{print $2}' | sed 's/+//' | sed 's/ /_/g' | sed 's/\r//g')
-    - export NEW_APK_NAME="${APP_NAME}.apk"
+    - export NEW_APK_NAME="${APP_NAME}_${APP_VERSION}.apk"
 
     # Rename APK
     - mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/$NEW_APK_NAME
@@ -55,7 +55,7 @@ create-release:
     - . build.env # use dot instead of source for POSIX sh compatibility
   release:
     tag_name: "$CI_COMMIT_TAG"
-    name: "Latest"
+    name: "Release $CI_COMMIT_TAG"
     description: "Automated GitLab CI/CD release for version $CI_COMMIT_TAG"
     assets:
       links:

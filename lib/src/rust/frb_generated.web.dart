@@ -7,8 +7,10 @@
 // ignore_for_file: argument_type_not_assignable
 
 import 'api/app.dart';
+import 'api/database/bookmark.dart';
 import 'api/database/get_settings_kv.dart';
 import 'api/database/initialize.dart';
+import 'api/internals.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'frb_generated.dart';
@@ -36,7 +38,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   bool dco_decode_bool(dynamic raw);
 
   @protected
-  PlatformInt64 dco_decode_i_64(dynamic raw);
+  InternalTorrent dco_decode_box_autoadd_internal_torrent(dynamic raw);
 
   @protected
   InternalQueryOptions dco_decode_internal_query_options(dynamic raw);
@@ -77,6 +79,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void dco_decode_unit(dynamic raw);
 
   @protected
+  BigInt dco_decode_usize(dynamic raw);
+
+  @protected
   Map<String, String> sse_decode_Map_String_String_None(
     SseDeserializer deserializer,
   );
@@ -94,7 +99,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   bool sse_decode_bool(SseDeserializer deserializer);
 
   @protected
-  PlatformInt64 sse_decode_i_64(SseDeserializer deserializer);
+  InternalTorrent sse_decode_box_autoadd_internal_torrent(
+    SseDeserializer deserializer,
+  );
 
   @protected
   InternalQueryOptions sse_decode_internal_query_options(
@@ -149,6 +156,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_decode_unit(SseDeserializer deserializer);
 
   @protected
+  BigInt sse_decode_usize(SseDeserializer deserializer);
+
+  @protected
   int sse_decode_i_32(SseDeserializer deserializer);
 
   @protected
@@ -170,7 +180,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_bool(bool self, SseSerializer serializer);
 
   @protected
-  void sse_encode_i_64(PlatformInt64 self, SseSerializer serializer);
+  void sse_encode_box_autoadd_internal_torrent(
+    InternalTorrent self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_internal_query_options(
@@ -234,6 +247,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_unit(void self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_usize(BigInt self, SseSerializer serializer);
 
   @protected
   void sse_encode_i_32(int self, SseSerializer serializer);

@@ -22,7 +22,4 @@ Future<void> initializeDatabase() async {
   initializeTorrentsDiggerDatabase(
     torrentsDiggerDatabaseDirectory: platformSpecificDatabaseDirectory.path,
   );
-
-  // testing user insertion
-  // insertNewUser();
 }

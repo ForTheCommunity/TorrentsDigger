@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:torrents_digger/configs/colors.dart';
+import 'package:torrents_digger/ui/widgets/popup_menu_button_widget.dart';
 
 class SearchBarWidget extends StatelessWidget {
   const SearchBarWidget({
@@ -49,14 +50,8 @@ class SearchBarWidget extends StatelessWidget {
             onTap: onSearchPressed,
             child: Icon(Icons.search, color: AppColors.greenColor, size: 25),
           ),
-          SizedBox(width: 20),
-          // A clickable (X) icon to clear the text field.
-          GestureDetector(
-            onTap: () {
-              searchController.clear();
-            },
-            child: Icon(Icons.clear, color: AppColors.brightRed, size: 25),
-          ),
+          SizedBox(width: 10),
+          PopupMenuButtonWidget(),
         ],
       ),
     );

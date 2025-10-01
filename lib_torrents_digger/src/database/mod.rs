@@ -1,3 +1,4 @@
+pub mod bookmark_torrent;
 pub mod database_config;
 pub mod fetch;
 pub mod initialize_database;

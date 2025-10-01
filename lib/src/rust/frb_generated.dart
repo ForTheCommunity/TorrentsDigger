@@ -4,8 +4,10 @@
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables, unused_field
 
 import 'api/app.dart';
+import 'api/database/bookmark.dart';
 import 'api/database/get_settings_kv.dart';
 import 'api/database/initialize.dart';
+import 'api/internals.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'frb_generated.dart';
@@ -66,7 +68,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.11.1';
 
   @override
-  int get rustContentHash => -773372188;
+  int get rustContentHash => -961203263;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -77,6 +79,14 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 }
 
 abstract class RustLibApi extends BaseApi {
+  Future<BigInt> crateApiDatabaseBookmarkBookmarkATorrent({
+    required InternalTorrent torrent,
+  });
+
+  Future<bool> crateApiDatabaseBookmarkCheckBookmarkExistence({
+    required String infoHash,
+  });
+
   Future<List<InternalTorrent>> crateApiAppDigTorrent({
     required String torrentName,
     required String source,
@@ -87,10 +97,16 @@ abstract class RustLibApi extends BaseApi {
 
   Future<Map<String, InternalSourceDetails>> crateApiAppFetchSourceDetails();
 
+  Future<List<InternalTorrent>> crateApiDatabaseBookmarkGetAllBookmarks();
+
   Future<Map<String, String>> crateApiDatabaseGetSettingsKvGetSettingsKv();
 
   Future<void> crateApiDatabaseInitializeInitializeTorrentsDiggerDatabase({
     required String torrentsDiggerDatabaseDirectory,
+  });
+
+  Future<bool> crateApiDatabaseBookmarkRemoveBookmark({
+    required String infoHash,
   });
 }
 
@@ -101,6 +117,72 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     required super.generalizedFrbRustBinding,
     required super.portManager,
   });
+
+  @override
+  Future<BigInt> crateApiDatabaseBookmarkBookmarkATorrent({
+    required InternalTorrent torrent,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_box_autoadd_internal_torrent(torrent, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 1,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_usize,
+          decodeErrorData: sse_decode_String,
+        ),
+        constMeta: kCrateApiDatabaseBookmarkBookmarkATorrentConstMeta,
+        argValues: [torrent],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiDatabaseBookmarkBookmarkATorrentConstMeta =>
+      const TaskConstMeta(
+        debugName: "bookmark_a_torrent",
+        argNames: ["torrent"],
+      );
+
+  @override
+  Future<bool> crateApiDatabaseBookmarkCheckBookmarkExistence({
+    required String infoHash,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(infoHash, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 2,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_bool,
+          decodeErrorData: sse_decode_String,
+        ),
+        constMeta: kCrateApiDatabaseBookmarkCheckBookmarkExistenceConstMeta,
+        argValues: [infoHash],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiDatabaseBookmarkCheckBookmarkExistenceConstMeta =>
+      const TaskConstMeta(
+        debugName: "check_bookmark_existence",
+        argNames: ["infoHash"],
+      );
 
   @override
   Future<List<InternalTorrent>> crateApiAppDigTorrent({
@@ -122,7 +204,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 1,
+            funcId: 3,
             port: port_,
           );
         },
@@ -151,7 +233,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 2,
+            funcId: 4,
             port: port_,
           );
         },
@@ -170,6 +252,33 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "fetch_source_details", argNames: []);
 
   @override
+  Future<List<InternalTorrent>> crateApiDatabaseBookmarkGetAllBookmarks() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 5,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_list_internal_torrent,
+          decodeErrorData: sse_decode_String,
+        ),
+        constMeta: kCrateApiDatabaseBookmarkGetAllBookmarksConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiDatabaseBookmarkGetAllBookmarksConstMeta =>
+      const TaskConstMeta(debugName: "get_all_bookmarks", argNames: []);
+
+  @override
   Future<Map<String, String>> crateApiDatabaseGetSettingsKvGetSettingsKv() {
     return handler.executeNormal(
       NormalTask(
@@ -178,7 +287,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 3,
+            funcId: 6,
             port: port_,
           );
         },
@@ -208,7 +317,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 4,
+            funcId: 7,
             port: port_,
           );
         },
@@ -230,6 +339,36 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         debugName: "initialize_torrents_digger_database",
         argNames: ["torrentsDiggerDatabaseDirectory"],
       );
+
+  @override
+  Future<bool> crateApiDatabaseBookmarkRemoveBookmark({
+    required String infoHash,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(infoHash, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 8,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_bool,
+          decodeErrorData: sse_decode_String,
+        ),
+        constMeta: kCrateApiDatabaseBookmarkRemoveBookmarkConstMeta,
+        argValues: [infoHash],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiDatabaseBookmarkRemoveBookmarkConstMeta =>
+      const TaskConstMeta(debugName: "remove_bookmark", argNames: ["infoHash"]);
 
   @protected
   Map<String, String> dco_decode_Map_String_String_None(dynamic raw) {
@@ -265,9 +404,9 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  PlatformInt64 dco_decode_i_64(dynamic raw) {
+  InternalTorrent dco_decode_box_autoadd_internal_torrent(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
-    return dcoDecodeI64(raw);
+    return dco_decode_internal_torrent(raw);
   }
 
   @protected
@@ -301,16 +440,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   InternalTorrent dco_decode_internal_torrent(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 7)
-      throw Exception('unexpected arr length: expect 7 but see ${arr.length}');
+    if (arr.length != 8)
+      throw Exception('unexpected arr length: expect 8 but see ${arr.length}');
     return InternalTorrent(
-      name: dco_decode_String(arr[0]),
-      magnetLink: dco_decode_String(arr[1]),
-      size: dco_decode_String(arr[2]),
-      date: dco_decode_String(arr[3]),
-      seeders: dco_decode_i_64(arr[4]),
-      leechers: dco_decode_i_64(arr[5]),
-      totalDownloads: dco_decode_i_64(arr[6]),
+      infoHash: dco_decode_String(arr[0]),
+      name: dco_decode_String(arr[1]),
+      magnet: dco_decode_String(arr[2]),
+      size: dco_decode_String(arr[3]),
+      date: dco_decode_String(arr[4]),
+      seeders: dco_decode_String(arr[5]),
+      leechers: dco_decode_String(arr[6]),
+      totalDownloads: dco_decode_String(arr[7]),
     );
   }
 
@@ -384,6 +524,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  BigInt dco_decode_usize(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dcoDecodeU64(raw);
+  }
+
+  @protected
   Map<String, String> sse_decode_Map_String_String_None(
     SseDeserializer deserializer,
   ) {
@@ -418,9 +564,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  PlatformInt64 sse_decode_i_64(SseDeserializer deserializer) {
+  InternalTorrent sse_decode_box_autoadd_internal_torrent(
+    SseDeserializer deserializer,
+  ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    return deserializer.buffer.getPlatformInt64();
+    return (sse_decode_internal_torrent(deserializer));
   }
 
   @protected
@@ -458,16 +606,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @protected
   InternalTorrent sse_decode_internal_torrent(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_infoHash = sse_decode_String(deserializer);
     var var_name = sse_decode_String(deserializer);
-    var var_magnetLink = sse_decode_String(deserializer);
+    var var_magnet = sse_decode_String(deserializer);
     var var_size = sse_decode_String(deserializer);
     var var_date = sse_decode_String(deserializer);
-    var var_seeders = sse_decode_i_64(deserializer);
-    var var_leechers = sse_decode_i_64(deserializer);
-    var var_totalDownloads = sse_decode_i_64(deserializer);
+    var var_seeders = sse_decode_String(deserializer);
+    var var_leechers = sse_decode_String(deserializer);
+    var var_totalDownloads = sse_decode_String(deserializer);
     return InternalTorrent(
+      infoHash: var_infoHash,
       name: var_name,
-      magnetLink: var_magnetLink,
+      magnet: var_magnet,
       size: var_size,
       date: var_date,
       seeders: var_seeders,
@@ -571,6 +721,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  BigInt sse_decode_usize(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return deserializer.buffer.getBigUint64();
+  }
+
+  @protected
   int sse_decode_i_32(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return deserializer.buffer.getInt32();
@@ -613,9 +769,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void sse_encode_i_64(PlatformInt64 self, SseSerializer serializer) {
+  void sse_encode_box_autoadd_internal_torrent(
+    InternalTorrent self,
+    SseSerializer serializer,
+  ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    serializer.buffer.putPlatformInt64(self);
+    sse_encode_internal_torrent(self, serializer);
   }
 
   @protected
@@ -647,13 +806,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     SseSerializer serializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.infoHash, serializer);
     sse_encode_String(self.name, serializer);
-    sse_encode_String(self.magnetLink, serializer);
+    sse_encode_String(self.magnet, serializer);
     sse_encode_String(self.size, serializer);
     sse_encode_String(self.date, serializer);
-    sse_encode_i_64(self.seeders, serializer);
-    sse_encode_i_64(self.leechers, serializer);
-    sse_encode_i_64(self.totalDownloads, serializer);
+    sse_encode_String(self.seeders, serializer);
+    sse_encode_String(self.leechers, serializer);
+    sse_encode_String(self.totalDownloads, serializer);
   }
 
   @protected
@@ -740,6 +900,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @protected
   void sse_encode_unit(void self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
+  }
+
+  @protected
+  void sse_encode_usize(BigInt self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    serializer.buffer.putBigUint64(self);
   }
 
   @protected
