@@ -6,17 +6,9 @@ use crate::database::database_config::{
 };
 
 pub fn initialize_database(torrents_digger_database_directory: String) {
-    println!(
-        "[RUST] DATABASE DIR : {}",
-        torrents_digger_database_directory
-    );
-
     let mut database_path: PathBuf = PathBuf::from(torrents_digger_database_directory);
-    // println!("DATABASE PATH --->>> {:?}", database_path);
 
     database_path.push(DATABASE_DIR.to_owned() + "/" + DATABASE_NAME);
-
-    // println!("DATABASE PATH --->>> {:?}", database_path);
 
     // creating database dir/file
     create_dir_all(database_path.parent().unwrap()).expect("Failed to create database directory");
@@ -34,7 +26,7 @@ fn create_tables() -> Result<(), rusqlite::Error> {
 
     //   proxy BOOLEAN,
     // Bookmarked Table
-    let result = db_conn.execute(
+  db_conn.execute(
         "
         CREATE TABLE IF NOT EXISTS bookmarked_torrents (
             info_hash TEXT UNIQUE,
@@ -49,11 +41,10 @@ fn create_tables() -> Result<(), rusqlite::Error> {
         ",
         params![],
     )?;
-    println!("Bookmarked Torrent Table creation Status : {}", result);
 
     //   proxy BOOLEAN,
     // settings table / KeyValue Store.
-    let result = db_conn.execute(
+  db_conn.execute(
         "
         CREATE TABLE IF NOT EXISTS settings_kvs (
             key TEXT PRIMARY KEY,
@@ -62,10 +53,9 @@ fn create_tables() -> Result<(), rusqlite::Error> {
         ",
         params![],
     )?;
-    println!("settings table/kvs creation Status : {}", result);
 
     // Creating proxy table , this stores info about self
-    let result = db_conn.execute(
+ db_conn.execute(
         "
         CREATE TABLE IF NOT EXISTS proxy_table (
             id INTEGER PRIMARY KEY,
@@ -78,10 +68,9 @@ fn create_tables() -> Result<(), rusqlite::Error> {
     ",
         params![],
     )?;
-    println!("proxy table creation Status : {}", result);
 
     // creating table to store supported protocols of proxy server..
-    let result = db_conn.execute(
+    db_conn.execute(
         "
         CREATE TABLE IF NOT EXISTS supported_proxy_protocols (
             id INTEGER PRIMARY KEY,
@@ -90,7 +79,7 @@ fn create_tables() -> Result<(), rusqlite::Error> {
     ",
         params![],
     )?;
-    println!("proxy types table creation Status : {}", result);
+
     Ok(())
 }
 
@@ -100,13 +89,12 @@ fn insert_configs() -> Result<(), rusqlite::Error> {
     let supported_protocols: [&str; 2] = ["SOCKS4", "SOCKS5"];
 
     for protocol in supported_protocols.iter() {
-        let result = db_conn.execute(
+      db_conn.execute(
             "
         INSERT INTO supported_proxy_protocols (protocol) VALUES (?1)
     ",
             params![protocol],
         )?;
-        println!("Supported proxy protocols insertion status : {}", result);
     }
     Ok(())
 }

@@ -59,10 +59,7 @@ fn get_bookmarks() -> Result<Vec<InternalTorrent>, String> {
 
 pub fn check_bookmark_existence(info_hash: String) -> Result<bool, String> {
     match check_bookmark(info_hash) {
-        Ok(a) => {
-            println!("____RUST , check_bookmark_existence bool value : {}", a);
-            Ok(a)
-        }
+        Ok(a) => Ok(a),
         Err(e) => Err(e.to_string()),
     }
 }

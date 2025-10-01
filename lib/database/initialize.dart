@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
+
 import 'package:path_provider/path_provider.dart';
 import 'package:torrents_digger/src/rust/api/database/initialize.dart';
 
@@ -18,7 +18,6 @@ Future<void> initializeDatabase() async {
     throw UnsupportedError('Unsupported platform');
   }
 
-  debugPrint("DART -> ${platformSpecificDatabaseDirectory.path}");
   initializeTorrentsDiggerDatabase(
     torrentsDiggerDatabaseDirectory: platformSpecificDatabaseDirectory.path,
   );

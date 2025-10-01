@@ -68,16 +68,8 @@ pub fn check_bookmark(info_hash: String) -> Result<bool, rusqlite::Error> {
 
     let exists: i32 = sql_statement.query_row(params![info_hash], |row| row.get(0))?;
     if exists == 1 {
-        println!(
-            "____RUST , check_bookmark_existence number value : {}",
-            exists
-        );
         Ok(true)
     } else if exists == 0 {
-        println!(
-            "____RUST , check_bookmark_existence number value : {}",
-            exists
-        );
         Ok(false)
     } else {
         Err(rusqlite::Error::QueryReturnedNoRows)
