@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/bookmark_bloc/bookmark_bloc.dart';
+import 'package:torrents_digger/blocs/proxy_settings_bloc/bloc/proxy_settings_bloc.dart';
 import 'package:torrents_digger/blocs/sources_bloc/source_bloc.dart';
 import 'package:torrents_digger/blocs/torrent_bloc/torrent_bloc.dart';
 import 'package:torrents_digger/configs/colors.dart';
@@ -30,6 +31,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => TorrentBloc()),
         BlocProvider(
           create: (_) => BookmarkBloc()..add(LoadBookmarkedTorrentsEvent()),
+        ),
+        BlocProvider(
+          create: (_) => ProxySettingsBloc()..add(LoadProxyDetails()),
         ),
       ],
       child: MaterialApp(

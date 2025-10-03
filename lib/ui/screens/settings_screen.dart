@@ -39,7 +39,7 @@ class SettingsScreen extends StatelessWidget {
                 leading: const Icon(Icons.settings_ethernet),
                 title: const Text('Proxy'),
                 onTap: () {
-                  Navigator.pushNamed(context, RoutesName.proxySettingUi);
+                  Navigator.pushNamed(context, RoutesName.proxySettingScreen);
                 },
               ),
               ListTile(

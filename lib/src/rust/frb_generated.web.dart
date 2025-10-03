@@ -10,6 +10,7 @@ import 'api/app.dart';
 import 'api/database/bookmark.dart';
 import 'api/database/get_settings_kv.dart';
 import 'api/database/initialize.dart';
+import 'api/database/proxy.dart';
 import 'api/internals.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -41,6 +42,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   InternalTorrent dco_decode_box_autoadd_internal_torrent(dynamic raw);
 
   @protected
+  int dco_decode_i_32(dynamic raw);
+
+  @protected
   InternalQueryOptions dco_decode_internal_query_options(dynamic raw);
 
   @protected
@@ -59,11 +63,17 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
 
   @protected
+  List<(int, String)> dco_decode_list_record_i_32_string(dynamic raw);
+
+  @protected
   List<(String, InternalSourceDetails)>
   dco_decode_list_record_string_internal_source_details(dynamic raw);
 
   @protected
   List<(String, String)> dco_decode_list_record_string_string(dynamic raw);
+
+  @protected
+  (int, String) dco_decode_record_i_32_string(dynamic raw);
 
   @protected
   (String, InternalSourceDetails)
@@ -104,6 +114,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  int sse_decode_i_32(SseDeserializer deserializer);
+
+  @protected
   InternalQueryOptions sse_decode_internal_query_options(
     SseDeserializer deserializer,
   );
@@ -128,6 +141,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
 
   @protected
+  List<(int, String)> sse_decode_list_record_i_32_string(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   List<(String, InternalSourceDetails)>
   sse_decode_list_record_string_internal_source_details(
     SseDeserializer deserializer,
@@ -137,6 +155,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<(String, String)> sse_decode_list_record_string_string(
     SseDeserializer deserializer,
   );
+
+  @protected
+  (int, String) sse_decode_record_i_32_string(SseDeserializer deserializer);
 
   @protected
   (String, InternalSourceDetails)
@@ -157,9 +178,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   BigInt sse_decode_usize(SseDeserializer deserializer);
-
-  @protected
-  int sse_decode_i_32(SseDeserializer deserializer);
 
   @protected
   void sse_encode_Map_String_String_None(
@@ -184,6 +202,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
     InternalTorrent self,
     SseSerializer serializer,
   );
+
+  @protected
+  void sse_encode_i_32(int self, SseSerializer serializer);
 
   @protected
   void sse_encode_internal_query_options(
@@ -219,6 +240,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_list_record_i_32_string(
+    List<(int, String)> self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_list_record_string_internal_source_details(
     List<(String, InternalSourceDetails)> self,
     SseSerializer serializer,
@@ -227,6 +254,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_list_record_string_string(
     List<(String, String)> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_record_i_32_string(
+    (int, String) self,
     SseSerializer serializer,
   );
 
@@ -250,9 +283,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_usize(BigInt self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_i_32(int self, SseSerializer serializer);
 }
 
 // Section: wire_class

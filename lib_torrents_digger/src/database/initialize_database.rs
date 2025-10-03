@@ -26,7 +26,7 @@ fn create_tables() -> Result<(), rusqlite::Error> {
 
     //   proxy BOOLEAN,
     // Bookmarked Table
-  db_conn.execute(
+    db_conn.execute(
         "
         CREATE TABLE IF NOT EXISTS bookmarked_torrents (
             info_hash TEXT UNIQUE,
@@ -42,9 +42,8 @@ fn create_tables() -> Result<(), rusqlite::Error> {
         params![],
     )?;
 
-    //   proxy BOOLEAN,
     // settings table / KeyValue Store.
-  db_conn.execute(
+    db_conn.execute(
         "
         CREATE TABLE IF NOT EXISTS settings_kvs (
             key TEXT PRIMARY KEY,
@@ -55,7 +54,7 @@ fn create_tables() -> Result<(), rusqlite::Error> {
     )?;
 
     // Creating proxy table , this stores info about self
- db_conn.execute(
+    db_conn.execute(
         "
         CREATE TABLE IF NOT EXISTS proxy_table (
             id INTEGER PRIMARY KEY,
@@ -69,11 +68,18 @@ fn create_tables() -> Result<(), rusqlite::Error> {
         params![],
     )?;
 
+    // Supported Protocols Table
+    // Delete the entire table (structure and data)
+    db_conn.execute(
+        "DROP TABLE IF EXISTS supported_proxy_protocols",
+        rusqlite::params![],
+    )?;
+
     // creating table to store supported protocols of proxy server..
     db_conn.execute(
         "
         CREATE TABLE IF NOT EXISTS supported_proxy_protocols (
-            id INTEGER PRIMARY KEY,
+            id INTEGER PRIMARY KEY NOT NULL,
             protocol VARCHAR(50) NOT NULL UNIQUE
         )
     ",
@@ -86,14 +92,20 @@ fn create_tables() -> Result<(), rusqlite::Error> {
 fn insert_configs() -> Result<(), rusqlite::Error> {
     let db_conn = get_a_database_connection();
 
-    let supported_protocols: [&str; 2] = ["SOCKS4", "SOCKS5"];
+    let supported_protocols: [(i32, &str); 5] = [
+        (0, "NONE"),
+        (1, "HTTP"),
+        (2, "HTTPS"),
+        (3, "SOCKS4"),
+        (4, "SOCKS5"),
+    ];
 
-    for protocol in supported_protocols.iter() {
-      db_conn.execute(
+    for (id, protocol) in supported_protocols.iter() {
+        db_conn.execute(
             "
-        INSERT INTO supported_proxy_protocols (protocol) VALUES (?1)
+        INSERT OR IGNORE INTO supported_proxy_protocols (id,protocol) VALUES (?1,?2)
     ",
-            params![protocol],
+            params![id, protocol],
         )?;
     }
     Ok(())

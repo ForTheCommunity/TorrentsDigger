@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:torrents_digger/ui/screens/bookmarks_screen.dart';
 import 'package:torrents_digger/ui/screens/database_screen.dart';
-import 'package:torrents_digger/ui/widgets/settings_widgets/proxy_setting_widget.dart';
+import 'package:torrents_digger/ui/screens/proxy_setting_screen.dart';
 import 'package:torrents_digger/ui/screens/settings_screen.dart';
 import '../ui/screens/main_screen.dart';
 import 'routes_name.dart';
@@ -15,9 +15,9 @@ class Routes {
       case RoutesName.settingsScreen:
         return MaterialPageRoute(builder: (context) => const SettingsScreen());
 
-      case RoutesName.proxySettingUi:
+      case RoutesName.proxySettingScreen:
         return MaterialPageRoute(
-          builder: (context) => const ProxySettingWidget(),
+          builder: (context) => const ProxySettingScreen(),
         );
 
       case RoutesName.bookmarksScreen:
