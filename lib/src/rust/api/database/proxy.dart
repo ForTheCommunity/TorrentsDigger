@@ -6,5 +6,27 @@
 import '../../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-Future<List<(int, String)>> getProxyDetails() =>
-    RustLib.instance.api.crateApiDatabaseProxyGetProxyDetails();
+Future<List<(int, String)>> getSupportedProxyDetails() =>
+    RustLib.instance.api.crateApiDatabaseProxyGetSupportedProxyDetails();
+
+Future<BigInt> saveProxyApi({
+  required String proxyName,
+  required String proxyType,
+  required String proxyServerIp,
+  required String proxyServerPort,
+  String? proxyUsername,
+  String? proxyPassword,
+}) => RustLib.instance.api.crateApiDatabaseProxySaveProxyApi(
+  proxyName: proxyName,
+  proxyType: proxyType,
+  proxyServerIp: proxyServerIp,
+  proxyServerPort: proxyServerPort,
+  proxyUsername: proxyUsername,
+  proxyPassword: proxyPassword,
+);
+
+Future<(int, String, String)> getSavedProxy() =>
+    RustLib.instance.api.crateApiDatabaseProxyGetSavedProxy();
+
+Future<BigInt> deleteProxy({required int proxyId}) =>
+    RustLib.instance.api.crateApiDatabaseProxyDeleteProxy(proxyId: proxyId);

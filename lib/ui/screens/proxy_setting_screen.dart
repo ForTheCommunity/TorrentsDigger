@@ -16,7 +16,7 @@ class ProxySettingScreen extends StatelessWidget {
           },
         ),
       ),
-      body: ProxySettingWidget(),
+      body: Column(children: [ProxySettingWidget()]),
     );
   }
 }

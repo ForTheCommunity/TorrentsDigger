@@ -69,7 +69,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.11.1';
 
   @override
-  int get rustContentHash => -1919788370;
+  int get rustContentHash => -179255387;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -88,6 +88,8 @@ abstract class RustLibApi extends BaseApi {
     required String infoHash,
   });
 
+  Future<BigInt> crateApiDatabaseProxyDeleteProxy({required int proxyId});
+
   Future<List<InternalTorrent>> crateApiAppDigTorrent({
     required String torrentName,
     required String source,
@@ -100,9 +102,11 @@ abstract class RustLibApi extends BaseApi {
 
   Future<List<InternalTorrent>> crateApiDatabaseBookmarkGetAllBookmarks();
 
-  Future<List<(int, String)>> crateApiDatabaseProxyGetProxyDetails();
+  Future<(int, String, String)> crateApiDatabaseProxyGetSavedProxy();
 
   Future<Map<String, String>> crateApiDatabaseGetSettingsKvGetSettingsKv();
+
+  Future<List<(int, String)>> crateApiDatabaseProxyGetSupportedProxyDetails();
 
   Future<void> crateApiDatabaseInitializeInitializeTorrentsDiggerDatabase({
     required String torrentsDiggerDatabaseDirectory,
@@ -110,6 +114,15 @@ abstract class RustLibApi extends BaseApi {
 
   Future<bool> crateApiDatabaseBookmarkRemoveBookmark({
     required String infoHash,
+  });
+
+  Future<BigInt> crateApiDatabaseProxySaveProxyApi({
+    required String proxyName,
+    required String proxyType,
+    required String proxyServerIp,
+    required String proxyServerPort,
+    String? proxyUsername,
+    String? proxyPassword,
   });
 }
 
@@ -188,6 +201,34 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
+  Future<BigInt> crateApiDatabaseProxyDeleteProxy({required int proxyId}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_i_32(proxyId, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 3,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_usize,
+          decodeErrorData: sse_decode_String,
+        ),
+        constMeta: kCrateApiDatabaseProxyDeleteProxyConstMeta,
+        argValues: [proxyId],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiDatabaseProxyDeleteProxyConstMeta =>
+      const TaskConstMeta(debugName: "delete_proxy", argNames: ["proxyId"]);
+
+  @override
   Future<List<InternalTorrent>> crateApiAppDigTorrent({
     required String torrentName,
     required String source,
@@ -207,7 +248,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 3,
+            funcId: 4,
             port: port_,
           );
         },
@@ -236,7 +277,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 4,
+            funcId: 5,
             port: port_,
           );
         },
@@ -263,7 +304,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 5,
+            funcId: 6,
             port: port_,
           );
         },
@@ -282,7 +323,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "get_all_bookmarks", argNames: []);
 
   @override
-  Future<List<(int, String)>> crateApiDatabaseProxyGetProxyDetails() {
+  Future<(int, String, String)> crateApiDatabaseProxyGetSavedProxy() {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
@@ -290,23 +331,23 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 6,
+            funcId: 7,
             port: port_,
           );
         },
         codec: SseCodec(
-          decodeSuccessData: sse_decode_list_record_i_32_string,
+          decodeSuccessData: sse_decode_record_i_32_string_string,
           decodeErrorData: sse_decode_String,
         ),
-        constMeta: kCrateApiDatabaseProxyGetProxyDetailsConstMeta,
+        constMeta: kCrateApiDatabaseProxyGetSavedProxyConstMeta,
         argValues: [],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiDatabaseProxyGetProxyDetailsConstMeta =>
-      const TaskConstMeta(debugName: "get_proxy_details", argNames: []);
+  TaskConstMeta get kCrateApiDatabaseProxyGetSavedProxyConstMeta =>
+      const TaskConstMeta(debugName: "get_saved_proxy", argNames: []);
 
   @override
   Future<Map<String, String>> crateApiDatabaseGetSettingsKvGetSettingsKv() {
@@ -317,7 +358,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 7,
+            funcId: 8,
             port: port_,
           );
         },
@@ -336,6 +377,36 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "get_settings_kv", argNames: []);
 
   @override
+  Future<List<(int, String)>> crateApiDatabaseProxyGetSupportedProxyDetails() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 9,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_list_record_i_32_string,
+          decodeErrorData: sse_decode_String,
+        ),
+        constMeta: kCrateApiDatabaseProxyGetSupportedProxyDetailsConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiDatabaseProxyGetSupportedProxyDetailsConstMeta =>
+      const TaskConstMeta(
+        debugName: "get_supported_proxy_details",
+        argNames: [],
+      );
+
+  @override
   Future<void> crateApiDatabaseInitializeInitializeTorrentsDiggerDatabase({
     required String torrentsDiggerDatabaseDirectory,
   }) {
@@ -347,7 +418,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 8,
+            funcId: 10,
             port: port_,
           );
         },
@@ -382,7 +453,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 9,
+            funcId: 11,
             port: port_,
           );
         },
@@ -399,6 +470,63 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   TaskConstMeta get kCrateApiDatabaseBookmarkRemoveBookmarkConstMeta =>
       const TaskConstMeta(debugName: "remove_bookmark", argNames: ["infoHash"]);
+
+  @override
+  Future<BigInt> crateApiDatabaseProxySaveProxyApi({
+    required String proxyName,
+    required String proxyType,
+    required String proxyServerIp,
+    required String proxyServerPort,
+    String? proxyUsername,
+    String? proxyPassword,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(proxyName, serializer);
+          sse_encode_String(proxyType, serializer);
+          sse_encode_String(proxyServerIp, serializer);
+          sse_encode_String(proxyServerPort, serializer);
+          sse_encode_opt_String(proxyUsername, serializer);
+          sse_encode_opt_String(proxyPassword, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 12,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_usize,
+          decodeErrorData: sse_decode_String,
+        ),
+        constMeta: kCrateApiDatabaseProxySaveProxyApiConstMeta,
+        argValues: [
+          proxyName,
+          proxyType,
+          proxyServerIp,
+          proxyServerPort,
+          proxyUsername,
+          proxyPassword,
+        ],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiDatabaseProxySaveProxyApiConstMeta =>
+      const TaskConstMeta(
+        debugName: "save_proxy_api",
+        argNames: [
+          "proxyName",
+          "proxyType",
+          "proxyServerIp",
+          "proxyServerPort",
+          "proxyUsername",
+          "proxyPassword",
+        ],
+      );
 
   @protected
   Map<String, String> dco_decode_Map_String_String_None(dynamic raw) {
@@ -530,6 +658,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  String? dco_decode_opt_String(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_String(raw);
+  }
+
+  @protected
   (int, String) dco_decode_record_i_32_string(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -537,6 +671,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       throw Exception('Expected 2 elements, got ${arr.length}');
     }
     return (dco_decode_i_32(arr[0]), dco_decode_String(arr[1]));
+  }
+
+  @protected
+  (int, String, String) dco_decode_record_i_32_string_string(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3) {
+      throw Exception('Expected 3 elements, got ${arr.length}');
+    }
+    return (
+      dco_decode_i_32(arr[0]),
+      dco_decode_String(arr[1]),
+      dco_decode_String(arr[2]),
+    );
   }
 
   @protected
@@ -761,11 +909,33 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  String? sse_decode_opt_String(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_String(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
   (int, String) sse_decode_record_i_32_string(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_field0 = sse_decode_i_32(deserializer);
     var var_field1 = sse_decode_String(deserializer);
     return (var_field0, var_field1);
+  }
+
+  @protected
+  (int, String, String) sse_decode_record_i_32_string_string(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_field0 = sse_decode_i_32(deserializer);
+    var var_field1 = sse_decode_String(deserializer);
+    var var_field2 = sse_decode_String(deserializer);
+    return (var_field0, var_field1, var_field2);
   }
 
   @protected
@@ -964,6 +1134,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_opt_String(String? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_String(self, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_record_i_32_string(
     (int, String) self,
     SseSerializer serializer,
@@ -971,6 +1151,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_32(self.$1, serializer);
     sse_encode_String(self.$2, serializer);
+  }
+
+  @protected
+  void sse_encode_record_i_32_string_string(
+    (int, String, String) self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.$1, serializer);
+    sse_encode_String(self.$2, serializer);
+    sse_encode_String(self.$3, serializer);
   }
 
   @protected

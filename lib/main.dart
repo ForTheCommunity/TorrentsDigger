@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
           create: (_) => BookmarkBloc()..add(LoadBookmarkedTorrentsEvent()),
         ),
         BlocProvider(
-          create: (_) => ProxySettingsBloc()..add(LoadProxyDetails()),
+          create: (_) => ProxySettingsBloc()..add(LoadProxyDetailsEvent()),
         ),
       ],
       child: MaterialApp(

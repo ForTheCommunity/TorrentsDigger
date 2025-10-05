@@ -54,15 +54,19 @@ fn create_tables() -> Result<(), rusqlite::Error> {
     )?;
 
     // Creating proxy table , this stores info about self
+    // only one row is allowded for now..
+    // Todo :  multiple proxies support
     db_conn.execute(
         "
         CREATE TABLE IF NOT EXISTS proxy_table (
             id INTEGER PRIMARY KEY,
+            proxy_name VARCHAR(255) NOT NULL,
             proxy_type VARCHAR(255) NOT NULL,
             proxy_server_ip VARCHAR(255) NOT NULL,
             proxy_server_port VARCHAR(255) NOT NULL,
             proxy_username VARCHAR(255),
             proxy_password VARCHAR(255)
+            CHECK ( (SELECT COUNT(*) FROM proxy_table) <= 1 )
         )
     ",
         params![],
