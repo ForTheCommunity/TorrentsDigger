@@ -5,7 +5,9 @@ use crate::database::database_config::{
     DATABASE_DIR, DATABASE_NAME, DATABASE_PATH, get_a_database_connection,
 };
 
-pub fn initialize_database(torrents_digger_database_directory: String) {
+pub fn initialize_database(
+    torrents_digger_database_directory: String,
+) -> Result<(), rusqlite::Error> {
     let mut database_path: PathBuf = PathBuf::from(torrents_digger_database_directory);
 
     database_path.push(DATABASE_DIR.to_owned() + "/" + DATABASE_NAME);
@@ -16,9 +18,10 @@ pub fn initialize_database(torrents_digger_database_directory: String) {
     set_database_path(database_path);
 
     // creating tables
-    let _ = create_tables();
+    create_tables()?;
     // inserting configs.
-    let _ = insert_configs();
+    insert_configs()?;
+    Ok(())
 }
 
 fn create_tables() -> Result<(), rusqlite::Error> {
@@ -66,19 +69,12 @@ fn create_tables() -> Result<(), rusqlite::Error> {
             proxy_server_port VARCHAR(255) NOT NULL,
             proxy_username VARCHAR(255),
             proxy_password VARCHAR(255)
-            CHECK ( (SELECT COUNT(*) FROM proxy_table) <= 1 )
         )
     ",
         params![],
     )?;
 
     // Supported Protocols Table
-    // Delete the entire table (structure and data)
-    db_conn.execute(
-        "DROP TABLE IF EXISTS supported_proxy_protocols",
-        rusqlite::params![],
-    )?;
-
     // creating table to store supported protocols of proxy server..
     db_conn.execute(
         "

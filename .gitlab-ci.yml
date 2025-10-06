@@ -20,6 +20,7 @@ build_binaries:
 
     # Build Android APK
     - flutter pub get
+    - dart run build_runner build # [Freezed]
     - flutter build apk --release
 
     # Get app name and version
