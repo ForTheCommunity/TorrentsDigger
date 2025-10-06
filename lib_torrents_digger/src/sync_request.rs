@@ -2,12 +2,13 @@ use std::error::Error;
 
 use anyhow::Result;
 use rand::{rng, seq::IndexedRandom};
-use ureq::{Body, http::Response};
+use ureq::{Agent, Body, Proxy, http::Response};
 
 use crate::{
+    database::proxy::fetch_saved_proxy,
     sources::{
-        available_sources::AllAvailableSources, nyaa::nyaa::NyaaCategories,
-        nyaa::sukebei_nyaa::SukebeiNyaaCategories,
+        available_sources::AllAvailableSources,
+        nyaa::{nyaa::NyaaCategories, sukebei_nyaa::SukebeiNyaaCategories},
         torrents_csv::torrents_csv_dot_com::TorrentsCsvCategories,
     },
     torrent::Torrent,
@@ -41,10 +42,54 @@ fn send_request(url: String) -> Result<Response<Body>, Box<dyn Error>> {
     let mut rng = rng();
     let user_agent = user_agents.choose(&mut rng).unwrap().to_owned();
 
-    let response = ureq::get(url).header("User-Agent", user_agent).call()?;
+    // Proxy
+    match fetch_saved_proxy()? {
+        Some(proxy_data) => {
+            let proxy_type = proxy_data.proxy_type;
+            let proxy_server_ip = proxy_data.proxy_server_ip;
+            let proxy_server_port = proxy_data.proxy_server_port;
+            let proxy_username: Option<String> = proxy_data.proxy_username;
+            let proxy_password: Option<String> = proxy_data.proxy_password;
 
-    Ok(response)
+            let proxy_url = match (proxy_username, proxy_password) {
+                (Some(username), Some(password)) => format!(
+                    "{}://{}:{}@{}:{}",
+                    proxy_type, username, password, proxy_server_ip, proxy_server_port
+                ),
+                (Some(username), None) => format!(
+                    "{}://{}:@{}:{}",
+                    proxy_type, username, proxy_server_ip, proxy_server_port
+                ),
+                (None, Some(password)) => format!(
+                    "{}://: {}@{}:{}",
+                    proxy_type, password, proxy_server_ip, proxy_server_port
+                ),
+                (None, None) => {
+                    format!("{}://{}:{}", proxy_type, proxy_server_ip, proxy_server_port)
+                }
+            };
+            let proxy = Proxy::new(&proxy_url)?;
+            let agent: Agent = Agent::config_builder().proxy(Some(proxy)).build().into();
+            let response = agent.get(url).header("User-Agent", user_agent).call()?;
+            Ok(response)
+        }
+        None => {
+            let response = ureq::get(url).header("User-Agent", user_agent).call()?;
+
+            Ok(response)
+        }
+    }
 }
+
+pub enum ProxyTypes {
+    NoProxy,
+    Http,
+    Https,
+    Socks4,
+    Socks5,
+}
+
+impl ProxyTypes {}
 
 // _______________________________________________________________________________________
 #[cfg(test)]

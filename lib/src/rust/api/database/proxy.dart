@@ -4,6 +4,7 @@
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
 import '../../frb_generated.dart';
+import '../internals.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 Future<List<(int, String)>> getSupportedProxyDetails() =>
@@ -25,7 +26,7 @@ Future<BigInt> saveProxyApi({
   proxyPassword: proxyPassword,
 );
 
-Future<(int, String, String)> getSavedProxy() =>
+Future<InternalProxy?> getSavedProxy() =>
     RustLib.instance.api.crateApiDatabaseProxyGetSavedProxy();
 
 Future<BigInt> deleteProxy({required int proxyId}) =>

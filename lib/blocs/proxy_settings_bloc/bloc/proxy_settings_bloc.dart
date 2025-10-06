@@ -1,13 +1,17 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:torrents_digger/database/proxy.dart';
+import 'package:torrents_digger/src/rust/api/internals.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 
+part 'proxy_settings_bloc.freezed.dart';
 part 'proxy_settings_event.dart';
 part 'proxy_settings_state.dart';
 
 class ProxySettingsBloc extends Bloc<ProxySettingsEvents, ProxySettingsState> {
-  ProxySettingsBloc() : super(ProxySettingsState(proxyDetails: [])) {
+  ProxySettingsBloc() : super(ProxySettingsState(proxyDetails: const [])) {
     on<LoadProxyDetailsEvent>(_loadProxyDetails);
     on<SelectProxyProtocolEvent>(_selectProxyProtocol);
     on<SaveProxyEvent>(_saveProxy);
@@ -20,12 +24,7 @@ class ProxySettingsBloc extends Bloc<ProxySettingsEvents, ProxySettingsState> {
   ) async {
     try {
       var proxiesDetails = await getSupportedProxyData();
-      (int, String, String)? savedProxy;
-      try {
-        savedProxy = await getSavedProxyData();
-      } catch (e) {
-        savedProxy = null; // fallback if db has zero row
-      }
+      final savedProxy = await getSavedProxyData();
       emit(
         state.copyWith(proxyDetails: proxiesDetails, savedProxy: savedProxy),
       );
@@ -46,11 +45,11 @@ class ProxySettingsBloc extends Bloc<ProxySettingsEvents, ProxySettingsState> {
     Emitter<ProxySettingsState> emit,
   ) async {
     var proxyUsername = event.proxyUsername;
-    if (event.proxyUsername!.isEmpty) {
+    if (proxyUsername?.isEmpty ?? false) {
       proxyUsername = null;
     }
     var proxyPassword = event.proxyPassword;
-    if (event.proxyPassword!.isEmpty) {
+    if (proxyPassword?.isEmpty ?? false) {
       proxyPassword = null;
     }
     try {
@@ -59,8 +58,8 @@ class ProxySettingsBloc extends Bloc<ProxySettingsEvents, ProxySettingsState> {
         proxyType: event.proxyType,
         proxyServerIp: event.proxyServerIp,
         proxyServerPort: event.proxyServerPort,
-        proxyUsername: proxyUsername ?? '',
-        proxyPassword: proxyPassword ?? '',
+        proxyUsername: proxyUsername,
+        proxyPassword: proxyPassword,
       );
       createSnackBar(message: "Proxy Saved. $a", duration: 5);
 

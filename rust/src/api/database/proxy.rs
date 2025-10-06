@@ -2,6 +2,8 @@ use lib_torrents_digger::database::proxy::{
     delete_proxy_by_id, fetch_saved_proxy, fetch_supported_proxies, save_proxy,
 };
 
+use crate::api::internals::InternalProxy;
+
 pub fn get_supported_proxy_details() -> Result<Vec<(i32, String)>, String> {
     match fetch_supported_proxies() {
         Ok(pd) => Ok(pd),
@@ -30,9 +32,18 @@ pub fn save_proxy_api(
     }
 }
 
-pub fn get_saved_proxy() -> Result<(i32, String, String), String> {
+pub fn get_saved_proxy() -> Result<Option<InternalProxy>, String> {
     match fetch_saved_proxy() {
-        Ok(proxies) => Ok(proxies),
+        Ok(Some(proxy)) => Ok(Some(InternalProxy {
+            id: proxy.id,
+            proxy_name: proxy.proxy_name,
+            proxy_type: proxy.proxy_type,
+            proxy_server_ip: proxy.proxy_server_ip,
+            proxy_server_port: proxy.proxy_server_port,
+            proxy_username: proxy.proxy_username,
+            proxy_password: proxy.proxy_password,
+        })),
+        Ok(None) => Ok(None),
         Err(e) => Err(e.to_string()),
     }
 }

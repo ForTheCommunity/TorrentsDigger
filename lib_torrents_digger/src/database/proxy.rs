@@ -35,7 +35,6 @@ pub fn save_proxy(
             ],
         )?)
     } else {
-        // Create a custom SQLite error with a message
         Err(rusqlite::Error::QueryReturnedMoreThanOneRow)
     }
 }
@@ -58,22 +57,33 @@ pub fn fetch_supported_proxies() -> Result<Vec<(i32, String)>, rusqlite::Error> 
     Ok(all_proxies)
 }
 
-pub fn fetch_saved_proxy() -> Result<(i32, String, String), rusqlite::Error> {
+pub fn fetch_saved_proxy() -> Result<Option<ProxyStruct>, rusqlite::Error> {
     let db_conn = get_a_database_connection();
 
     let mut sql_statement = db_conn.prepare(
         "
-            SELECT id, proxy_name, proxy_type FROM proxy_table
-            LIMIT 1
+        SELECT id, proxy_name, proxy_type, proxy_server_ip, proxy_server_port, proxy_username, proxy_password FROM proxy_table
+        LIMIT 1
         ",
     )?;
 
-    // using query_row to fetch exactly one row..
-    let saved_proxy: (i32, String, String) = sql_statement.query_row([], |a_row| {
-        Ok((a_row.get(0)?, a_row.get(1)?, a_row.get(2)?))
-    })?;
+    let result = sql_statement.query_row([], |row| {
+        Ok(ProxyStruct {
+            id: row.get(0)?,
+            proxy_name: row.get(1)?,
+            proxy_type: row.get(2)?,
+            proxy_server_ip: row.get(3)?,
+            proxy_server_port: row.get(4)?,
+            proxy_username: row.get::<_, Option<String>>(5)?,
+            proxy_password: row.get::<_, Option<String>>(6)?,
+        })
+    });
 
-    Ok(saved_proxy)
+    match result {
+        Ok(proxy) => Ok(Some(proxy)),
+        Err(rusqlite::Error::QueryReturnedNoRows) => Ok(None),
+        Err(e) => Err(e),
+    }
 }
 
 pub fn delete_proxy_by_id(proxy_id: i32) -> Result<usize, rusqlite::Error> {
@@ -83,4 +93,15 @@ pub fn delete_proxy_by_id(proxy_id: i32) -> Result<usize, rusqlite::Error> {
 
     let deleted_row_count = db_conn.execute(sql_statement, params![proxy_id])?;
     Ok(deleted_row_count)
+}
+
+#[derive(Debug)]
+pub struct ProxyStruct {
+    pub id: i32,
+    pub proxy_name: String,
+    pub proxy_type: String,
+    pub proxy_server_ip: String,
+    pub proxy_server_port: String,
+    pub proxy_username: Option<String>,
+    pub proxy_password: Option<String>,
 }

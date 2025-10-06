@@ -1,11 +1,12 @@
 import 'package:torrents_digger/src/rust/api/database/proxy.dart';
+import 'package:torrents_digger/src/rust/api/internals.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 
-Future<(int, String, String)> getSavedProxyData() async {
+Future<InternalProxy?> getSavedProxyData() async {
   try {
-    var allProxies = await getSavedProxy();
+    var savedProxy = await getSavedProxy();
 
-    return allProxies;
+    return savedProxy;
   } catch (e) {
     createSnackBar(message: "Error : ${e.toString()}", duration: 10);
     rethrow;
@@ -17,8 +18,8 @@ Future<BigInt> saveProxy({
   required String proxyType,
   required String proxyServerIp,
   required String proxyServerPort,
-  required String proxyUsername,
-  required String proxyPassword,
+  required String? proxyUsername,
+  required String? proxyPassword,
 }) {
   try {
     var result = saveProxyApi(
@@ -26,6 +27,8 @@ Future<BigInt> saveProxy({
       proxyType: proxyType,
       proxyServerIp: proxyServerIp,
       proxyServerPort: proxyServerPort,
+      proxyUsername: proxyUsername,
+      proxyPassword: proxyPassword
     );
     return result;
   } catch (e) {

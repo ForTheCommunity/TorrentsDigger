@@ -509,6 +509,28 @@ impl SseDecode for i32 {
     }
 }
 
+impl SseDecode for crate::api::internals::InternalProxy {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_id = <i32>::sse_decode(deserializer);
+        let mut var_proxyName = <String>::sse_decode(deserializer);
+        let mut var_proxyType = <String>::sse_decode(deserializer);
+        let mut var_proxyServerIp = <String>::sse_decode(deserializer);
+        let mut var_proxyServerPort = <String>::sse_decode(deserializer);
+        let mut var_proxyUsername = <Option<String>>::sse_decode(deserializer);
+        let mut var_proxyPassword = <Option<String>>::sse_decode(deserializer);
+        return crate::api::internals::InternalProxy {
+            id: var_id,
+            proxy_name: var_proxyName,
+            proxy_type: var_proxyType,
+            proxy_server_ip: var_proxyServerIp,
+            proxy_server_port: var_proxyServerPort,
+            proxy_username: var_proxyUsername,
+            proxy_password: var_proxyPassword,
+        };
+    }
+}
+
 impl SseDecode for crate::api::internals::InternalQueryOptions {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -651,22 +673,25 @@ impl SseDecode for Option<String> {
     }
 }
 
+impl SseDecode for Option<crate::api::internals::InternalProxy> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(<crate::api::internals::InternalProxy>::sse_decode(
+                deserializer,
+            ));
+        } else {
+            return None;
+        }
+    }
+}
+
 impl SseDecode for (i32, String) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut var_field0 = <i32>::sse_decode(deserializer);
         let mut var_field1 = <String>::sse_decode(deserializer);
         return (var_field0, var_field1);
-    }
-}
-
-impl SseDecode for (i32, String, String) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut var_field0 = <i32>::sse_decode(deserializer);
-        let mut var_field1 = <String>::sse_decode(deserializer);
-        let mut var_field2 = <String>::sse_decode(deserializer);
-        return (var_field0, var_field1, var_field2);
     }
 }
 
@@ -795,6 +820,32 @@ fn pde_ffi_dispatcher_sync_impl(
 // Section: rust2dart
 
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::internals::InternalProxy {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.id.into_into_dart().into_dart(),
+            self.proxy_name.into_into_dart().into_dart(),
+            self.proxy_type.into_into_dart().into_dart(),
+            self.proxy_server_ip.into_into_dart().into_dart(),
+            self.proxy_server_port.into_into_dart().into_dart(),
+            self.proxy_username.into_into_dart().into_dart(),
+            self.proxy_password.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::internals::InternalProxy
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::internals::InternalProxy>
+    for crate::api::internals::InternalProxy
+{
+    fn into_into_dart(self) -> crate::api::internals::InternalProxy {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::api::internals::InternalQueryOptions {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
@@ -905,6 +956,19 @@ impl SseEncode for i32 {
     }
 }
 
+impl SseEncode for crate::api::internals::InternalProxy {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.id, serializer);
+        <String>::sse_encode(self.proxy_name, serializer);
+        <String>::sse_encode(self.proxy_type, serializer);
+        <String>::sse_encode(self.proxy_server_ip, serializer);
+        <String>::sse_encode(self.proxy_server_port, serializer);
+        <Option<String>>::sse_encode(self.proxy_username, serializer);
+        <Option<String>>::sse_encode(self.proxy_password, serializer);
+    }
+}
+
 impl SseEncode for crate::api::internals::InternalQueryOptions {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -1008,20 +1072,21 @@ impl SseEncode for Option<String> {
     }
 }
 
+impl SseEncode for Option<crate::api::internals::InternalProxy> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <crate::api::internals::InternalProxy>::sse_encode(value, serializer);
+        }
+    }
+}
+
 impl SseEncode for (i32, String) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <i32>::sse_encode(self.0, serializer);
         <String>::sse_encode(self.1, serializer);
-    }
-}
-
-impl SseEncode for (i32, String, String) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <i32>::sse_encode(self.0, serializer);
-        <String>::sse_encode(self.1, serializer);
-        <String>::sse_encode(self.2, serializer);
     }
 }
 

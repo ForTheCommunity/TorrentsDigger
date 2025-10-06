@@ -1,6 +1,6 @@
 // This whole proxy widget is for temporary use,
 // this implementation is not perfect, it is just for prototyping.
-// Future<TODO> : REPLACE THIS WIDGET WITH MORE ROBUST  WIDGET.
+// Future<TODO> : REPLACE THIS WIDGET WITH MORE ROBUST WIDGET Implementation.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,7 +22,7 @@ class ProxySettingWidget extends StatelessWidget {
 
     return BlocBuilder<ProxySettingsBloc, ProxySettingsState>(
       builder: (context, state) {
-        if (state.proxyDetails.isEmpty) {
+        if (state.proxyDetails == null || state.proxyDetails!.isEmpty) {
           return const Center(
             child: CircularProgressIndicator(color: AppColors.greenColor),
           );
@@ -30,9 +30,8 @@ class ProxySettingWidget extends StatelessWidget {
 
         // if proxy is not saved....
         if (state.savedProxy == null ||
-            (state.savedProxy!.$1 <= 0 &&
-                state.savedProxy!.$2.isEmpty &&
-                state.savedProxy!.$3.isEmpty)) {
+            state.savedProxy!.id == 0 ||
+            state.savedProxy!.id.isNaN) {
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
             child: Form(
@@ -61,7 +60,7 @@ class ProxySettingWidget extends StatelessWidget {
                         // creating a mutable copy
                         // and sorting in ascending order according to int of tuple.
                         final ascSortedProxyDetails = List<(int, String)>.from(
-                          state.proxyDetails,
+                          state.proxyDetails!,
                         )..sort((a, b) => a.$1.compareTo(b.$1));
 
                         // mapping sorted list to a list of PopupMenuItem Widgets.
@@ -225,9 +224,20 @@ class ProxySettingWidget extends StatelessWidget {
 
         // if proxy is already saved....
         final saved = state.savedProxy!;
-        final proxyId = saved.$1;
-        final proxyName = saved.$2;
-        final proxyType = saved.$3;
+        final proxyId = saved.id;
+        final proxyName = saved.proxyName;
+        final proxyType = saved.proxyType;
+        final String proxyServer = saved.proxyServerIp;
+        final String proxyServerPort = saved.proxyServerPort;
+        final String proxyServerUsername =
+            (saved.proxyUsername?.isNotEmpty ?? false)
+            ? saved.proxyUsername!
+            : "Not Specified";
+
+        final String proxyServerPassword =
+            saved.proxyPassword != null && saved.proxyPassword!.isNotEmpty
+            ? "*****"
+            : "Not Specified";
 
         return Padding(
           padding: const EdgeInsets.all(16),
@@ -239,15 +249,37 @@ class ProxySettingWidget extends StatelessWidget {
             child: ListTile(
               leading: const Icon(Icons.vpn_lock, color: AppColors.greenColor),
               title: Text(
-                proxyName,
-                style: TextStyle(
-                  color: AppColors.creationDateTextColor,
-                  fontSize: 16,
-                ),
+                proxyName.toUpperCase(),
+                style: TextStyle(color: AppColors.greenColor, fontSize: 16),
               ),
-              subtitle: Text(
-                proxyType,
-                style: const TextStyle(color: AppColors.greenColor),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Type : ${proxyType.toUpperCase()}",
+                    style: const TextStyle(color: AppColors.greenColor),
+                  ),
+
+                  Text(
+                    "Server : $proxyServer",
+                    style: const TextStyle(color: AppColors.greenColor),
+                  ),
+
+                  Text(
+                    "Port : $proxyServerPort",
+                    style: const TextStyle(color: AppColors.greenColor),
+                  ),
+
+                  Text(
+                    "Username : $proxyServerUsername",
+                    style: const TextStyle(color: AppColors.greenColor),
+                  ),
+
+                  Text(
+                    "Password : $proxyServerPassword",
+                    style: const TextStyle(color: AppColors.greenColor),
+                  ),
+                ],
               ),
               trailing: IconButton(
                 onPressed: () {

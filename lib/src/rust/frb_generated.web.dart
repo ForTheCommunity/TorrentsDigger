@@ -39,10 +39,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   bool dco_decode_bool(dynamic raw);
 
   @protected
+  InternalProxy dco_decode_box_autoadd_internal_proxy(dynamic raw);
+
+  @protected
   InternalTorrent dco_decode_box_autoadd_internal_torrent(dynamic raw);
 
   @protected
   int dco_decode_i_32(dynamic raw);
+
+  @protected
+  InternalProxy dco_decode_internal_proxy(dynamic raw);
 
   @protected
   InternalQueryOptions dco_decode_internal_query_options(dynamic raw);
@@ -76,10 +82,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   String? dco_decode_opt_String(dynamic raw);
 
   @protected
-  (int, String) dco_decode_record_i_32_string(dynamic raw);
+  InternalProxy? dco_decode_opt_box_autoadd_internal_proxy(dynamic raw);
 
   @protected
-  (int, String, String) dco_decode_record_i_32_string_string(dynamic raw);
+  (int, String) dco_decode_record_i_32_string(dynamic raw);
 
   @protected
   (String, InternalSourceDetails)
@@ -115,12 +121,20 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   bool sse_decode_bool(SseDeserializer deserializer);
 
   @protected
+  InternalProxy sse_decode_box_autoadd_internal_proxy(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   InternalTorrent sse_decode_box_autoadd_internal_torrent(
     SseDeserializer deserializer,
   );
 
   @protected
   int sse_decode_i_32(SseDeserializer deserializer);
+
+  @protected
+  InternalProxy sse_decode_internal_proxy(SseDeserializer deserializer);
 
   @protected
   InternalQueryOptions sse_decode_internal_query_options(
@@ -166,12 +180,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   String? sse_decode_opt_String(SseDeserializer deserializer);
 
   @protected
-  (int, String) sse_decode_record_i_32_string(SseDeserializer deserializer);
-
-  @protected
-  (int, String, String) sse_decode_record_i_32_string_string(
+  InternalProxy? sse_decode_opt_box_autoadd_internal_proxy(
     SseDeserializer deserializer,
   );
+
+  @protected
+  (int, String) sse_decode_record_i_32_string(SseDeserializer deserializer);
 
   @protected
   (String, InternalSourceDetails)
@@ -212,6 +226,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_bool(bool self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_internal_proxy(
+    InternalProxy self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_box_autoadd_internal_torrent(
     InternalTorrent self,
     SseSerializer serializer,
@@ -219,6 +239,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_i_32(int self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_internal_proxy(InternalProxy self, SseSerializer serializer);
 
   @protected
   void sse_encode_internal_query_options(
@@ -275,14 +298,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_opt_String(String? self, SseSerializer serializer);
 
   @protected
-  void sse_encode_record_i_32_string(
-    (int, String) self,
+  void sse_encode_opt_box_autoadd_internal_proxy(
+    InternalProxy? self,
     SseSerializer serializer,
   );
 
   @protected
-  void sse_encode_record_i_32_string_string(
-    (int, String, String) self,
+  void sse_encode_record_i_32_string(
+    (int, String) self,
     SseSerializer serializer,
   );
 

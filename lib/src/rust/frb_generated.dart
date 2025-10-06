@@ -102,7 +102,7 @@ abstract class RustLibApi extends BaseApi {
 
   Future<List<InternalTorrent>> crateApiDatabaseBookmarkGetAllBookmarks();
 
-  Future<(int, String, String)> crateApiDatabaseProxyGetSavedProxy();
+  Future<InternalProxy?> crateApiDatabaseProxyGetSavedProxy();
 
   Future<Map<String, String>> crateApiDatabaseGetSettingsKvGetSettingsKv();
 
@@ -323,7 +323,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "get_all_bookmarks", argNames: []);
 
   @override
-  Future<(int, String, String)> crateApiDatabaseProxyGetSavedProxy() {
+  Future<InternalProxy?> crateApiDatabaseProxyGetSavedProxy() {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
@@ -336,7 +336,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           );
         },
         codec: SseCodec(
-          decodeSuccessData: sse_decode_record_i_32_string_string,
+          decodeSuccessData: sse_decode_opt_box_autoadd_internal_proxy,
           decodeErrorData: sse_decode_String,
         ),
         constMeta: kCrateApiDatabaseProxyGetSavedProxyConstMeta,
@@ -562,6 +562,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  InternalProxy dco_decode_box_autoadd_internal_proxy(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_internal_proxy(raw);
+  }
+
+  @protected
   InternalTorrent dco_decode_box_autoadd_internal_torrent(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_internal_torrent(raw);
@@ -571,6 +577,23 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   int dco_decode_i_32(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as int;
+  }
+
+  @protected
+  InternalProxy dco_decode_internal_proxy(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 7)
+      throw Exception('unexpected arr length: expect 7 but see ${arr.length}');
+    return InternalProxy(
+      id: dco_decode_i_32(arr[0]),
+      proxyName: dco_decode_String(arr[1]),
+      proxyType: dco_decode_String(arr[2]),
+      proxyServerIp: dco_decode_String(arr[3]),
+      proxyServerPort: dco_decode_String(arr[4]),
+      proxyUsername: dco_decode_opt_String(arr[5]),
+      proxyPassword: dco_decode_opt_String(arr[6]),
+    );
   }
 
   @protected
@@ -664,6 +687,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  InternalProxy? dco_decode_opt_box_autoadd_internal_proxy(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_internal_proxy(raw);
+  }
+
+  @protected
   (int, String) dco_decode_record_i_32_string(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -671,20 +700,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       throw Exception('Expected 2 elements, got ${arr.length}');
     }
     return (dco_decode_i_32(arr[0]), dco_decode_String(arr[1]));
-  }
-
-  @protected
-  (int, String, String) dco_decode_record_i_32_string_string(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    final arr = raw as List<dynamic>;
-    if (arr.length != 3) {
-      throw Exception('Expected 3 elements, got ${arr.length}');
-    }
-    return (
-      dco_decode_i_32(arr[0]),
-      dco_decode_String(arr[1]),
-      dco_decode_String(arr[2]),
-    );
   }
 
   @protected
@@ -764,6 +779,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  InternalProxy sse_decode_box_autoadd_internal_proxy(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_internal_proxy(deserializer));
+  }
+
+  @protected
   InternalTorrent sse_decode_box_autoadd_internal_torrent(
     SseDeserializer deserializer,
   ) {
@@ -775,6 +798,27 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   int sse_decode_i_32(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return deserializer.buffer.getInt32();
+  }
+
+  @protected
+  InternalProxy sse_decode_internal_proxy(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_id = sse_decode_i_32(deserializer);
+    var var_proxyName = sse_decode_String(deserializer);
+    var var_proxyType = sse_decode_String(deserializer);
+    var var_proxyServerIp = sse_decode_String(deserializer);
+    var var_proxyServerPort = sse_decode_String(deserializer);
+    var var_proxyUsername = sse_decode_opt_String(deserializer);
+    var var_proxyPassword = sse_decode_opt_String(deserializer);
+    return InternalProxy(
+      id: var_id,
+      proxyName: var_proxyName,
+      proxyType: var_proxyType,
+      proxyServerIp: var_proxyServerIp,
+      proxyServerPort: var_proxyServerPort,
+      proxyUsername: var_proxyUsername,
+      proxyPassword: var_proxyPassword,
+    );
   }
 
   @protected
@@ -920,22 +964,24 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  InternalProxy? sse_decode_opt_box_autoadd_internal_proxy(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_internal_proxy(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
   (int, String) sse_decode_record_i_32_string(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_field0 = sse_decode_i_32(deserializer);
     var var_field1 = sse_decode_String(deserializer);
     return (var_field0, var_field1);
-  }
-
-  @protected
-  (int, String, String) sse_decode_record_i_32_string_string(
-    SseDeserializer deserializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    var var_field0 = sse_decode_i_32(deserializer);
-    var var_field1 = sse_decode_String(deserializer);
-    var var_field2 = sse_decode_String(deserializer);
-    return (var_field0, var_field1, var_field2);
   }
 
   @protected
@@ -1013,6 +1059,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_box_autoadd_internal_proxy(
+    InternalProxy self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_internal_proxy(self, serializer);
+  }
+
+  @protected
   void sse_encode_box_autoadd_internal_torrent(
     InternalTorrent self,
     SseSerializer serializer,
@@ -1025,6 +1080,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   void sse_encode_i_32(int self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     serializer.buffer.putInt32(self);
+  }
+
+  @protected
+  void sse_encode_internal_proxy(InternalProxy self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.id, serializer);
+    sse_encode_String(self.proxyName, serializer);
+    sse_encode_String(self.proxyType, serializer);
+    sse_encode_String(self.proxyServerIp, serializer);
+    sse_encode_String(self.proxyServerPort, serializer);
+    sse_encode_opt_String(self.proxyUsername, serializer);
+    sse_encode_opt_String(self.proxyPassword, serializer);
   }
 
   @protected
@@ -1144,6 +1211,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_opt_box_autoadd_internal_proxy(
+    InternalProxy? self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_internal_proxy(self, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_record_i_32_string(
     (int, String) self,
     SseSerializer serializer,
@@ -1151,17 +1231,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_32(self.$1, serializer);
     sse_encode_String(self.$2, serializer);
-  }
-
-  @protected
-  void sse_encode_record_i_32_string_string(
-    (int, String, String) self,
-    SseSerializer serializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_i_32(self.$1, serializer);
-    sse_encode_String(self.$2, serializer);
-    sse_encode_String(self.$3, serializer);
   }
 
   @protected

@@ -6,6 +6,49 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+class InternalProxy {
+  final int id;
+  final String proxyName;
+  final String proxyType;
+  final String proxyServerIp;
+  final String proxyServerPort;
+  final String? proxyUsername;
+  final String? proxyPassword;
+
+  const InternalProxy({
+    required this.id,
+    required this.proxyName,
+    required this.proxyType,
+    required this.proxyServerIp,
+    required this.proxyServerPort,
+    this.proxyUsername,
+    this.proxyPassword,
+  });
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      proxyName.hashCode ^
+      proxyType.hashCode ^
+      proxyServerIp.hashCode ^
+      proxyServerPort.hashCode ^
+      proxyUsername.hashCode ^
+      proxyPassword.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is InternalProxy &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          proxyName == other.proxyName &&
+          proxyType == other.proxyType &&
+          proxyServerIp == other.proxyServerIp &&
+          proxyServerPort == other.proxyServerPort &&
+          proxyUsername == other.proxyUsername &&
+          proxyPassword == other.proxyPassword;
+}
+
 class InternalQueryOptions {
   final bool categories;
   final bool sortings;

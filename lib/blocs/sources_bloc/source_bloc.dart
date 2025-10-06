@@ -1,8 +1,10 @@
 import 'package:bloc/bloc.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:meta/meta.dart';
 import 'package:torrents_digger/blocs/sources_bloc/get_source_details_data.dart';
 import 'package:torrents_digger/src/rust/api/internals.dart';
 
+part 'source_bloc.freezed.dart';
 part 'source_events.dart';
 part 'source_state.dart';
 
