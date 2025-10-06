@@ -59,14 +59,14 @@ build_binaries:
 
     # Creating AppRun
     - touch "${APP_NAME}.AppDir/AppRun"
-    - echo -e "#!/bin/bash\ncd \"\$(dirname \"\$0\")\"\nexec ./$APP_NAME" > "${APP_NAME}.AppDir/AppRun"
+    - echo -e "#!/bin/bash\ncd \"\$(dirname \"\$0\")\"\nexec ./bundle/$APP_NAME" > "${APP_NAME}.AppDir/AppRun"
     - chmod +x "${APP_NAME}.AppDir/AppRun"
 
     # copying icon
     - cp ./assets/icon.png "${APP_NAME}.AppDir"
 
     # Creating Desktop Entry for App
-    - touch "${APP_NAME}.AppDir/test_flutter_app.desktop"
+    - touch "${APP_NAME}.AppDir/${APP_NAME}.desktop"
     - echo -e "[Desktop Entry]\nVersion=${APPIMAGE_VERSION}\nType=Application\nTerminal=false\nName=${APP_NAME}\nExec=${APP_NAME} %u\nIcon=icon\nCategories=Utility" > "${APP_NAME}.AppDir/test_flutter_app.desktop"
 
     # Downloading AppImageToolKit

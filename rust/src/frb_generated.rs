@@ -377,12 +377,11 @@ fn wire__crate__api__database__initialize__initialize_torrents_digger_database_i
             let api_torrents_digger_database_directory = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
-                transform_result_sse::<_, ()>((move || {
-                    let output_ok = Result::<_, ()>::Ok({
+                transform_result_sse::<_, String>((move || {
+                    let output_ok =
                         crate::api::database::initialize::initialize_torrents_digger_database(
                             api_torrents_digger_database_directory,
-                        );
-                    })?;
+                        )?;
                     Ok(output_ok)
                 })())
             }

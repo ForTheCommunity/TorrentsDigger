@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:torrents_digger/src/rust/api/database/initialize.dart';
+import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 
 Future<void> initializeDatabase() async {
   Directory platformSpecificDatabaseDirectory;
@@ -17,8 +18,11 @@ Future<void> initializeDatabase() async {
   } else {
     throw UnsupportedError('Unsupported platform');
   }
-
-  initializeTorrentsDiggerDatabase(
-    torrentsDiggerDatabaseDirectory: platformSpecificDatabaseDirectory.path,
-  );
+  try {
+    initializeTorrentsDiggerDatabase(
+      torrentsDiggerDatabaseDirectory: platformSpecificDatabaseDirectory.path,
+    );
+  } catch (e) {
+    createSnackBar(message: "Error : $e", duration: 10);
+  }
 }
