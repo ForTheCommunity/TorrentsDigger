@@ -16,6 +16,7 @@ impl TorrentsCsvCategories {
             categories: false,
             sortings: false,
             filters: false,
+            pagination: true,
         }
     }
     pub fn to_category(text_category: &str) -> TorrentsCsvCategories {
@@ -32,19 +33,29 @@ impl TorrentsCsvCategories {
             .collect()
     }
 
-    pub fn request_url_builder_torrents_csv(torrent_name: &str) -> String {
+    pub fn request_url_builder_torrents_csv(torrent_name: &str, next: &Option<i64>) -> String {
         // https://torrents-csv.com/service/search?q=[QUERY]&size=[NUMBER_OF_RESULTS]&after=[AFTER]
+        // Size parameter is not working [Problem in Api]
+        // https://torrents-csv.com/service/search?q=[QUERY]&after=[AFTER]
+
         let torrent_name = torrent_name
             .split_whitespace()
             .collect::<Vec<&str>>()
             .join("+");
         let root_url = "https://torrents-csv.com";
-        let results_size = 50;
-        let after = 0;
-        format!(
-            "{}/service/search?q={}&size={}&after={}",
-            root_url, torrent_name, results_size, after
-        )
+        // let results_size = 50;
+
+        match next {
+            Some(next) => {
+                format!(
+                    "{}/service/search?q={}&after={}",
+                    root_url, torrent_name, next
+                )
+            }
+            None => {
+                format!("{}/service/search?q={}", root_url, torrent_name)
+            }
+        }
     }
 
     pub fn parse_response(mut response: Response<Body>) -> Result<Vec<Torrent>, Box<dyn Error>> {

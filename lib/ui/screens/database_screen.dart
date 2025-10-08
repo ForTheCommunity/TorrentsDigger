@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:torrents_digger/configs/colors.dart';
-import 'package:torrents_digger/database/import_export_database.dart';
+import 'package:torrents_digger/database/import_export.dart';
 
 class DatabaseScreen extends StatelessWidget {
   const DatabaseScreen({super.key});
@@ -50,7 +50,7 @@ class DatabaseScreen extends StatelessWidget {
                   leading: const Icon(Icons.keyboard_double_arrow_down),
                   title: const Text('Import Database'),
                   onTap: () {
-                    import_database_android();
+                    importDatabaseAndroid();
                   },
                 )
               else

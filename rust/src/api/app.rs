@@ -34,8 +34,9 @@ pub fn dig_torrent(
     category: String,
     filter: String,
     sorting: String,
+    page: Option<i64>,
 ) -> Result<Vec<InternalTorrent>, String> {
-    match search_torrent(torrent_name, source, category, filter, sorting) {
+    match search_torrent(torrent_name, source, category, filter, sorting, page) {
         Ok(torrents) => {
             let internal_torrents: Vec<InternalTorrent> = torrents
                 .into_iter()

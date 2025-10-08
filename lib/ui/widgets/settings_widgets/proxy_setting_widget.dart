@@ -4,7 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:torrents_digger/blocs/proxy_settings_bloc/bloc/proxy_settings_bloc.dart';
+import 'package:torrents_digger/blocs/proxy_settings_bloc/proxy_settings_bloc.dart';
 import 'package:torrents_digger/configs/colors.dart';
 
 class ProxySettingWidget extends StatelessWidget {
@@ -212,7 +212,10 @@ class ProxySettingWidget extends StatelessWidget {
                       ),
                       child: const Text(
                         'Save Proxy',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(
+                          color: AppColors.greenColor,
+                          fontSize: 18,
+                        ),
                       ),
                     ),
                   ],

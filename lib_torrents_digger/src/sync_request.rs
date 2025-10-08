@@ -7,9 +7,8 @@ use ureq::{Agent, Body, Proxy, http::Response};
 use crate::{
     database::proxy::fetch_saved_proxy,
     sources::{
-        available_sources::AllAvailableSources,
-        nyaa::{nyaa::NyaaCategories, sukebei_nyaa::SukebeiNyaaCategories},
-        torrents_csv::torrents_csv_dot_com::TorrentsCsvCategories,
+        available_sources::AllAvailableSources, nyaa::NyaaCategories,
+        sukebei_nyaa::SukebeiNyaaCategories, torrents_csv::TorrentsCsvCategories,
     },
     torrent::Torrent,
 };
@@ -21,7 +20,7 @@ pub fn fetch_torrents(
     // sending request
     let response = send_request(url)?;
 
-    // scrape & parse
+    // scrape & parseNyaaCategories
     match source {
         AllAvailableSources::NyaaDotSi => NyaaCategories::scrape_and_parse(response),
         AllAvailableSources::SukebeiNyaaDotSi => SukebeiNyaaCategories::scrape_and_parse(response),

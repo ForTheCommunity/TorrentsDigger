@@ -6,7 +6,8 @@ use scraper::{self, ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
 
 use crate::{
-    sources::{QueryOptions, common::extract_info_hash_from_magnet, nyaa::nyaa::NyaaSortings},
+    extract_info_hash_from_magnet,
+    sources::{QueryOptions, nyaa::NyaaSortings},
     torrent::Torrent,
     trackers::get_trackers,
 };
@@ -34,6 +35,7 @@ impl SukebeiNyaaCategories {
             categories: true,
             sortings: true,
             filters: true,
+            pagination: true,
         }
     }
 

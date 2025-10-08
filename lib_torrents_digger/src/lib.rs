@@ -3,9 +3,9 @@ use std::error::Error;
 use crate::{
     sources::{
         available_sources::AllAvailableSources,
-        nyaa::nyaa::{NyaaCategories, NyaaFilter, NyaaSortings},
-        nyaa::sukebei_nyaa::{SukebeiNyaaCategories, SukebeiNyaaFilter},
-        torrents_csv::torrents_csv_dot_com::TorrentsCsvCategories,
+        nyaa::{NyaaCategories, NyaaFilter, NyaaSortings},
+        sukebei_nyaa::{SukebeiNyaaCategories, SukebeiNyaaFilter},
+        torrents_csv::TorrentsCsvCategories,
     },
     sync_request::fetch_torrents,
 };
@@ -22,6 +22,7 @@ pub fn search_torrent(
     category: String,
     filter: String,
     sorting: String,
+    page: Option<i64>,
 ) -> Result<Vec<torrent::Torrent>, Box<dyn Error + 'static>> {
     let source = AllAvailableSources::to_source(&source);
     match source {
@@ -31,7 +32,7 @@ pub fn search_torrent(
                 &NyaaFilter::to_filter(&filter),
                 &NyaaCategories::to_category(&category),
                 &NyaaSortings::to_sorting(&sorting),
-                &1,
+                &page.unwrap_or(0),
             );
             fetch_torrents(url, AllAvailableSources::NyaaDotSi)
         }
@@ -41,13 +42,25 @@ pub fn search_torrent(
                 &SukebeiNyaaFilter::to_filter(&filter),
                 &SukebeiNyaaCategories::to_category(&category),
                 &NyaaSortings::to_sorting(&sorting),
-                &1,
+                &page.unwrap_or(0),
             );
             fetch_torrents(url, AllAvailableSources::SukebeiNyaaDotSi)
         }
         AllAvailableSources::TorrentsCsvDotCom => {
-            let url = TorrentsCsvCategories::request_url_builder_torrents_csv(&torrent_name);
+            let url = TorrentsCsvCategories::request_url_builder_torrents_csv(&torrent_name, &page);
             fetch_torrents(url, AllAvailableSources::TorrentsCsvDotCom)
         }
+    }
+}
+
+pub fn extract_info_hash_from_magnet(magnet: &str) -> String {
+    // removing magnet link prefix to get info hash start
+    let info_hash_start = magnet.trim_start_matches("magnet:?xt=urn:btih:");
+
+    // finding index for first '&' separator i.e for torrent display name and for trackers.
+    match info_hash_start.find("&") {
+        Some(info_hash_length) => info_hash_start[..info_hash_length].to_string(),
+        // if magnet link have no display name & trackers
+        None => info_hash_start[..info_hash_start.len()].to_string(),
     }
 }

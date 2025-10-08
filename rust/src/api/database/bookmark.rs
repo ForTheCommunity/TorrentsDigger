@@ -1,5 +1,5 @@
 use flutter_rust_bridge::frb;
-use lib_torrents_digger::database::bookmark_torrent::{
+use lib_torrents_digger::database::bookmark::{
     check_bookmark, create_a_bookmark, delete_a_bookmark, fetch_all_bookmarks,
 };
 

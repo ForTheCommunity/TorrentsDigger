@@ -59,7 +59,7 @@ void exportDatabaseAndroid() async {
   }
 }
 
-void import_database_android() async {
+void importDatabaseAndroid() async {
   // database file/folder name
   String databaseFileName = "torrents_digger.database";
   String internalScopedStoragedatabaseDirName = ".torrents_digger";

@@ -7,6 +7,7 @@ Future<List<InternalTorrent>> searchTorrent({
   required String filter,
   required String category,
   required String sorting,
+  int? page,
 }) async {
   // calling rust-side to fetch data from torrent sites
   List<InternalTorrent> torrents = await digTorrent(
@@ -15,6 +16,7 @@ Future<List<InternalTorrent>> searchTorrent({
     filter: filter,
     category: category,
     sorting: sorting,
+    page: page,
   );
   return torrents;
 }

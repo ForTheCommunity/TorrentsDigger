@@ -1,3 +1,9 @@
+// this build program/script downloads all active public trackers from
+// https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_all.txt
+// and save it to a file named all_active_public_trackers.txt
+// this program will run on every build,
+// these active public trackers will be added in magent link or in info_hash
+
 use std::{env, fs, path::Path};
 
 use rand::{rng, seq::IndexedRandom};

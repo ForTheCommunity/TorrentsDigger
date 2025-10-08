@@ -6,8 +6,8 @@ use lib_torrents_digger::{
     sources::{
         available_sources::AllAvailableSources,
         get_source_details,
-        nyaa::nyaa::{NyaaCategories, NyaaFilter, NyaaSortings},
-        torrents_csv::torrents_csv_dot_com::TorrentsCsvCategories,
+        nyaa::{NyaaCategories, NyaaFilter, NyaaSortings},
+        torrents_csv::TorrentsCsvCategories,
     },
     sync_request::fetch_torrents,
     trackers::get_trackers,
@@ -28,7 +28,7 @@ fn test_sources_data() {
 
 fn test_torrents_csv_dot_com() {
     // let SearchInput: SearchInput
-    let url = TorrentsCsvCategories::request_url_builder_torrents_csv("The Matrix");
+    let url = TorrentsCsvCategories::request_url_builder_torrents_csv("The Matrix", &None);
     // let response
     let response = fetch_torrents(url, AllAvailableSources::TorrentsCsvDotCom);
     match response {

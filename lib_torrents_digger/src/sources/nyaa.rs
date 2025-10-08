@@ -6,9 +6,7 @@ use scraper::{self, ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
 
 use crate::{
-    sources::{QueryOptions, common::extract_info_hash_from_magnet},
-    torrent::Torrent,
-    trackers::get_trackers,
+    extract_info_hash_from_magnet, sources::QueryOptions, torrent::Torrent, trackers::get_trackers,
 };
 
 // https://nyaa.si
@@ -48,6 +46,7 @@ impl NyaaCategories {
             categories: true,
             sortings: true,
             filters: true,
+            pagination: true,
         }
     }
     pub fn to_category(text_category: &str) -> Self {

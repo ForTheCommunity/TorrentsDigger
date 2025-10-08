@@ -2,14 +2,14 @@ use std::collections::HashMap;
 
 use crate::sources::{
     available_sources::AllAvailableSources,
-    nyaa::nyaa::{NyaaCategories, NyaaFilter, NyaaSortings},
-    nyaa::sukebei_nyaa::{SukebeiNyaaCategories, SukebeiNyaaFilter},
-    torrents_csv::torrents_csv_dot_com::TorrentsCsvCategories,
+    nyaa::{NyaaCategories, NyaaFilter, NyaaSortings},
+    sukebei_nyaa::{SukebeiNyaaCategories, SukebeiNyaaFilter},
+    torrents_csv::TorrentsCsvCategories,
 };
 
 pub mod available_sources;
-pub mod common;
 pub mod nyaa;
+pub mod sukebei_nyaa;
 pub mod torrents_csv;
 
 pub enum SourcesIndex {
@@ -23,6 +23,7 @@ pub struct QueryOptions {
     pub categories: bool,
     pub sortings: bool,
     pub filters: bool,
+    pub pagination: bool,
 }
 
 pub struct Sortings {
