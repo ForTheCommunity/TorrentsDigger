@@ -90,7 +90,7 @@ abstract class RustLibApi extends BaseApi {
 
   Future<BigInt> crateApiDatabaseProxyDeleteProxy({required int proxyId});
 
-  Future<List<InternalTorrent>> crateApiAppDigTorrent({
+  Future<(List<InternalTorrent>, PlatformInt64?)> crateApiAppDigTorrent({
     required String torrentName,
     required String source,
     required String category,
@@ -118,12 +118,7 @@ abstract class RustLibApi extends BaseApi {
   });
 
   Future<BigInt> crateApiDatabaseProxySaveProxyApi({
-    required String proxyName,
-    required String proxyType,
-    required String proxyServerIp,
-    required String proxyServerPort,
-    String? proxyUsername,
-    String? proxyPassword,
+    required InternalProxy proxyData,
   });
 }
 
@@ -230,7 +225,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "delete_proxy", argNames: ["proxyId"]);
 
   @override
-  Future<List<InternalTorrent>> crateApiAppDigTorrent({
+  Future<(List<InternalTorrent>, PlatformInt64?)> crateApiAppDigTorrent({
     required String torrentName,
     required String source,
     required String category,
@@ -256,7 +251,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           );
         },
         codec: SseCodec(
-          decodeSuccessData: sse_decode_list_internal_torrent,
+          decodeSuccessData:
+              sse_decode_record_list_internal_torrent_opt_box_autoadd_i_64,
           decodeErrorData: sse_decode_String,
         ),
         constMeta: kCrateApiAppDigTorrentConstMeta,
@@ -483,23 +479,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @override
   Future<BigInt> crateApiDatabaseProxySaveProxyApi({
-    required String proxyName,
-    required String proxyType,
-    required String proxyServerIp,
-    required String proxyServerPort,
-    String? proxyUsername,
-    String? proxyPassword,
+    required InternalProxy proxyData,
   }) {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          sse_encode_String(proxyName, serializer);
-          sse_encode_String(proxyType, serializer);
-          sse_encode_String(proxyServerIp, serializer);
-          sse_encode_String(proxyServerPort, serializer);
-          sse_encode_opt_String(proxyUsername, serializer);
-          sse_encode_opt_String(proxyPassword, serializer);
+          sse_encode_box_autoadd_internal_proxy(proxyData, serializer);
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
@@ -512,31 +498,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeErrorData: sse_decode_String,
         ),
         constMeta: kCrateApiDatabaseProxySaveProxyApiConstMeta,
-        argValues: [
-          proxyName,
-          proxyType,
-          proxyServerIp,
-          proxyServerPort,
-          proxyUsername,
-          proxyPassword,
-        ],
+        argValues: [proxyData],
         apiImpl: this,
       ),
     );
   }
 
   TaskConstMeta get kCrateApiDatabaseProxySaveProxyApiConstMeta =>
-      const TaskConstMeta(
-        debugName: "save_proxy_api",
-        argNames: [
-          "proxyName",
-          "proxyType",
-          "proxyServerIp",
-          "proxyServerPort",
-          "proxyUsername",
-          "proxyPassword",
-        ],
-      );
+      const TaskConstMeta(debugName: "save_proxy_api", argNames: ["proxyData"]);
 
   @protected
   Map<String, String> dco_decode_Map_String_String_None(dynamic raw) {
@@ -622,12 +591,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   InternalQueryOptions dco_decode_internal_query_options(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 3)
-      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    if (arr.length != 4)
+      throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
     return InternalQueryOptions(
       categories: dco_decode_bool(arr[0]),
       sortings: dco_decode_bool(arr[1]),
       filters: dco_decode_bool(arr[2]),
+      pagination: dco_decode_bool(arr[3]),
     );
   }
 
@@ -728,6 +698,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       throw Exception('Expected 2 elements, got ${arr.length}');
     }
     return (dco_decode_i_32(arr[0]), dco_decode_String(arr[1]));
+  }
+
+  @protected
+  (List<InternalTorrent>, PlatformInt64?)
+  dco_decode_record_list_internal_torrent_opt_box_autoadd_i_64(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2) {
+      throw Exception('Expected 2 elements, got ${arr.length}');
+    }
+    return (
+      dco_decode_list_internal_torrent(arr[0]),
+      dco_decode_opt_box_autoadd_i_64(arr[1]),
+    );
   }
 
   @protected
@@ -869,10 +853,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_categories = sse_decode_bool(deserializer);
     var var_sortings = sse_decode_bool(deserializer);
     var var_filters = sse_decode_bool(deserializer);
+    var var_pagination = sse_decode_bool(deserializer);
     return InternalQueryOptions(
       categories: var_categories,
       sortings: var_sortings,
       filters: var_filters,
+      pagination: var_pagination,
     );
   }
 
@@ -1036,6 +1022,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  (List<InternalTorrent>, PlatformInt64?)
+  sse_decode_record_list_internal_torrent_opt_box_autoadd_i_64(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_field0 = sse_decode_list_internal_torrent(deserializer);
+    var var_field1 = sse_decode_opt_box_autoadd_i_64(deserializer);
+    return (var_field0, var_field1);
+  }
+
+  @protected
   (String, InternalSourceDetails)
   sse_decode_record_string_internal_source_details(
     SseDeserializer deserializer,
@@ -1169,6 +1166,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_bool(self.categories, serializer);
     sse_encode_bool(self.sortings, serializer);
     sse_encode_bool(self.filters, serializer);
+    sse_encode_bool(self.pagination, serializer);
   }
 
   @protected
@@ -1310,6 +1308,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_32(self.$1, serializer);
     sse_encode_String(self.$2, serializer);
+  }
+
+  @protected
+  void sse_encode_record_list_internal_torrent_opt_box_autoadd_i_64(
+    (List<InternalTorrent>, PlatformInt64?) self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_list_internal_torrent(self.$1, serializer);
+    sse_encode_opt_box_autoadd_i_64(self.$2, serializer);
   }
 
   @protected

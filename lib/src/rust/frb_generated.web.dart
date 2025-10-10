@@ -97,6 +97,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   (int, String) dco_decode_record_i_32_string(dynamic raw);
 
   @protected
+  (List<InternalTorrent>, PlatformInt64?)
+  dco_decode_record_list_internal_torrent_opt_box_autoadd_i_64(dynamic raw);
+
+  @protected
   (String, InternalSourceDetails)
   dco_decode_record_string_internal_source_details(dynamic raw);
 
@@ -204,6 +208,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   (int, String) sse_decode_record_i_32_string(SseDeserializer deserializer);
+
+  @protected
+  (List<InternalTorrent>, PlatformInt64?)
+  sse_decode_record_list_internal_torrent_opt_box_autoadd_i_64(
+    SseDeserializer deserializer,
+  );
 
   @protected
   (String, InternalSourceDetails)
@@ -339,6 +349,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_record_i_32_string(
     (int, String) self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_record_list_internal_torrent_opt_box_autoadd_i_64(
+    (List<InternalTorrent>, PlatformInt64?) self,
     SseSerializer serializer,
   );
 

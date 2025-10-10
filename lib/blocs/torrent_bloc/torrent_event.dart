@@ -9,11 +9,14 @@ class SearchTorrents extends TorrentEvents {
   final String filter;
   final String category;
   final String sorting;
+  final int? page;
+
   SearchTorrents({
     required this.torrentName,
     required this.source,
     required this.filter,
     required this.category,
     required this.sorting,
+    this.page,
   });
 }

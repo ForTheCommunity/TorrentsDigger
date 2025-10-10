@@ -445,23 +445,12 @@ fn wire__crate__api__database__proxy__save_proxy_api_impl(
             };
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_proxy_name = <String>::sse_decode(&mut deserializer);
-            let api_proxy_type = <String>::sse_decode(&mut deserializer);
-            let api_proxy_server_ip = <String>::sse_decode(&mut deserializer);
-            let api_proxy_server_port = <String>::sse_decode(&mut deserializer);
-            let api_proxy_username = <Option<String>>::sse_decode(&mut deserializer);
-            let api_proxy_password = <Option<String>>::sse_decode(&mut deserializer);
+            let api_proxy_data =
+                <crate::api::internals::InternalProxy>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
                 transform_result_sse::<_, String>((move || {
-                    let output_ok = crate::api::database::proxy::save_proxy_api(
-                        api_proxy_name,
-                        api_proxy_type,
-                        api_proxy_server_ip,
-                        api_proxy_server_port,
-                        api_proxy_username,
-                        api_proxy_password,
-                    )?;
+                    let output_ok = crate::api::database::proxy::save_proxy_api(api_proxy_data)?;
                     Ok(output_ok)
                 })())
             }
@@ -545,10 +534,12 @@ impl SseDecode for crate::api::internals::InternalQueryOptions {
         let mut var_categories = <bool>::sse_decode(deserializer);
         let mut var_sortings = <bool>::sse_decode(deserializer);
         let mut var_filters = <bool>::sse_decode(deserializer);
+        let mut var_pagination = <bool>::sse_decode(deserializer);
         return crate::api::internals::InternalQueryOptions {
             categories: var_categories,
             sortings: var_sortings,
             filters: var_filters,
+            pagination: var_pagination,
         };
     }
 }
@@ -714,6 +705,16 @@ impl SseDecode for (i32, String) {
     }
 }
 
+impl SseDecode for (Vec<crate::api::internals::InternalTorrent>, Option<i64>) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_field0 =
+            <Vec<crate::api::internals::InternalTorrent>>::sse_decode(deserializer);
+        let mut var_field1 = <Option<i64>>::sse_decode(deserializer);
+        return (var_field0, var_field1);
+    }
+}
+
 impl SseDecode for (String, crate::api::internals::InternalSourceDetails) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -871,6 +872,7 @@ impl flutter_rust_bridge::IntoDart for crate::api::internals::InternalQueryOptio
             self.categories.into_into_dart().into_dart(),
             self.sortings.into_into_dart().into_dart(),
             self.filters.into_into_dart().into_dart(),
+            self.pagination.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -1001,6 +1003,7 @@ impl SseEncode for crate::api::internals::InternalQueryOptions {
         <bool>::sse_encode(self.categories, serializer);
         <bool>::sse_encode(self.sortings, serializer);
         <bool>::sse_encode(self.filters, serializer);
+        <bool>::sse_encode(self.pagination, serializer);
     }
 }
 
@@ -1123,6 +1126,14 @@ impl SseEncode for (i32, String) {
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <i32>::sse_encode(self.0, serializer);
         <String>::sse_encode(self.1, serializer);
+    }
+}
+
+impl SseEncode for (Vec<crate::api::internals::InternalTorrent>, Option<i64>) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <Vec<crate::api::internals::InternalTorrent>>::sse_encode(self.0, serializer);
+        <Option<i64>>::sse_encode(self.1, serializer);
     }
 }
 

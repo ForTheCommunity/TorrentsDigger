@@ -113,8 +113,11 @@ impl SukebeiNyaaCategories {
             root_url, filter, category, query, sorting, page_number
         )
     }
+
     // Scraping
-    pub fn scrape_and_parse(mut response: Response<Body>) -> Result<Vec<Torrent>, Box<dyn Error>> {
+    pub fn scrape_and_parse(
+        mut response: Response<Body>,
+    ) -> Result<(Vec<Torrent>, Option<i64>), Box<dyn Error>> {
         // Scraping
         let html_response = response.body_mut().read_to_string()?;
         let document = Html::parse_document(&html_response);
@@ -126,6 +129,7 @@ impl SukebeiNyaaCategories {
         let table_row_selector = Selector::parse(r#"tr"#)?;
         let table_data_selector = Selector::parse(r#"td"#)?;
         let anchor_tag_selector = Selector::parse(r#"a"#)?;
+        let pagination_selector = Selector::parse("ul.pagination li.active")?;
 
         // Vector of Torrent to Store all Torrents
         let mut all_torrents: Vec<Torrent> = Vec::new();
@@ -133,6 +137,15 @@ impl SukebeiNyaaCategories {
         let div = document.select(&div_selector).next().unwrap();
         let table = div.select(&table_selector).next().unwrap();
         let table_body = table.select(&table_body_selector).next().unwrap();
+
+        let next_page_num: Option<i64> =
+            if let Some(active_li) = document.select(&pagination_selector).next() {
+                let current_page_num = active_li.text().collect::<String>().parse::<i64>()?;
+                Some(current_page_num + 1)
+            } else {
+                // No active pagination element found, so no next page.
+                None
+            };
 
         // iterating over table rows.
         for table_row in table_body.select(&table_row_selector) {
@@ -186,7 +199,7 @@ impl SukebeiNyaaCategories {
             all_torrents.push(torrent);
         }
 
-        Ok(all_torrents)
+        Ok((all_torrents, next_page_num))
     }
 }
 

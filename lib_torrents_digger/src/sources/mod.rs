@@ -12,34 +12,12 @@ pub mod nyaa;
 pub mod sukebei_nyaa;
 pub mod torrents_csv;
 
-pub enum SourcesIndex {
-    NyaaDotSi = 1,
-    SukebeiDotNyaaDotSi = 2,
-    TorrentsCsvDotCom = 3,
-}
-
 #[derive(Debug)]
 pub struct QueryOptions {
     pub categories: bool,
     pub sortings: bool,
     pub filters: bool,
     pub pagination: bool,
-}
-
-pub struct Sortings {
-    pub by_size: bool,
-    pub by_date: bool,
-    pub by_seeders: bool,
-    pub by_leechers: bool,
-    pub by_total_downloads: bool,
-}
-
-pub struct QueryStruct {
-    pub source_name: SourcesIndex,
-    pub query_options: QueryOptions,
-    pub categories: Vec<String>,
-    pub filters: Vec<String>,
-    pub sortings: Sortings,
 }
 
 pub fn get_source_details() -> HashMap<String, SourceDetails> {

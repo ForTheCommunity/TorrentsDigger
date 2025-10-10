@@ -16,6 +16,7 @@ pub fn fetch_source_details() -> HashMap<String, InternalSourceDetails> {
             categories: details.source_query_options.categories,
             sortings: details.source_query_options.sortings,
             filters: details.source_query_options.filters,
+            pagination: details.source_query_options.pagination,
         };
         let internal_source_details = InternalSourceDetails {
             query_options: internal_query_options,
@@ -35,9 +36,9 @@ pub fn dig_torrent(
     filter: String,
     sorting: String,
     page: Option<i64>,
-) -> Result<Vec<InternalTorrent>, String> {
+) -> Result<(Vec<InternalTorrent>, Option<i64>), String> {
     match search_torrent(torrent_name, source, category, filter, sorting, page) {
-        Ok(torrents) => {
+        Ok((torrents, next_page)) => {
             let internal_torrents: Vec<InternalTorrent> = torrents
                 .into_iter()
                 .map(|t: ExternalTorrent| InternalTorrent {
@@ -51,7 +52,7 @@ pub fn dig_torrent(
                     total_downloads: t.total_downloads,
                 })
                 .collect();
-            Ok(internal_torrents)
+            Ok((internal_torrents, next_page))
         }
 
         Err(error) => {

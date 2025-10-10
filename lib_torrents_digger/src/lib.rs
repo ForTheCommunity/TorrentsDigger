@@ -23,7 +23,7 @@ pub fn search_torrent(
     filter: String,
     sorting: String,
     page: Option<i64>,
-) -> Result<Vec<torrent::Torrent>, Box<dyn Error + 'static>> {
+) -> Result<(Vec<torrent::Torrent>, Option<i64>), Box<dyn Error + 'static>> {
     let source = AllAvailableSources::to_source(&source);
     match source {
         AllAvailableSources::NyaaDotSi => {

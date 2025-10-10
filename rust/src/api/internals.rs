@@ -19,6 +19,7 @@ pub struct InternalQueryOptions {
     pub categories: bool,
     pub sortings: bool,
     pub filters: bool,
+    pub pagination: bool,
 }
 
 pub struct InternalSourceDetails {

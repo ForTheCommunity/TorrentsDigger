@@ -1,4 +1,4 @@
-# Torrents Digger - Dig Torrents from Internet.
+# Torrents Digger - Digs Torrents from the Internet.
 
 ## Screenshots
 
@@ -22,9 +22,9 @@
     </a>
 </div>
 
-## Download Apk from [Release](https://gitlab.com/ForTheCommunity/torrentsdigger/-/releases) Page.
+## Download Torrents Digger from [Releases](https://gitlab.com/ForTheCommunity/torrentsdigger/-/releases) Page.
 
-### Note -> It only do the job of Fetching ,Scraping & Listing. Torrents Digger don't host anything , Torrent Digger just list what is already available in the internet.
+### Note -> Torrents Digger only do the job of Fetching ,Scraping & Listing. It don't host anything , It just list what is already available in the internet.
 
 
 

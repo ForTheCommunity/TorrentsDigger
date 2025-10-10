@@ -1,6 +1,11 @@
 part of 'pagination_bloc.dart';
 
-@freezed
-class PaginationState with _$PaginationState {
-  const factory PaginationState.initial() = _Initial;
+class PaginationState {
+  int? nextPage;
+
+  PaginationState({this.nextPage});
+
+  copyWith(int? nextPage) {
+    return PaginationState(nextPage: nextPage ?? this.nextPage);
+  }
 }

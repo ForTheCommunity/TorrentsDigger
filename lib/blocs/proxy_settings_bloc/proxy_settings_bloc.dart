@@ -54,12 +54,13 @@ class ProxySettingsBloc extends Bloc<ProxySettingsEvents, ProxySettingsState> {
     }
     try {
       var a = await saveProxy(
-        proxyName: event.proxyName,
-        proxyType: event.proxyType,
-        proxyServerIp: event.proxyServerIp,
-        proxyServerPort: event.proxyServerPort,
-        proxyUsername: proxyUsername,
-        proxyPassword: proxyPassword,
+        proxyData: InternalProxy(
+          id: 1,
+          proxyName: event.proxyName,
+          proxyType: event.proxyType,
+          proxyServerIp: event.proxyServerIp,
+          proxyServerPort: event.proxyServerPort,
+        ),
       );
       createSnackBar(message: "Proxy Saved. $a", duration: 5);
 

@@ -13,23 +13,9 @@ Future<InternalProxy?> getSavedProxyData() async {
   }
 }
 
-Future<BigInt> saveProxy({
-  required String proxyName,
-  required String proxyType,
-  required String proxyServerIp,
-  required String proxyServerPort,
-  required String? proxyUsername,
-  required String? proxyPassword,
-}) {
+Future<BigInt> saveProxy({required InternalProxy proxyData}) {
   try {
-    var result = saveProxyApi(
-      proxyName: proxyName,
-      proxyType: proxyType,
-      proxyServerIp: proxyServerIp,
-      proxyServerPort: proxyServerPort,
-      proxyUsername: proxyUsername,
-      proxyPassword: proxyPassword
-    );
+    var result = saveProxyApi(proxyData: proxyData);
     return result;
   } catch (e) {
     createSnackBar(message: "Error : ${e.toString()}", duration: 10);

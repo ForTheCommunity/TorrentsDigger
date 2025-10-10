@@ -58,7 +58,9 @@ impl TorrentsCsvCategories {
         }
     }
 
-    pub fn parse_response(mut response: Response<Body>) -> Result<Vec<Torrent>, Box<dyn Error>> {
+    pub fn parse_response(
+        mut response: Response<Body>,
+    ) -> Result<(Vec<Torrent>, Option<i64>), Box<dyn Error>> {
         let json_response_txt = response.body_mut().read_to_string()?;
         let json_root: JsonRoot = serde_json::from_str(&json_response_txt)?;
         let torrents: Vec<Torrent> = json_root
@@ -66,7 +68,8 @@ impl TorrentsCsvCategories {
             .iter()
             .map(|td| td.to_torrent())
             .collect();
-        Ok(torrents)
+        let next_page = json_root.next;
+        Ok((torrents, next_page))
     }
 }
 
@@ -81,7 +84,7 @@ impl fmt::Display for TorrentsCsvCategories {
 #[derive(Serialize, Deserialize, Debug)]
 struct JsonRoot {
     torrents: Vec<JsonTorrentData>,
-    next: i64,
+    next: Option<i64>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -112,9 +115,6 @@ impl JsonTorrentData {
         // adding extra trackers
         magnet.push_str(get_trackers().unwrap().as_str());
 
-        // Calculate total downloads
-        let total_downloads = self.completed + self.seeders;
-
         Torrent {
             info_hash: self.infohash.clone(),
             name: self.name.clone(),
@@ -123,7 +123,7 @@ impl JsonTorrentData {
             date: date_str,
             seeders: self.seeders.to_string(),
             leechers: self.leechers.to_string(),
-            total_downloads: total_downloads.to_string(),
+            total_downloads: self.completed.to_string(),
         }
     }
 }

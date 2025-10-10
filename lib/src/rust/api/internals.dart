@@ -53,16 +53,21 @@ class InternalQueryOptions {
   final bool categories;
   final bool sortings;
   final bool filters;
+  final bool pagination;
 
   const InternalQueryOptions({
     required this.categories,
     required this.sortings,
     required this.filters,
+    required this.pagination,
   });
 
   @override
   int get hashCode =>
-      categories.hashCode ^ sortings.hashCode ^ filters.hashCode;
+      categories.hashCode ^
+      sortings.hashCode ^
+      filters.hashCode ^
+      pagination.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -71,7 +76,8 @@ class InternalQueryOptions {
           runtimeType == other.runtimeType &&
           categories == other.categories &&
           sortings == other.sortings &&
-          filters == other.filters;
+          filters == other.filters &&
+          pagination == other.pagination;
 }
 
 class InternalSourceDetails {

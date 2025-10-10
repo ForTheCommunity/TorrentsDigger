@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:torrents_digger/blocs/pagination_bloc/pagination_bloc.dart';
 import 'package:torrents_digger/blocs/sources_bloc/source_bloc.dart';
 import 'package:torrents_digger/blocs/torrent_bloc/torrent_bloc.dart';
 import 'package:torrents_digger/configs/colors.dart';
@@ -32,6 +33,8 @@ class MainScreen extends StatelessWidget {
                   onSearchPressed: () {
                     String torrentName = searchController.text.trim();
                     final sourceState = context.read<SourceBloc>().state;
+                    // resetting pagination
+                    context.read<PaginationBloc>().add(ResetPagination());
 
                     if (torrentName.isNotEmpty) {
                       if (sourceState.selectedSource != null) {

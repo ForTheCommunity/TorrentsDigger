@@ -33,7 +33,7 @@ fn test_torrents_csv_dot_com() {
     let response = fetch_torrents(url, AllAvailableSources::TorrentsCsvDotCom);
     match response {
         Ok(torrents) => {
-            println!("Total Torrents in First Page : {}", torrents.len());
+            println!("Total Torrents in First Page : {}", torrents.0.len());
             println!("{:#?}", torrents);
         }
         Err(error) => {
@@ -55,7 +55,7 @@ fn test_nyaa_dot_si() {
 
     match response {
         Ok(torrents) => {
-            println!("Total Torrents in First Page : {}", torrents.len());
+            println!("Total Torrents in First Page : {}", torrents.0.len());
         }
         Err(error) => {
             println!("Error Occurred : {:?}", error);

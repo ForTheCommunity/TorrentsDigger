@@ -2,10 +2,10 @@ use std::error::Error;
 
 use anyhow::Result;
 use rand::{rng, seq::IndexedRandom};
-use ureq::{Agent, Body, Proxy, http::Response};
+use ureq::{Agent, Body, http::Response};
 
 use crate::{
-    database::proxy::fetch_saved_proxy,
+    database::proxy::Proxy,
     sources::{
         available_sources::AllAvailableSources, nyaa::NyaaCategories,
         sukebei_nyaa::SukebeiNyaaCategories, torrents_csv::TorrentsCsvCategories,
@@ -16,7 +16,7 @@ use crate::{
 pub fn fetch_torrents(
     url: String,
     source: AllAvailableSources,
-) -> Result<Vec<Torrent>, Box<dyn std::error::Error + 'static>> {
+) -> Result<(Vec<Torrent>, Option<i64>), Box<dyn std::error::Error + 'static>> {
     // sending request
     let response = send_request(url)?;
 
@@ -42,7 +42,7 @@ fn send_request(url: String) -> Result<Response<Body>, Box<dyn Error>> {
     let user_agent = user_agents.choose(&mut rng).unwrap().to_owned();
 
     // Proxy
-    match fetch_saved_proxy()? {
+    match Proxy::fetch_saved_proxy()? {
         Some(proxy_data) => {
             let proxy_type = proxy_data.proxy_type;
             let proxy_server_ip = proxy_data.proxy_server_ip;
@@ -67,7 +67,7 @@ fn send_request(url: String) -> Result<Response<Body>, Box<dyn Error>> {
                     format!("{}://{}:{}", proxy_type, proxy_server_ip, proxy_server_port)
                 }
             };
-            let proxy = Proxy::new(&proxy_url)?;
+            let proxy = ureq::Proxy::new(&proxy_url)?;
             let agent: Agent = Agent::config_builder().proxy(Some(proxy)).build().into();
             let response = agent.get(url).header("User-Agent", user_agent).call()?;
             Ok(response)
