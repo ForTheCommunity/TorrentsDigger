@@ -3,6 +3,7 @@ use std::error::Error;
 use crate::{
     sources::{
         available_sources::AllAvailableSources,
+        limetorrents::{LimeTorrentsCategories, LimeTorrentsSortings},
         nyaa::{NyaaCategories, NyaaFilter, NyaaSortings},
         sukebei_nyaa::{SukebeiNyaaCategories, SukebeiNyaaFilter},
         torrents_csv::TorrentsCsvCategories,
@@ -58,6 +59,15 @@ pub fn search_torrent(
                 &UindexSortings::to_sorting(&sorting),
             );
             fetch_torrents(url, AllAvailableSources::UindexDotOrg)
+        }
+        AllAvailableSources::LimeTorrentsDotLol => {
+            let url = LimeTorrentsCategories::request_url_builder(
+                &torrent_name,
+                &LimeTorrentsCategories::to_category(&category),
+                &LimeTorrentsSortings::to_sorting(&sorting),
+                &page.unwrap_or(0),
+            );
+            fetch_torrents(url, AllAvailableSources::LimeTorrentsDotLol)
         }
     }
 }

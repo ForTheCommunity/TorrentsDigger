@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use crate::sources::{
     available_sources::AllAvailableSources,
+    limetorrents::{LimeTorrentsCategories, LimeTorrentsSortings},
     nyaa::{NyaaCategories, NyaaFilter, NyaaSortings},
     sukebei_nyaa::{SukebeiNyaaCategories, SukebeiNyaaFilter},
     torrents_csv::TorrentsCsvCategories,
@@ -9,6 +10,7 @@ use crate::sources::{
 };
 
 pub mod available_sources;
+pub mod limetorrents;
 pub mod nyaa;
 pub mod sukebei_nyaa;
 pub mod torrents_csv;
@@ -70,6 +72,17 @@ pub fn get_source_details() -> HashMap<String, SourceDetails> {
     sources_details.insert(
         AllAvailableSources::UindexDotOrg.to_string(),
         uindex_source_details,
+    );
+
+    let lime_torrents_source_details = SourceDetails {
+        source_query_options: LimeTorrentsCategories::get_query_options(),
+        source_categories: LimeTorrentsCategories::all_categories(),
+        source_filters: vec!["".to_string()],
+        source_sortings: LimeTorrentsSortings::all_limetorrents_sortings(),
+    };
+    sources_details.insert(
+        AllAvailableSources::LimeTorrentsDotLol.to_string(),
+        lime_torrents_source_details,
     );
 
     sources_details

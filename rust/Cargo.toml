@@ -9,7 +9,7 @@ crate-type = ["cdylib", "staticlib"]
 [dependencies]
 lib_torrents_digger = { path = "../lib_torrents_digger" }
 flutter_rust_bridge = "=2.11.1"
-anyhow = "1.0.99"
+anyhow = "1.0.100"
 
 [lints.rust]
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(frb_expand)'] }

@@ -5,6 +5,7 @@ pub enum AllAvailableSources {
     SukebeiNyaaDotSi,
     TorrentsCsvDotCom,
     UindexDotOrg,
+    LimeTorrentsDotLol,
 }
 
 impl fmt::Display for AllAvailableSources {
@@ -14,6 +15,7 @@ impl fmt::Display for AllAvailableSources {
             Self::SukebeiNyaaDotSi => write!(f, "Nyaa Sukebei"),
             Self::TorrentsCsvDotCom => write!(f, "Torrents Csv"),
             Self::UindexDotOrg => write!(f, "Uindex"),
+            Self::LimeTorrentsDotLol => write!(f, "Lime Torrents"),
         }
     }
 }
@@ -25,6 +27,7 @@ impl AllAvailableSources {
             "Nyaa Sukebei" => AllAvailableSources::SukebeiNyaaDotSi,
             "Torrents Csv" => AllAvailableSources::TorrentsCsvDotCom,
             "Uindex" => AllAvailableSources::UindexDotOrg,
+            "Lime Torrents" => AllAvailableSources::LimeTorrentsDotLol,
             _ => AllAvailableSources::TorrentsCsvDotCom,
         }
     }
