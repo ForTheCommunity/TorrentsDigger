@@ -227,7 +227,7 @@ impl NyaaCategories {
             };
 
             // extracting info hash from magnet
-            let info_hash = extract_info_hash_from_magnet(&magnet);
+            let info_hash = extract_info_hash_from_magnet(&magnet).to_lowercase();
 
             // adding extra trackers
             magnet.push_str(get_trackers()?.as_str());

@@ -7,9 +7,10 @@ use ureq::{Agent, Body, http::Response};
 use crate::{
     database::proxy::Proxy,
     sources::{
-        available_sources::AllAvailableSources, limetorrents::LimeTorrentsCategories,
-        nyaa::NyaaCategories, sukebei_nyaa::SukebeiNyaaCategories,
-        torrents_csv::TorrentsCsvCategories, uindex::UindexCategories,
+        available_sources::AllAvailableSources, lime_torrents::LimeTorrentsCategories,
+        nyaa::NyaaCategories, solid_torrents::SolidTorrentsCategories,
+        sukebei_nyaa::SukebeiNyaaCategories, torrents_csv::TorrentsCsvCategories,
+        uindex::UindexCategories,
     },
     torrent::Torrent,
 };
@@ -23,13 +24,12 @@ pub fn fetch_torrents(
 
     // scrape & parseNyaaCategories
     match source {
-        AllAvailableSources::NyaaDotSi => NyaaCategories::scrape_and_parse(response),
-        AllAvailableSources::SukebeiNyaaDotSi => SukebeiNyaaCategories::scrape_and_parse(response),
-        AllAvailableSources::TorrentsCsvDotCom => TorrentsCsvCategories::parse_response(response),
-        AllAvailableSources::UindexDotOrg => UindexCategories::scrape_and_parse(response),
-        AllAvailableSources::LimeTorrentsDotLol => {
-            LimeTorrentsCategories::scrape_and_parse(response)
-        }
+        AllAvailableSources::Nyaa => NyaaCategories::scrape_and_parse(response),
+        AllAvailableSources::SukebeiNyaa => SukebeiNyaaCategories::scrape_and_parse(response),
+        AllAvailableSources::TorrentsCsv => TorrentsCsvCategories::parse_response(response),
+        AllAvailableSources::Uindex => UindexCategories::scrape_and_parse(response),
+        AllAvailableSources::LimeTorrents => LimeTorrentsCategories::scrape_and_parse(response),
+        AllAvailableSources::SolidTorrents => SolidTorrentsCategories::scrape_and_parse(response),
     }
 }
 

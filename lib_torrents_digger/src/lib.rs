@@ -3,8 +3,9 @@ use std::error::Error;
 use crate::{
     sources::{
         available_sources::AllAvailableSources,
-        limetorrents::{LimeTorrentsCategories, LimeTorrentsSortings},
+        lime_torrents::{LimeTorrentsCategories, LimeTorrentsSortings},
         nyaa::{NyaaCategories, NyaaFilter, NyaaSortings},
+        solid_torrents::{SolidTorrentsCategories, SolidTorrentsSortings},
         sukebei_nyaa::{SukebeiNyaaCategories, SukebeiNyaaFilter},
         torrents_csv::TorrentsCsvCategories,
         uindex::{UindexCategories, UindexSortings},
@@ -28,7 +29,7 @@ pub fn search_torrent(
 ) -> Result<(Vec<torrent::Torrent>, Option<i64>), Box<dyn Error + 'static>> {
     let source = AllAvailableSources::to_source(&source);
     match source {
-        AllAvailableSources::NyaaDotSi => {
+        AllAvailableSources::Nyaa => {
             let url = NyaaCategories::request_url_builder(
                 &torrent_name,
                 &NyaaFilter::to_filter(&filter),
@@ -36,9 +37,9 @@ pub fn search_torrent(
                 &NyaaSortings::to_sorting(&sorting),
                 &page.unwrap_or(0),
             );
-            fetch_torrents(url, AllAvailableSources::NyaaDotSi)
+            fetch_torrents(url, AllAvailableSources::Nyaa)
         }
-        AllAvailableSources::SukebeiNyaaDotSi => {
+        AllAvailableSources::SukebeiNyaa => {
             let url = SukebeiNyaaCategories::request_url_builder(
                 &torrent_name,
                 &SukebeiNyaaFilter::to_filter(&filter),
@@ -46,28 +47,37 @@ pub fn search_torrent(
                 &NyaaSortings::to_sorting(&sorting),
                 &page.unwrap_or(0),
             );
-            fetch_torrents(url, AllAvailableSources::SukebeiNyaaDotSi)
+            fetch_torrents(url, AllAvailableSources::SukebeiNyaa)
         }
-        AllAvailableSources::TorrentsCsvDotCom => {
+        AllAvailableSources::TorrentsCsv => {
             let url = TorrentsCsvCategories::request_url_builder_torrents_csv(&torrent_name, &page);
-            fetch_torrents(url, AllAvailableSources::TorrentsCsvDotCom)
+            fetch_torrents(url, AllAvailableSources::TorrentsCsv)
         }
-        AllAvailableSources::UindexDotOrg => {
+        AllAvailableSources::Uindex => {
             let url = UindexCategories::request_url_builder(
                 &torrent_name,
                 &UindexCategories::to_category(&category),
                 &UindexSortings::to_sorting(&sorting),
             );
-            fetch_torrents(url, AllAvailableSources::UindexDotOrg)
+            fetch_torrents(url, AllAvailableSources::Uindex)
         }
-        AllAvailableSources::LimeTorrentsDotLol => {
+        AllAvailableSources::LimeTorrents => {
             let url = LimeTorrentsCategories::request_url_builder(
                 &torrent_name,
                 &LimeTorrentsCategories::to_category(&category),
                 &LimeTorrentsSortings::to_sorting(&sorting),
                 &page.unwrap_or(0),
             );
-            fetch_torrents(url, AllAvailableSources::LimeTorrentsDotLol)
+            fetch_torrents(url, AllAvailableSources::LimeTorrents)
+        }
+        AllAvailableSources::SolidTorrents => {
+            let url = SolidTorrentsCategories::request_url_builder(
+                &torrent_name,
+                &SolidTorrentsCategories::to_category(&category),
+                &SolidTorrentsSortings::to_sorting(&sorting),
+                &page.unwrap_or(0),
+            );
+            fetch_torrents(url, AllAvailableSources::SolidTorrents)
         }
     }
 }

@@ -30,7 +30,7 @@ fn test_torrents_csv_dot_com() {
     // let SearchInput: SearchInput
     let url = TorrentsCsvCategories::request_url_builder_torrents_csv("The Matrix", &None);
     // let response
-    let response = fetch_torrents(url, AllAvailableSources::TorrentsCsvDotCom);
+    let response = fetch_torrents(url, AllAvailableSources::TorrentsCsv);
     match response {
         Ok(torrents) => {
             println!("Total Torrents in First Page : {}", torrents.0.len());
@@ -51,7 +51,7 @@ fn test_nyaa_dot_si() {
         &1,
     );
 
-    let response = fetch_torrents(url, AllAvailableSources::NyaaDotSi);
+    let response = fetch_torrents(url, AllAvailableSources::Nyaa);
 
     match response {
         Ok(torrents) => {
@@ -83,7 +83,7 @@ fn test_nyaa_dot_si() {
         .map(|category| category.to_string())
         .collect();
     sources_categories.insert(
-        AllAvailableSources::NyaaDotSi.to_string(),
+        AllAvailableSources::Nyaa.to_string(),
         nyaa_categories_as_strings_vector,
     );
     println!("HashMap : {:?}", sources_categories);

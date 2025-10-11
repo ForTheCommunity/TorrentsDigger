@@ -195,16 +195,17 @@ impl LimeTorrentsCategories {
                 .collect::<String>()
                 .trim()
                 .to_string();
+
             // extracting date
-            let mut date = "N/A".to_string();
             // The format is "1 Year+ - in Anime." - we can split by ' - in '
-            if let Some(parts) = date_category_text.split_once(" - in ") {
-                date = parts.0.trim().to_string();
+            let date = if let Some(parts) = date_category_text.split_once(" - in ") {
+                // If successful, use the first part (the date)
+                parts.0.trim().to_string()
             } else {
-                // if unable to split them
+                // If unable to split (or no match), use the original text as a fallback
                 // Fallback to date category appended text
-                date = date_category_text;
-            }
+                date_category_text
+            };
 
             // torrent size
             let size = table_row_data[2]

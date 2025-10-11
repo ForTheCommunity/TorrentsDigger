@@ -116,7 +116,7 @@ impl JsonTorrentData {
         magnet.push_str(get_trackers().unwrap().as_str());
 
         Torrent {
-            info_hash: self.infohash.clone(),
+            info_hash: self.infohash.clone().to_lowercase(),
             name: self.name.clone(),
             magnet,
             size: size_str,

@@ -2,16 +2,18 @@ use std::collections::HashMap;
 
 use crate::sources::{
     available_sources::AllAvailableSources,
-    limetorrents::{LimeTorrentsCategories, LimeTorrentsSortings},
+    lime_torrents::{LimeTorrentsCategories, LimeTorrentsSortings},
     nyaa::{NyaaCategories, NyaaFilter, NyaaSortings},
+    solid_torrents::{SolidTorrentsCategories, SolidTorrentsSortings},
     sukebei_nyaa::{SukebeiNyaaCategories, SukebeiNyaaFilter},
     torrents_csv::TorrentsCsvCategories,
     uindex::{UindexCategories, UindexSortings},
 };
 
 pub mod available_sources;
-pub mod limetorrents;
+pub mod lime_torrents;
 pub mod nyaa;
+pub mod solid_torrents;
 pub mod sukebei_nyaa;
 pub mod torrents_csv;
 pub mod uindex;
@@ -34,10 +36,7 @@ pub fn get_source_details() -> HashMap<String, SourceDetails> {
         source_filters: NyaaFilter::all_nyaa_filters(),
         source_sortings: NyaaSortings::all_nyaa_sortings(),
     };
-    sources_details.insert(
-        AllAvailableSources::NyaaDotSi.to_string(),
-        nyaa_source_details,
-    );
+    sources_details.insert(AllAvailableSources::Nyaa.to_string(), nyaa_source_details);
 
     // Inserting SukebeiNyaaDotSi
     let sukebei_nyaa_source_details: SourceDetails = SourceDetails {
@@ -47,7 +46,7 @@ pub fn get_source_details() -> HashMap<String, SourceDetails> {
         source_sortings: NyaaSortings::all_nyaa_sortings(), // same sortings for sukebei
     };
     sources_details.insert(
-        AllAvailableSources::SukebeiNyaaDotSi.to_string(),
+        AllAvailableSources::SukebeiNyaa.to_string(),
         sukebei_nyaa_source_details,
     );
 
@@ -59,7 +58,7 @@ pub fn get_source_details() -> HashMap<String, SourceDetails> {
         source_sortings: vec!["".to_string()],
     };
     sources_details.insert(
-        AllAvailableSources::TorrentsCsvDotCom.to_string(),
+        AllAvailableSources::TorrentsCsv.to_string(),
         torrents_csv_source_details,
     );
 
@@ -70,7 +69,7 @@ pub fn get_source_details() -> HashMap<String, SourceDetails> {
         source_sortings: UindexSortings::all_uindex_sortings(),
     };
     sources_details.insert(
-        AllAvailableSources::UindexDotOrg.to_string(),
+        AllAvailableSources::Uindex.to_string(),
         uindex_source_details,
     );
 
@@ -81,10 +80,20 @@ pub fn get_source_details() -> HashMap<String, SourceDetails> {
         source_sortings: LimeTorrentsSortings::all_limetorrents_sortings(),
     };
     sources_details.insert(
-        AllAvailableSources::LimeTorrentsDotLol.to_string(),
+        AllAvailableSources::LimeTorrents.to_string(),
         lime_torrents_source_details,
     );
 
+    let solid_torrents_source_details = SourceDetails {
+        source_query_options: SolidTorrentsCategories::get_query_options(),
+        source_categories: SolidTorrentsCategories::all_categories(),
+        source_filters: vec!["".to_string()],
+        source_sortings: SolidTorrentsSortings::all_solid_torrents_sortings(),
+    };
+    sources_details.insert(
+        AllAvailableSources::SolidTorrents.to_string(),
+        solid_torrents_source_details,
+    );
     sources_details
 }
 

@@ -1,21 +1,23 @@
 use core::fmt;
 
 pub enum AllAvailableSources {
-    NyaaDotSi,
-    SukebeiNyaaDotSi,
-    TorrentsCsvDotCom,
-    UindexDotOrg,
-    LimeTorrentsDotLol,
+    Nyaa,
+    SukebeiNyaa,
+    TorrentsCsv,
+    Uindex,
+    LimeTorrents,
+    SolidTorrents,
 }
 
 impl fmt::Display for AllAvailableSources {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Self::NyaaDotSi => write!(f, "Nyaa"),
-            Self::SukebeiNyaaDotSi => write!(f, "Nyaa Sukebei"),
-            Self::TorrentsCsvDotCom => write!(f, "Torrents Csv"),
-            Self::UindexDotOrg => write!(f, "Uindex"),
-            Self::LimeTorrentsDotLol => write!(f, "Lime Torrents"),
+            Self::Nyaa => write!(f, "Nyaa"),
+            Self::SukebeiNyaa => write!(f, "Nyaa Sukebei"),
+            Self::TorrentsCsv => write!(f, "Torrents Csv"),
+            Self::Uindex => write!(f, "Uindex"),
+            Self::LimeTorrents => write!(f, "Lime Torrents"),
+            Self::SolidTorrents => write!(f, "Solid Torrents"),
         }
     }
 }
@@ -23,12 +25,13 @@ impl fmt::Display for AllAvailableSources {
 impl AllAvailableSources {
     pub fn to_source(text_category: &str) -> AllAvailableSources {
         match text_category {
-            "Nyaa" => AllAvailableSources::NyaaDotSi,
-            "Nyaa Sukebei" => AllAvailableSources::SukebeiNyaaDotSi,
-            "Torrents Csv" => AllAvailableSources::TorrentsCsvDotCom,
-            "Uindex" => AllAvailableSources::UindexDotOrg,
-            "Lime Torrents" => AllAvailableSources::LimeTorrentsDotLol,
-            _ => AllAvailableSources::TorrentsCsvDotCom,
+            "Nyaa" => AllAvailableSources::Nyaa,
+            "Nyaa Sukebei" => AllAvailableSources::SukebeiNyaa,
+            "Torrents Csv" => AllAvailableSources::TorrentsCsv,
+            "Uindex" => AllAvailableSources::Uindex,
+            "Lime Torrents" => AllAvailableSources::LimeTorrents,
+            "Solid Torrents" => AllAvailableSources::SolidTorrents,
+            _ => AllAvailableSources::TorrentsCsv,
         }
     }
 }
