@@ -9,6 +9,7 @@ use crate::{
     sources::{
         available_sources::AllAvailableSources, nyaa::NyaaCategories,
         sukebei_nyaa::SukebeiNyaaCategories, torrents_csv::TorrentsCsvCategories,
+        uindex::UindexCategories,
     },
     torrent::Torrent,
 };
@@ -25,6 +26,7 @@ pub fn fetch_torrents(
         AllAvailableSources::NyaaDotSi => NyaaCategories::scrape_and_parse(response),
         AllAvailableSources::SukebeiNyaaDotSi => SukebeiNyaaCategories::scrape_and_parse(response),
         AllAvailableSources::TorrentsCsvDotCom => TorrentsCsvCategories::parse_response(response),
+        AllAvailableSources::UindexDotOrg => UindexCategories::scrape_and_parse(response),
     }
 }
 
@@ -80,15 +82,15 @@ fn send_request(url: String) -> Result<Response<Body>, Box<dyn Error>> {
     }
 }
 
-pub enum ProxyTypes {
-    NoProxy,
-    Http,
-    Https,
-    Socks4,
-    Socks5,
-}
+// pub enum ProxyTypes {
+//     NoProxy,
+//     Http,
+//     Https,
+//     Socks4,
+//     Socks5,
+// }
 
-impl ProxyTypes {}
+// impl ProxyTypes {}
 
 // _______________________________________________________________________________________
 #[cfg(test)]

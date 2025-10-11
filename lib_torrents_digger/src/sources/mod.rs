@@ -5,12 +5,14 @@ use crate::sources::{
     nyaa::{NyaaCategories, NyaaFilter, NyaaSortings},
     sukebei_nyaa::{SukebeiNyaaCategories, SukebeiNyaaFilter},
     torrents_csv::TorrentsCsvCategories,
+    uindex::{UindexCategories, UindexSortings},
 };
 
 pub mod available_sources;
 pub mod nyaa;
 pub mod sukebei_nyaa;
 pub mod torrents_csv;
+pub mod uindex;
 
 #[derive(Debug)]
 pub struct QueryOptions {
@@ -24,50 +26,52 @@ pub fn get_source_details() -> HashMap<String, SourceDetails> {
     let mut sources_details: HashMap<String, SourceDetails> = HashMap::new();
 
     // Inserting NyaaDotSi
-    let nyaa_dot_si_categories_as_strings_vector: Vec<String> = NyaaCategories::all_categories();
-    let nyaa_filters = NyaaFilter::all_nyaa_filters();
-    let nyaa_sortings = NyaaSortings::all_nyaa_sortings();
-    let nyaa_dot_si_source_details: SourceDetails = SourceDetails {
+    let nyaa_source_details: SourceDetails = SourceDetails {
         source_query_options: NyaaCategories::get_query_options(),
-        source_categories: nyaa_dot_si_categories_as_strings_vector,
-        source_filters: nyaa_filters,
-        source_sortings: nyaa_sortings.clone(),
+        source_categories: NyaaCategories::all_categories(),
+        source_filters: NyaaFilter::all_nyaa_filters(),
+        source_sortings: NyaaSortings::all_nyaa_sortings(),
     };
     sources_details.insert(
         AllAvailableSources::NyaaDotSi.to_string(),
-        nyaa_dot_si_source_details,
+        nyaa_source_details,
     );
 
     // Inserting SukebeiNyaaDotSi
-    let sukebei_nyaa_dot_si_categories_as_strings_vector: Vec<String> =
-        SukebeiNyaaCategories::all_categories();
-    let sukebei_nyaa_filters = SukebeiNyaaFilter::all_sukebei_nyaa_filters();
-    // nyaa sortings is same for sukebei also
-    let sukebei_nyaa_dot_si_source_details: SourceDetails = SourceDetails {
+    let sukebei_nyaa_source_details: SourceDetails = SourceDetails {
         source_query_options: SukebeiNyaaCategories::get_query_options(),
-        source_categories: sukebei_nyaa_dot_si_categories_as_strings_vector,
-        source_filters: sukebei_nyaa_filters,
-        source_sortings: nyaa_sortings,
+        source_categories: SukebeiNyaaCategories::all_categories(),
+        source_filters: SukebeiNyaaFilter::all_sukebei_nyaa_filters(),
+        source_sortings: NyaaSortings::all_nyaa_sortings(), // same sortings for sukebei
     };
     sources_details.insert(
         AllAvailableSources::SukebeiNyaaDotSi.to_string(),
-        sukebei_nyaa_dot_si_source_details,
+        sukebei_nyaa_source_details,
     );
 
     // Inserting TorrentsCsvDotCom
-    let torrents_csv_dot_com_categories_as_strings_vector: Vec<String> =
-        TorrentsCsvCategories::all_categories();
-    let torrents_csv_filter = vec!["".to_string()];
-    let torrents_csv_dot_com_source_details: SourceDetails = SourceDetails {
+    let torrents_csv_source_details: SourceDetails = SourceDetails {
         source_query_options: TorrentsCsvCategories::get_query_options(),
-        source_categories: torrents_csv_dot_com_categories_as_strings_vector,
-        source_filters: torrents_csv_filter,
+        source_categories: TorrentsCsvCategories::all_categories(),
+        source_filters: vec!["".to_string()],
         source_sortings: vec!["".to_string()],
     };
     sources_details.insert(
         AllAvailableSources::TorrentsCsvDotCom.to_string(),
-        torrents_csv_dot_com_source_details,
+        torrents_csv_source_details,
     );
+
+    let uindex_source_details = SourceDetails {
+        source_query_options: UindexCategories::get_query_options(),
+        source_categories: UindexCategories::all_categories(),
+        source_filters: vec!["".to_string()],
+        source_sortings: UindexSortings::all_uindex_sortings(),
+    };
+    sources_details.insert(
+        AllAvailableSources::UindexDotOrg.to_string(),
+        uindex_source_details,
+    );
+
     sources_details
 }
 
