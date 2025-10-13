@@ -9,33 +9,69 @@ build_binaries:
   rules:
     - if: $CI_COMMIT_TAG
   script:
-    # creating releases dir.
-    - mkdir releases
-
     # Install Rust
     - apt update -y && apt upgrade -y
     - apt install -y curl git wget unzip
     - curl https://sh.rustup.rs -sSf | sh -s -- -y
     - source "$HOME/.cargo/env"
 
-    # Build Android APK
-    - flutter pub get
-    - dart run build_runner build # [Freezed]
-    - flutter build apk --release
-
     # Get app name and version
     - export APP_NAME=$(grep 'name:' pubspec.yaml | head -1 | awk '{print $2}' | sed 's/-/_/g' | sed 's/\r//g')
     - export APP_VERSION=$(grep 'version:' pubspec.yaml | head -1 | awk '{print $2}' | sed 's/+//' | sed 's/ /_/g' | sed 's/\r//g')
-    - export NEW_APK_NAME="${APP_NAME}_${APP_VERSION}.apk"
+    # Setting Apk Name according to cpu architectures
+    - export UNIVERSAL_APK_NAME="${APP_NAME}_${APP_VERSION}_universal.apk"
+    - export ARMEABI-V7A_APK_NAME="${APP_NAME}_${APP_VERSION}_armeabi-v7a.apk"
+    - export ARM64-V8A_APK_NAME="${APP_NAME}_${APP_VERSION}_arm64-v8a.apk"
+    - export X86_64_APK_NAME="${APP_NAME}_${APP_VERSION}_x86_64.apk"
 
+    # Build Android APK
+    - flutter pub get
+    - dart run build_runner build # [Freezed]
+    # Universal Fat APK
+    - flutter build apk --release
+    # APK per ABI
+    - flutter build apk --release --split-per-abi
+
+    # Creating releases dir
+    - mkdir releases
+
+    # Universal APK
+    # moving to releases dir
+    - mv build/app/outputs/flutter-apk/app-release.apk releases
     # Rename APK
-    - mv build/app/outputs/flutter-apk/app-release.apk releases/$NEW_APK_NAME
-
+    - mv releases/app-release.apk releases/$UNIVERSAL_APK_NAME
     # Generate SHA256
-    - sha256sum releases/$NEW_APK_NAME > releases/$NEW_APK_NAME.sha256.txt
+    - sha256sum releases/$UNIVERSAL_APK_NAME > releases/$UNIVERSAL_APK_NAME.sha256.txt
+
+    # ARMEABI-V7A APK
+    # moving to releases dir
+    - mv build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk releases
+    # Rename APK
+    - mv releases/app-armeabi-v7a-release.apk releases/$ARMEABI-V7A_APK_NAME
+    # Generate SHA256
+    - sha256sum releases/$ARMEABI-V7A_APK_NAME > releases/$ARMEABI-V7A_APK_NAME.sha256.txt
+
+    # ARM64-V8A APK
+    # moving to releases dir
+    - mv build/app/outputs/flutter-apk/app-arm64-v8a-release.apk releases
+    # Rename APK
+    - mv releases/app-arm64-v8a-release.apk releases/$ARM64-V8A_APK_NAME
+    # Generate SHA256
+    - sha256sum releases/$ARM64-V8A_APK_NAME > releases/$ARM64-V8A_APK_NAME.sha256.txt
+
+    # X86_64 APK
+    # moving to releases dir
+    - mv build/app/outputs/flutter-apk/app-x86_64-release.apk releases
+    # Rename APK
+    - mv releases/app-x86_64-release.apk releases/$X86_64_APK_NAME
+    # Generate SHA256
+    - sha256sum releases/$X86_64_APK_NAME > releases/$X86_64_APK_NAME.sha256.txt
 
     # Save .env for release job
-    - echo "NEW_APK_NAME=$NEW_APK_NAME" > build.env
+    - echo "UNIVERSAL_APK_NAME=$UNIVERSAL_APK_NAME" > build.env
+    - echo "ARMEABI-V7A_APK_NAME=$ARMEABI-V7A_APK_NAME" >> build.env
+    - echo "ARM64-V8A_APK_NAME=$ARM64-V8A_APK_NAME" >> build.env
+    - echo "X86_64_APK_NAME=$X86_64_APK_NAME" >> build.env
 
       # Creating AppImage
     # Installing Dependencies
@@ -113,10 +149,25 @@ create-release:
     assets:
       links:
         # Android Universal Fat Apk
-        - name: "$NEW_APK_NAME"
-          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$NEW_APK_NAME?job=build_binaries"
-        - name: "$NEW_APK_NAME.sha256.txt"
-          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$NEW_APK_NAME.sha256.txt?job=build_binaries"
+        - name: "$UNIVERSAL_APK_NAME"
+          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/main/latest/raw/releases/$UNIVERSAL_APK_NAME?job=build_binaries"
+        - name: "$UNIVERSAL_APK_NAME.sha256.txt"
+          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/main/latest/raw/releases/$UNIVERSAL_APK_NAME.sha256.txt?job=build_binaries"
+        # Android armeabi-v7a-release
+        - name: "$ARMEABI-V7A_APK_NAME"
+          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/main/latest/raw/releases/$ARMEABI-V7A_APK_NAME?job=build_binaries"
+        - name: "$ARMEABI-V7A_APK_NAME.sha256.txt"
+          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/main/latest/raw/releases/$ARMEABI-V7A_APK_NAME.sha256.txt?job=build_binaries"
+        # Android arm64-v8a-release
+        - name: "$ARM64-V8A_APK_NAME"
+          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/main/latest/raw/releases/$ARM64-V8A_APK_NAME?job=build_binaries"
+        - name: "$ARM64-V8A_APK_NAME.sha256.txt"
+          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/main/latest/raw/releases/$ARM64-V8A_APK_NAME.sha256.txt?job=build_binaries"
+        # Android x86_64-release
+        - name: "$X86_64_APK_NAME"
+          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/main/latest/raw/releases/$X86_64_APK_NAME?job=build_binaries"
+        - name: "$X86_64_APK_NAME.sha256.txt"
+          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/main/latest/raw/releases/$X86_64_APK_NAME.sha256.txt?job=build_binaries"
         # AppImage
         - name: "$NEW_APPIMAGE_NAME"
           url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$NEW_APPIMAGE_NAME?job=build_binaries"
