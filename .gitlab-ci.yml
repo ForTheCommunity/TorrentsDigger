@@ -9,13 +9,16 @@ build_binaries:
   rules:
     - if: $CI_COMMIT_TAG
   script:
-    # installing just
-    - apt install just
     # Install Rust
     - apt update -y && apt upgrade -y
     - apt install -y curl git wget unzip
     - curl https://sh.rustup.rs -sSf | sh -s -- -y
     - source "$HOME/.cargo/env"
+
+    # Installing cargo-binstall
+    - curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+    # install just
+    - cargo binstall just
 
     # Get app name and version
     - export APP_NAME=$(grep 'name:' pubspec.yaml | head -1 | awk '{print $2}' | sed 's/-/_/g' | sed 's/\r//g')
