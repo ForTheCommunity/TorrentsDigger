@@ -20,8 +20,8 @@ build_binaries:
     - export APP_VERSION=$(grep 'version:' pubspec.yaml | head -1 | awk '{print $2}' | sed 's/+//' | sed 's/ /_/g' | sed 's/\r//g')
     # Setting Apk Name according to cpu architectures
     - export UNIVERSAL_APK_NAME="${APP_NAME}_${APP_VERSION}_universal.apk"
-    - export ARMEABI-V7A_APK_NAME="${APP_NAME}_${APP_VERSION}_armeabi-v7a.apk"
-    - export ARM64-V8A_APK_NAME="${APP_NAME}_${APP_VERSION}_arm64-v8a.apk"
+    - export ARMEABI_V7A_APK_NAME="${APP_NAME}_${APP_VERSION}_armeabi-v7a.apk"
+    - export ARM64_V8A_APK_NAME="${APP_NAME}_${APP_VERSION}_arm64-v8a.apk"
     - export X86_64_APK_NAME="${APP_NAME}_${APP_VERSION}_x86_64.apk"
 
     # Build Android APK
@@ -47,17 +47,17 @@ build_binaries:
     # moving to releases dir
     - mv build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk releases
     # Rename APK
-    - mv releases/app-armeabi-v7a-release.apk releases/$ARMEABI-V7A_APK_NAME
+    - mv releases/app-armeabi-v7a-release.apk releases/$ARMEABI_V7A_APK_NAME
     # Generate SHA256
-    - sha256sum releases/$ARMEABI-V7A_APK_NAME > releases/$ARMEABI-V7A_APK_NAME.sha256.txt
+    - sha256sum releases/$ARMEABI_V7A_APK_NAME > releases/$ARMEABI_V7A_APK_NAME.sha256.txt
 
     # ARM64-V8A APK
     # moving to releases dir
     - mv build/app/outputs/flutter-apk/app-arm64-v8a-release.apk releases
     # Rename APK
-    - mv releases/app-arm64-v8a-release.apk releases/$ARM64-V8A_APK_NAME
+    - mv releases/app-arm64-v8a-release.apk releases/$ARM64_V8A_APK_NAME
     # Generate SHA256
-    - sha256sum releases/$ARM64-V8A_APK_NAME > releases/$ARM64-V8A_APK_NAME.sha256.txt
+    - sha256sum releases/$ARM64_V8A_APK_NAME > releases/$ARM64_V8A_APK_NAME.sha256.txt
 
     # X86_64 APK
     # moving to releases dir
@@ -69,8 +69,8 @@ build_binaries:
 
     # Save .env for release job
     - echo "UNIVERSAL_APK_NAME=$UNIVERSAL_APK_NAME" > build.env
-    - echo "ARMEABI-V7A_APK_NAME=$ARMEABI-V7A_APK_NAME" >> build.env
-    - echo "ARM64-V8A_APK_NAME=$ARM64-V8A_APK_NAME" >> build.env
+    - echo "ARMEABI_V7A_APK_NAME=$ARMEABI_V7A_APK_NAME" >> build.env
+    - echo "ARM64_V8A_APK_NAME=$ARM64_V8A_APK_NAME" >> build.env
     - echo "X86_64_APK_NAME=$X86_64_APK_NAME" >> build.env
 
       # Creating AppImage
@@ -85,8 +85,6 @@ build_binaries:
     - flutter build linux --release
 
     # Grepping App Name & Version.
-    - export APP_NAME=$(grep 'name:' pubspec.yaml | head -1 | awk '{print $2}' | sed 's/-/_/g' | sed 's/\r//g');
-    - export APPIMAGE_VERSION=$(grep 'version:' pubspec.yaml | head -1 | awk '{print $2}' | cut -c1-3);
     - export NEW_APPIMAGE_NAME="${APP_NAME}_${APP_VERSION}-x86_64.AppImage"
 
     # Copying release bundle to AppDir
@@ -103,7 +101,7 @@ build_binaries:
 
     # Creating Desktop Entry for App
     - touch "${APP_NAME}.AppDir/${APP_NAME}.desktop"
-    - echo -e "[Desktop Entry]\nVersion=${APPIMAGE_VERSION}\nType=Application\nTerminal=false\nName=${APP_NAME}\nExec=${APP_NAME} %u\nIcon=icon\nCategories=Utility" > "${APP_NAME}.AppDir/test_flutter_app.desktop"
+    - echo -e "[Desktop Entry]\nVersion=${APP_VERSION}\nType=Application\nTerminal=false\nName=${APP_NAME}\nExec=${APP_NAME} %u\nIcon=icon\nCategories=Utility" > "${APP_NAME}.AppDir/test_flutter_app.desktop"
 
     # Downloading AppImageToolKit
     - wget https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
@@ -154,15 +152,15 @@ create-release:
         - name: "$UNIVERSAL_APK_NAME.sha256.txt"
           url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/main/latest/raw/releases/$UNIVERSAL_APK_NAME.sha256.txt?job=build_binaries"
         # Android armeabi-v7a-release
-        - name: "$ARMEABI-V7A_APK_NAME"
-          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/main/latest/raw/releases/$ARMEABI-V7A_APK_NAME?job=build_binaries"
-        - name: "$ARMEABI-V7A_APK_NAME.sha256.txt"
-          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/main/latest/raw/releases/$ARMEABI-V7A_APK_NAME.sha256.txt?job=build_binaries"
+        - name: "$ARMEABI_V7A_APK_NAME"
+          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/main/latest/raw/releases/$ARMEABI_V7A_APK_NAME?job=build_binaries"
+        - name: "$ARMEABI_V7A_APK_NAME.sha256.txt"
+          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/main/latest/raw/releases/$ARMEABI_V7A_APK_NAME.sha256.txt?job=build_binaries"
         # Android arm64-v8a-release
-        - name: "$ARM64-V8A_APK_NAME"
-          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/main/latest/raw/releases/$ARM64-V8A_APK_NAME?job=build_binaries"
-        - name: "$ARM64-V8A_APK_NAME.sha256.txt"
-          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/main/latest/raw/releases/$ARM64-V8A_APK_NAME.sha256.txt?job=build_binaries"
+        - name: "$ARM64_V8A_APK_NAME"
+          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/main/latest/raw/releases/$ARM64_V8A_APK_NAME?job=build_binaries"
+        - name: "$ARM64_V8A_APK_NAME.sha256.txt"
+          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/main/latest/raw/releases/$ARM64_V8A_APK_NAME.sha256.txt?job=build_binaries"
         # Android x86_64-release
         - name: "$X86_64_APK_NAME"
           url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/main/latest/raw/releases/$X86_64_APK_NAME?job=build_binaries"
