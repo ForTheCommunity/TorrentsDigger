@@ -13,35 +13,35 @@ rl:
 build_apk:
 	flutter build apk --release
 	# moving to releases dir
-    mv build/app/outputs/flutter-apk/app-release.apk releases
-    # Rename APK
-    mv releases/app-release.apk releases/{{ env('UNIVERSAL_APK_NAME') }}
-    # Generate SHA256
-    sha256sum releases/{{ env('UNIVERSAL_APK_NAME') }} > releases/{{ env('UNIVERSAL_APK_NAME') }}.sha256.txt
+	mv build/app/outputs/flutter-apk/app-release.apk releases
+	# Rename APK
+	mv releases/app-release.apk releases/{{ env('UNIVERSAL_APK_NAME') }}
+	# Generate SHA256
+	sha256sum releases/{{ env('UNIVERSAL_APK_NAME') }} > releases/{{ env('UNIVERSAL_APK_NAME') }}.sha256.txt
 
 build_apk_per_abi:
 	flutter build apk --release --split-per-abi
 	# ARMEABI-V7A APK
-    # moving to releases dir
-    mv build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk releases
-    # Rename APK
-    mv releases/app-armeabi-v7a-release.apk releases/{{ env('ARMEABI_V7A_APK_NAME' )}}
-    # Generate SHA256
-    sha256sum releases/{{ env('ARMEABI_V7A_APK_NAME' )}} > releases/{{ env('ARMEABI_V7A_APK_NAME' )}}.sha256.txt
+	# moving to releases dir
+	mv build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk releases
+	# Rename APK
+	mv releases/app-armeabi-v7a-release.apk releases/{{ env('ARMEABI_V7A_APK_NAME' )}}
+	# Generate SHA256
+	sha256sum releases/{{ env('ARMEABI_V7A_APK_NAME' )}} > releases/{{ env('ARMEABI_V7A_APK_NAME' )}}.sha256.txt
 	# ARM64-V8A APK
-    # moving to releases dir
-    mv build/app/outputs/flutter-apk/app-arm64-v8a-release.apk releases
-    # Rename APK
-    mv releases/app-arm64-v8a-release.apk releases/{{ env('ARM64_V8A_APK_NAME') }}
-    # Generate SHA256
-    sha256sum releases/{{ env('ARM64_V8A_APK_NAME') }} > releases/{{ env('ARM64_V8A_APK_NAME') }}.sha256.txt
+	# moving to releases dir
+	mv build/app/outputs/flutter-apk/app-arm64-v8a-release.apk releases
+	# Rename APK
+	mv releases/app-arm64-v8a-release.apk releases/{{ env('ARM64_V8A_APK_NAME') }}
+	# Generate SHA256
+	sha256sum releases/{{ env('ARM64_V8A_APK_NAME') }} > releases/{{ env('ARM64_V8A_APK_NAME') }}.sha256.txt
 	# X86_64 APK
-    # moving to releases dir
-    mv build/app/outputs/flutter-apk/app-x86_64-release.apk releases
-    # Rename APK
-    mv releases/app-x86_64-release.apk releases/{{ env('X86_64_APK_NAME') }}
-    # Generate SHA256
-    sha256sum releases/{{ env('X86_64_APK_NAME') }} > releases/{{ env('X86_64_APK_NAME') }}.sha256.txt
+	# moving to releases dir
+	mv build/app/outputs/flutter-apk/app-x86_64-release.apk releases
+	# Rename APK
+	mv releases/app-x86_64-release.apk releases/{{ env('X86_64_APK_NAME') }}
+	# Generate SHA256
+	sha256sum releases/{{ env('X86_64_APK_NAME') }} > releases/{{ env('X86_64_APK_NAME') }}.sha256.txt
 
 
 build_appimage:
