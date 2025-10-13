@@ -34,6 +34,7 @@ build_appimage:
 	flutter pub get
 	flutter build linux --release
 	# Copying release bundle to AppDir
+	mkdir -p AppImage/AppDir/usr/bin
 	cp -r build/linux/x64/release/bundle/* AppImage/AppDir/usr/bin/
 	chmod +x AppImage/AppDir/AppRun
 	ARCH=x86_64 ./build_deps_dir/appimagetool-x86_64.AppImage AppImage/AppDir {{AppName}}_{{AppVersion}}_x86_64_linux.AppImage
