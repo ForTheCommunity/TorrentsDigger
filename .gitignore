@@ -47,3 +47,5 @@ app.*.map.json
 # Custom Ignores
 android/.kotlin/sessions/kotlin-compiler-*.salive
 *.freezed.dart
+build_deps_dir
+releases
