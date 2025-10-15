@@ -392,7 +392,6 @@ impl KnabenDatabaseCategories {
         let mut all_torrents: Vec<Torrent> = Vec::new();
 
         // extracting next page number
-
         let next_page_num: Option<i64> = document
             .select(&next_page_link_selector)
             .next()
@@ -413,9 +412,23 @@ impl KnabenDatabaseCategories {
                 }
 
                 // extracting Info Hash
-                let info_hash = table_row
-                    .attr("data-id")
-                    .map_or("N/A".to_string(), |s| s.to_lowercase());
+                let info_hash = match table_row.attr("data-id") {
+                    Some(i_h) => {
+                        // skipping torrent if it has Invalid info hash
+                        if i_h.len() != 40 {
+                            continue;
+                        }
+                        // skipping torrent if it has Invalid info hash (non-hex characters)
+                        if !i_h.chars().all(|c| c.is_ascii_hexdigit()) {
+                            continue;
+                        }
+                        i_h.to_lowercase()
+                    }
+                    None => {
+                        eprintln!("Skipping row: Missing data-id (info_hash).");
+                        continue;
+                    }
+                };
 
                 // extracting torrent name and magnet link
                 let (name, magnet) =
@@ -437,6 +450,11 @@ impl KnabenDatabaseCategories {
                     } else {
                         ("N/A".to_string(), "N/A".to_string())
                     };
+
+                // skipping if there is no magnet_link..
+                if magnet.is_empty() || !magnet.starts_with("magnet:") {
+                    continue;
+                }
 
                 // size
                 let size = table_row_data[2]
