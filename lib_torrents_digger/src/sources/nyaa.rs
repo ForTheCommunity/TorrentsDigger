@@ -149,10 +149,8 @@ impl NyaaCategories {
     ) -> String {
         //https://nyaa.si/?f=0&c=1_0&q=naruto&s=seeders&o=desc&p=2
 
-        let torrent_name = torrent_name
-            .split_whitespace()
-            .collect::<Vec<&str>>()
-            .join("+");
+        // url encoding
+        let torrent_name = urlencoding::encode(torrent_name).to_owned().into_owned();
 
         let root_url = "https://nyaa.si";
         let filter = format!("f={}", filter.filter_to_value());

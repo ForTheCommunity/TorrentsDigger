@@ -206,10 +206,8 @@ impl SolidTorrentsCategories {
     ) -> String {
         // https://solidtorrents.to/search?q=fate&page=1&sortBy=leechers&category=1
 
-        let torrent_name = torrent_name
-            .split_whitespace()
-            .collect::<Vec<&str>>()
-            .join("+");
+        // url encoding
+        let torrent_name = urlencoding::encode(torrent_name).to_owned().into_owned();
 
         let root_url = "https://solidtorrents.to";
         let path = "search";

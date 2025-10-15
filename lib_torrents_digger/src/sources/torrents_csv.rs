@@ -38,10 +38,9 @@ impl TorrentsCsvCategories {
         // Size parameter is not working [Problem in Api]
         // https://torrents-csv.com/service/search?q=[QUERY]&after=[AFTER]
 
-        let torrent_name = torrent_name
-            .split_whitespace()
-            .collect::<Vec<&str>>()
-            .join("+");
+        // url encoding
+        let torrent_name = urlencoding::encode(torrent_name).to_owned().into_owned();
+
         let root_url = "https://torrents-csv.com";
         // let results_size = 50;
 

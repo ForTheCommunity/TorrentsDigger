@@ -3,6 +3,7 @@ use std::error::Error;
 use crate::{
     sources::{
         available_sources::AllAvailableSources,
+        knaben_database::{KnabenDatabaseCategories, KnabenDatabaseSortings},
         lime_torrents::{LimeTorrentsCategories, LimeTorrentsSortings},
         nyaa::{NyaaCategories, NyaaFilter, NyaaSortings},
         solid_torrents::{SolidTorrentsCategories, SolidTorrentsSortings},
@@ -78,6 +79,15 @@ pub fn search_torrent(
                 &page.unwrap_or(0),
             );
             fetch_torrents(url, AllAvailableSources::SolidTorrents)
+        }
+        AllAvailableSources::KnabenDatabase => {
+            let url = KnabenDatabaseCategories::request_url_builder(
+                &torrent_name,
+                &KnabenDatabaseCategories::to_category(&category),
+                &KnabenDatabaseSortings::to_sorting(&sorting),
+                &page.unwrap_or(1),
+            );
+            fetch_torrents(url, AllAvailableSources::KnabenDatabase)
         }
     }
 }

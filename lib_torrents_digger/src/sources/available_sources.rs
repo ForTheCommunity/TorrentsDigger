@@ -7,6 +7,7 @@ pub enum AllAvailableSources {
     Uindex,
     LimeTorrents,
     SolidTorrents,
+    KnabenDatabase,
 }
 
 impl fmt::Display for AllAvailableSources {
@@ -18,6 +19,7 @@ impl fmt::Display for AllAvailableSources {
             Self::Uindex => write!(f, "Uindex"),
             Self::LimeTorrents => write!(f, "Lime Torrents"),
             Self::SolidTorrents => write!(f, "Solid Torrents"),
+            Self::KnabenDatabase => write!(f, "Knaben Database"),
         }
     }
 }
@@ -31,6 +33,7 @@ impl AllAvailableSources {
             "Uindex" => AllAvailableSources::Uindex,
             "Lime Torrents" => AllAvailableSources::LimeTorrents,
             "Solid Torrents" => AllAvailableSources::SolidTorrents,
+            "Knaben Database" => AllAvailableSources::KnabenDatabase,
             _ => AllAvailableSources::TorrentsCsv,
         }
     }

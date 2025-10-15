@@ -80,10 +80,8 @@ impl LimeTorrentsCategories {
         // https://www.limetorrents.lol/search/all/fate/seeds/1/
         // https://www.limetorrents.fun/search/all/fate/seeds/1/
 
-        let torrent_name = torrent_name
-            .split_whitespace()
-            .collect::<Vec<&str>>()
-            .join("-");
+        // url encoding
+        let torrent_name = urlencoding::encode(torrent_name).to_owned().into_owned();
 
         let root_url = "https://www.limetorrents.lol";
         let path = "search";

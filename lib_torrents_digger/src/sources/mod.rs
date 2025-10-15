@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use crate::sources::{
     available_sources::AllAvailableSources,
+    knaben_database::{KnabenDatabaseCategories, KnabenDatabaseSortings},
     lime_torrents::{LimeTorrentsCategories, LimeTorrentsSortings},
     nyaa::{NyaaCategories, NyaaFilter, NyaaSortings},
     solid_torrents::{SolidTorrentsCategories, SolidTorrentsSortings},
@@ -11,6 +12,7 @@ use crate::sources::{
 };
 
 pub mod available_sources;
+pub mod knaben_database;
 pub mod lime_torrents;
 pub mod nyaa;
 pub mod solid_torrents;
@@ -94,6 +96,18 @@ pub fn get_source_details() -> HashMap<String, SourceDetails> {
         AllAvailableSources::SolidTorrents.to_string(),
         solid_torrents_source_details,
     );
+
+    let knaben_database_source_details = SourceDetails {
+        source_query_options: KnabenDatabaseCategories::get_query_options(),
+        source_categories: KnabenDatabaseCategories::all_categories(),
+        source_filters: vec!["".to_string()],
+        source_sortings: KnabenDatabaseSortings::all_sortings(),
+    };
+    sources_details.insert(
+        AllAvailableSources::KnabenDatabase.to_string(),
+        knaben_database_source_details,
+    );
+
     sources_details
 }
 
