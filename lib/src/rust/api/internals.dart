@@ -6,6 +6,73 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+class InternalIpDetails {
+  final String ipAddr;
+  final String isp;
+  final String continent;
+  final String country;
+  final String capital;
+  final String city;
+  final String region;
+  final double latitude;
+  final double longitude;
+  final String timezone;
+  final String flagUnicode;
+  final bool isVpn;
+  final bool isTor;
+
+  const InternalIpDetails({
+    required this.ipAddr,
+    required this.isp,
+    required this.continent,
+    required this.country,
+    required this.capital,
+    required this.city,
+    required this.region,
+    required this.latitude,
+    required this.longitude,
+    required this.timezone,
+    required this.flagUnicode,
+    required this.isVpn,
+    required this.isTor,
+  });
+
+  @override
+  int get hashCode =>
+      ipAddr.hashCode ^
+      isp.hashCode ^
+      continent.hashCode ^
+      country.hashCode ^
+      capital.hashCode ^
+      city.hashCode ^
+      region.hashCode ^
+      latitude.hashCode ^
+      longitude.hashCode ^
+      timezone.hashCode ^
+      flagUnicode.hashCode ^
+      isVpn.hashCode ^
+      isTor.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is InternalIpDetails &&
+          runtimeType == other.runtimeType &&
+          ipAddr == other.ipAddr &&
+          isp == other.isp &&
+          continent == other.continent &&
+          country == other.country &&
+          capital == other.capital &&
+          city == other.city &&
+          region == other.region &&
+          latitude == other.latitude &&
+          longitude == other.longitude &&
+          timezone == other.timezone &&
+          flagUnicode == other.flagUnicode &&
+          isVpn == other.isVpn &&
+          isTor == other.isTor;
+}
+
 class InternalProxy {
   final int id;
   final String proxyName;

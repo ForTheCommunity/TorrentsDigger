@@ -1,10 +1,14 @@
-use lib_torrents_digger::{search_torrent, sources::get_source_details};
+use lib_torrents_digger::{
+    search_torrent, sources::get_source_details, sync_request::extract_ip_details,
+};
 use std::collections::HashMap;
 
 use lib_torrents_digger::sources::SourceDetails as ExternalSourceDetails;
 use lib_torrents_digger::torrent::Torrent as ExternalTorrent;
 
-use crate::api::internals::{InternalQueryOptions, InternalSourceDetails, InternalTorrent};
+use crate::api::internals::{
+    InternalIpDetails, InternalQueryOptions, InternalSourceDetails, InternalTorrent,
+};
 
 //  Map the external HashMap to an internal HashMap
 pub fn fetch_source_details() -> HashMap<String, InternalSourceDetails> {
@@ -59,5 +63,26 @@ pub fn dig_torrent(
             let error_message = format!("{}", error);
             Err(error_message)
         }
+    }
+}
+
+pub fn get_ip_details() -> Result<InternalIpDetails, String> {
+    match extract_ip_details() {
+        Ok(a) => Ok(InternalIpDetails {
+            ip_addr: a.ip_addr,
+            isp: a.isp,
+            continent: a.continent,
+            country: a.country,
+            capital: a.capital,
+            city: a.city,
+            region: a.region,
+            latitude: a.latitude,
+            longitude: a.longitude,
+            timezone: a.timezone,
+            flag_unicode: a.flag_unicode,
+            is_vpn: a.is_vpn,
+            is_tor: a.is_tor,
+        }),
+        Err(e) => Err(e.to_string()),
     }
 }

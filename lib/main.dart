@@ -31,7 +31,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => SourceBloc()..add(LoadSources())),
         BlocProvider(create: (_) => PaginationBloc()),
         BlocProvider(
-          create: (context) => TorrentBloc(paginationBloc: context.read<PaginationBloc>()),
+          create: (context) =>
+              TorrentBloc(paginationBloc: context.read<PaginationBloc>()),
         ),
         BlocProvider(
           create: (_) => BookmarkBloc()..add(LoadBookmarkedTorrentsEvent()),

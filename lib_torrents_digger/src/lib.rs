@@ -38,7 +38,7 @@ pub fn search_torrent(
                 &NyaaSortings::to_sorting(&sorting),
                 &page.unwrap_or(0),
             );
-            fetch_torrents(url, AllAvailableSources::Nyaa)
+            fetch_torrents(&url, AllAvailableSources::Nyaa)
         }
         AllAvailableSources::SukebeiNyaa => {
             let url = SukebeiNyaaCategories::request_url_builder(
@@ -48,11 +48,11 @@ pub fn search_torrent(
                 &NyaaSortings::to_sorting(&sorting),
                 &page.unwrap_or(0),
             );
-            fetch_torrents(url, AllAvailableSources::SukebeiNyaa)
+            fetch_torrents(&url, AllAvailableSources::SukebeiNyaa)
         }
         AllAvailableSources::TorrentsCsv => {
             let url = TorrentsCsvCategories::request_url_builder_torrents_csv(&torrent_name, &page);
-            fetch_torrents(url, AllAvailableSources::TorrentsCsv)
+            fetch_torrents(&url, AllAvailableSources::TorrentsCsv)
         }
         AllAvailableSources::Uindex => {
             let url = UindexCategories::request_url_builder(
@@ -60,7 +60,7 @@ pub fn search_torrent(
                 &UindexCategories::to_category(&category),
                 &UindexSortings::to_sorting(&sorting),
             );
-            fetch_torrents(url, AllAvailableSources::Uindex)
+            fetch_torrents(&url, AllAvailableSources::Uindex)
         }
         AllAvailableSources::LimeTorrents => {
             let url = LimeTorrentsCategories::request_url_builder(
@@ -69,7 +69,7 @@ pub fn search_torrent(
                 &LimeTorrentsSortings::to_sorting(&sorting),
                 &page.unwrap_or(0),
             );
-            fetch_torrents(url, AllAvailableSources::LimeTorrents)
+            fetch_torrents(&url, AllAvailableSources::LimeTorrents)
         }
         AllAvailableSources::SolidTorrents => {
             let url = SolidTorrentsCategories::request_url_builder(
@@ -78,7 +78,7 @@ pub fn search_torrent(
                 &SolidTorrentsSortings::to_sorting(&sorting),
                 &page.unwrap_or(0),
             );
-            fetch_torrents(url, AllAvailableSources::SolidTorrents)
+            fetch_torrents(&url, AllAvailableSources::SolidTorrents)
         }
         AllAvailableSources::KnabenDatabase => {
             let url = KnabenDatabaseCategories::request_url_builder(
@@ -87,7 +87,7 @@ pub fn search_torrent(
                 &KnabenDatabaseSortings::to_sorting(&sorting),
                 &page.unwrap_or(1),
             );
-            fetch_torrents(url, AllAvailableSources::KnabenDatabase)
+            fetch_torrents(&url, AllAvailableSources::KnabenDatabase)
         }
     }
 }

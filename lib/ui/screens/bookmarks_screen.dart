@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/bookmark_bloc/bookmark_bloc.dart';
 import 'package:torrents_digger/configs/colors.dart';
+import 'package:torrents_digger/ui/widgets/circular_progress_bar_widget.dart';
 import 'package:torrents_digger/ui/widgets/torrent_list_widget.dart';
 
 class BookmarksScreen extends StatefulWidget {
@@ -48,18 +49,10 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                 case BookmarkInitialState():
                   // Show a loading indicator while in the initial state
                   // as we are dispatching the load event immediately.
-                  return const Center(
-                    child: CircularProgressIndicator(
-                      color: AppColors.greenColor,
-                    ),
-                  );
+                  return const Center(child: CircularProgressBarWidget());
 
                 case BookmarksLoadingState():
-                  return const Center(
-                    child: CircularProgressIndicator(
-                      color: AppColors.greenColor,
-                    ),
-                  );
+                  return const Center(child: CircularProgressBarWidget());
 
                 case BookmarksLoadedState():
                   return state.bookmarkedTorrents.isEmpty

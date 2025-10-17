@@ -2,6 +2,7 @@ use std::error::Error;
 
 use anyhow::Result;
 use rand::{rng, seq::IndexedRandom};
+use serde::Deserialize;
 use ureq::{Agent, Body, http::Response};
 
 use crate::{
@@ -16,11 +17,11 @@ use crate::{
 };
 
 pub fn fetch_torrents(
-    url: String,
+    url: &str,
     source: AllAvailableSources,
 ) -> Result<(Vec<Torrent>, Option<i64>), Box<dyn std::error::Error + 'static>> {
     // sending request
-    let response = send_request(url)?;
+    let response = send_request(&url)?;
 
     // scrape & parseNyaaCategories
     match source {
@@ -34,13 +35,13 @@ pub fn fetch_torrents(
     }
 }
 
-fn send_request(url: String) -> Result<Response<Body>, Box<dyn Error>> {
+fn send_request(url: &str) -> Result<Response<Body>, Box<dyn Error>> {
     // List of User-Agent strings
     let user_agents = [
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.1 Safari/605.1.15",
-        "Mozilla/5.0 (Linux; Android 10; Pixel 3 XL) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Mobile Safari/537.36",
-        "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1",
+        "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36",
+        "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Mobile Safari/537.36,gzip(gfe)",
+        "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Mobile Safari/537.36",
+        "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101 Firefox/15.0.1",
     ];
 
     // Select a random User-Agent
@@ -50,29 +51,7 @@ fn send_request(url: String) -> Result<Response<Body>, Box<dyn Error>> {
     // Proxy
     match Proxy::fetch_saved_proxy()? {
         Some(proxy_data) => {
-            let proxy_type = proxy_data.proxy_type;
-            let proxy_server_ip = proxy_data.proxy_server_ip;
-            let proxy_server_port = proxy_data.proxy_server_port;
-            let proxy_username: Option<String> = proxy_data.proxy_username;
-            let proxy_password: Option<String> = proxy_data.proxy_password;
-
-            let proxy_url = match (proxy_username, proxy_password) {
-                (Some(username), Some(password)) => format!(
-                    "{}://{}:{}@{}:{}",
-                    proxy_type, username, password, proxy_server_ip, proxy_server_port
-                ),
-                (Some(username), None) => format!(
-                    "{}://{}:@{}:{}",
-                    proxy_type, username, proxy_server_ip, proxy_server_port
-                ),
-                (None, Some(password)) => format!(
-                    "{}://: {}@{}:{}",
-                    proxy_type, password, proxy_server_ip, proxy_server_port
-                ),
-                (None, None) => {
-                    format!("{}://{}:{}", proxy_type, proxy_server_ip, proxy_server_port)
-                }
-            };
+            let proxy_url = build_proxy_url(&proxy_data);
             let proxy = ureq::Proxy::new(&proxy_url)?;
             let agent: Agent = Agent::config_builder().proxy(Some(proxy)).build().into();
             let response = agent.get(url).header("User-Agent", user_agent).call()?;
@@ -86,16 +65,124 @@ fn send_request(url: String) -> Result<Response<Body>, Box<dyn Error>> {
     }
 }
 
-// pub enum ProxyTypes {
-//     NoProxy,
-//     Http,
-//     Https,
-//     Socks4,
-//     Socks5,
-// }
+pub fn build_proxy_url(proxy_data: &Proxy) -> String {
+    let proxy_type = &proxy_data.proxy_type;
+    let proxy_server_ip = &proxy_data.proxy_server_ip;
+    let proxy_server_port = &proxy_data.proxy_server_port;
+    let proxy_username: Option<&String> = proxy_data.proxy_username.as_ref();
+    let proxy_password: Option<&String> = proxy_data.proxy_password.as_ref();
 
-// impl ProxyTypes {}
+    match (proxy_username, proxy_password) {
+        (Some(username), Some(password)) => format!(
+            "{}://{}:{}@{}:{}",
+            proxy_type, username, password, proxy_server_ip, proxy_server_port
+        ),
+        (Some(username), None) => format!(
+            "{}://{}:@{}:{}",
+            proxy_type, username, proxy_server_ip, proxy_server_port
+        ),
+        (None, Some(password)) => format!(
+            "{}://: {}@{}:{}",
+            proxy_type, password, proxy_server_ip, proxy_server_port
+        ),
+        (None, None) => {
+            format!("{}://{}:{}", proxy_type, proxy_server_ip, proxy_server_port)
+        }
+    }
+}
 
+pub fn extract_ip_details() -> Result<IpDetails, Box<dyn Error>> {
+    //  https://api.ipwho.org/me
+    let mut respose = send_request("https://api.ipwho.org/me")?;
+    let response_body = respose.body_mut().read_to_string()?;
+
+    let api_response: ApiResponse = serde_json::from_str(&response_body)?;
+
+    if api_response.success == false {
+        return Err(Box::from(format!("API Error")));
+    }
+
+    Ok(IpDetails {
+        ip_addr: api_response.data.ip,
+        isp: api_response.data.connection.org,
+        continent: api_response.data.continent,
+        country: api_response.data.country,
+        capital: api_response.data.capital,
+        city: api_response.data.city.unwrap_or("N/A".to_string()),
+        region: api_response.data.region.unwrap_or("N/A".to_string()),
+        latitude: api_response.data.latitude,
+        longitude: api_response.data.longitude,
+        timezone: format!(
+            "{} ({})",
+            api_response.data.timezone.time_zone, api_response.data.timezone.utc
+        ),
+        flag_unicode: api_response.data.flag.flag_unicode,
+        is_vpn: api_response.data.security.is_vpn,
+        is_tor: api_response.data.security.is_tor,
+    })
+}
+
+pub struct IpDetails {
+    pub ip_addr: String,
+    pub isp: String,
+    pub continent: String,
+    pub country: String,
+    pub capital: String,
+    pub city: String,
+    pub region: String,
+    pub latitude: f64,
+    pub longitude: f64,
+    pub timezone: String,
+    pub flag_unicode: String,
+    pub is_vpn: bool,
+    pub is_tor: bool,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct Data {
+    ip: String,
+    continent: String,
+    country: String,
+    capital: String,
+    region: Option<String>,
+    city: Option<String>,
+    latitude: f64,
+    longitude: f64,
+    timezone: Timezone,
+    flag: Flag,
+    connection: Connection,
+    security: Security,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct Timezone {
+    time_zone: String,
+    utc: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct Flag {
+    flag_unicode: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct Connection {
+    org: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct Security {
+    #[serde(rename = "isVpn")]
+    is_vpn: bool,
+    #[serde(rename = "isTor")]
+    is_tor: bool,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ApiResponse {
+    success: bool,
+    data: Data,
+}
 // _______________________________________________________________________________________
 #[cfg(test)]
 mod tests {
@@ -112,7 +199,7 @@ mod tests {
             "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1",
         ];
 
-        let mut response = send_request(url).unwrap();
+        let mut response = send_request(&url).unwrap();
         let body = response.body_mut().read_to_string().unwrap();
 
         // parsing json

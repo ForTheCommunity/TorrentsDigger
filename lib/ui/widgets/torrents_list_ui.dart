@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/torrent_bloc/torrent_bloc.dart';
 import 'package:torrents_digger/configs/colors.dart';
+import 'package:torrents_digger/ui/widgets/circular_progress_bar_widget.dart';
 import 'package:torrents_digger/ui/widgets/pagination_widget.dart';
 import 'package:torrents_digger/ui/widgets/torrent_list_widget.dart';
 
@@ -21,9 +22,7 @@ class TorrentsListUi extends StatelessWidget {
               ),
             );
           case TorrentSearchLoading():
-            return const Center(
-              child: CircularProgressIndicator(color: AppColors.greenColor),
-            );
+            return const Center(child: CircularProgressBarWidget());
           case TorrentSearchSuccess():
             return state.torrents.isEmpty
                 ? const Center(child: Text("No Torrent Found..."))

@@ -69,7 +69,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.11.1';
 
   @override
-  int get rustContentHash => -179255387;
+  int get rustContentHash => 1725865787;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -102,6 +102,8 @@ abstract class RustLibApi extends BaseApi {
   Future<Map<String, InternalSourceDetails>> crateApiAppFetchSourceDetails();
 
   Future<List<InternalTorrent>> crateApiDatabaseBookmarkGetAllBookmarks();
+
+  Future<InternalIpDetails> crateApiAppGetIpDetails();
 
   Future<InternalProxy?> crateApiDatabaseProxyGetSavedProxy();
 
@@ -329,7 +331,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "get_all_bookmarks", argNames: []);
 
   @override
-  Future<InternalProxy?> crateApiDatabaseProxyGetSavedProxy() {
+  Future<InternalIpDetails> crateApiAppGetIpDetails() {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
@@ -338,6 +340,33 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             generalizedFrbRustBinding,
             serializer,
             funcId: 7,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_internal_ip_details,
+          decodeErrorData: sse_decode_String,
+        ),
+        constMeta: kCrateApiAppGetIpDetailsConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiAppGetIpDetailsConstMeta =>
+      const TaskConstMeta(debugName: "get_ip_details", argNames: []);
+
+  @override
+  Future<InternalProxy?> crateApiDatabaseProxyGetSavedProxy() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 8,
             port: port_,
           );
         },
@@ -364,7 +393,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 8,
+            funcId: 9,
             port: port_,
           );
         },
@@ -391,7 +420,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 9,
+            funcId: 10,
             port: port_,
           );
         },
@@ -424,7 +453,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 10,
+            funcId: 11,
             port: port_,
           );
         },
@@ -459,7 +488,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 11,
+            funcId: 12,
             port: port_,
           );
         },
@@ -489,7 +518,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 12,
+            funcId: 13,
             port: port_,
           );
         },
@@ -559,6 +588,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  double dco_decode_f_64(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as double;
+  }
+
+  @protected
   int dco_decode_i_32(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as int;
@@ -568,6 +603,29 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   PlatformInt64 dco_decode_i_64(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dcoDecodeI64(raw);
+  }
+
+  @protected
+  InternalIpDetails dco_decode_internal_ip_details(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 13)
+      throw Exception('unexpected arr length: expect 13 but see ${arr.length}');
+    return InternalIpDetails(
+      ipAddr: dco_decode_String(arr[0]),
+      isp: dco_decode_String(arr[1]),
+      continent: dco_decode_String(arr[2]),
+      country: dco_decode_String(arr[3]),
+      capital: dco_decode_String(arr[4]),
+      city: dco_decode_String(arr[5]),
+      region: dco_decode_String(arr[6]),
+      latitude: dco_decode_f_64(arr[7]),
+      longitude: dco_decode_f_64(arr[8]),
+      timezone: dco_decode_String(arr[9]),
+      flagUnicode: dco_decode_String(arr[10]),
+      isVpn: dco_decode_bool(arr[11]),
+      isTor: dco_decode_bool(arr[12]),
+    );
   }
 
   @protected
@@ -813,6 +871,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  double sse_decode_f_64(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return deserializer.buffer.getFloat64();
+  }
+
+  @protected
   int sse_decode_i_32(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return deserializer.buffer.getInt32();
@@ -822,6 +886,41 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   PlatformInt64 sse_decode_i_64(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return deserializer.buffer.getPlatformInt64();
+  }
+
+  @protected
+  InternalIpDetails sse_decode_internal_ip_details(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_ipAddr = sse_decode_String(deserializer);
+    var var_isp = sse_decode_String(deserializer);
+    var var_continent = sse_decode_String(deserializer);
+    var var_country = sse_decode_String(deserializer);
+    var var_capital = sse_decode_String(deserializer);
+    var var_city = sse_decode_String(deserializer);
+    var var_region = sse_decode_String(deserializer);
+    var var_latitude = sse_decode_f_64(deserializer);
+    var var_longitude = sse_decode_f_64(deserializer);
+    var var_timezone = sse_decode_String(deserializer);
+    var var_flagUnicode = sse_decode_String(deserializer);
+    var var_isVpn = sse_decode_bool(deserializer);
+    var var_isTor = sse_decode_bool(deserializer);
+    return InternalIpDetails(
+      ipAddr: var_ipAddr,
+      isp: var_isp,
+      continent: var_continent,
+      country: var_country,
+      capital: var_capital,
+      city: var_city,
+      region: var_region,
+      latitude: var_latitude,
+      longitude: var_longitude,
+      timezone: var_timezone,
+      flagUnicode: var_flagUnicode,
+      isVpn: var_isVpn,
+      isTor: var_isTor,
+    );
   }
 
   @protected
@@ -1134,6 +1233,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_f_64(double self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    serializer.buffer.putFloat64(self);
+  }
+
+  @protected
   void sse_encode_i_32(int self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     serializer.buffer.putInt32(self);
@@ -1143,6 +1248,27 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   void sse_encode_i_64(PlatformInt64 self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     serializer.buffer.putPlatformInt64(self);
+  }
+
+  @protected
+  void sse_encode_internal_ip_details(
+    InternalIpDetails self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.ipAddr, serializer);
+    sse_encode_String(self.isp, serializer);
+    sse_encode_String(self.continent, serializer);
+    sse_encode_String(self.country, serializer);
+    sse_encode_String(self.capital, serializer);
+    sse_encode_String(self.city, serializer);
+    sse_encode_String(self.region, serializer);
+    sse_encode_f_64(self.latitude, serializer);
+    sse_encode_f_64(self.longitude, serializer);
+    sse_encode_String(self.timezone, serializer);
+    sse_encode_String(self.flagUnicode, serializer);
+    sse_encode_bool(self.isVpn, serializer);
+    sse_encode_bool(self.isTor, serializer);
   }
 
   @protected

@@ -37,7 +37,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.11.1";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -179255387;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1725865787;
 
 // Section: executor
 
@@ -250,6 +250,38 @@ fn wire__crate__api__database__bookmark__get_all_bookmarks_impl(
             move |context| {
                 transform_result_sse::<_, String>((move || {
                     let output_ok = crate::api::database::bookmark::get_all_bookmarks()?;
+                    Ok(output_ok)
+                })())
+            }
+        },
+    )
+}
+fn wire__crate__api__app__get_ip_details_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "get_ip_details",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            move |context| {
+                transform_result_sse::<_, String>((move || {
+                    let output_ok = crate::api::app::get_ip_details()?;
                     Ok(output_ok)
                 })())
             }
@@ -492,6 +524,13 @@ impl SseDecode for bool {
     }
 }
 
+impl SseDecode for f64 {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        deserializer.cursor.read_f64::<NativeEndian>().unwrap()
+    }
+}
+
 impl SseDecode for i32 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -503,6 +542,40 @@ impl SseDecode for i64 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         deserializer.cursor.read_i64::<NativeEndian>().unwrap()
+    }
+}
+
+impl SseDecode for crate::api::internals::InternalIpDetails {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_ipAddr = <String>::sse_decode(deserializer);
+        let mut var_isp = <String>::sse_decode(deserializer);
+        let mut var_continent = <String>::sse_decode(deserializer);
+        let mut var_country = <String>::sse_decode(deserializer);
+        let mut var_capital = <String>::sse_decode(deserializer);
+        let mut var_city = <String>::sse_decode(deserializer);
+        let mut var_region = <String>::sse_decode(deserializer);
+        let mut var_latitude = <f64>::sse_decode(deserializer);
+        let mut var_longitude = <f64>::sse_decode(deserializer);
+        let mut var_timezone = <String>::sse_decode(deserializer);
+        let mut var_flagUnicode = <String>::sse_decode(deserializer);
+        let mut var_isVpn = <bool>::sse_decode(deserializer);
+        let mut var_isTor = <bool>::sse_decode(deserializer);
+        return crate::api::internals::InternalIpDetails {
+            ip_addr: var_ipAddr,
+            isp: var_isp,
+            continent: var_continent,
+            country: var_country,
+            capital: var_capital,
+            city: var_city,
+            region: var_region,
+            latitude: var_latitude,
+            longitude: var_longitude,
+            timezone: var_timezone,
+            flag_unicode: var_flagUnicode,
+            is_vpn: var_isVpn,
+            is_tor: var_isTor,
+        };
     }
 }
 
@@ -785,37 +858,38 @@ fn pde_ffi_dispatcher_primary_impl(
             rust_vec_len,
             data_len,
         ),
-        7 => wire__crate__api__database__proxy__get_saved_proxy_impl(
+        7 => wire__crate__api__app__get_ip_details_impl(port, ptr, rust_vec_len, data_len),
+        8 => wire__crate__api__database__proxy__get_saved_proxy_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        8 => wire__crate__api__database__get_settings_kv__get_settings_kv_impl(
+        9 => wire__crate__api__database__get_settings_kv__get_settings_kv_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        9 => wire__crate__api__database__proxy__get_supported_proxy_details_impl(
+        10 => wire__crate__api__database__proxy__get_supported_proxy_details_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        10 => wire__crate__api__database__initialize__initialize_torrents_digger_database_impl(
+        11 => wire__crate__api__database__initialize__initialize_torrents_digger_database_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        11 => wire__crate__api__database__bookmark__remove_bookmark_impl(
+        12 => wire__crate__api__database__bookmark__remove_bookmark_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        12 => wire__crate__api__database__proxy__save_proxy_api_impl(
+        13 => wire__crate__api__database__proxy__save_proxy_api_impl(
             port,
             ptr,
             rust_vec_len,
@@ -839,6 +913,38 @@ fn pde_ffi_dispatcher_sync_impl(
 
 // Section: rust2dart
 
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::internals::InternalIpDetails {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.ip_addr.into_into_dart().into_dart(),
+            self.isp.into_into_dart().into_dart(),
+            self.continent.into_into_dart().into_dart(),
+            self.country.into_into_dart().into_dart(),
+            self.capital.into_into_dart().into_dart(),
+            self.city.into_into_dart().into_dart(),
+            self.region.into_into_dart().into_dart(),
+            self.latitude.into_into_dart().into_dart(),
+            self.longitude.into_into_dart().into_dart(),
+            self.timezone.into_into_dart().into_dart(),
+            self.flag_unicode.into_into_dart().into_dart(),
+            self.is_vpn.into_into_dart().into_dart(),
+            self.is_tor.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::internals::InternalIpDetails
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::internals::InternalIpDetails>
+    for crate::api::internals::InternalIpDetails
+{
+    fn into_into_dart(self) -> crate::api::internals::InternalIpDetails {
+        self
+    }
+}
 // Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::api::internals::InternalProxy {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
@@ -970,6 +1076,13 @@ impl SseEncode for bool {
     }
 }
 
+impl SseEncode for f64 {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        serializer.cursor.write_f64::<NativeEndian>(self).unwrap();
+    }
+}
+
 impl SseEncode for i32 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -981,6 +1094,25 @@ impl SseEncode for i64 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         serializer.cursor.write_i64::<NativeEndian>(self).unwrap();
+    }
+}
+
+impl SseEncode for crate::api::internals::InternalIpDetails {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.ip_addr, serializer);
+        <String>::sse_encode(self.isp, serializer);
+        <String>::sse_encode(self.continent, serializer);
+        <String>::sse_encode(self.country, serializer);
+        <String>::sse_encode(self.capital, serializer);
+        <String>::sse_encode(self.city, serializer);
+        <String>::sse_encode(self.region, serializer);
+        <f64>::sse_encode(self.latitude, serializer);
+        <f64>::sse_encode(self.longitude, serializer);
+        <String>::sse_encode(self.timezone, serializer);
+        <String>::sse_encode(self.flag_unicode, serializer);
+        <bool>::sse_encode(self.is_vpn, serializer);
+        <bool>::sse_encode(self.is_tor, serializer);
     }
 }
 

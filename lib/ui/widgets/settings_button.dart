@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:torrents_digger/routes/routes_name.dart';
-import '../../../configs/colors.dart';
+import '../../configs/colors.dart';
 
 class SettingButton extends StatelessWidget {
   const SettingButton({super.key});

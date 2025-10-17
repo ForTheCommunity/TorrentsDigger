@@ -25,3 +25,6 @@ Future<(List<InternalTorrent>, PlatformInt64?)> digTorrent({
   sorting: sorting,
   page: page,
 );
+
+Future<InternalIpDetails> getIpDetails() =>
+    RustLib.instance.api.crateApiAppGetIpDetails();

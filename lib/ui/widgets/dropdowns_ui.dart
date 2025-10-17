@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/sources_bloc/source_bloc.dart';
+import 'package:torrents_digger/ui/widgets/circular_progress_bar_widget.dart';
 import 'package:torrents_digger/ui/widgets/dropdown_widget.dart';
 
 class DropdownsUi extends StatelessWidget {
@@ -11,7 +12,7 @@ class DropdownsUi extends StatelessWidget {
     return BlocBuilder<SourceBloc, SourceState>(
       builder: (context, state) {
         if (state.sources.isEmpty) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressBarWidget());
         }
 
         return Column(

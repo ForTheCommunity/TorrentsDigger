@@ -7,7 +7,7 @@ import 'package:torrents_digger/configs/colors.dart';
 import 'package:torrents_digger/ui/widgets/dropdowns_ui.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 import 'package:torrents_digger/ui/widgets/search_bar_widget.dart';
-import 'package:torrents_digger/ui/widgets/settings_widgets/settings_button.dart';
+import 'package:torrents_digger/ui/widgets/settings_button.dart';
 import 'package:torrents_digger/ui/widgets/torrents_list_ui.dart';
 
 class MainScreen extends StatelessWidget {
