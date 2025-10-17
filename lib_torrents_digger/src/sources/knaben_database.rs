@@ -356,7 +356,7 @@ impl KnabenDatabaseCategories {
         // https://knaben.org/search/naruto/6000000/2/seeders
 
         // url encoding
-        let torrent_name = urlencoding::encode(torrent_name).to_owned().into_owned();
+        let torrent_name = urlencoding::encode(torrent_name).to_string();
 
         let root_url = "https://knaben.org";
         let path = "search";

@@ -39,7 +39,7 @@ impl TorrentsCsvCategories {
         // https://torrents-csv.com/service/search?q=[QUERY]&after=[AFTER]
 
         // url encoding
-        let torrent_name = urlencoding::encode(torrent_name).to_owned().into_owned();
+        let torrent_name = urlencoding::encode(torrent_name).to_string();
 
         let root_url = "https://torrents-csv.com";
         // let results_size = 50;

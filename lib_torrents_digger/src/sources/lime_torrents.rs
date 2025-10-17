@@ -81,7 +81,7 @@ impl LimeTorrentsCategories {
         // https://www.limetorrents.fun/search/all/fate/seeds/1/
 
         // url encoding
-        let torrent_name = urlencoding::encode(torrent_name).to_owned().into_owned();
+        let torrent_name = urlencoding::encode(torrent_name).to_string();
 
         let root_url = "https://www.limetorrents.lol";
         let path = "search";

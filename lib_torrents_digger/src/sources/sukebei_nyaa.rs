@@ -98,7 +98,7 @@ impl SukebeiNyaaCategories {
         //https://sukebei.nyaa.si/?f=0&c=1_0&q=FC2-PPV-
 
         // url encoding
-        let torrent_name = urlencoding::encode(torrent_name).to_owned().into_owned();
+        let torrent_name = urlencoding::encode(torrent_name).to_string();
 
         let root_url = "https://sukebei.nyaa.si";
         let filter = format!("f={}", filter.filter_to_value());

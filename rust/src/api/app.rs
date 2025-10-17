@@ -1,5 +1,7 @@
 use lib_torrents_digger::{
-    search_torrent, sources::get_source_details, sync_request::extract_ip_details,
+    search_torrent,
+    sources::get_source_details,
+    sync_request::{check_for_update, extract_ip_details},
 };
 use std::collections::HashMap;
 
@@ -83,6 +85,13 @@ pub fn get_ip_details() -> Result<InternalIpDetails, String> {
             is_vpn: a.is_vpn,
             is_tor: a.is_tor,
         }),
+        Err(e) => Err(e.to_string()),
+    }
+}
+
+pub fn check_new_update() -> Result<u8, String> {
+    match check_for_update() {
+        Ok(a) => Ok(a),
         Err(e) => Err(e.to_string()),
     }
 }

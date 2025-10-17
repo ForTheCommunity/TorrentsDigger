@@ -85,7 +85,7 @@ impl UindexCategories {
         // https://uindex.org/search.php?search=batman&c=0&sort=seeders&order=DESC
 
         // url encoding
-        let torrent_name = urlencoding::encode(torrent_name).to_owned().into_owned();
+        let torrent_name = urlencoding::encode(torrent_name).to_string();
 
         let root_url = "https://uindex.org";
         let path = "search.php";

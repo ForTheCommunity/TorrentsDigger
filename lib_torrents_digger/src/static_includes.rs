@@ -29,7 +29,6 @@ static APP_CURRENT_VERSION: Lazy<String> = Lazy::new(|| {
     let mut current_version_string = String::new();
 
     for a_line in file_content.lines() {
-        // check for empty lines / gap
         if !a_line.trim().is_empty() {
             current_version_string.push_str(a_line);
         }

@@ -150,7 +150,7 @@ impl NyaaCategories {
         //https://nyaa.si/?f=0&c=1_0&q=naruto&s=seeders&o=desc&p=2
 
         // url encoding
-        let torrent_name = urlencoding::encode(torrent_name).to_owned().into_owned();
+        let torrent_name = urlencoding::encode(torrent_name).to_string();
 
         let root_url = "https://nyaa.si";
         let filter = format!("f={}", filter.filter_to_value());

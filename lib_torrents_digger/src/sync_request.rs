@@ -13,6 +13,7 @@ use crate::{
         solid_torrents::SolidTorrentsCategories, sukebei_nyaa::SukebeiNyaaCategories,
         torrents_csv::TorrentsCsvCategories, uindex::UindexCategories,
     },
+    static_includes::get_current_version,
     torrent::Torrent,
 };
 
@@ -21,7 +22,7 @@ pub fn fetch_torrents(
     source: AllAvailableSources,
 ) -> Result<(Vec<Torrent>, Option<i64>), Box<dyn std::error::Error + 'static>> {
     // sending request
-    let response = send_request(&url)?;
+    let response = send_request(url)?;
 
     // scrape & parseNyaaCategories
     match source {
@@ -93,13 +94,14 @@ pub fn build_proxy_url(proxy_data: &Proxy) -> String {
 
 pub fn extract_ip_details() -> Result<IpDetails, Box<dyn Error>> {
     //  https://api.ipwho.org/me
-    let mut respose = send_request("https://api.ipwho.org/me")?;
-    let response_body = respose.body_mut().read_to_string()?;
+    let mut response = send_request("https://api.ipwho.org/me")?;
+    let response_body = response.body_mut().read_to_string()?;
 
+    // Deserializing
     let api_response: ApiResponse = serde_json::from_str(&response_body)?;
 
-    if api_response.success == false {
-        return Err(Box::from(format!("API Error")));
+    if !api_response.success {
+        return Err(Box::from("API Error"));
     }
 
     Ok(IpDetails {
@@ -183,6 +185,47 @@ pub struct ApiResponse {
     success: bool,
     data: Data,
 }
+
+pub fn check_for_update() -> Result<u8, Box<dyn Error>> {
+    // https://gitlab.com/api/v4/projects/73090806/repository/tags
+
+    let url: &'static str = "https://gitlab.com/api/v4/projects/73090806/repository/tags";
+    let mut response = send_request(url)?;
+    let response_body = response.body_mut().read_to_string()?;
+
+    // Deserializing
+    let tags: Vec<Tag> = serde_json::from_str(&response_body)?;
+    // latest tag/release is the first.......
+    match tags.first() {
+        Some(latest_tag) => {
+            let latest_version = latest_tag
+                .name
+                .trim_start_matches("v")
+                .split("+")
+                .next()
+                .unwrap_or(&latest_tag.name);
+
+            let current_version_full = get_current_version()?;
+            let current_version = current_version_full
+                .split("+")
+                .next()
+                .unwrap_or(&current_version_full);
+
+            if current_version == latest_version {
+                Ok(1)
+            } else {
+                Ok(0)
+            }
+        }
+        None => Err(Box::from("Latest Release Not Found !!!")),
+    }
+}
+
+#[derive(Debug, Deserialize)]
+struct Tag {
+    name: String,
+}
+
 // _______________________________________________________________________________________
 #[cfg(test)]
 mod tests {
