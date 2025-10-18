@@ -28,10 +28,6 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-
-           ndk {
-            abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86_64")
-        }
     }
 
     buildTypes {
@@ -45,23 +41,4 @@ android {
 
 flutter {
     source = "../.."
-}
-
-val abiCodes = mapOf(
-    "x86_64" to 1,
-    "armeabi-v7a" to 2,
-    "arm64-v8a" to 3
-)
-
-android.applicationVariants.all {
-    outputs.all {
-        val abi = (this as com.android.build.gradle.internal.api.BaseVariantOutputImpl)
-            .getFilter(OutputFile.ABI)
-        if (abi != null) {
-            val abiVersionCode = abiCodes[abi]
-            if (abiVersionCode != null) {
-                this.versionCodeOverride = this.versionCode * 100 + abiVersionCode
-            }
-        }
-    }
 }
