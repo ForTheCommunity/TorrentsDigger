@@ -5,7 +5,7 @@ class PaginationState {
 
   PaginationState({this.nextPage});
 
-  copyWith(int? nextPage) {
+  PaginationState copyWith(int? nextPage) {
     return PaginationState(nextPage: nextPage ?? this.nextPage);
   }
 }

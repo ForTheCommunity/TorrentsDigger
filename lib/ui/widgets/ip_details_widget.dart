@@ -42,7 +42,9 @@ class IpDetailsWidget extends StatelessWidget {
                     ),
                     IpDetailsTextWidget(
                       name: "Country",
-                      value: "${ipDetails.country} ${ipDetails.flagUnicode}",
+                      value: _decodeUnicodeFlag(
+                        "${ipDetails.country} ${ipDetails.flagUnicode}",
+                      ),
                     ),
                     IpDetailsTextWidget(
                       name: "Region",
@@ -108,4 +110,26 @@ class IpDetailsTextWidget extends StatelessWidget {
       ),
     );
   }
+}
+
+String _decodeUnicodeFlag(String value) {
+  final regex = RegExp(r'(U\+[0-9A-Fa-f]+(?:\sU\+[0-9A-Fa-f]+)*)');
+  final match = regex.firstMatch(value);
+
+  if (match != null) {
+    // Extracting the Unicode part
+    final unicodePart = match.group(0)!;
+
+    // Converting it to emoji
+    final codePoints = RegExp(r'U\+([0-9A-Fa-f]+)')
+        .allMatches(unicodePart)
+        .map((m) => int.parse(m.group(1)!, radix: 16))
+        .toList();
+
+    final flag = String.fromCharCodes(codePoints);
+
+    // Replacing only the Unicode part with the emoji
+    return value.replaceAll(unicodePart, flag);
+  }
+  return value;
 }

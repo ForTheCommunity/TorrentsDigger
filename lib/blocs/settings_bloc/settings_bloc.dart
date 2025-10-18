@@ -11,6 +11,7 @@ class SettingsBloc extends Bloc<SettingsEvents, SettingsState> {
     on<SettingsEvents>((event, emit) async {
       await event.map(
         checkForUpdate: (e) async => await _checkAppUpdate(e, emit),
+        getAppCurrentVersion: (e) async => await _getVersion(e, emit),
       );
     });
   }
@@ -31,6 +32,19 @@ Future<void> _checkAppUpdate(
       emit(const SettingsState.latestVersion());
     }
   } catch (e) {
-    emit(SettingsState.error(e.toString()));
+    emit(SettingsState.checkAppUpdateError(e.toString()));
+  }
+}
+
+Future<void> _getVersion(
+  _GetAppCurrentVersion event,
+  Emitter<SettingsState> emit,
+) async {
+    emit(SettingsState.loadingCurrentVersion());
+  try {
+    final version = await getAppCurrentVersion();
+    emit(SettingsState.loadedCurrentVersion(version));
+  } catch (e) {
+    emit(SettingsState.loadCurrentVersionError(e.toString()));
   }
 }

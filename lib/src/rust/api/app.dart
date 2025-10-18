@@ -31,3 +31,6 @@ Future<InternalIpDetails> getIpDetails() =>
 
 Future<int> checkNewUpdate() =>
     RustLib.instance.api.crateApiAppCheckNewUpdate();
+
+Future<String> getAppCurrentVersion() =>
+    RustLib.instance.api.crateApiAppGetAppCurrentVersion();

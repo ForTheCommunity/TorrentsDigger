@@ -16,10 +16,10 @@ use crate::{
 
 pub mod database;
 pub mod sources;
+pub mod static_includes;
 pub mod sync_request;
 pub mod torrent;
 pub mod trackers;
-pub mod static_includes;
 
 pub fn search_torrent(
     torrent_name: String,
