@@ -29,10 +29,8 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
 
-          ndk {
-            if(!splits.abi.enable) { // abiFilters cannot be present when splits abi filters are set
-                abiFilters 'arm64-v8a', 'armeabi-v7a', 'x86_64'
-            }
+           ndk {
+            abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86_64")
         }
     }
 
@@ -49,13 +47,21 @@ flutter {
     source = "../.."
 }
 
-ext.abiCodes = ["x86_64": 1, "armeabi-v7a": 2, "arm64-v8a": 3]
-import com.android.build.OutputFile
-android.applicationVariants.all { variant ->
-  variant.outputs.each { output ->
-    def abiVersionCode = project.ext.abiCodes.get(output.getFilter(OutputFile.ABI))
-    if (abiVersionCode != null) {
-      output.versionCodeOverride = variant.versionCode * 100 + abiVersionCode
+val abiCodes = mapOf(
+    "x86_64" to 1,
+    "armeabi-v7a" to 2,
+    "arm64-v8a" to 3
+)
+
+android.applicationVariants.all {
+    outputs.all {
+        val abi = (this as com.android.build.gradle.internal.api.BaseVariantOutputImpl)
+            .getFilter(OutputFile.ABI)
+        if (abi != null) {
+            val abiVersionCode = abiCodes[abi]
+            if (abiVersionCode != null) {
+                this.versionCodeOverride = this.versionCode * 100 + abiVersionCode
+            }
+        }
     }
-  }
 }
