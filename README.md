@@ -1,5 +1,7 @@
 # Torrents Digger - Digs Torrents from the Internet.
 
+### Join [Matrix Room](https://matrix.to/#/#torrentsdigger:matrix.org)
+
 ## Screenshots
 
 <div style="display: flex; justify-content: center; gap: 20px;">
