@@ -43,14 +43,17 @@ flutter {
     source = "../.."
 }
 
+
 val abiCodes = mapOf("armeabi-v7a" to 1, "arm64-v8a" to 2, "x86_64" to 3)
 
-android.applicationVariants.all { variant ->
+android.applicationVariants.all {
+    val variant = this // 'this' is the ApplicationVariant object
     variant.outputs.all {
-        val output = this
-        val abiCode = abiCodes[output.getFilter("ABI")?.value]
+        val output = this 
+        val abiIdentifier = output.getFilter(com.android.build.OutputFile.ABI)?.identifier
+        val abiCode = abiCodes[abiIdentifier]
         if (abiCode != null) {
-            output.versionCodeOverride = variant.versionCode * 10 + abiCode
+            output.setVersionCodeOverride(variant.versionCode * 10 + abiCode)
         }
     }
 }
