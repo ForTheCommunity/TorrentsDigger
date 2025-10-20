@@ -1,7 +1,3 @@
-import com.android.build.gradle.api.ApplicationVariant
-import com.android.build.gradle.api.ApkVariantOutput
-import org.gradle.api.JavaVersion
-
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -47,28 +43,13 @@ flutter {
     source = "../.."
 }
 
-
-// F-droid splits APKs by ABI, and requires different versionCode for each ABI.
-val abiCodes = mapOf(
-    "x86_64" to 1,
-    "armeabi-v7a" to 2,
-    "arm64-v8a" to 3
-)
-
-// F-droid splits APKs by ABI, and requires different versionCode for each ABI.
-// For flutter version X.Y.Z, version code is X0Y0ZA, where A is the ABI code.
-// See:
-// * https://developer.android.com/build/gradle-tips
-// * https://developer.android.com/studio/build/configure-apk-splits
-// * https://gitlab.com/fdroid/fdroiddata/-/blob/master/metadata/im.nfc.nfsee.yml
-
-android.applicationVariants.all { variant: ApplicationVariant ->
-    variant.outputs.configureEach { output: ApkVariantOutput ->
-        val abiName = output.getFilter("ABI") 
-        val abiVersionCode = abiCodes[abiName]
-
+val abiCodes = mapOf("armeabi-v7a" to 1, "arm64-v8a" to 2, "x86_64" to 3)
+android.applicationVariants.configureEach {
+    val variant = this
+    variant.outputs.forEach { output ->
+        val abiVersionCode = abiCodes[output.filters.find { it.filterType == "ABI" }?.identifier]
         if (abiVersionCode != null) {
-            output.versionCodeOverride = variant.versionCode * 10 + abiVersionCode
+            (output as ApkVariantOutputImpl).versionCodeOverride = variant.versionCode * 10 + abiVersionCode
         }
     }
 }
