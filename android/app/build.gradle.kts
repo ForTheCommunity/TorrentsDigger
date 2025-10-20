@@ -1,4 +1,5 @@
-import com.android.build.api.variant.ApplicationVariant
+import com.android.build.gradle.api.ApplicationVariant
+import com.android.build.gradle.api.ApkVariantOutput
 import org.gradle.api.JavaVersion
 
 plugins {
@@ -60,11 +61,12 @@ val abiCodes = mapOf(
 // * https://developer.android.com/build/gradle-tips
 // * https://developer.android.com/studio/build/configure-apk-splits
 // * https://gitlab.com/fdroid/fdroiddata/-/blob/master/metadata/im.nfc.nfsee.yml
+
 android.applicationVariants.all { variant: ApplicationVariant ->
-    variant.outputs.all { output ->
+    variant.outputs.configureEach { output: ApkVariantOutput ->
         val abiName = output.getFilter("ABI") 
         val abiVersionCode = abiCodes[abiName]
-        
+
         if (abiVersionCode != null) {
             output.versionCodeOverride = variant.versionCode * 10 + abiVersionCode
         }
