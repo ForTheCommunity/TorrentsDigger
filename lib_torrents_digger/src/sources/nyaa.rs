@@ -6,7 +6,7 @@ use scraper::{self, ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
 
 use crate::{
-    extract_info_hash_from_magnet, sources::QueryOptions, torrent::Torrent, trackers::get_trackers,
+    extract_info_hash_from_magnet, sources::QueryOptions, torrent::Torrent, static_includes::get_trackers,
 };
 
 // https://nyaa.si

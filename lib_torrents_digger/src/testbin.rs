@@ -10,7 +10,7 @@ use lib_torrents_digger::{
         torrents_csv::TorrentsCsvCategories,
     },
     sync_request::fetch_torrents,
-    trackers::get_trackers,
+    static_includes::get_trackers,
 };
 
 fn main() {

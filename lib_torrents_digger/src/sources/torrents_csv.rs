@@ -1,7 +1,7 @@
 use core::fmt;
 use std::error::Error;
 
-use crate::{sources::QueryOptions, torrent::Torrent, trackers::get_trackers};
+use crate::{sources::QueryOptions, torrent::Torrent, static_includes::get_trackers};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use ureq::{Body, http::Response};

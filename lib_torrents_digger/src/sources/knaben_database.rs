@@ -6,7 +6,7 @@ use std::error::Error;
 use scraper::{ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
 
-use crate::{sources::QueryOptions, torrent::Torrent, trackers::get_trackers};
+use crate::{sources::QueryOptions, torrent::Torrent, static_includes::get_trackers};
 
 #[derive(Debug)]
 pub enum KnabenDatabaseCategories {

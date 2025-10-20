@@ -9,7 +9,7 @@ use crate::{
     extract_info_hash_from_magnet,
     sources::{QueryOptions, nyaa::NyaaSortings},
     torrent::Torrent,
-    trackers::get_trackers,
+    static_includes::get_trackers,
 };
 
 // https://sukebei.nyaa.si/
