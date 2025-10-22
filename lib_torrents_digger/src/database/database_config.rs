@@ -6,11 +6,13 @@ use std::{
 use once_cell::sync::Lazy;
 use rusqlite::Connection;
 
-pub const DATABASE_DIR: &str = ".torrents_digger";
+pub const APP_DIR_NAME: &str = ".torrents_digger";
 pub const DATABASE_NAME: &str = "torrents_digger.database";
+pub const TRACKERS_LISTS_DIR: &str = "trackers/";
 pub const ACTIVE_TRACKERS_LIST_KEY: &str = "active_trackers_list";
 
 pub static DATABASE_PATH: OnceLock<PathBuf> = OnceLock::new();
+pub static TRACKERS_DIR_PATH: OnceLock<PathBuf> = OnceLock::new();
 
 static A_DATABASE_CONNECTION: Lazy<Mutex<Connection>> = Lazy::new(|| {
     let database_path = DATABASE_PATH

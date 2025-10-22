@@ -36,7 +36,7 @@ pub fn fetch_torrents(
     }
 }
 
-fn send_request(url: &str) -> Result<Response<Body>, Box<dyn Error>> {
+pub fn send_request(url: &str) -> Result<Response<Body>, Box<dyn Error>> {
     // List of User-Agent strings
     let user_agents = [
         "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36",

@@ -1,4 +1,7 @@
 use core::fmt;
+use std::{error::Error, fs};
+
+use crate::{database::database_config::TRACKERS_DIR_PATH, sync_request::send_request};
 
 #[derive(Debug)]
 pub enum DefaultTrackers {
@@ -64,6 +67,38 @@ impl DefaultTrackers {
             }
             Self::AllTrackersIpOnly => "https://ngosang.github.io/trackerslist/trackers_all_ip.txt",
         }
+    }
+
+    pub fn get_filename(&self) -> String {
+        self.to_string().to_lowercase().replace(' ', "_") + ".txt"
+    }
+
+    pub fn download_trackers_lists() -> Result<bool, Box<dyn Error>> {
+        let trackers_dir_path = TRACKERS_DIR_PATH.get().unwrap();
+
+        for a_variant in Self::ALL_VARIANTS.iter() {
+            let url = a_variant.url();
+            let file_name = a_variant.get_filename();
+            let file_path = trackers_dir_path.join(&file_name);
+
+            // if file is already downloaded then skip
+            if file_path.exists() {
+                continue;
+            }
+
+            let mut response = send_request(url)?;
+            if !response.status().is_success() {
+                return Err(format!(
+                    "Request to {} failed with status {}",
+                    url,
+                    response.status()
+                )
+                .into());
+            }
+            let response_body_text = response.body_mut().read_to_string()?;
+            fs::write(file_path, response_body_text)?;
+        }
+        Ok(true)
     }
 }
 
