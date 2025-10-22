@@ -5,7 +5,8 @@ use scraper::{ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
 
 use crate::{
-    extract_info_hash_from_magnet, sources::QueryOptions, torrent::Torrent, static_includes::get_trackers,
+    extract_info_hash_from_magnet, sources::QueryOptions, static_includes::get_trackers,
+    torrent::Torrent,
 };
 
 #[derive(Debug)]
@@ -46,17 +47,17 @@ impl UindexCategories {
         }
     }
 
-    pub fn category_to_value(&self) -> String {
+    pub fn category_to_value(&self) -> &str {
         match *self {
-            Self::AllCategories => "0".to_string(),
-            Self::Movies => "1".to_string(),
-            Self::Tv => "2".to_string(),
-            Self::Games => "3".to_string(),
-            Self::Music => "4".to_string(),
-            Self::Softwares => "5".to_string(),
-            Self::XXX => "6".to_string(),
-            Self::Anime => "7".to_string(),
-            Self::Other => "8".to_string(),
+            Self::AllCategories => "0",
+            Self::Movies => "1",
+            Self::Tv => "2",
+            Self::Games => "3",
+            Self::Music => "4",
+            Self::Softwares => "5",
+            Self::XXX => "6",
+            Self::Anime => "7",
+            Self::Other => "8",
         }
     }
 
@@ -236,11 +237,11 @@ impl UindexSortings {
         }
     }
 
-    pub fn sorting_to_value(&self) -> String {
+    pub fn sorting_to_value(&self) -> &str {
         match *self {
-            Self::BySize => "size".to_string(),
-            Self::BySeeders => "seeders".to_string(),
-            Self::ByLeechers => "leechers".to_string(),
+            Self::BySize => "size",
+            Self::BySeeders => "seeders",
+            Self::ByLeechers => "leechers",
         }
     }
 

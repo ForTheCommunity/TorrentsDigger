@@ -8,8 +8,8 @@ use ureq::{Body, http::Response};
 use crate::{
     extract_info_hash_from_magnet,
     sources::{QueryOptions, nyaa::NyaaSortings},
-    torrent::Torrent,
     static_includes::get_trackers,
+    torrent::Torrent,
 };
 
 // https://sukebei.nyaa.si/
@@ -55,18 +55,18 @@ impl SukebeiNyaaCategories {
         }
     }
 
-    pub fn category_to_value(&self) -> String {
+    pub fn category_to_value(&self) -> &str {
         match *self {
-            Self::AllCategories => "0_0".to_string(),
-            Self::Art => "1_0".to_string(),
-            Self::Anime => "1_1".to_string(),
-            Self::ArtDoujinshi => "1_2".to_string(),
-            Self::ArtGames => "1_3".to_string(),
-            Self::ArtManga => "1_4".to_string(),
-            Self::ArtPictures => "1_5".to_string(),
-            Self::RealLife => "2_0".to_string(),
-            Self::RealLifePhotobookAndPictures => "2_1".to_string(),
-            Self::RealLifeVideos => "2_2".to_string(),
+            Self::AllCategories => "0_0",
+            Self::Art => "1_0",
+            Self::Anime => "1_1",
+            Self::ArtDoujinshi => "1_2",
+            Self::ArtGames => "1_3",
+            Self::ArtManga => "1_4",
+            Self::ArtPictures => "1_5",
+            Self::RealLife => "2_0",
+            Self::RealLifePhotobookAndPictures => "2_1",
+            Self::RealLifeVideos => "2_2",
         }
     }
 

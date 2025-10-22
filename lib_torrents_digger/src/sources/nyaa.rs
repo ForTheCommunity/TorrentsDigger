@@ -6,7 +6,8 @@ use scraper::{self, ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
 
 use crate::{
-    extract_info_hash_from_magnet, sources::QueryOptions, torrent::Torrent, static_includes::get_trackers,
+    extract_info_hash_from_magnet, sources::QueryOptions, static_includes::get_trackers,
+    torrent::Torrent,
 };
 
 // https://nyaa.si
@@ -79,32 +80,32 @@ impl NyaaCategories {
         }
     }
 
-    pub fn category_to_value(&self) -> String {
+    pub fn category_to_value(&self) -> &str {
         match *self {
-            Self::AllCategories => "0_0".to_string(),
-            Self::Anime => "1_0".to_string(),
-            Self::AnimeMusicVideo => "1_1".to_string(),
-            Self::AnimeEnglishTranslated => "1_2".to_string(),
-            Self::AnimeNonEnglishTranslated => "1_3".to_string(),
-            Self::AnimeRaw => "1_4".to_string(),
-            Self::Audio => "2_0".to_string(),
-            Self::AudioLossLess => "2_1".to_string(),
-            Self::AudioLossy => "2_1".to_string(),
-            Self::Literature => "3_0".to_string(),
-            Self::LiteratureEnglishTranslated => "3_1".to_string(),
-            Self::LiteratureNonEnglishTranslated => "3_2".to_string(),
-            Self::LiteratureRaw => "3_3".to_string(),
-            Self::LiveAction => "4_0".to_string(),
-            Self::LiveActionEnglishTranslated => "4_1".to_string(),
-            Self::LiveActionIdolPromotionalVideo => "4_2".to_string(),
-            Self::LiveActionNonEnglishTranslated => "4_3".to_string(),
-            Self::LiveActionRaw => "4_4".to_string(),
-            Self::Pictures => "5_0".to_string(),
-            Self::PicturesGraphics => "5_1".to_string(),
-            Self::PicturesPhotos => "5_2".to_string(),
-            Self::Software => "6_0".to_string(),
-            Self::SoftwareApplications => "6_1".to_string(),
-            Self::SoftwareGames => "6_2".to_string(),
+            Self::AllCategories => "0_0",
+            Self::Anime => "1_0",
+            Self::AnimeMusicVideo => "1_1",
+            Self::AnimeEnglishTranslated => "1_2",
+            Self::AnimeNonEnglishTranslated => "1_3",
+            Self::AnimeRaw => "1_4",
+            Self::Audio => "2_0",
+            Self::AudioLossLess => "2_1",
+            Self::AudioLossy => "2_1",
+            Self::Literature => "3_0",
+            Self::LiteratureEnglishTranslated => "3_1",
+            Self::LiteratureNonEnglishTranslated => "3_2",
+            Self::LiteratureRaw => "3_3",
+            Self::LiveAction => "4_0",
+            Self::LiveActionEnglishTranslated => "4_1",
+            Self::LiveActionIdolPromotionalVideo => "4_2",
+            Self::LiveActionNonEnglishTranslated => "4_3",
+            Self::LiveActionRaw => "4_4",
+            Self::Pictures => "5_0",
+            Self::PicturesGraphics => "5_1",
+            Self::PicturesPhotos => "5_2",
+            Self::Software => "6_0",
+            Self::SoftwareApplications => "6_1",
+            Self::SoftwareGames => "6_2",
         }
     }
 
@@ -358,14 +359,14 @@ impl NyaaSortings {
         }
     }
 
-    pub fn sorting_to_value(&self) -> String {
+    pub fn sorting_to_value(&self) -> &str {
         match *self {
-            Self::ByComments => "comments".to_string(),
-            Self::BySize => "size".to_string(),
-            Self::ByDate => "id".to_string(),
-            Self::BySeeders => "seeders".to_string(),
-            Self::ByLeechers => "leechers".to_string(),
-            Self::ByTotalDownloads => "downloads".to_string(),
+            Self::ByComments => "comments",
+            Self::BySize => "size",
+            Self::ByDate => "id",
+            Self::BySeeders => "seeders",
+            Self::ByLeechers => "leechers",
+            Self::ByTotalDownloads => "downloads",
         }
     }
 

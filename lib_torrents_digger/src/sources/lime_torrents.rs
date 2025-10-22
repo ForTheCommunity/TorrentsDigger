@@ -4,7 +4,7 @@ use std::error::Error;
 use scraper::{ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
 
-use crate::{sources::QueryOptions, torrent::Torrent, static_includes::get_trackers};
+use crate::{sources::QueryOptions, static_includes::get_trackers, torrent::Torrent};
 
 #[derive(Debug)]
 pub enum LimeTorrentsCategories {
@@ -42,16 +42,16 @@ impl LimeTorrentsCategories {
         }
     }
 
-    pub fn category_to_value(&self) -> String {
+    pub fn category_to_value(&self) -> &str {
         match *self {
-            Self::AllCategories => "all".to_string(),
-            Self::Anime => "anime".to_string(),
-            Self::Softwares => "applications".to_string(),
-            Self::Games => "games".to_string(),
-            Self::Movies => "movies".to_string(),
-            Self::Music => "music".to_string(),
-            Self::Tv => "tv".to_string(),
-            Self::Other => "other".to_string(),
+            Self::AllCategories => "all",
+            Self::Anime => "anime",
+            Self::Softwares => "applications",
+            Self::Games => "games",
+            Self::Movies => "movies",
+            Self::Music => "music",
+            Self::Tv => "tv",
+            Self::Other => "other",
         }
     }
 
@@ -281,12 +281,12 @@ impl LimeTorrentsSortings {
         }
     }
 
-    pub fn sorting_to_value(&self) -> String {
+    pub fn sorting_to_value(&self) -> &str {
         match *self {
-            Self::ByDate => "date".to_string(),
-            Self::BySize => "size".to_string(),
-            Self::BySeeders => "seeds".to_string(),
-            Self::ByLeechers => "leechs".to_string(),
+            Self::ByDate => "date",
+            Self::BySize => "size",
+            Self::BySeeders => "seeds",
+            Self::ByLeechers => "leechs",
         }
     }
 

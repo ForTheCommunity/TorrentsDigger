@@ -8,7 +8,8 @@ use scraper::{Html, Selector};
 use ureq::{Body, http::Response};
 
 use crate::{
-    extract_info_hash_from_magnet, sources::QueryOptions, torrent::Torrent, static_includes::get_trackers,
+    extract_info_hash_from_magnet, sources::QueryOptions, static_includes::get_trackers,
+    torrent::Torrent,
 };
 
 #[derive(Debug)]
@@ -113,44 +114,44 @@ impl SolidTorrentsCategories {
         }
     }
 
-    pub fn category_to_value(&self) -> String {
+    pub fn category_to_value(&self) -> &str {
         match *self {
-            Self::AllCategories => "".to_string(),
-            Self::Other => "1".to_string(),
-            Self::Audio => "1-1".to_string(),
-            Self::Video => "1-2".to_string(),
-            Self::Image => "1-3".to_string(),
-            Self::Document => "1-4".to_string(),
-            Self::Program => "1-5".to_string(),
-            Self::Android => "1-6".to_string(),
-            Self::DiskImage => "1-7".to_string(),
-            Self::SourceCode => "1-8".to_string(),
-            Self::Database => "1-9".to_string(),
-            Self::Archive => "1-11".to_string(),
-            Self::Movies => "2".to_string(),
-            Self::MoviesDubDualAudio => "2-1".to_string(),
-            Self::Tv => "3".to_string(),
-            Self::Anime => "4".to_string(),
-            Self::AnimeDubDualAudio => "4-1".to_string(),
-            Self::AnimeSubbed => "4-2".to_string(),
-            Self::AnimeRaw => "4-3".to_string(),
-            Self::Softwares => "5".to_string(),
-            Self::SoftwaresWindows => "5-1".to_string(),
-            Self::SoftwaresMac => "5-2".to_string(),
-            Self::SoftwaresAndroid => "5-3".to_string(),
-            Self::Games => "6".to_string(),
-            Self::GamesPc => "6-1".to_string(),
-            Self::GamesMac => "6-2".to_string(),
-            Self::GamesLinux => "6-3".to_string(),
-            Self::GamesAndroid => "6-4".to_string(),
-            Self::Music => "7".to_string(),
-            Self::MusicMp3 => "7-1".to_string(),
-            Self::MusicLossless => "7-2".to_string(),
-            Self::MusicAlbum => "7-3".to_string(),
-            Self::MusicVideo => "7-4".to_string(),
-            Self::AudioBook => "8".to_string(),
-            Self::EbookCourse => "9".to_string(),
-            Self::XXX => "10".to_string(),
+            Self::AllCategories => "",
+            Self::Other => "1",
+            Self::Audio => "1-1",
+            Self::Video => "1-2",
+            Self::Image => "1-3",
+            Self::Document => "1-4",
+            Self::Program => "1-5",
+            Self::Android => "1-6",
+            Self::DiskImage => "1-7",
+            Self::SourceCode => "1-8",
+            Self::Database => "1-9",
+            Self::Archive => "1-11",
+            Self::Movies => "2",
+            Self::MoviesDubDualAudio => "2-1",
+            Self::Tv => "3",
+            Self::Anime => "4",
+            Self::AnimeDubDualAudio => "4-1",
+            Self::AnimeSubbed => "4-2",
+            Self::AnimeRaw => "4-3",
+            Self::Softwares => "5",
+            Self::SoftwaresWindows => "5-1",
+            Self::SoftwaresMac => "5-2",
+            Self::SoftwaresAndroid => "5-3",
+            Self::Games => "6",
+            Self::GamesPc => "6-1",
+            Self::GamesMac => "6-2",
+            Self::GamesLinux => "6-3",
+            Self::GamesAndroid => "6-4",
+            Self::Music => "7",
+            Self::MusicMp3 => "7-1",
+            Self::MusicLossless => "7-2",
+            Self::MusicAlbum => "7-3",
+            Self::MusicVideo => "7-4",
+            Self::AudioBook => "8",
+            Self::EbookCourse => "9",
+            Self::XXX => "10",
         }
     }
 
@@ -417,13 +418,13 @@ impl SolidTorrentsSortings {
         }
     }
 
-    pub fn sorting_to_value(&self) -> String {
+    pub fn sorting_to_value(&self) -> &str {
         match *self {
-            Self::ByRelevance => "relevance".to_string(),
-            Self::BySeeders => "seeders".to_string(),
-            Self::ByDate => "created".to_string(),
-            Self::ByFileSize => "size".to_string(),
-            Self::ByLeechers => "leechers".to_string(),
+            Self::ByRelevance => "relevance",
+            Self::BySeeders => "seeders",
+            Self::ByDate => "created",
+            Self::ByFileSize => "size",
+            Self::ByLeechers => "leechers",
         }
     }
 
