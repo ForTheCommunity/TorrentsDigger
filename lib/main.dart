@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/bookmark_bloc/bookmark_bloc.dart';
+import 'package:torrents_digger/blocs/default_trackers_bloc/default_trackers_bloc.dart';
 import 'package:torrents_digger/blocs/proxy_settings_bloc/proxy_settings_bloc.dart';
 import 'package:torrents_digger/blocs/pagination_bloc/pagination_bloc.dart';
 import 'package:torrents_digger/blocs/sources_bloc/source_bloc.dart';
@@ -39,6 +40,11 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => ProxySettingsBloc()..add(LoadProxyDetailsEvent()),
+        ),
+        BlocProvider(
+          create: (_) =>
+              DefaultTrackersBloc()
+                ..add(DefaultTrackersEvent.loadTrackersList()),
         ),
       ],
       child: MaterialApp(

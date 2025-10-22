@@ -45,4 +45,25 @@ class AppColors {
 
   static const bookmarkIconColor = Color.fromRGBO(135, 200, 189, 1);
   static const bookmarkedIconColor = Color.fromRGBO(145, 255, 0, 1);
+
+  static const addTrackersListUrlTextFieldBackgroundColor = Color.fromARGB(
+    255,
+    40,
+    52,
+    54,
+  );
+  static const addTrackersListUrlTextButtonTextColor = Color.fromARGB(
+    255,
+    0,
+    255,
+    242,
+  );
+  static const addTrackersListUrlTextButtonBorderColor = Color.fromARGB(
+    255,
+    41,
+    55,
+    57,
+  );
+
+  static const hyperlinkColor = Color.fromRGBO(118, 131, 224, 1);
 }

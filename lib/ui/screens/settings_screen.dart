@@ -45,6 +45,16 @@ class SettingsScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 25),
                     ListTile(
+                      leading: const Icon(Icons.hub),
+                      title: const Text('Default Trackers'),
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          RoutesName.defaultTrackersScreen,
+                        );
+                      },
+                    ),
+                    ListTile(
                       leading: const Icon(Icons.settings_ethernet),
                       title: const Text('Proxy'),
                       onTap: () {

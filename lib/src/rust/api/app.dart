@@ -34,3 +34,6 @@ Future<int> checkNewUpdate() =>
 
 Future<String> getAppCurrentVersion() =>
     RustLib.instance.api.crateApiAppGetAppCurrentVersion();
+
+Future<List<(BigInt, String)>> getAllDefaultTrackersList() =>
+    RustLib.instance.api.crateApiAppGetAllDefaultTrackersList();

@@ -3,6 +3,7 @@ use lib_torrents_digger::{
     sources::get_source_details,
     static_includes::get_current_version,
     sync_request::{check_for_update, extract_ip_details},
+    trackers::DefaultTrackers,
 };
 use std::collections::HashMap;
 
@@ -102,4 +103,8 @@ pub fn get_app_current_version() -> String {
         Ok(a) => a,
         Err(e) => e.to_string(),
     }
+}
+
+pub fn get_all_default_trackers_list() -> Vec<(usize, String)> {
+    DefaultTrackers::get_default_trackers_list()
 }

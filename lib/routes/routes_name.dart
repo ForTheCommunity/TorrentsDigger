@@ -4,4 +4,5 @@ class RoutesName {
   static const String proxySettingScreen = "proxy_setting_screen";
   static const String bookmarksScreen = "bookmarks_screen";
   static const String databaseScreen = "database_screen";
+  static const String defaultTrackersScreen = "default_trackers_screen";
 }
