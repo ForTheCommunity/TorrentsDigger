@@ -13,3 +13,6 @@ Future<BigInt> setDefaultTrackersList({required int index}) => RustLib
     .instance
     .api
     .crateApiDatabaseGetSettingsKvSetDefaultTrackersList(index: index);
+
+Future<String> getActiveDefaultTrackersList() => RustLib.instance.api
+    .crateApiDatabaseGetSettingsKvGetActiveDefaultTrackersList();

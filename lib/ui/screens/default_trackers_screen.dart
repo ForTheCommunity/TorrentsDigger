@@ -70,26 +70,39 @@ class DefaultTrackersScreen extends StatelessWidget {
                       child: Text('No Trackers List Loaded Yet...'),
                     ),
                     loading: () => const CircularProgressBarWidget(),
-                    loaded: (trackersList) => ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: trackersList.length,
-                      itemBuilder: (context, index) {
-                        final tracker = trackersList[index];
-                        final trackerId = tracker.$1;
-                        final trackerName = tracker.$2;
-                        return ListTile(
-                          title: Row(children: [Text(trackerName)]),
-                          onTap: () {
-                            context.read<DefaultTrackersBloc>().add(
-                              DefaultTrackersEvent.setTrackersList(
-                                selectedTrackerId: trackerId,
+                    loaded: (trackersList, activatedDefaultTrackersList) =>
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: trackersList.length,
+                          itemBuilder: (context, index) {
+                            final tracker = trackersList[index];
+                            final trackerId = tracker.$1;
+                            final trackerName = tracker.$2;
+                            return ListTile(
+                              title: Row(
+                                children: [
+                                  Text(trackerName),
+                                  SizedBox(width: 15),
+                                  activatedDefaultTrackersList == trackerId
+                                      ? const Icon(
+                                          Icons.check,
+                                          color: AppColors.greenColor,
+                                          size: 30,
+                                        )
+                                      : const SizedBox.shrink(),
+                                ],
                               ),
+                              onTap: () {
+                                context.read<DefaultTrackersBloc>().add(
+                                  DefaultTrackersEvent.setTrackersList(
+                                    selectedTrackerId: trackerId,
+                                  ),
+                                );
+                              },
                             );
                           },
-                        );
-                      },
-                    ),
+                        ),
                   );
                 },
               ),

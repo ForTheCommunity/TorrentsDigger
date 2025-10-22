@@ -21,8 +21,19 @@ class DefaultTrackersBloc
   ) async {
     emit(const DefaultTrackersState.loading());
     try {
+      // loading trackers lists
       final trackersList = await getAllDefaultTrackersList();
-      emit(DefaultTrackersState.loaded(trackersList: trackersList));
+      // loading activated trackers list.
+      final String activatedDefaultTrackersListIndex =
+          await getActiveDefaultTrackersList();
+      final BigInt index = BigInt.parse(activatedDefaultTrackersListIndex);
+      // updating states
+      emit(
+        DefaultTrackersState.loaded(
+          trackersList: trackersList,
+          activatedTrackersList: index,
+        ),
+      );
     } catch (e) {
       createSnackBar(message: "Error : ${e.toString()}", duration: 5);
     }
@@ -33,8 +44,27 @@ class DefaultTrackersBloc
     Emitter<DefaultTrackersState> emit,
   ) async {
     try {
-      var selectedTrackersListIndex = event.selectedTrackerId.toInt();
-      await setDefaultTrackersList(index: selectedTrackersListIndex);
+      var selectedTrackersListIndex = event.selectedTrackerId;
+      // saving to database
+      await setDefaultTrackersList(index: selectedTrackersListIndex.toInt());
+      // updating state
+
+      // getting current state to retrieve existing tracker list
+      if (state is _loaded) {
+        var currentState = state as _loaded;
+        emit(
+          DefaultTrackersState.loaded(
+            trackersList: currentState.trackersList,
+            activatedTrackersList: selectedTrackersListIndex,
+          ),
+        );
+      } else {
+        createSnackBar(
+          message: "STATE ERROR : Unable to get current state..",
+          duration: 5,
+        );
+      }
+
       createSnackBar(message: "Updated Trackers List.", duration: 1);
     } catch (e) {
       createSnackBar(message: "Error : ${e.toString()}", duration: 5);

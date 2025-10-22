@@ -13,7 +13,7 @@ pub fn insert_update_kv(key: &str, value: &str) -> Result<usize, rusqlite::Error
     )
 }
 
-pub fn fetch_kv(key: String) -> Result<String, rusqlite::Error> {
+pub fn fetch_kv(key: &str) -> Result<String, rusqlite::Error> {
     let db_conn = get_a_database_connection();
     let mut sql_statement = db_conn.prepare(
         "
