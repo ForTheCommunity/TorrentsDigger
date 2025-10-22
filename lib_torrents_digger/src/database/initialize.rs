@@ -2,7 +2,7 @@ use rusqlite::{Connection, params};
 use std::{fs::create_dir_all, path::PathBuf, sync::MutexGuard};
 
 use crate::database::database_config::{
-    DATABASE_DIR, DATABASE_NAME, DATABASE_PATH, get_a_database_connection,
+    ACTIVE_TRACKERS_LIST_KEY, DATABASE_DIR, DATABASE_NAME, DATABASE_PATH, get_a_database_connection,
 };
 
 pub fn initialize_database(
@@ -21,6 +21,8 @@ pub fn initialize_database(
     create_tables()?;
     // inserting configs.
     insert_configs()?;
+    // insert default settings key values
+    insert_default_settings_kvs()?;
     Ok(())
 }
 
@@ -106,6 +108,22 @@ fn insert_configs() -> Result<(), rusqlite::Error> {
         INSERT OR IGNORE INTO supported_proxy_protocols (id,protocol) VALUES (?1,?2)
     ",
             params![id, protocol],
+        )?;
+    }
+    Ok(())
+}
+
+fn insert_default_settings_kvs() -> Result<(), rusqlite::Error> {
+    let db_conn = get_a_database_connection();
+
+    let default_key_value_pairs = vec![(ACTIVE_TRACKERS_LIST_KEY, "0")];
+
+    for (key, value) in default_key_value_pairs {
+        db_conn.execute(
+            "
+            INSERT OR IGNORE INTO settings_kvs (key,value) VALUES (?1,?2)
+            ",
+            params![key, value],
         )?;
     }
     Ok(())

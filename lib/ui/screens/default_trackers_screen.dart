@@ -80,7 +80,13 @@ class DefaultTrackersScreen extends StatelessWidget {
                         final trackerName = tracker.$2;
                         return ListTile(
                           title: Row(children: [Text(trackerName)]),
-                          onTap: () {},
+                          onTap: () {
+                            context.read<DefaultTrackersBloc>().add(
+                              DefaultTrackersEvent.setTrackersList(
+                                selectedTrackerId: trackerId,
+                              ),
+                            );
+                          },
                         );
                       },
                     ),

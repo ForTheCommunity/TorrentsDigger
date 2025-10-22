@@ -8,3 +8,8 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 Future<Map<String, String>> getSettingsKv() =>
     RustLib.instance.api.crateApiDatabaseGetSettingsKvGetSettingsKv();
+
+Future<BigInt> setDefaultTrackersList({required int index}) => RustLib
+    .instance
+    .api
+    .crateApiDatabaseGetSettingsKvSetDefaultTrackersList(index: index);

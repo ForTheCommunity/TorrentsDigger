@@ -4,7 +4,7 @@ use rusqlite::params;
 
 use crate::database::database_config::get_a_database_connection;
 
-pub fn insert_update_kv(key: String, value: String) -> Result<usize, rusqlite::Error> {
+pub fn insert_update_kv(key: &str, value: &str) -> Result<usize, rusqlite::Error> {
     let db_conn = get_a_database_connection();
 
     db_conn.execute(

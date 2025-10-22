@@ -6,6 +6,10 @@ use std::{
 use once_cell::sync::Lazy;
 use rusqlite::Connection;
 
+pub const DATABASE_DIR: &str = ".torrents_digger";
+pub const DATABASE_NAME: &str = "torrents_digger.database";
+pub const ACTIVE_TRACKERS_LIST_KEY: &str = "active_trackers_list";
+
 pub static DATABASE_PATH: OnceLock<PathBuf> = OnceLock::new();
 
 static A_DATABASE_CONNECTION: Lazy<Mutex<Connection>> = Lazy::new(|| {
@@ -16,9 +20,6 @@ static A_DATABASE_CONNECTION: Lazy<Mutex<Connection>> = Lazy::new(|| {
 
     Mutex::new(conn)
 });
-
-pub const DATABASE_DIR: &str = ".torrents_digger";
-pub const DATABASE_NAME: &str = "torrents_digger.database";
 
 pub fn get_a_database_connection() -> std::sync::MutexGuard<'static, Connection> {
     A_DATABASE_CONNECTION

@@ -7,4 +7,7 @@ class DefaultTrackersState with _$DefaultTrackersState {
   const factory DefaultTrackersState.loaded({
     required List<(BigInt, String)> trackersList,
   }) = _loaded;
+  // const factory DefaultTrackersState.selectedTrackersList({
+  //   required BigInt selectedTrackersList,
+  // }) = _selectedTrackersList;
 }
