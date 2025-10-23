@@ -9,6 +9,7 @@ use rusqlite::Connection;
 pub const APP_DIR_NAME: &str = ".torrents_digger";
 pub const DATABASE_NAME: &str = "torrents_digger.database";
 pub const TRACKERS_LISTS_DIR: &str = "trackers/";
+// Database Settings_KVS Keys
 pub const ACTIVE_TRACKERS_LIST_KEY: &str = "active_trackers_list";
 
 pub static DATABASE_PATH: OnceLock<PathBuf> = OnceLock::new();

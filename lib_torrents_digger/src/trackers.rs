@@ -1,7 +1,19 @@
 use core::fmt;
-use std::{error::Error, fs};
+use once_cell::sync::Lazy;
+use std::{
+    error::Error,
+    fs::{self, File},
+    io::Read,
+    path::Path,
+};
 
-use crate::{database::database_config::TRACKERS_DIR_PATH, sync_request::send_request};
+use crate::{
+    database::{
+        database_config::{APP_DIR_NAME, TRACKERS_DIR_PATH, TRACKERS_LISTS_DIR},
+        default_trackers::get_active_trackers_list,
+    },
+    sync_request::send_request,
+};
 
 #[derive(Debug)]
 pub enum DefaultTrackers {
@@ -100,6 +112,10 @@ impl DefaultTrackers {
         }
         Ok(true)
     }
+
+    pub fn get_trackers() -> Result<String, Box<dyn std::error::Error>> {
+        Ok(TRACKERS_STRING.clone())
+    }
 }
 
 impl fmt::Display for DefaultTrackers {
@@ -117,3 +133,29 @@ impl fmt::Display for DefaultTrackers {
         }
     }
 }
+
+static TRACKERS_STRING: Lazy<Result<String, Box<dyn Error + Send + Sync>>> = Lazy::new(|| {
+    let active_trackers_list_index = get_active_trackers_list()?.parse::<usize>()?;
+    let trackers_list_type = DefaultTrackers::from_index(active_trackers_list_index)
+        .ok_or_else(|| "Invalid tracker index")?;
+    let file_name = trackers_list_type.get_filename();
+    let file_path = Path::new(APP_DIR_NAME)
+        .join(TRACKERS_LISTS_DIR)
+        .join(file_name);
+
+    let mut file = File::open(file_path)?;
+    let mut trackers_file_content = String::new();
+    file.read_to_string(&mut trackers_file_content);
+
+    // String to store trackers.
+    let mut trackers = String::new();
+
+    for a_tracker in trackers_file_content.lines() {
+        // check for empty lines / gap
+        if !a_tracker.trim().is_empty() {
+            trackers.push_str("&tr=");
+            trackers.push_str(a_tracker);
+        }
+    }
+    Ok(trackers)
+});
