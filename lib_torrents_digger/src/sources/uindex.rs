@@ -1,12 +1,11 @@
+use anyhow::Result;
 use core::fmt;
-use std::error::Error;
-
 use scraper::{ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
 
 use crate::{
-    extract_info_hash_from_magnet, sources::QueryOptions, static_includes::get_trackers,
-    torrent::Torrent,
+    extract_info_hash_from_magnet, sources::QueryOptions, torrent::Torrent,
+    trackers::DefaultTrackers,
 };
 
 #[derive(Debug)]
@@ -103,21 +102,32 @@ impl UindexCategories {
     }
 
     // Scraping
-    pub fn scrape_and_parse(
-        mut response: Response<Body>,
-    ) -> Result<(Vec<Torrent>, Option<i64>), Box<dyn Error>> {
+    pub fn scrape_and_parse(mut response: Response<Body>) -> Result<(Vec<Torrent>, Option<i64>)> {
         // Scraping
         let html_response = response.body_mut().read_to_string()?;
         let document = Html::parse_document(&html_response);
 
         // Selectors
-        let div_selector = Selector::parse(r#"div[id="results-area"]"#)?;
-        let table_selector = Selector::parse("table")?;
-        let table_body_selector = Selector::parse("tbody")?;
-        let table_row_selector = Selector::parse("tr")?;
-        let table_data_selector = Selector::parse("td")?;
-        let anchor_tag_selector = Selector::parse("a")?;
-        let sub_div_selector = Selector::parse("div.sub")?;
+        let div_selector = Selector::parse(r#"div[id="results-area"]"#)
+            .map_err(|e| anyhow::anyhow!(format!("Error parsing div selector: {}", e)))?;
+
+        let table_selector = Selector::parse("table")
+            .map_err(|e| anyhow::anyhow!(format!("Error parsing table selector: {}", e)))?;
+
+        let table_body_selector = Selector::parse("tbody")
+            .map_err(|e| anyhow::anyhow!(format!("Error parsing table body selector: {}", e)))?;
+
+        let table_row_selector = Selector::parse("tr")
+            .map_err(|e| anyhow::anyhow!(format!("Error parsing table row selector: {}", e)))?;
+
+        let table_data_selector = Selector::parse("td")
+            .map_err(|e| anyhow::anyhow!(format!("Error parsing table data selector: {}", e)))?;
+
+        let anchor_tag_selector = Selector::parse("a")
+            .map_err(|e| anyhow::anyhow!(format!("Error parsing anchor tag selector: {}", e)))?;
+
+        let sub_div_selector = Selector::parse("div.sub")
+            .map_err(|e| anyhow::anyhow!(format!("Error parsing sub div selector: {}", e)))?;
 
         // Vector of Torrent to Store all Torrents
         let mut all_torrents: Vec<Torrent> = Vec::new();
@@ -149,7 +159,7 @@ impl UindexCategories {
             // extracting info hash from magnet
             let info_hash = extract_info_hash_from_magnet(&magnet).to_lowercase();
             // adding more trackers
-            magnet.push_str(get_trackers()?.as_str());
+            magnet.push_str(DefaultTrackers::get_trackers()?.as_str());
 
             // extracting torrent name
             let name = magnet_and_torrent_name_elem_vec

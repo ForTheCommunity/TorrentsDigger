@@ -10,7 +10,7 @@ use lib_torrents_digger::{
         torrents_csv::TorrentsCsvCategories,
     },
     sync_request::fetch_torrents,
-    static_includes::get_trackers,
+    trackers::DefaultTrackers,
 };
 
 fn main() {
@@ -90,6 +90,6 @@ fn test_nyaa_dot_si() {
 }
 
 fn test_trackers() {
-    let trackers = get_trackers().unwrap();
+    let trackers = DefaultTrackers::get_trackers().unwrap();
     println!("{:?}", trackers);
 }

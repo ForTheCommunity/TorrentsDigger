@@ -1,4 +1,4 @@
-use std::error::Error;
+use anyhow::Result;
 
 use crate::{
     sources::{
@@ -28,7 +28,7 @@ pub fn search_torrent(
     filter: String,
     sorting: String,
     page: Option<i64>,
-) -> Result<(Vec<torrent::Torrent>, Option<i64>), Box<dyn Error + 'static>> {
+) -> Result<(Vec<torrent::Torrent>, Option<i64>)> {
     let source = AllAvailableSources::to_source(&source);
     match source {
         AllAvailableSources::Nyaa => {

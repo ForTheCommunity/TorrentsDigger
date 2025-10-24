@@ -1,10 +1,9 @@
+use anyhow::Result;
 use core::fmt;
-use std::error::Error;
-
 use scraper::{ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
 
-use crate::{sources::QueryOptions, static_includes::get_trackers, torrent::Torrent};
+use crate::{sources::QueryOptions, torrent::Torrent, trackers::DefaultTrackers};
 
 #[derive(Debug)]
 pub enum LimeTorrentsCategories {
@@ -100,25 +99,40 @@ impl LimeTorrentsCategories {
     }
 
     // Scraping
-    pub fn scrape_and_parse(
-        mut response: Response<Body>,
-    ) -> Result<(Vec<Torrent>, Option<i64>), Box<dyn Error>> {
+    pub fn scrape_and_parse(mut response: Response<Body>) -> Result<(Vec<Torrent>, Option<i64>)> {
         // Scraping
         let html_response = response.body_mut().read_to_string()?;
         let document = Html::parse_document(&html_response);
 
         // selectors
-        let div_selector = Selector::parse(r#"div[id="content"]"#)?;
-        let table_selector = Selector::parse(r#"table[class="table2"]"#)?;
-        let table_body_selector = Selector::parse("tbody")?;
+        let div_selector = Selector::parse(r#"div[id="content"]"#)
+            .map_err(|e| anyhow::anyhow!(format!("Error parsing div selector: {}", e)))?;
+
+        let table_selector = Selector::parse(r#"table[class="table2"]"#)
+            .map_err(|e| anyhow::anyhow!(format!("Error parsing table selector: {}", e)))?;
+
+        let table_body_selector = Selector::parse("tbody")
+            .map_err(|e| anyhow::anyhow!(format!("Error parsing table body selector: {}", e)))?;
+
         // select only rows that have torrent data,
-        let table_row_selector = Selector::parse("tr[bgcolor]")?;
+        let table_row_selector = Selector::parse("tr[bgcolor]")
+            .map_err(|e| anyhow::anyhow!(format!("Error parsing table row selector: {}", e)))?;
 
-        let table_data_selector = Selector::parse("td")?;
-        let anchor_tag_selector = Selector::parse("a")?;
-        let active_page_selector = Selector::parse("span.active")?;
+        let table_data_selector = Selector::parse("td")
+            .map_err(|e| anyhow::anyhow!(format!("Error parsing table data selector: {}", e)))?;
 
-        let torrent_name_and_magnet_div_selector = Selector::parse("div.tt-name")?;
+        let anchor_tag_selector = Selector::parse("a")
+            .map_err(|e| anyhow::anyhow!(format!("Error parsing anchor tag selector: {}", e)))?;
+
+        let active_page_selector = Selector::parse("span.active")
+            .map_err(|e| anyhow::anyhow!(format!("Error parsing active page selector: {}", e)))?;
+
+        let torrent_name_and_magnet_div_selector = Selector::parse("div.tt-name").map_err(|e| {
+            anyhow::anyhow!(format!(
+                "Error parsing torrent name and magnet div selector: {}",
+                e
+            ))
+        })?;
 
         // Vector of Torrent to Store all Torrents
         let mut all_torrents: Vec<Torrent> = Vec::new();
@@ -183,7 +197,7 @@ impl LimeTorrentsCategories {
             let mut magnet = magnet_link_prefix + info_hash + "&dn=" + disply_name;
 
             // adding extra trackers
-            magnet.push_str(get_trackers()?.as_str());
+            magnet.push_str(DefaultTrackers::get_trackers()?.as_str());
 
             // using display name as Torrent Name
 

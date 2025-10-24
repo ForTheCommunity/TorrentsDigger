@@ -1,13 +1,11 @@
-use core::fmt;
-use std::error::Error;
-
 use anyhow::Result;
+use core::fmt;
 use scraper::{self, ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
 
 use crate::{
-    extract_info_hash_from_magnet, sources::QueryOptions, static_includes::get_trackers,
-    torrent::Torrent,
+    extract_info_hash_from_magnet, sources::QueryOptions, torrent::Torrent,
+    trackers::DefaultTrackers,
 };
 
 // https://nyaa.si
@@ -167,21 +165,32 @@ impl NyaaCategories {
     }
 
     // Scraping
-    pub fn scrape_and_parse(
-        mut response: Response<Body>,
-    ) -> Result<(Vec<Torrent>, Option<i64>), Box<dyn Error>> {
+    pub fn scrape_and_parse(mut response: Response<Body>) -> Result<(Vec<Torrent>, Option<i64>)> {
         // Scraping
         let html_response = response.body_mut().read_to_string()?;
         let document = Html::parse_document(&html_response);
 
         // selectors
-        let div_selector = Selector::parse(r#"div[class="table-responsive"]"#)?;
-        let table_selector = Selector::parse("table")?;
-        let table_body_selector = Selector::parse("tbody")?;
-        let table_row_selector = Selector::parse("tr")?;
-        let table_data_selector = Selector::parse("td")?;
-        let anchor_tag_selector = Selector::parse("a")?;
-        let pagination_selector = Selector::parse("ul.pagination li.active")?;
+        let div_selector = Selector::parse(r#"div[class="table-responsive"]"#)
+            .map_err(|e| anyhow::anyhow!(format!("Error parsing div selector: {}", e)))?;
+        
+        let table_selector = Selector::parse("table")
+            .map_err(|e| anyhow::anyhow!(format!("Error parsing table selector: {}", e)))?;
+        
+        let table_body_selector = Selector::parse("tbody")
+            .map_err(|e| anyhow::anyhow!(format!("Error parsing tbody selector: {}", e)))?;
+        
+        let table_row_selector = Selector::parse("tr")
+            .map_err(|e| anyhow::anyhow!(format!("Error parsing tr selector: {}", e)))?;
+        
+        let table_data_selector = Selector::parse("td")
+            .map_err(|e| anyhow::anyhow!(format!("Error parsing td selector: {}", e)))?;
+        
+        let anchor_tag_selector = Selector::parse("a")
+            .map_err(|e| anyhow::anyhow!(format!("Error parsing a selector: {}", e)))?;
+        
+        let pagination_selector = Selector::parse("ul.pagination li.active")
+            .map_err(|e| anyhow::anyhow!(format!("Error parsing pagination selector: {}", e)))?;
 
         // Vector of Torrent to Store all Torrents
         let mut all_torrents: Vec<Torrent> = Vec::new();
@@ -229,7 +238,7 @@ impl NyaaCategories {
             let info_hash = extract_info_hash_from_magnet(&magnet).to_lowercase();
 
             // adding extra trackers
-            magnet.push_str(get_trackers()?.as_str());
+            magnet.push_str(DefaultTrackers::get_trackers()?.as_str());
 
             let size = table_data_vec[3].inner_html().to_string();
             let date = table_data_vec[4].inner_html().to_string();

@@ -2,34 +2,81 @@ use rusqlite::{Connection, params};
 use std::{fs::create_dir_all, path::PathBuf, sync::MutexGuard};
 
 use crate::{
-    database::database_config::{
-        ACTIVE_TRACKERS_LIST_KEY, APP_DIR_NAME, DATABASE_NAME, DATABASE_PATH, TRACKERS_DIR_PATH,
-        TRACKERS_LISTS_DIR, get_a_database_connection,
+    database::{
+        database_config::{
+            ACTIVE_TRACKERS_LIST_KEY, APP_ROOT_DIR, DATABASE_DIR, DATABASE_NAME, DATABASE_PATH,
+            TRACKERS_DIR_PATH, TRACKERS_LISTS_DIR, get_a_database_connection,
+        },
+        settings_kvs::insert_update_kv,
     },
     trackers::DefaultTrackers,
 };
 
+// pub fn initialize_database(
+//     torrents_digger_database_directory: String,
+// ) -> Result<(), rusqlite::Error> {
+//     let root_dir = PathBuf::from(torrents_digger_database_directory);
+//     let app_dir = root_dir.join(APP_DIR_NAME);
+//     let database_file_path = app_dir.join(DATABASE_NAME);
+//     let trackers_path = app_dir.join(TRACKERS_LISTS_DIR);
+
+//     // creating files & dirs
+//     create_dir_all(app_dir).expect("Failed to create app directory");
+//     create_dir_all(&trackers_path).expect("Failed to create trackers directory");
+
+//     // set_platform_specific_root_dir_path(root_dir);
+//     insert_update_kv(
+//         APP_ROOT_DIR,
+//         root_dir.to_string_lossy().into_owned().as_str(),
+//     )?;
+
+//     set_database_path(database_file_path);
+//     set_trackers_dir_path(trackers_path);
+
+//     // creating tables
+//     create_tables()?;
+//     // inserting configs.
+//     insert_configs()?;
+//     // insert default settings key values
+//     insert_default_settings_kvs()?;
+
+//     // downloading trackers lists
+//     // need to use Anyhow crate later.....
+//     DefaultTrackers::download_trackers_lists().unwrap();
+
+//     Ok(())
+// }
+
+// this initialize database function is for temp use.,
+// this will be / should be replaced/improved in future.
+// this is not reliable......
 pub fn initialize_database(
     torrents_digger_database_directory: String,
 ) -> Result<(), rusqlite::Error> {
-    let root_dir = PathBuf::from(torrents_digger_database_directory);
-    let app_dir = root_dir.join(APP_DIR_NAME);
-    let database_file_path = app_dir.join(DATABASE_NAME);
-    let trackers_path = app_dir.join(TRACKERS_LISTS_DIR);
+    let mut database_path: PathBuf = PathBuf::from(torrents_digger_database_directory);
+    //  app root dir i,e database path..
+    let root_dir_path = database_path.clone();
 
-    // creating files & dirs
-    create_dir_all(app_dir).expect("Failed to create app directory");
+    let trackers_path = database_path.join(DATABASE_DIR).join(TRACKERS_LISTS_DIR);
+    database_path.push(DATABASE_DIR.to_owned() + "/" + DATABASE_NAME);
+
+    // creating database dir/file
+    create_dir_all(database_path.parent().unwrap()).expect("Failed to create database directory");
     create_dir_all(&trackers_path).expect("Failed to create trackers directory");
 
-    set_database_path(database_file_path);
+    set_database_path(database_path);
     set_trackers_dir_path(trackers_path);
 
     // creating tables
     create_tables()?;
     // inserting configs.
     insert_configs()?;
+
     // insert default settings key values
     insert_default_settings_kvs()?;
+
+    // saving app root dir..
+    insert_update_kv(APP_ROOT_DIR, root_dir_path.to_str().unwrap())?;
 
     // downloading trackers lists
     // need to use Anyhow crate later.....
@@ -141,9 +188,9 @@ fn insert_default_settings_kvs() -> Result<(), rusqlite::Error> {
     Ok(())
 }
 
-fn set_database_path(database_file_path: PathBuf) {
+fn set_database_path(database_path: PathBuf) {
     DATABASE_PATH
-        .set(database_file_path)
+        .set(database_path)
         .expect("Database path can only be set once");
 }
 

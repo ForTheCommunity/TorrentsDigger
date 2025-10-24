@@ -1,6 +1,5 @@
-use std::error::Error;
+use anyhow::{anyhow, Result};
 
-use anyhow::Result;
 use rand::{rng, seq::IndexedRandom};
 use serde::Deserialize;
 use ureq::{Agent, Body, http::Response};
@@ -20,7 +19,7 @@ use crate::{
 pub fn fetch_torrents(
     url: &str,
     source: AllAvailableSources,
-) -> Result<(Vec<Torrent>, Option<i64>), Box<dyn std::error::Error + 'static>> {
+) -> Result<(Vec<Torrent>, Option<i64>)> {
     // sending request
     let response = send_request(url)?;
 
@@ -36,7 +35,7 @@ pub fn fetch_torrents(
     }
 }
 
-pub fn send_request(url: &str) -> Result<Response<Body>, Box<dyn Error>> {
+pub fn send_request(url: &str) -> Result<Response<Body>> {
     // List of User-Agent strings
     let user_agents = [
         "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36",
@@ -92,7 +91,7 @@ pub fn build_proxy_url(proxy_data: &Proxy) -> String {
     }
 }
 
-pub fn extract_ip_details() -> Result<IpDetails, Box<dyn Error>> {
+pub fn extract_ip_details() -> Result<IpDetails> {
     //  https://api.ipwho.org/me
     let mut response = send_request("https://api.ipwho.org/me")?;
     let response_body = response.body_mut().read_to_string()?;
@@ -101,7 +100,7 @@ pub fn extract_ip_details() -> Result<IpDetails, Box<dyn Error>> {
     let api_response: ApiResponse = serde_json::from_str(&response_body)?;
 
     if !api_response.success {
-        return Err(Box::from("API Error"));
+        return Err(anyhow!("API Error"));
     }
 
     Ok(IpDetails {
@@ -186,7 +185,7 @@ pub struct ApiResponse {
     data: Data,
 }
 
-pub fn check_for_update() -> Result<u8, Box<dyn Error>> {
+pub fn check_for_update() -> Result<u8> {
     // https://gitlab.com/api/v4/projects/73090806/repository/tags
 
     let url: &'static str = "https://gitlab.com/api/v4/projects/73090806/repository/tags";
@@ -217,7 +216,7 @@ pub fn check_for_update() -> Result<u8, Box<dyn Error>> {
                 Ok(0)
             }
         }
-        None => Err(Box::from("Latest Release Not Found !!!")),
+        None => Err(anyhow!("Latest Release Not Found !!!")),
     }
 }
 

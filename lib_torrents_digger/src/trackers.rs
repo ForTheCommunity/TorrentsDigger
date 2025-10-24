@@ -1,7 +1,7 @@
+use anyhow::{Ok, Result, anyhow};
 use core::fmt;
 use once_cell::sync::Lazy;
 use std::{
-    error::Error,
     fs::{self, File},
     io::Read,
     path::Path,
@@ -9,8 +9,9 @@ use std::{
 
 use crate::{
     database::{
-        database_config::{APP_DIR_NAME, TRACKERS_DIR_PATH, TRACKERS_LISTS_DIR},
+        database_config::{APP_DIR_NAME, APP_ROOT_DIR, TRACKERS_DIR_PATH, TRACKERS_LISTS_DIR},
         default_trackers::get_active_trackers_list,
+        settings_kvs::fetch_kv,
     },
     sync_request::send_request,
 };
@@ -85,7 +86,7 @@ impl DefaultTrackers {
         self.to_string().to_lowercase().replace(' ', "_") + ".txt"
     }
 
-    pub fn download_trackers_lists() -> Result<bool, Box<dyn Error>> {
+    pub fn download_trackers_lists() -> Result<bool> {
         let trackers_dir_path = TRACKERS_DIR_PATH.get().unwrap();
 
         for a_variant in Self::ALL_VARIANTS.iter() {
@@ -100,12 +101,11 @@ impl DefaultTrackers {
 
             let mut response = send_request(url)?;
             if !response.status().is_success() {
-                return Err(format!(
+                return Err(anyhow!(format!(
                     "Request to {} failed with status {}",
                     url,
                     response.status()
-                )
-                .into());
+                )));
             }
             let response_body_text = response.body_mut().read_to_string()?;
             fs::write(file_path, response_body_text)?;
@@ -113,8 +113,12 @@ impl DefaultTrackers {
         Ok(true)
     }
 
-    pub fn get_trackers() -> Result<String, Box<dyn std::error::Error>> {
-        Ok(TRACKERS_STRING.clone())
+    pub fn get_trackers() -> Result<String> {
+        let result = &*TRACKERS_STRING;
+        result
+            .as_deref()
+            .map(|trackers_str| trackers_str.to_owned())
+            .map_err(|e| anyhow::anyhow!(e.to_string()))
     }
 }
 
@@ -134,18 +138,24 @@ impl fmt::Display for DefaultTrackers {
     }
 }
 
-static TRACKERS_STRING: Lazy<Result<String, Box<dyn Error + Send + Sync>>> = Lazy::new(|| {
+static TRACKERS_STRING: Lazy<Result<String>> = Lazy::new(|| {
     let active_trackers_list_index = get_active_trackers_list()?.parse::<usize>()?;
     let trackers_list_type = DefaultTrackers::from_index(active_trackers_list_index)
-        .ok_or_else(|| "Invalid tracker index")?;
+        .ok_or_else(|| anyhow!("Invalid tracker index: {}", active_trackers_list_index))?;
     let file_name = trackers_list_type.get_filename();
-    let file_path = Path::new(APP_DIR_NAME)
+
+    // platform specific root dir
+    // let app_root_dir_path = fetch_kv(APP_ROOT_DIR)?;
+    let app_root_dir_path = fetch_kv(APP_ROOT_DIR)?;
+
+    let file_path = Path::new(&app_root_dir_path)
+        .join(APP_DIR_NAME)
         .join(TRACKERS_LISTS_DIR)
         .join(file_name);
 
     let mut file = File::open(file_path)?;
     let mut trackers_file_content = String::new();
-    file.read_to_string(&mut trackers_file_content);
+    file.read_to_string(&mut trackers_file_content)?;
 
     // String to store trackers.
     let mut trackers = String::new();

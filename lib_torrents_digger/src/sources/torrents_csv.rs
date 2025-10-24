@@ -1,8 +1,7 @@
-use core::fmt;
-use std::error::Error;
-
-use crate::{sources::QueryOptions, torrent::Torrent, static_includes::get_trackers};
+use crate::{sources::QueryOptions, torrent::Torrent, trackers::DefaultTrackers};
+use anyhow::Result;
 use chrono::{DateTime, Utc};
+use core::fmt;
 use serde::{Deserialize, Serialize};
 use ureq::{Body, http::Response};
 
@@ -57,9 +56,7 @@ impl TorrentsCsvCategories {
         }
     }
 
-    pub fn parse_response(
-        mut response: Response<Body>,
-    ) -> Result<(Vec<Torrent>, Option<i64>), Box<dyn Error>> {
+    pub fn parse_response(mut response: Response<Body>) -> Result<(Vec<Torrent>, Option<i64>)> {
         let json_response_txt = response.body_mut().read_to_string()?;
         let json_root: JsonRoot = serde_json::from_str(&json_response_txt)?;
         let torrents: Vec<Torrent> = json_root
@@ -112,7 +109,7 @@ impl JsonTorrentData {
         let mut magnet = format!("magnet:?xt=urn:btih:{}&dn={}", self.infohash, self.name);
 
         // adding extra trackers
-        magnet.push_str(get_trackers().unwrap().as_str());
+        magnet.push_str(DefaultTrackers::get_trackers().unwrap().as_str());
 
         Torrent {
             info_hash: self.infohash.clone().to_lowercase(),

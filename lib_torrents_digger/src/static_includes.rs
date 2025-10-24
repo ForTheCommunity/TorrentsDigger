@@ -1,3 +1,4 @@
+use anyhow::Result;
 use once_cell::sync::Lazy;
 
 static APP_CURRENT_VERSION: Lazy<String> = Lazy::new(|| {
@@ -15,6 +16,6 @@ static APP_CURRENT_VERSION: Lazy<String> = Lazy::new(|| {
     current_version_string
 });
 
-pub fn get_current_version() -> Result<String, Box<dyn std::error::Error>> {
+pub fn get_current_version() -> Result<String> {
     Ok(APP_CURRENT_VERSION.clone())
 }

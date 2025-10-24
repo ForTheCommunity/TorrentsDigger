@@ -1,12 +1,12 @@
 // Knaben Database
 
+use anyhow::Result;
 use core::fmt;
-use std::error::Error;
 
 use scraper::{ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
 
-use crate::{sources::QueryOptions, static_includes::get_trackers, torrent::Torrent};
+use crate::{sources::QueryOptions, torrent::Torrent, trackers::DefaultTrackers};
 
 #[derive(Debug)]
 pub enum KnabenDatabaseCategories {
@@ -374,19 +374,27 @@ impl KnabenDatabaseCategories {
     }
 
     // Scraping
-    pub fn scrape_and_parse(
-        mut response: Response<Body>,
-    ) -> Result<(Vec<Torrent>, Option<i64>), Box<dyn Error>> {
+    pub fn scrape_and_parse(mut response: Response<Body>) -> Result<(Vec<Torrent>, Option<i64>)> {
         // Scraping
         let html_response = response.body_mut().read_to_string()?;
         let document = Html::parse_document(&html_response);
 
         // Selectors
-        let table_body_selector = Selector::parse("tbody")?;
-        let table_row_selector = Selector::parse("tr.text-nowrap.border-start")?;
-        let table_data_selector = Selector::parse("td")?;
-        let title_anchor_selector = Selector::parse("td:nth-child(2) > a:nth-child(1)")?;
-        let next_page_link_selector = Selector::parse("a#nextPage")?;
+        let table_body_selector = Selector::parse("tbody")
+            .map_err(|e| anyhow::anyhow!(format!("Error parsing table body selector: {}", e)))?;
+
+        let table_row_selector = Selector::parse("tr.text-nowrap.border-start")
+            .map_err(|e| anyhow::anyhow!(format!("Error parsing table row selector: {}", e)))?;
+
+        let table_data_selector = Selector::parse("td")
+            .map_err(|e| anyhow::anyhow!(format!("Error parsing table data selector: {}", e)))?;
+
+        let title_anchor_selector = Selector::parse("td:nth-child(2) > a:nth-child(1)")
+            .map_err(|e| anyhow::anyhow!(format!("Error parsing title anchor selector: {}", e)))?;
+
+        let next_page_link_selector = Selector::parse("a#nextPage").map_err(|e| {
+            anyhow::anyhow!(format!("Error parsing next page link selector: {}", e))
+        })?;
 
         // Vector of Torrent to Store all Torrents
         let mut all_torrents: Vec<Torrent> = Vec::new();
@@ -441,7 +449,7 @@ impl KnabenDatabaseCategories {
                             });
                         let magnet = title_anchor.attr("href").map_or("N/A".to_string(), |a| {
                             let mut magnet = a.to_string();
-                            if let Ok(trackers) = get_trackers() {
+                            if let Ok(trackers) = DefaultTrackers::get_trackers() {
                                 magnet.push_str(&trackers);
                             }
                             magnet
