@@ -32,14 +32,33 @@ android {
         versionName = flutter.versionName
     }
 
-    buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+    signingConfigs {
+        create("release") {
+            keyAlias = System.getenv("FTC_TD_KEY_ALIAS") ?: "lumo"
+            keyPassword = System.getenv("FTC_TD_KEY_PASSWORD")
+            storeFile = System.getenv("FTC_TD_KEYSTORE_PATH")?.let { file(it) }
+            storePassword = System.getenv("FTC_TD_STORE_PASSWORD")
         }
     }
+
+
+    buildTypes {
+          debug {
+            signingConfig = signingConfigs.getByName("debug")
+          }
+             release {
+            signingConfig = signingConfigs.getByName("release")
+        }
+    }
+
+    dependenciesInfo {
+        // Disables dependency metadata when building APKs.
+        includeInApk = false
+        // Disables dependency metadata when building Android App Bundles.
+        includeInBundle = false
+    }
 }
+
 
 flutter {
     source = "../.."
