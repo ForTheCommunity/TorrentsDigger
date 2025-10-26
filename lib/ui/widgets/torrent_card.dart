@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,8 +43,9 @@ class TorrentCard extends StatelessWidget {
                   builder: (context, state) {
                     bool isBookmarked = false;
                     if (state is BookmarksLoadedState) {
-                      isBookmarked =
-                          state.bookmarkedInfoHashes.contains(torrent.infoHash);
+                      isBookmarked = state.bookmarkedInfoHashes.contains(
+                        torrent.infoHash,
+                      );
                     }
 
                     return IconButton(
@@ -54,9 +57,9 @@ class TorrentCard extends StatelessWidget {
                         size: 24,
                       ),
                       onPressed: () {
-                        context
-                            .read<BookmarkBloc>()
-                            .add(ToggleBookmarkEvent(torrent: torrent));
+                        context.read<BookmarkBloc>().add(
+                          ToggleBookmarkEvent(torrent: torrent),
+                        );
                         createSnackBar(
                           message: isBookmarked
                               ? "Bookmark Removed"
@@ -72,96 +75,123 @@ class TorrentCard extends StatelessWidget {
             const SizedBox(height: 10),
             Row(
               children: [
-                Icon(Icons.folder_outlined,
-                    size: 16, color: AppColors.cardSecondaryTextColor),
+                Icon(
+                  Icons.folder_outlined,
+                  size: 16,
+                  color: AppColors.cardSecondaryTextColor,
+                ),
                 const SizedBox(width: 4),
-                Text(torrent.size,
-                    style: TextStyle(color: AppColors.cardSecondaryTextColor)),
+                Text(
+                  torrent.size,
+                  style: TextStyle(color: AppColors.cardSecondaryTextColor),
+                ),
               ],
             ),
             const SizedBox(height: 10),
             Row(
               children: [
-                Icon(Icons.date_range_sharp,
-                    size: 20, color: AppColors.cardSecondaryTextColor),
+                Icon(
+                  Icons.date_range_sharp,
+                  size: 20,
+                  color: AppColors.cardSecondaryTextColor,
+                ),
                 const SizedBox(width: 4),
-                Text('Created at : ${torrent.date}',
-                    style: TextStyle(
-                        color: AppColors.cardSecondaryTextColor,
-                        fontWeight: FontWeight.w600)),
+                Text(
+                  'Created at : ${torrent.date}',
+                  style: TextStyle(
+                    color: AppColors.cardSecondaryTextColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 10),
             Row(
               children: [
-                Icon(Icons.upload_sharp,
-                    size: 20, color: AppColors.seedersIconColor),
+                Icon(
+                  Icons.upload_sharp,
+                  size: 20,
+                  color: AppColors.seedersIconColor,
+                ),
                 const SizedBox(width: 4),
-                Text('Seeders : ${torrent.seeders}',
-                    style: TextStyle(
-                        color: AppColors.seedersTextColor,
-                        fontWeight: FontWeight.w600)),
+                Text(
+                  'Seeders : ${torrent.seeders}',
+                  style: TextStyle(
+                    color: AppColors.seedersTextColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
                 const SizedBox(width: 16),
-                Icon(Icons.download,
-                    size: 20, color: AppColors.leechersIconColor),
+                Icon(
+                  Icons.download,
+                  size: 20,
+                  color: AppColors.leechersIconColor,
+                ),
                 const SizedBox(width: 4),
-                Text('Leechers : ${torrent.leechers}',
-                    style: TextStyle(
-                        color: AppColors.leechersTextColor,
-                        fontWeight: FontWeight.w600)),
+                Text(
+                  'Leechers : ${torrent.leechers}',
+                  style: TextStyle(
+                    color: AppColors.leechersTextColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 10),
             Row(
               children: [
-                Icon(Icons.download_for_offline,
-                    size: 20, color: AppColors.cardSecondaryTextColor),
+                Icon(
+                  Icons.download_for_offline,
+                  size: 20,
+                  color: AppColors.cardSecondaryTextColor,
+                ),
                 const SizedBox(width: 4),
-                Text('Total Downloads : ${torrent.totalDownloads}',
-                    style: TextStyle(
-                        color: AppColors.cardSecondaryTextColor,
-                        fontWeight: FontWeight.w600)),
+                Text(
+                  'Total Downloads : ${torrent.totalDownloads}',
+                  style: TextStyle(
+                    color: AppColors.cardSecondaryTextColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                ElevatedButton(
+                TextButton(
                   onPressed: () async {
                     final Uri magnetUri = Uri.parse(torrent.magnet);
                     await Clipboard.setData(
-                        ClipboardData(text: magnetUri.toString()));
+                      ClipboardData(text: magnetUri.toString()),
+                    );
                     createSnackBar(
-                        message:
-                            "Magnet Link Copied to Clipboard.\nOpening Torrent Downloader...",
-                        duration: 1);
+                      message:
+                          "Magnet Link Copied to Clipboard.\nOpening Torrent Downloader...",
+                      duration: 1,
+                    );
 
                     await Future.delayed(const Duration(seconds: 2));
 
                     if (!await launchUrl(magnetUri)) {
                       createSnackBar(
-                          message:
-                              'Unable to open torrent downloader.\nInstall Torrent App.',
-                          duration: 2);
+                        message:
+                            'Unable to open torrent downloader.\nInstall Torrent App.',
+                        duration: 2,
+                      );
                     }
                   },
-                  style: ElevatedButton.styleFrom(
-                      surfaceTintColor: AppColors.magnetButtonSurfaceTintColor,
-                      backgroundColor: AppColors.magnetBackgroundColor,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 15)),
-                  child: Row(mainAxisSize: MainAxisSize.min, children: [
-                    Icon(Icons.link, size: 30, color: AppColors.magnetIconColor),
-                    const SizedBox(width: 4),
-                    Text("Magnet",
-                        style: TextStyle(
-                            color: AppColors.magnetForegroundColor,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600)),
-                  ]),
+
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.asset(
+                        "assets/magnet-svgrepo-com.png",
+                        width: Platform.isAndroid ? 25 : 35,
+                        height: Platform.isAndroid ? 25 : 35,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

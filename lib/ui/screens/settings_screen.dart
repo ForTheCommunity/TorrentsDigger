@@ -76,15 +76,15 @@ class SettingsScreen extends StatelessWidget {
                         state.whenOrNull(
                           updateAvailable: () => createSnackBar(
                             message: "New Version is Available.",
-                            duration: 5,
+                            duration: 2,
                           ),
                           latestVersion: () => createSnackBar(
                             message: "You are using latest version...",
-                            duration: 5,
+                            duration: 2,
                           ),
                           checkAppUpdateError: (msg) => createSnackBar(
                             message: "Error : $msg",
-                            duration: 10,
+                            duration: 5,
                           ),
                         );
                       },

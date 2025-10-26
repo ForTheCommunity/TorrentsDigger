@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:torrents_digger/ui/screens/bookmarks_screen.dart';
+import 'package:torrents_digger/ui/screens/customs_screen.dart';
 import 'package:torrents_digger/ui/screens/database_screen.dart';
 import 'package:torrents_digger/ui/screens/default_trackers_screen.dart';
 import 'package:torrents_digger/ui/screens/proxy_setting_screen.dart';
@@ -31,6 +32,9 @@ class Routes {
         return MaterialPageRoute(
           builder: (context) => const DefaultTrackersScreen(),
         );
+
+      case RoutesName.customsScreen:
+        return MaterialPageRoute(builder: (context) => const CustomsScreen());
 
       default:
         return MaterialPageRoute(

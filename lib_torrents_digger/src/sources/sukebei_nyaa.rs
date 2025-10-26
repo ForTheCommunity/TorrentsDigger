@@ -148,8 +148,20 @@ impl SukebeiNyaaCategories {
 
         let next_page_num: Option<i64> =
             if let Some(active_li) = document.select(&pagination_selector).next() {
-                let current_page_num = active_li.text().collect::<String>().parse::<i64>()?;
-                Some(current_page_num + 1)
+                if let Some(anchor) = active_li.select(&anchor_tag_selector).next() {
+                    let text = anchor.text().collect::<String>();
+                    let current_page_str = text.split_whitespace().next().unwrap_or("1");
+                    let current_page_num = current_page_str
+                        .trim()
+                        .parse::<i64>()
+                        .map_err(|e| anyhow::anyhow!("Error parsing page number: {}", e))?;
+                    Some(current_page_num + 1)
+                } else {
+                    // Fallback in case there is no anchor tag
+                    let current_page_num =
+                        active_li.text().collect::<String>().trim().parse::<i64>()?;
+                    Some(current_page_num + 1)
+                }
             } else {
                 // No active pagination element found, so no next page.
                 None

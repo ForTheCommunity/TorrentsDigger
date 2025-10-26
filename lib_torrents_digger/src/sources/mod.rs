@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use crate::sources::{
     available_sources::AllAvailableSources,
+    customs::custom::Customs,
     knaben_database::{KnabenDatabaseCategories, KnabenDatabaseSortings},
     lime_torrents::{LimeTorrentsCategories, LimeTorrentsSortings},
     nyaa::{NyaaCategories, NyaaFilter, NyaaSortings},
@@ -12,6 +13,7 @@ use crate::sources::{
 };
 
 pub mod available_sources;
+pub mod customs;
 pub mod knaben_database;
 pub mod lime_torrents;
 pub mod nyaa;
@@ -109,6 +111,10 @@ pub fn get_source_details() -> HashMap<String, SourceDetails> {
     );
 
     sources_details
+}
+
+pub fn get_customs() -> Vec<String> {
+    Customs::all_customs()
 }
 
 #[derive(Debug)]

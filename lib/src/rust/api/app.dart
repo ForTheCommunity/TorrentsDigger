@@ -37,3 +37,10 @@ Future<String> getAppCurrentVersion() =>
 
 Future<List<(BigInt, String)>> getAllDefaultTrackersList() =>
     RustLib.instance.api.crateApiAppGetAllDefaultTrackersList();
+
+Future<List<String>> getCustomsDetails() =>
+    RustLib.instance.api.crateApiAppGetCustomsDetails();
+
+Future<(List<InternalTorrent>, PlatformInt64?)> digCustomTorrents({
+  required String custom,
+}) => RustLib.instance.api.crateApiAppDigCustomTorrents(custom: custom);

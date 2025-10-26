@@ -1,6 +1,6 @@
 use lib_torrents_digger::{
     search_torrent,
-    sources::get_source_details,
+    sources::{customs::search_custom, get_customs, get_source_details},
     static_includes::get_current_version,
     sync_request::{check_for_update, extract_ip_details},
     trackers::DefaultTrackers,
@@ -63,10 +63,7 @@ pub fn dig_torrent(
             Ok((internal_torrents, next_page))
         }
 
-        Err(error) => {
-            let error_message = format!("{}", error);
-            Err(error_message)
-        }
+        Err(error) => Err(error.to_string()),
     }
 }
 
@@ -107,4 +104,30 @@ pub fn get_app_current_version() -> String {
 
 pub fn get_all_default_trackers_list() -> Vec<(usize, String)> {
     DefaultTrackers::get_default_trackers_list()
+}
+
+pub fn get_customs_details() -> Vec<String> {
+    get_customs()
+}
+
+pub fn dig_custom_torrents(custom: String) -> Result<(Vec<InternalTorrent>, Option<i64>), String> {
+    match search_custom(custom) {
+        Ok((torrents, next_page)) => {
+            let internal_torrents: Vec<InternalTorrent> = torrents
+                .into_iter()
+                .map(|t: ExternalTorrent| InternalTorrent {
+                    info_hash: t.info_hash,
+                    name: t.name,
+                    magnet: t.magnet,
+                    size: t.size,
+                    date: t.date,
+                    seeders: t.seeders,
+                    leechers: t.leechers,
+                    total_downloads: t.total_downloads,
+                })
+                .collect();
+            Ok((internal_torrents, next_page))
+        }
+        Err(error) => Err(error.to_string()),
+    }
 }

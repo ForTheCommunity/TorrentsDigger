@@ -167,28 +167,31 @@ impl NyaaCategories {
     // Scraping
     pub fn scrape_and_parse(mut response: Response<Body>) -> Result<(Vec<Torrent>, Option<i64>)> {
         // Scraping
-        let html_response = response.body_mut().read_to_string()?;
+        let html_response = response
+            .body_mut()
+            .read_to_string()
+            .map_err(|e| anyhow::anyhow!(format!("Error reading response body: {}", e)))?;
         let document = Html::parse_document(&html_response);
 
         // selectors
         let div_selector = Selector::parse(r#"div[class="table-responsive"]"#)
             .map_err(|e| anyhow::anyhow!(format!("Error parsing div selector: {}", e)))?;
-        
+
         let table_selector = Selector::parse("table")
             .map_err(|e| anyhow::anyhow!(format!("Error parsing table selector: {}", e)))?;
-        
+
         let table_body_selector = Selector::parse("tbody")
             .map_err(|e| anyhow::anyhow!(format!("Error parsing tbody selector: {}", e)))?;
-        
+
         let table_row_selector = Selector::parse("tr")
             .map_err(|e| anyhow::anyhow!(format!("Error parsing tr selector: {}", e)))?;
-        
+
         let table_data_selector = Selector::parse("td")
             .map_err(|e| anyhow::anyhow!(format!("Error parsing td selector: {}", e)))?;
-        
+
         let anchor_tag_selector = Selector::parse("a")
             .map_err(|e| anyhow::anyhow!(format!("Error parsing a selector: {}", e)))?;
-        
+
         let pagination_selector = Selector::parse("ul.pagination li.active")
             .map_err(|e| anyhow::anyhow!(format!("Error parsing pagination selector: {}", e)))?;
 
@@ -201,8 +204,20 @@ impl NyaaCategories {
 
         let next_page_num: Option<i64> =
             if let Some(active_li) = document.select(&pagination_selector).next() {
-                let current_page_num = active_li.text().collect::<String>().parse::<i64>()?;
-                Some(current_page_num + 1)
+                if let Some(anchor) = active_li.select(&anchor_tag_selector).next() {
+                    let text = anchor.text().collect::<String>();
+                    let current_page_str = text.split_whitespace().next().unwrap_or("1");
+                    let current_page_num = current_page_str
+                        .trim()
+                        .parse::<i64>()
+                        .map_err(|e| anyhow::anyhow!("Error parsing page number: {}", e))?;
+                    Some(current_page_num + 1)
+                } else {
+                    // Fallback in case there is no anchor tag
+                    let current_page_num =
+                        active_li.text().collect::<String>().trim().parse::<i64>()?;
+                    Some(current_page_num + 1)
+                }
             } else {
                 // No active pagination element found, so no next page.
                 None
