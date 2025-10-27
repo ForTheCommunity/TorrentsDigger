@@ -25,52 +25,13 @@ class TorrentCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Text(
-                    torrent.name,
-                    style: TextStyle(
-                      color: AppColors.cardPrimaryTextColor,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                BlocBuilder<BookmarkBloc, BookmarkState>(
-                  builder: (context, state) {
-                    bool isBookmarked = false;
-                    if (state is BookmarksLoadedState) {
-                      isBookmarked = state.bookmarkedInfoHashes.contains(
-                        torrent.infoHash,
-                      );
-                    }
-
-                    return IconButton(
-                      icon: Icon(
-                        isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-                        color: isBookmarked
-                            ? AppColors.bookmarkedIconColor
-                            : AppColors.bookmarkIconColor,
-                        size: 24,
-                      ),
-                      onPressed: () {
-                        context.read<BookmarkBloc>().add(
-                          ToggleBookmarkEvent(torrent: torrent),
-                        );
-                        createSnackBar(
-                          message: isBookmarked
-                              ? "Bookmark Removed"
-                              : "Torrent Bookmarked",
-                          duration: 1,
-                        );
-                      },
-                    );
-                  },
-                ),
-              ],
+            Text(
+              torrent.name,
+              style: TextStyle(
+                color: AppColors.cardPrimaryTextColor,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
             ),
             const SizedBox(height: 10),
             Row(
@@ -157,8 +118,39 @@ class TorrentCard extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                BlocBuilder<BookmarkBloc, BookmarkState>(
+                  builder: (context, state) {
+                    bool isBookmarked = false;
+                    if (state is BookmarksLoadedState) {
+                      isBookmarked = state.bookmarkedInfoHashes.contains(
+                        torrent.infoHash,
+                      );
+                    }
+
+                    return IconButton(
+                      icon: Icon(
+                        isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                        color: isBookmarked
+                            ? AppColors.bookmarkedIconColor
+                            : AppColors.bookmarkIconColor,
+                        size: 24,
+                      ),
+                      onPressed: () {
+                        context.read<BookmarkBloc>().add(
+                          ToggleBookmarkEvent(torrent: torrent),
+                        );
+                        createSnackBar(
+                          message: isBookmarked
+                              ? "Bookmark Removed"
+                              : "Torrent Bookmarked",
+                          duration: 1,
+                        );
+                      },
+                    );
+                  },
+                ),
+                const SizedBox(width: 10),
                 TextButton(
                   onPressed: () async {
                     final Uri magnetUri = Uri.parse(torrent.magnet);
@@ -187,8 +179,8 @@ class TorrentCard extends StatelessWidget {
                     children: [
                       Image.asset(
                         "assets/magnet-svgrepo-com.png",
-                        width: Platform.isAndroid ? 25 : 35,
-                        height: Platform.isAndroid ? 25 : 35,
+                        width: Platform.isAndroid ? 25 : 30,
+                        height: Platform.isAndroid ? 25 : 30,
                       ),
                     ],
                   ),
