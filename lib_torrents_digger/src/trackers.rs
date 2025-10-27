@@ -153,6 +153,10 @@ static TRACKERS_STRING: Lazy<Result<String>> = Lazy::new(|| {
         .join(TRACKERS_LISTS_DIR)
         .join(file_name);
 
+    if !file_path.exists() {
+        DefaultTrackers::download_trackers_lists()?;
+    }
+
     let mut file = File::open(file_path)?;
     let mut trackers_file_content = String::new();
     file.read_to_string(&mut trackers_file_content)?;
