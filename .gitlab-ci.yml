@@ -30,8 +30,7 @@ build_binaries:
     - glab auth login --job-token $CI_JOB_TOKEN --hostname $CI_SERVER_FQDN --api-protocol $CI_SERVER_PROTOCOL
     # Downloading signing key store.
     - glab -R $CI_PROJECT_PATH securefile download --all
-    # Env Vars are already setted at project level.
-    # so no need to do manuall exporting, ci/cd will automatically use setted env vars
+    - export FTC_TD_KEYSTORE_PATH="$CI_PROJECT_DIR/ftc_torrents_digger.jks"
 
     # Get app name and version
     - export APP_NAME=$(grep 'name:' pubspec.yaml | head -1 | awk '{print $2}' | sed 's/-/_/g' | sed 's/\r//g')
