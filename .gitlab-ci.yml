@@ -23,6 +23,16 @@ build_binaries:
     # Creating essential dirs
     - mkdir -p  build_deps_dir releases
 
+    # Downloading & installing gitlab cli tool
+    - wget https://gitlab.com/gitlab-org/cli/-/releases/v1.74.0/downloads/glab_1.74.0_linux_amd64.deb
+    - apt install ./glab_1.74.0_linux_amd64.deb
+    # Logging in
+    - glab auth login --job-token $CI_JOB_TOKEN --hostname $CI_SERVER_FQDN --api-protocol $CI_SERVER_PROTOCOL
+    # Downloading signing key store.
+    - glab -R $CI_PROJECT_PATH securefile download --all
+    # Env Vars are already setted at project level.
+    # so no need to do manuall exporting, ci/cd will automatically use setted env vars
+
     # Get app name and version
     - export APP_NAME=$(grep 'name:' pubspec.yaml | head -1 | awk '{print $2}' | sed 's/-/_/g' | sed 's/\r//g')
     - export APP_VERSION=$(grep 'version:' pubspec.yaml | head -1 | awk '{print $2}' | sed 's/+//' | sed 's/ /_/g' | sed 's/\r//g')
