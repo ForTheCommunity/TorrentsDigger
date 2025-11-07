@@ -5,22 +5,22 @@
 ## --> Screenshots
 
 <div style="display: flex; justify-content: center; gap: 20px;">
-    <a href="fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_1_forthecommunity.torrentsdigger.jpg">
-        <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_1_forthecommunity.torrentsdigger.jpg" width="160">
+    <a href="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_1.jpg">
+        <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_1.jpg" width="160">
     </a>
-    <a href="fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_2_org.forthecommunity.torrentsdigger.jpg">
-        <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_2_org.forthecommunity.torrentsdigger.jpg" width="160">
+    <a href="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_2.jpg">
+        <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_2.jpg" width="160">
     </a>
 </div>
 <br>
 <br>
 
 <div style="display: flex; justify-content: center; gap: 20px;">
-    <a href="fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_3_org.forthecommunity.torrentsdigger.jpg">
-        <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_3_org.forthecommunity.torrentsdigger.jpg" width="160">
+    <a href="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_3.jpg">
+        <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_3.jpg" width="160">
     </a>
-    <a href="fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_4_org.forthecommunity.torrentsdigger.jpg">
-        <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_4_org.forthecommunity.torrentsdigger.jpg" width="160">
+    <a href="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_4.jpg">
+        <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_4.jpg" width="160">
     </a>
 </div>
 
