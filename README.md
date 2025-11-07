@@ -1,8 +1,8 @@
 # Torrents Digger - Digs Torrents from the Internet.
 
-### Join [Matrix Room](https://matrix.to/#/#torrentsdigger:matrix.org)
+### -> Join [Matrix Room](https://matrix.to/#/#torrentsdigger:matrix.org)
 
-## Screenshots
+## --> Screenshots
 
 <div style="display: flex; justify-content: center; gap: 20px;">
     <a href="fastlane/metadata/android/en-US/images/phoneScreenshots/Screenshot_1_forthecommunity.torrentsdigger.jpg">
@@ -24,7 +24,13 @@
     </a>
 </div>
 
-## Download Torrents Digger from [Releases](https://gitlab.com/ForTheCommunity/torrentsdigger/-/releases) Page.
+## --> Download | Install :
+[<img src="https://f-droid.org/badge/get-it-on.png"
+    alt="Get it on F-Droid"
+    height="80">](https://f-droid.org/packages/org.forthecommunity.torrentsdigger)
+
+## --> Download binaries from [releases](https://gitlab.com/ForTheCommunity/torrentsdigger/-/releases) Page.
+
 
 ### Note -> Torrents Digger only do the job of Fetching ,Scraping & Listing. It don't host anything , It just list what is already available in the internet.
 
