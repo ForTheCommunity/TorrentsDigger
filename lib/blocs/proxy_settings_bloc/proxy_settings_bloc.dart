@@ -60,6 +60,8 @@ class ProxySettingsBloc extends Bloc<ProxySettingsEvents, ProxySettingsState> {
           proxyType: event.proxyType,
           proxyServerIp: event.proxyServerIp,
           proxyServerPort: event.proxyServerPort,
+          proxyUsername: proxyUsername,
+          proxyPassword: proxyPassword,
         ),
       );
       createSnackBar(message: "Proxy Saved. $a", duration: 5);
