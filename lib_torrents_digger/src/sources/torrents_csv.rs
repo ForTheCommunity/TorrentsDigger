@@ -1,5 +1,5 @@
 use crate::{sources::QueryOptions, torrent::Torrent, trackers::DefaultTrackers};
-use anyhow::Result;
+use anyhow::{Result, anyhow};
 use chrono::{DateTime, Utc};
 use core::fmt;
 use serde::{Deserialize, Serialize};
@@ -59,12 +59,18 @@ impl TorrentsCsvCategories {
     pub fn parse_response(mut response: Response<Body>) -> Result<(Vec<Torrent>, Option<i64>)> {
         let json_response_txt = response.body_mut().read_to_string()?;
         let json_root: JsonRoot = serde_json::from_str(&json_response_txt)?;
+
         let torrents: Vec<Torrent> = json_root
             .torrents
             .iter()
             .map(|td| td.to_torrent())
-            .collect();
+            .collect::<Result<Vec<Torrent>>>()?;
         let next_page = json_root.next;
+
+        if torrents.is_empty() {
+            return Err(anyhow!("No torrents found with the specified name."));
+        }
+
         Ok((torrents, next_page))
     }
 }
@@ -97,7 +103,7 @@ struct JsonTorrentData {
 }
 
 impl JsonTorrentData {
-    fn to_torrent(&self) -> Torrent {
+    fn to_torrent(&self) -> Result<Torrent> {
         // Convert bytes to a human-readable size string
         let size_str = format!("{:.2} GB", (self.size_bytes as f64) / 1_000_000_000.0);
 
@@ -109,9 +115,9 @@ impl JsonTorrentData {
         let mut magnet = format!("magnet:?xt=urn:btih:{}&dn={}", self.infohash, self.name);
 
         // adding extra trackers
-        magnet.push_str(DefaultTrackers::get_trackers().unwrap().as_str());
+        magnet.push_str(DefaultTrackers::get_trackers()?.as_str());
 
-        Torrent {
+        Ok(Torrent {
             info_hash: self.infohash.clone().to_lowercase(),
             name: self.name.clone(),
             magnet,
@@ -120,6 +126,6 @@ impl JsonTorrentData {
             seeders: self.seeders.to_string(),
             leechers: self.leechers.to_string(),
             total_downloads: self.completed.to_string(),
-        }
+        })
     }
 }

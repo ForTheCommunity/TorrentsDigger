@@ -1,7 +1,7 @@
 // https://solidtorrents.to/search?q=fate&sortBy=seeders&page=1&category=1
 // https://torrentz2.nz/
 
-use anyhow::Result;
+use anyhow::{Result, anyhow};
 use core::fmt;
 use scraper::{Html, Selector};
 use ureq::{Body, http::Response};
@@ -14,7 +14,7 @@ use crate::{
 #[derive(Debug)]
 pub enum SolidTorrentsCategories {
     AllCategories,
-    // Othee Categories
+    // Others Categories
     Other,
     Audio,
     Video,
@@ -233,29 +233,29 @@ impl SolidTorrentsCategories {
         // Master Selector for a single torrent entry
         let torrent_item_container_selector =
             Selector::parse("div.space-y-4 > div.bg-white.rounded-lg")
-                .map_err(|e| anyhow::anyhow!(format!("Error parsing container selector: {}", e)))?;
+                .map_err(|e| anyhow!(format!("Error parsing container selector: {}", e)))?;
 
         let torrent_name_selector = Selector::parse("h3.line-clamp-2 a")
-            .map_err(|e| anyhow::anyhow!(format!("Error parsing torrent name selector: {}", e)))?;
+            .map_err(|e| anyhow!(format!("Error parsing torrent name selector: {}", e)))?;
 
         let size_selector = Selector::parse(
             ".flex-wrap.items-center.gap-4.text-sm.text-gray-600 > span:nth-child(2) > span",
         )
-        .map_err(|e| anyhow::anyhow!(format!("Error parsing size selector: {}", e)))?;
+        .map_err(|e| anyhow!(format!("Error parsing size selector: {}", e)))?;
 
         let date_selector = Selector::parse(
             ".flex-wrap.items-center.gap-4.text-sm.text-gray-600 > span:nth-child(3) > span",
         )
-        .map_err(|e| anyhow::anyhow!(format!("Error parsing date selector: {}", e)))?;
+        .map_err(|e| anyhow!(format!("Error parsing date selector: {}", e)))?;
 
         let seeders_selector = Selector::parse(".text-green-600 .font-medium")
-            .map_err(|e| anyhow::anyhow!(format!("Error parsing seeders selector: {}", e)))?;
+            .map_err(|e| anyhow!(format!("Error parsing seeders selector: {}", e)))?;
 
         let leechers_selector = Selector::parse(".text-red-600 .font-medium")
-            .map_err(|e| anyhow::anyhow!(format!("Error parsing leechers selector: {}", e)))?;
+            .map_err(|e| anyhow!(format!("Error parsing leechers selector: {}", e)))?;
 
         let downloads_selector = Selector::parse(".text-blue-600 .font-medium")
-            .map_err(|e| anyhow::anyhow!(format!("Error parsing downloads selector: {}", e)))?;
+            .map_err(|e| anyhow!(format!("Error parsing downloads selector: {}", e)))?;
 
         // let active_page_selector = Selector::parse("span.bg-primary.text-white")?;
         // let next_button_selector = Selector::parse("nav.flex a")?;
@@ -263,7 +263,7 @@ impl SolidTorrentsCategories {
         // let active_page_selector = Selector::parse("span.bg-primary.text-white")?;
         // Target all links within the <nav>
         let next_button_selector = Selector::parse("nav.flex a")
-            .map_err(|e| anyhow::anyhow!(format!("Error parsing next button selector: {}", e)))?;
+            .map_err(|e| anyhow!(format!("Error parsing next button selector: {}", e)))?;
 
         // Vector to Store all Torrents
         let mut all_torrents: Vec<Torrent> = Vec::new();
@@ -333,7 +333,7 @@ impl SolidTorrentsCategories {
                 });
 
             let magnet_selector = Selector::parse("a[href^='magnet:?xt=urn:btih:']")
-                .map_err(|e| anyhow::anyhow!(format!("Error parsing magnet selector: {}", e)))?;
+                .map_err(|e| anyhow!(format!("Error parsing magnet selector: {}", e)))?;
 
             let mut magnet = item_element
                 .select(&magnet_selector)

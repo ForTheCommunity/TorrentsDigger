@@ -1,4 +1,4 @@
-use anyhow::Result;
+use anyhow::{Result, anyhow};
 use core::fmt;
 use scraper::{self, ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
@@ -170,37 +170,46 @@ impl NyaaCategories {
         let html_response = response
             .body_mut()
             .read_to_string()
-            .map_err(|e| anyhow::anyhow!(format!("Error reading response body: {}", e)))?;
+            .map_err(|e| anyhow!(format!("Error reading response body: {}", e)))?;
         let document = Html::parse_document(&html_response);
 
         // selectors
         let div_selector = Selector::parse(r#"div[class="table-responsive"]"#)
-            .map_err(|e| anyhow::anyhow!(format!("Error parsing div selector: {}", e)))?;
+            .map_err(|e| anyhow!(format!("Error parsing div selector: {}", e)))?;
 
         let table_selector = Selector::parse("table")
-            .map_err(|e| anyhow::anyhow!(format!("Error parsing table selector: {}", e)))?;
+            .map_err(|e| anyhow!(format!("Error parsing table selector: {}", e)))?;
 
         let table_body_selector = Selector::parse("tbody")
-            .map_err(|e| anyhow::anyhow!(format!("Error parsing tbody selector: {}", e)))?;
+            .map_err(|e| anyhow!(format!("Error parsing tbody selector: {}", e)))?;
 
         let table_row_selector = Selector::parse("tr")
-            .map_err(|e| anyhow::anyhow!(format!("Error parsing tr selector: {}", e)))?;
+            .map_err(|e| anyhow!(format!("Error parsing tr selector: {}", e)))?;
 
         let table_data_selector = Selector::parse("td")
-            .map_err(|e| anyhow::anyhow!(format!("Error parsing td selector: {}", e)))?;
+            .map_err(|e| anyhow!(format!("Error parsing td selector: {}", e)))?;
 
         let anchor_tag_selector = Selector::parse("a")
-            .map_err(|e| anyhow::anyhow!(format!("Error parsing a selector: {}", e)))?;
+            .map_err(|e| anyhow!(format!("Error parsing a selector: {}", e)))?;
 
         let pagination_selector = Selector::parse("ul.pagination li.active")
-            .map_err(|e| anyhow::anyhow!(format!("Error parsing pagination selector: {}", e)))?;
+            .map_err(|e| anyhow!(format!("Error parsing pagination selector: {}", e)))?;
 
         // Vector of Torrent to Store all Torrents
         let mut all_torrents: Vec<Torrent> = Vec::new();
 
-        let div = document.select(&div_selector).next().unwrap();
-        let table = div.select(&table_selector).next().unwrap();
-        let table_body = table.select(&table_body_selector).next().unwrap();
+        let div = document
+            .select(&div_selector)
+            .next()
+            .ok_or_else(|| anyhow!("No torrents found with the specified name."))?;
+        let table = div
+            .select(&table_selector)
+            .next()
+            .ok_or_else(|| anyhow!("No Table Found....."))?;
+        let table_body = table
+            .select(&table_body_selector)
+            .next()
+            .ok_or_else(|| anyhow!("Didn't found Table Body."))?;
 
         let next_page_num: Option<i64> =
             if let Some(active_li) = document.select(&pagination_selector).next() {
@@ -210,7 +219,7 @@ impl NyaaCategories {
                     let current_page_num = current_page_str
                         .trim()
                         .parse::<i64>()
-                        .map_err(|e| anyhow::anyhow!("Error parsing page number: {}", e))?;
+                        .map_err(|e| anyhow!("Error parsing page number: {}", e))?;
                     Some(current_page_num + 1)
                 } else {
                     // Fallback in case there is no anchor tag

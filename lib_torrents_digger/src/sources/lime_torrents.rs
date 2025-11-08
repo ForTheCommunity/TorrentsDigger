@@ -1,4 +1,4 @@
-use anyhow::Result;
+use anyhow::{Result, anyhow};
 use core::fmt;
 use scraper::{ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
@@ -106,29 +106,29 @@ impl LimeTorrentsCategories {
 
         // selectors
         let div_selector = Selector::parse(r#"div[id="content"]"#)
-            .map_err(|e| anyhow::anyhow!(format!("Error parsing div selector: {}", e)))?;
+            .map_err(|e| anyhow!(format!("Error parsing div selector: {}", e)))?;
 
         let table_selector = Selector::parse(r#"table[class="table2"]"#)
-            .map_err(|e| anyhow::anyhow!(format!("Error parsing table selector: {}", e)))?;
+            .map_err(|e| anyhow!(format!("Error parsing table selector: {}", e)))?;
 
         let table_body_selector = Selector::parse("tbody")
-            .map_err(|e| anyhow::anyhow!(format!("Error parsing table body selector: {}", e)))?;
+            .map_err(|e| anyhow!(format!("Error parsing table body selector: {}", e)))?;
 
         // select only rows that have torrent data,
         let table_row_selector = Selector::parse("tr[bgcolor]")
-            .map_err(|e| anyhow::anyhow!(format!("Error parsing table row selector: {}", e)))?;
+            .map_err(|e| anyhow!(format!("Error parsing table row selector: {}", e)))?;
 
         let table_data_selector = Selector::parse("td")
-            .map_err(|e| anyhow::anyhow!(format!("Error parsing table data selector: {}", e)))?;
+            .map_err(|e| anyhow!(format!("Error parsing table data selector: {}", e)))?;
 
         let anchor_tag_selector = Selector::parse("a")
-            .map_err(|e| anyhow::anyhow!(format!("Error parsing anchor tag selector: {}", e)))?;
+            .map_err(|e| anyhow!(format!("Error parsing anchor tag selector: {}", e)))?;
 
         let active_page_selector = Selector::parse("span.active")
-            .map_err(|e| anyhow::anyhow!(format!("Error parsing active page selector: {}", e)))?;
+            .map_err(|e| anyhow!(format!("Error parsing active page selector: {}", e)))?;
 
         let torrent_name_and_magnet_div_selector = Selector::parse("div.tt-name").map_err(|e| {
-            anyhow::anyhow!(format!(
+            anyhow!(format!(
                 "Error parsing torrent name and magnet div selector: {}",
                 e
             ))
@@ -137,9 +137,18 @@ impl LimeTorrentsCategories {
         // Vector of Torrent to Store all Torrents
         let mut all_torrents: Vec<Torrent> = Vec::new();
 
-        let div = document.select(&div_selector).next().unwrap();
-        let table = div.select(&table_selector).next().unwrap();
-        let table_body = table.select(&table_body_selector).next().unwrap();
+        let div = document
+            .select(&div_selector)
+            .next()
+            .ok_or_else(|| anyhow!("No Div Found...."))?;
+        let table = div
+            .select(&table_selector)
+            .next()
+            .ok_or_else(|| anyhow!("No torrents found with the specified name."))?;
+        let table_body = table
+            .select(&table_body_selector)
+            .next()
+            .ok_or_else(|| anyhow!("No Table Body Found......"))?;
 
         // Active Page Number
         let next_page_num: Option<i64> =
@@ -184,12 +193,16 @@ impl LimeTorrentsCategories {
             let info_hash_start =
                 torrent_file_hyperlink.trim_start_matches("http://itorrents.net/torrent/");
             // finding index for .torrent
-            let info_hash_end_index = info_hash_start.find(".torrent").unwrap();
+            let info_hash_end_index = info_hash_start
+                .find(".torrent")
+                .ok_or_else(|| anyhow!("unable t extract info_hash"))?;
             // actual info hash
             let info_hash = &info_hash_start[..info_hash_end_index].to_lowercase();
 
             // Extracting Display Name
-            let disply_name_start_index = torrent_file_hyperlink.find("title=").unwrap();
+            let disply_name_start_index = torrent_file_hyperlink
+                .find("title=")
+                .ok_or_else(|| anyhow!("Unable to extract display name."))?;
             let disply_name = &torrent_file_hyperlink[disply_name_start_index + "title=".len()..];
 
             // now creating magnet link from info hash and display name.

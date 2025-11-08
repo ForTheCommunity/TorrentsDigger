@@ -1,6 +1,6 @@
 // Knaben Database
 
-use anyhow::Result;
+use anyhow::{Result, anyhow};
 use core::fmt;
 
 use scraper::{ElementRef, Html, Selector};
@@ -379,22 +379,26 @@ impl KnabenDatabaseCategories {
         let html_response = response.body_mut().read_to_string()?;
         let document = Html::parse_document(&html_response);
 
+        // checking if torrents are available or not.
+        if html_response.contains("Total hits: 0") {
+            return Err(anyhow!("No torrents found with the specified name."));
+        }
+
         // Selectors
         let table_body_selector = Selector::parse("tbody")
-            .map_err(|e| anyhow::anyhow!(format!("Error parsing table body selector: {}", e)))?;
+            .map_err(|e| anyhow!(format!("Error parsing table body selector: {}", e)))?;
 
         let table_row_selector = Selector::parse("tr.text-nowrap.border-start")
-            .map_err(|e| anyhow::anyhow!(format!("Error parsing table row selector: {}", e)))?;
+            .map_err(|e| anyhow!(format!("Error parsing table row selector: {}", e)))?;
 
         let table_data_selector = Selector::parse("td")
-            .map_err(|e| anyhow::anyhow!(format!("Error parsing table data selector: {}", e)))?;
+            .map_err(|e| anyhow!(format!("Error parsing table data selector: {}", e)))?;
 
         let title_anchor_selector = Selector::parse("td:nth-child(2) > a:nth-child(1)")
-            .map_err(|e| anyhow::anyhow!(format!("Error parsing title anchor selector: {}", e)))?;
+            .map_err(|e| anyhow!(format!("Error parsing title anchor selector: {}", e)))?;
 
-        let next_page_link_selector = Selector::parse("a#nextPage").map_err(|e| {
-            anyhow::anyhow!(format!("Error parsing next page link selector: {}", e))
-        })?;
+        let next_page_link_selector = Selector::parse("a#nextPage")
+            .map_err(|e| anyhow!(format!("Error parsing next page link selector: {}", e)))?;
 
         // Vector of Torrent to Store all Torrents
         let mut all_torrents: Vec<Torrent> = Vec::new();

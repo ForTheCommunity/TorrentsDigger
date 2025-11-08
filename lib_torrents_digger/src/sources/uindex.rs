@@ -1,4 +1,4 @@
-use anyhow::Result;
+use anyhow::{Result, anyhow};
 use core::fmt;
 use scraper::{ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
@@ -109,25 +109,25 @@ impl UindexCategories {
 
         // Selectors
         let div_selector = Selector::parse(r#"div[id="results-area"]"#)
-            .map_err(|e| anyhow::anyhow!(format!("Error parsing div selector: {}", e)))?;
+            .map_err(|e| anyhow!(format!("Error parsing div selector: {}", e)))?;
 
         let table_selector = Selector::parse("table")
-            .map_err(|e| anyhow::anyhow!(format!("Error parsing table selector: {}", e)))?;
+            .map_err(|e| anyhow!(format!("Error parsing table selector: {}", e)))?;
 
         let table_body_selector = Selector::parse("tbody")
-            .map_err(|e| anyhow::anyhow!(format!("Error parsing table body selector: {}", e)))?;
+            .map_err(|e| anyhow!(format!("Error parsing table body selector: {}", e)))?;
 
         let table_row_selector = Selector::parse("tr")
-            .map_err(|e| anyhow::anyhow!(format!("Error parsing table row selector: {}", e)))?;
+            .map_err(|e| anyhow!(format!("Error parsing table row selector: {}", e)))?;
 
         let table_data_selector = Selector::parse("td")
-            .map_err(|e| anyhow::anyhow!(format!("Error parsing table data selector: {}", e)))?;
+            .map_err(|e| anyhow!(format!("Error parsing table data selector: {}", e)))?;
 
         let anchor_tag_selector = Selector::parse("a")
-            .map_err(|e| anyhow::anyhow!(format!("Error parsing anchor tag selector: {}", e)))?;
+            .map_err(|e| anyhow!(format!("Error parsing anchor tag selector: {}", e)))?;
 
         let sub_div_selector = Selector::parse("div.sub")
-            .map_err(|e| anyhow::anyhow!(format!("Error parsing sub div selector: {}", e)))?;
+            .map_err(|e| anyhow!(format!("Error parsing sub div selector: {}", e)))?;
 
         // Vector of Torrent to Store all Torrents
         let mut all_torrents: Vec<Torrent> = Vec::new();
@@ -135,6 +135,14 @@ impl UindexCategories {
         let div = document.select(&div_selector).next().unwrap();
         let table = div.select(&table_selector).next().unwrap();
         let table_body = table.select(&table_body_selector).next().unwrap();
+
+        // checking if torrent is available or not.
+        if table_body
+            .text()
+            .any(|error_text_response| error_text_response.trim() == "No results found.")
+        {
+            return Err(anyhow!("No torrents found with the specified name."));
+        }
 
         // iterating over table rows.
         for table_row in table_body.select(&table_row_selector) {
