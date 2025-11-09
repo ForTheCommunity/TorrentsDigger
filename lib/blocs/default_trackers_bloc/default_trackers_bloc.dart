@@ -23,10 +23,11 @@ class DefaultTrackersBloc
     try {
       // loading trackers lists
       final trackersList = await getAllDefaultTrackersList();
-      // loading activated trackers list.
+      // loading activated trackers list Index.
       final String activatedDefaultTrackersListIndex =
           await getActiveDefaultTrackersList();
       final BigInt index = BigInt.parse(activatedDefaultTrackersListIndex);
+
       // updating states
       emit(
         DefaultTrackersState.loaded(
@@ -34,6 +35,9 @@ class DefaultTrackersBloc
           activatedTrackersList: index,
         ),
       );
+
+      // loading active trackers list i.e TRACKERS_STRING in Rust Side.
+      await loadActiveTrackersList();
     } catch (e) {
       createSnackBar(message: "Error : ${e.toString()}", duration: 5);
     }
@@ -47,8 +51,10 @@ class DefaultTrackersBloc
       var selectedTrackersListIndex = event.selectedTrackerId;
       // saving to database
       await setDefaultTrackersList(index: selectedTrackersListIndex.toInt());
-      // updating state
+      // reloading TRACKERS_STRING in RUST SIDE.
+      await loadActiveTrackersList();
 
+      // updating state
       // getting current state to retrieve existing tracker list
       if (state is _loaded) {
         var currentState = state as _loaded;

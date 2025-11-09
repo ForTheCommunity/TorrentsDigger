@@ -1,3 +1,4 @@
+use anyhow::Result;
 use rusqlite::{Connection, params};
 use std::{fs::create_dir_all, path::PathBuf, sync::MutexGuard};
 
@@ -50,9 +51,7 @@ use crate::{
 // this initialize database function is for temp use.,
 // this will be / should be replaced/improved in future.
 // this is not reliable......
-pub fn initialize_database(
-    torrents_digger_database_directory: String,
-) -> Result<(), rusqlite::Error> {
+pub fn initialize_database(torrents_digger_database_directory: String) -> Result<()> {
     let mut database_path: PathBuf = PathBuf::from(torrents_digger_database_directory);
     //  app root dir i,e database path..
     let root_dir_path = database_path.clone();
@@ -80,7 +79,7 @@ pub fn initialize_database(
 
     // downloading trackers lists
     // need to use Anyhow crate later.....
-    DefaultTrackers::download_trackers_lists().unwrap();
+    DefaultTrackers::download_trackers_lists()?;
 
     Ok(())
 }

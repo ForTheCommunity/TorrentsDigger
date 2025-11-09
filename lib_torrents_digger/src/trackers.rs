@@ -1,10 +1,10 @@
 use anyhow::{Ok, Result, anyhow};
 use core::fmt;
-use once_cell::sync::Lazy;
 use std::{
     fs::{self, File},
     io::Read,
     path::Path,
+    sync::{LazyLock, Mutex},
 };
 
 use crate::{
@@ -27,6 +27,8 @@ pub enum DefaultTrackers {
     AllI2PTrackers,
     BestTrackersIpOnly,
     AllTrackersIpOnly,
+    AllYggdrasilTrackers,
+    AllYggdrasilTrackersIpOnly,
 }
 
 impl DefaultTrackers {
@@ -40,6 +42,8 @@ impl DefaultTrackers {
         Self::AllI2PTrackers,
         Self::BestTrackersIpOnly,
         Self::AllTrackersIpOnly,
+        Self::AllYggdrasilTrackers,
+        Self::AllYggdrasilTrackersIpOnly,
     ];
 
     pub fn from_index(index: usize) -> Option<&'static DefaultTrackers> {
@@ -57,6 +61,8 @@ impl DefaultTrackers {
             Self::AllI2PTrackers,
             Self::BestTrackersIpOnly,
             Self::AllTrackersIpOnly,
+            Self::AllYggdrasilTrackers,
+            Self::AllYggdrasilTrackersIpOnly,
         ]
         .into_iter()
         .enumerate()
@@ -79,6 +85,12 @@ impl DefaultTrackers {
                 "https://ngosang.github.io/trackerslist/trackers_best_ip.txt"
             }
             Self::AllTrackersIpOnly => "https://ngosang.github.io/trackerslist/trackers_all_ip.txt",
+            Self::AllYggdrasilTrackers => {
+                "https://ngosang.github.io/trackerslist/trackers_all_yggdrasil.txt"
+            }
+            Self::AllYggdrasilTrackersIpOnly => {
+                "https://ngosang.github.io/trackerslist/trackers_all_yggdrasil_ip.txt"
+            }
         }
     }
 
@@ -114,11 +126,8 @@ impl DefaultTrackers {
     }
 
     pub fn get_trackers() -> Result<String> {
-        let result = &*TRACKERS_STRING;
-        result
-            .as_deref()
-            .map(|trackers_str| trackers_str.to_owned())
-            .map_err(|e| anyhow::anyhow!(e.to_string()))
+        let trackers_string = TRACKERS_STRING.lock().unwrap();
+        Ok(trackers_string.clone())
     }
 }
 
@@ -134,18 +143,22 @@ impl fmt::Display for DefaultTrackers {
             Self::AllI2PTrackers => write!(f, "All I2P Trackers"),
             Self::BestTrackersIpOnly => write!(f, "Best IP Only Trackers"),
             Self::AllTrackersIpOnly => write!(f, "All IP Only Trackers"),
+            Self::AllYggdrasilTrackers => write!(f, "All Yggdrasil Trackers"),
+            Self::AllYggdrasilTrackersIpOnly => write!(f, "All Yggdrasil IP Only Trackers"),
         }
     }
 }
 
-static TRACKERS_STRING: Lazy<Result<String>> = Lazy::new(|| {
+static TRACKERS_STRING: LazyLock<Mutex<String>> =
+    LazyLock::new(|| Mutex::new(String::from("this data will be overwrited....")));
+
+pub fn load_trackers_list() -> Result<bool> {
     let active_trackers_list_index = get_active_trackers_list()?.parse::<usize>()?;
     let trackers_list_type = DefaultTrackers::from_index(active_trackers_list_index)
         .ok_or_else(|| anyhow!("Invalid tracker index: {}", active_trackers_list_index))?;
     let file_name = trackers_list_type.get_filename();
 
     // platform specific root dir
-    // let app_root_dir_path = fetch_kv(APP_ROOT_DIR)?;
     let app_root_dir_path = fetch_kv(APP_ROOT_DIR)?;
 
     let file_path = Path::new(&app_root_dir_path)
@@ -171,5 +184,10 @@ static TRACKERS_STRING: Lazy<Result<String>> = Lazy::new(|| {
             trackers.push_str(a_tracker);
         }
     }
-    Ok(trackers)
-});
+
+    let mut data = TRACKERS_STRING.lock().unwrap();
+    *data = String::from(trackers);
+    // for appending
+    // let a = data.push_str(&trackers);
+    Ok(true)
+}
