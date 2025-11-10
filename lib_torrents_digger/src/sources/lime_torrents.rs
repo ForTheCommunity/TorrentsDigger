@@ -3,7 +3,7 @@ use core::fmt;
 use scraper::{ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
 
-use crate::{sources::QueryOptions, torrent::Torrent, trackers::DefaultTrackers};
+use crate::{sources::QueryOptions, torrent::Torrent};
 
 #[derive(Debug)]
 pub enum LimeTorrentsCategories {
@@ -200,6 +200,7 @@ impl LimeTorrentsCategories {
             let info_hash = &info_hash_start[..info_hash_end_index].to_lowercase();
 
             // Extracting Display Name
+            // using display name as Torrent Name
             let disply_name_start_index = torrent_file_hyperlink
                 .find("title=")
                 .ok_or_else(|| anyhow!("Unable to extract display name."))?;
@@ -207,12 +208,7 @@ impl LimeTorrentsCategories {
 
             // now creating magnet link from info hash and display name.
             let magnet_link_prefix = String::from("magnet:?xt=urn:btih:");
-            let mut magnet = magnet_link_prefix + info_hash + "&dn=" + disply_name;
-
-            // adding extra trackers
-            magnet.push_str(DefaultTrackers::get_trackers()?.as_str());
-
-            // using display name as Torrent Name
+            let magnet = magnet_link_prefix + info_hash + "&dn=" + disply_name;
 
             // date and category are appended.
             let date_category_text = table_row_data[1]

@@ -20,6 +20,9 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Initializing Database
   await initializeDatabase();
+  // loading TRACKERS_STRING
+  await loadTrackersString();
+
   runApp(const MyApp());
 }
 
@@ -47,7 +50,9 @@ class MyApp extends StatelessWidget {
               DefaultTrackersBloc()
                 ..add(DefaultTrackersEvent.loadTrackersList()),
         ),
-        BlocProvider(create: (_) => CustomsBloc()..add(CustomsEvent.loadCustoms())),
+        BlocProvider(
+          create: (_) => CustomsBloc()..add(CustomsEvent.loadCustoms()),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

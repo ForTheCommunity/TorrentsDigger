@@ -125,9 +125,13 @@ impl DefaultTrackers {
         Ok(true)
     }
 
-    pub fn get_trackers() -> Result<String> {
-        let trackers_string = TRACKERS_STRING.lock().unwrap();
-        Ok(trackers_string.clone())
+    pub fn get_magnet_link(mut magnet: String) -> anyhow::Result<String> {
+        let trackers_string = TRACKERS_STRING
+            .lock()
+            .map_err(|_| anyhow!("Failed to lock TRACKERS_STRING"))?
+            .clone();
+        magnet.push_str(&trackers_string);
+        Ok(magnet)
     }
 }
 
@@ -152,7 +156,7 @@ impl fmt::Display for DefaultTrackers {
 static TRACKERS_STRING: LazyLock<Mutex<String>> =
     LazyLock::new(|| Mutex::new(String::from("this data will be overwrited....")));
 
-pub fn load_trackers_list() -> Result<bool> {
+pub fn load_trackers_string() -> Result<bool> {
     let active_trackers_list_index = get_active_trackers_list()?.parse::<usize>()?;
     let trackers_list_type = DefaultTrackers::from_index(active_trackers_list_index)
         .ok_or_else(|| anyhow!("Invalid tracker index: {}", active_trackers_list_index))?;
@@ -186,7 +190,7 @@ pub fn load_trackers_list() -> Result<bool> {
     }
 
     let mut data = TRACKERS_STRING.lock().unwrap();
-    *data = String::from(trackers);
+    *data = trackers;
     // for appending
     // let a = data.push_str(&trackers);
     Ok(true)

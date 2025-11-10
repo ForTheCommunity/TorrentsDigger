@@ -3,10 +3,7 @@ use core::fmt;
 use scraper::{self, ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
 
-use crate::{
-    extract_info_hash_from_magnet, sources::QueryOptions, torrent::Torrent,
-    trackers::DefaultTrackers,
-};
+use crate::{extract_info_hash_from_magnet, sources::QueryOptions, torrent::Torrent};
 
 // https://nyaa.si
 
@@ -252,7 +249,7 @@ impl NyaaCategories {
                 .unwrap_or("Name title attribute missing")
                 .to_string();
 
-            let mut magnet = if torrent_data.len() > 1 {
+            let magnet = if torrent_data.len() > 1 {
                 torrent_data[1].attr("href").unwrap_or_default().to_string()
             } else {
                 String::from("Magnet link not available")
@@ -260,9 +257,6 @@ impl NyaaCategories {
 
             // extracting info hash from magnet
             let info_hash = extract_info_hash_from_magnet(&magnet).to_lowercase();
-
-            // adding extra trackers
-            magnet.push_str(DefaultTrackers::get_trackers()?.as_str());
 
             let size = table_data_vec[3].inner_html().to_string();
             let date = table_data_vec[4].inner_html().to_string();

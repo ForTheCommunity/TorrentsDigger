@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/bookmark_bloc/bookmark_bloc.dart';
+import 'package:torrents_digger/blocs/default_trackers_bloc/default_trackers_bloc.dart';
 import 'package:torrents_digger/configs/colors.dart';
 import 'package:torrents_digger/src/rust/api/internals.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
@@ -153,23 +154,35 @@ class TorrentCard extends StatelessWidget {
                 const SizedBox(width: 10),
                 TextButton(
                   onPressed: () async {
-                    final Uri magnetUri = Uri.parse(torrent.magnet);
-                    await Clipboard.setData(
-                      ClipboardData(text: magnetUri.toString()),
-                    );
-                    createSnackBar(
-                      message:
-                          "Magnet Link Copied to Clipboard.\nOpening Torrent Downloader...",
-                      duration: 1,
-                    );
+                    try {
+                      final processedMagnetLink = await processMagnetLink(
+                        unprocessedMagnet: torrent.magnet,
+                      );
 
-                    await Future.delayed(const Duration(seconds: 2));
-
-                    if (!await launchUrl(magnetUri)) {
+                      final Uri magnetUri = Uri.parse(processedMagnetLink);
+                      await Clipboard.setData(
+                        ClipboardData(text: magnetUri.toString()),
+                      );
                       createSnackBar(
                         message:
-                            'Unable to open torrent downloader.\nInstall Torrent App.',
-                        duration: 2,
+                            "Magnet Link Copied to Clipboard.\nOpening Torrent Downloader...",
+                        duration: 1,
+                      );
+
+                      await Future.delayed(const Duration(seconds: 2));
+
+                      if (!await launchUrl(magnetUri)) {
+                        createSnackBar(
+                          message:
+                              'Unable to open torrent downloader.\nInstall Torrent App.',
+                          duration: 2,
+                        );
+                      }
+                    } catch (e) {
+                      createSnackBar(
+                        message:
+                            "Error Processing Magnet Link...\nError: ${e.toString}",
+                        duration: 10,
                       );
                     }
                   },

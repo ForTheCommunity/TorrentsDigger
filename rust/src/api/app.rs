@@ -3,7 +3,7 @@ use lib_torrents_digger::{
     sources::{customs::search_custom, get_customs, get_source_details},
     static_includes::get_current_version,
     sync_request::{check_for_update, extract_ip_details},
-    trackers::{load_trackers_list, DefaultTrackers},
+    trackers::{load_trackers_string, DefaultTrackers},
 };
 use std::collections::HashMap;
 
@@ -106,10 +106,17 @@ pub fn get_all_default_trackers_list() -> Vec<(usize, String)> {
     DefaultTrackers::get_default_trackers_list()
 }
 
-pub fn load_active_trackers_list() -> String {
-    match load_trackers_list() {
+pub fn reload_trackers_string() -> String {
+    match load_trackers_string() {
         Ok(a) => a.to_string(),
         Err(e) => e.to_string(),
+    }
+}
+
+pub fn get_processed_magnet_link(unprocessed_magnet: String) -> Result<String, String> {
+    match DefaultTrackers::get_magnet_link(unprocessed_magnet) {
+        Ok(p_m_l) => Ok(p_m_l),
+        Err(e) => Err(e.to_string()),
     }
 }
 

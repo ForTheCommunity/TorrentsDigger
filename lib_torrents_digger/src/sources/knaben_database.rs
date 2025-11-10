@@ -6,7 +6,7 @@ use core::fmt;
 use scraper::{ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
 
-use crate::{sources::QueryOptions, torrent::Torrent, trackers::DefaultTrackers};
+use crate::{sources::QueryOptions, torrent::Torrent};
 
 #[derive(Debug)]
 pub enum KnabenDatabaseCategories {
@@ -451,13 +451,11 @@ impl KnabenDatabaseCategories {
                             .unwrap_or_else(|| {
                                 title_anchor.text().collect::<String>().trim().to_string()
                             });
-                        let magnet = title_anchor.attr("href").map_or("N/A".to_string(), |a| {
-                            let mut magnet = a.to_string();
-                            if let Ok(trackers) = DefaultTrackers::get_trackers() {
-                                magnet.push_str(&trackers);
-                            }
-                            magnet
-                        });
+
+                        let magnet = match title_anchor.attr("href") {
+                            Some(magnet) => magnet.to_string(),
+                            None => continue, // skipping this torrent if magnet not
+                        };
                         (name, magnet)
                     } else {
                         ("N/A".to_string(), "N/A".to_string())

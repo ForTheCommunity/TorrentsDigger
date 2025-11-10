@@ -3,10 +3,7 @@ use core::fmt;
 use scraper::{ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
 
-use crate::{
-    extract_info_hash_from_magnet, sources::QueryOptions, torrent::Torrent,
-    trackers::DefaultTrackers,
-};
+use crate::{extract_info_hash_from_magnet, sources::QueryOptions, torrent::Torrent};
 
 #[derive(Debug)]
 pub enum UindexCategories {
@@ -158,7 +155,7 @@ impl UindexCategories {
                 table_row_data[1].select(&anchor_tag_selector).collect();
 
             // extracting magnet link
-            let mut magnet = magnet_and_torrent_name_elem_vec
+            let magnet = magnet_and_torrent_name_elem_vec
                 .first()
                 .and_then(|a| a.attr("href"))
                 .unwrap_or("No Magnet Link Found..")
@@ -166,8 +163,6 @@ impl UindexCategories {
 
             // extracting info hash from magnet
             let info_hash = extract_info_hash_from_magnet(&magnet).to_lowercase();
-            // adding more trackers
-            magnet.push_str(DefaultTrackers::get_trackers()?.as_str());
 
             // extracting torrent name
             let name = magnet_and_torrent_name_elem_vec

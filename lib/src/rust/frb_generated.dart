@@ -69,7 +69,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.11.1';
 
   @override
-  int get rustContentHash => -206280926;
+  int get rustContentHash => 2129225679;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -119,6 +119,10 @@ abstract class RustLibApi extends BaseApi {
 
   Future<InternalIpDetails> crateApiAppGetIpDetails();
 
+  Future<String> crateApiAppGetProcessedMagnetLink({
+    required String unprocessedMagnet,
+  });
+
   Future<InternalProxy?> crateApiDatabaseProxyGetSavedProxy();
 
   Future<Map<String, String>> crateApiDatabaseGetSettingsKvGetSettingsKv();
@@ -129,7 +133,7 @@ abstract class RustLibApi extends BaseApi {
     required String torrentsDiggerDatabaseDirectory,
   });
 
-  Future<String> crateApiAppLoadActiveTrackersList();
+  Future<String> crateApiAppReloadTrackersString();
 
   Future<bool> crateApiDatabaseBookmarkRemoveBookmark({
     required String infoHash,
@@ -555,6 +559,39 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "get_ip_details", argNames: []);
 
   @override
+  Future<String> crateApiAppGetProcessedMagnetLink({
+    required String unprocessedMagnet,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(unprocessedMagnet, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 14,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_String,
+          decodeErrorData: sse_decode_String,
+        ),
+        constMeta: kCrateApiAppGetProcessedMagnetLinkConstMeta,
+        argValues: [unprocessedMagnet],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiAppGetProcessedMagnetLinkConstMeta =>
+      const TaskConstMeta(
+        debugName: "get_processed_magnet_link",
+        argNames: ["unprocessedMagnet"],
+      );
+
+  @override
   Future<InternalProxy?> crateApiDatabaseProxyGetSavedProxy() {
     return handler.executeNormal(
       NormalTask(
@@ -563,7 +600,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 14,
+            funcId: 15,
             port: port_,
           );
         },
@@ -590,7 +627,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 15,
+            funcId: 16,
             port: port_,
           );
         },
@@ -617,7 +654,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 16,
+            funcId: 17,
             port: port_,
           );
         },
@@ -650,7 +687,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 17,
+            funcId: 18,
             port: port_,
           );
         },
@@ -674,7 +711,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<String> crateApiAppLoadActiveTrackersList() {
+  Future<String> crateApiAppReloadTrackersString() {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
@@ -682,7 +719,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 18,
+            funcId: 19,
             port: port_,
           );
         },
@@ -690,15 +727,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_String,
           decodeErrorData: null,
         ),
-        constMeta: kCrateApiAppLoadActiveTrackersListConstMeta,
+        constMeta: kCrateApiAppReloadTrackersStringConstMeta,
         argValues: [],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiAppLoadActiveTrackersListConstMeta =>
-      const TaskConstMeta(debugName: "load_active_trackers_list", argNames: []);
+  TaskConstMeta get kCrateApiAppReloadTrackersStringConstMeta =>
+      const TaskConstMeta(debugName: "reload_trackers_string", argNames: []);
 
   @override
   Future<bool> crateApiDatabaseBookmarkRemoveBookmark({
@@ -712,7 +749,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 19,
+            funcId: 20,
             port: port_,
           );
         },
@@ -742,7 +779,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 20,
+            funcId: 21,
             port: port_,
           );
         },
@@ -772,7 +809,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 21,
+            funcId: 22,
             port: port_,
           );
         },

@@ -6,10 +6,7 @@ use core::fmt;
 use scraper::{Html, Selector};
 use ureq::{Body, http::Response};
 
-use crate::{
-    extract_info_hash_from_magnet, sources::QueryOptions, torrent::Torrent,
-    trackers::DefaultTrackers,
-};
+use crate::{extract_info_hash_from_magnet, sources::QueryOptions, torrent::Torrent};
 
 #[derive(Debug)]
 pub enum SolidTorrentsCategories {
@@ -335,7 +332,7 @@ impl SolidTorrentsCategories {
             let magnet_selector = Selector::parse("a[href^='magnet:?xt=urn:btih:']")
                 .map_err(|e| anyhow!(format!("Error parsing magnet selector: {}", e)))?;
 
-            let mut magnet = item_element
+            let magnet = item_element
                 .select(&magnet_selector)
                 .next()
                 .and_then(|a| a.attr("href"))
@@ -346,8 +343,6 @@ impl SolidTorrentsCategories {
 
             // extracting info hash from magnet
             let info_hash = extract_info_hash_from_magnet(&magnet).to_lowercase();
-            // adding trackers
-            magnet.push_str(DefaultTrackers::get_trackers()?.as_str());
 
             all_torrents.push(Torrent {
                 info_hash,

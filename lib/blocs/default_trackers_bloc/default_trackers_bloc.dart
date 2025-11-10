@@ -35,9 +35,6 @@ class DefaultTrackersBloc
           activatedTrackersList: index,
         ),
       );
-
-      // loading active trackers list i.e TRACKERS_STRING in Rust Side.
-      await loadActiveTrackersList();
     } catch (e) {
       createSnackBar(message: "Error : ${e.toString()}", duration: 5);
     }
@@ -52,7 +49,7 @@ class DefaultTrackersBloc
       // saving to database
       await setDefaultTrackersList(index: selectedTrackersListIndex.toInt());
       // reloading TRACKERS_STRING in RUST SIDE.
-      await loadActiveTrackersList();
+      await reloadTrackersString();
 
       // updating state
       // getting current state to retrieve existing tracker list
@@ -75,5 +72,28 @@ class DefaultTrackersBloc
     } catch (e) {
       createSnackBar(message: "Error : ${e.toString()}", duration: 5);
     }
+  }
+}
+
+Future<String> processMagnetLink({required String unprocessedMagnet}) async {
+  try {
+    var processedMagnetLink = await getProcessedMagnetLink(
+      unprocessedMagnet: unprocessedMagnet,
+    );
+    return processedMagnetLink;
+  } catch (e) {
+    throw Exception("Error Processing Magnet Link...\nError: ${e.toString()}");
+  }
+}
+
+Future<void> loadTrackersString() async {
+  try {
+    // loading active trackers list i.e TRACKERS_STRING in Rust Side.
+    var _ = await reloadTrackersString();
+  } catch (e) {
+    createSnackBar(
+      message: "Error Loading TRACKERS_STRING.\nError: ${e.toString()}",
+      duration: 10,
+    );
   }
 }

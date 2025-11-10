@@ -1,4 +1,4 @@
-use crate::{sources::QueryOptions, torrent::Torrent, trackers::DefaultTrackers};
+use crate::{sources::QueryOptions, torrent::Torrent};
 use anyhow::{Result, anyhow};
 use chrono::{DateTime, Utc};
 use core::fmt;
@@ -112,10 +112,7 @@ impl JsonTorrentData {
             DateTime::<Utc>::from_timestamp(self.created_unix, 0).unwrap_or_else(Utc::now);
         let date_str = datetime.format("%Y-%m-%d").to_string();
 
-        let mut magnet = format!("magnet:?xt=urn:btih:{}&dn={}", self.infohash, self.name);
-
-        // adding extra trackers
-        magnet.push_str(DefaultTrackers::get_trackers()?.as_str());
+        let magnet = format!("magnet:?xt=urn:btih:{}&dn={}", self.infohash, self.name);
 
         Ok(Torrent {
             info_hash: self.infohash.clone().to_lowercase(),
