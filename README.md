@@ -31,6 +31,10 @@
 
 ## --> Download binaries from [releases](https://gitlab.com/ForTheCommunity/torrentsdigger/-/releases) Page.
 
+> **Why No Binaries For Windows & Mac OS ?**
+<br>
+> -> It is possible to build this app for Windows and Mac OS; however, we need contributors who can test app on these platforms.
+
 
 ### Note -> Torrents Digger only do the job of Fetching ,Scraping & Listing. It don't host anything , It just list what is already available in the internet.
 

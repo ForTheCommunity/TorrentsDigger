@@ -20,7 +20,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Initializing Database
   await initializeDatabase();
-  // loading TRACKERS_STRING
+  // loading Active Default TRACKERS_STRING
   await loadTrackersString();
 
   runApp(const MyApp());

@@ -1,15 +1,24 @@
+# Build Runner(Freezed). (Development)
 f_w:
 	clear ; dart run build_runner watch -d
 
+# FRB Codegen. (Development)
 frb_w:
 	clear ; flutter_rust_bridge_codegen generate --watch
 
+# Flutter Run. (Development)
 run:
 	clear ; flutter run
 
+# Flutter Run Linux. (Development)
 rl:
 	clear ; flutter run -d linux
 
+# For Building Android Apk.
+build_android_apk:
+	clear ; flutter build apk --release
+
+# For Building Universal APK in CI/CD
 build_apk:
 	flutter build apk --release
 	# moving to releases dir
@@ -19,6 +28,7 @@ build_apk:
 	# Generate SHA256
 	sha256sum releases/{{ env('UNIVERSAL_APK_NAME') }} > releases/{{ env('UNIVERSAL_APK_NAME') }}.sha256.txt
 
+# For Building APK per ABI in CI/CD
 build_apk_per_abi:
 	flutter build apk --release --split-per-abi
 	# ARMEABI-V7A APK
@@ -43,7 +53,7 @@ build_apk_per_abi:
 	# Generate SHA256
 	sha256sum releases/{{ env('X86_64_APK_NAME') }} > releases/{{ env('X86_64_APK_NAME') }}.sha256.txt
 
-
+# For Building AppImage in CI/CD
 build_appimage:
 	# installing dependencies
 	apt-get update -y && sudo apt-get upgrade -y

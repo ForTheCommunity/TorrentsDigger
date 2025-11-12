@@ -69,7 +69,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.11.1';
 
   @override
-  int get rustContentHash => 2129225679;
+  int get rustContentHash => -6537961;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -133,7 +133,7 @@ abstract class RustLibApi extends BaseApi {
     required String torrentsDiggerDatabaseDirectory,
   });
 
-  Future<String> crateApiAppReloadTrackersString();
+  Future<bool> crateApiAppLoadDefaultTrackersString();
 
   Future<bool> crateApiDatabaseBookmarkRemoveBookmark({
     required String infoHash,
@@ -711,7 +711,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<String> crateApiAppReloadTrackersString() {
+  Future<bool> crateApiAppLoadDefaultTrackersString() {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
@@ -724,18 +724,21 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           );
         },
         codec: SseCodec(
-          decodeSuccessData: sse_decode_String,
-          decodeErrorData: null,
+          decodeSuccessData: sse_decode_bool,
+          decodeErrorData: sse_decode_String,
         ),
-        constMeta: kCrateApiAppReloadTrackersStringConstMeta,
+        constMeta: kCrateApiAppLoadDefaultTrackersStringConstMeta,
         argValues: [],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiAppReloadTrackersStringConstMeta =>
-      const TaskConstMeta(debugName: "reload_trackers_string", argNames: []);
+  TaskConstMeta get kCrateApiAppLoadDefaultTrackersStringConstMeta =>
+      const TaskConstMeta(
+        debugName: "load_default_trackers_string",
+        argNames: [],
+      );
 
   @override
   Future<bool> crateApiDatabaseBookmarkRemoveBookmark({

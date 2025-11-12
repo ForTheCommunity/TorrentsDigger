@@ -37,7 +37,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.11.1";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 2129225679;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -6537961;
 
 // Section: executor
 
@@ -650,7 +650,7 @@ fn wire__crate__api__database__initialize__initialize_torrents_digger_database_i
         },
     )
 }
-fn wire__crate__api__app__reload_trackers_string_impl(
+fn wire__crate__api__app__load_default_trackers_string_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -658,7 +658,7 @@ fn wire__crate__api__app__reload_trackers_string_impl(
 ) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
         flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "reload_trackers_string",
+            debug_name: "load_default_trackers_string",
             port: Some(port_),
             mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
         },
@@ -674,8 +674,8 @@ fn wire__crate__api__app__reload_trackers_string_impl(
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             deserializer.end();
             move |context| {
-                transform_result_sse::<_, ()>((move || {
-                    let output_ok = Result::<_, ()>::Ok(crate::api::app::reload_trackers_string())?;
+                transform_result_sse::<_, String>((move || {
+                    let output_ok = crate::api::app::load_default_trackers_string()?;
                     Ok(output_ok)
                 })())
             }
@@ -1228,7 +1228,12 @@ fn pde_ffi_dispatcher_primary_impl(
             rust_vec_len,
             data_len,
         ),
-        19 => wire__crate__api__app__reload_trackers_string_impl(port, ptr, rust_vec_len, data_len),
+        19 => wire__crate__api__app__load_default_trackers_string_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
         20 => wire__crate__api__database__bookmark__remove_bookmark_impl(
             port,
             ptr,

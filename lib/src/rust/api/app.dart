@@ -38,8 +38,8 @@ Future<String> getAppCurrentVersion() =>
 Future<List<(BigInt, String)>> getAllDefaultTrackersList() =>
     RustLib.instance.api.crateApiAppGetAllDefaultTrackersList();
 
-Future<String> reloadTrackersString() =>
-    RustLib.instance.api.crateApiAppReloadTrackersString();
+Future<bool> loadDefaultTrackersString() =>
+    RustLib.instance.api.crateApiAppLoadDefaultTrackersString();
 
 Future<String> getProcessedMagnetLink({required String unprocessedMagnet}) =>
     RustLib.instance.api.crateApiAppGetProcessedMagnetLink(

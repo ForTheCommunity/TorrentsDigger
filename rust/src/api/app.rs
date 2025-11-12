@@ -106,10 +106,10 @@ pub fn get_all_default_trackers_list() -> Vec<(usize, String)> {
     DefaultTrackers::get_default_trackers_list()
 }
 
-pub fn reload_trackers_string() -> String {
+pub fn load_default_trackers_string() -> Result<bool, String> {
     match load_trackers_string() {
-        Ok(a) => a.to_string(),
-        Err(e) => e.to_string(),
+        Ok(a) => Ok(a),
+        Err(e) => Err(e.to_string()),
     }
 }
 

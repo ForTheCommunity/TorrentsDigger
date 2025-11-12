@@ -1,11 +1,11 @@
-use anyhow::Result;
+use anyhow::{Result, anyhow};
 use rusqlite::{Connection, params};
 use std::{fs::create_dir_all, path::PathBuf, sync::MutexGuard};
 
 use crate::{
     database::{
         database_config::{
-            ACTIVE_TRACKERS_LIST_KEY, APP_ROOT_DIR, DATABASE_DIR, DATABASE_NAME, DATABASE_PATH,
+            ACTIVE_TRACKERS_LIST_KEY, APP_DIR, DATABASE_NAME, DATABASE_PATH, PLATFORM_SPECIFIC_DIR,
             TRACKERS_DIR_PATH, TRACKERS_LISTS_DIR, get_a_database_connection,
         },
         settings_kvs::insert_update_kv,
@@ -13,55 +13,16 @@ use crate::{
     trackers::DefaultTrackers,
 };
 
-// pub fn initialize_database(
-//     torrents_digger_database_directory: String,
-// ) -> Result<(), rusqlite::Error> {
-//     let root_dir = PathBuf::from(torrents_digger_database_directory);
-//     let app_dir = root_dir.join(APP_DIR_NAME);
-//     let database_file_path = app_dir.join(DATABASE_NAME);
-//     let trackers_path = app_dir.join(TRACKERS_LISTS_DIR);
+pub fn initialize_database(platform_specific_home_dir: String) -> Result<()> {
+    let platform_specific_home_dir = PathBuf::from(platform_specific_home_dir);
+    let app_dir = platform_specific_home_dir.join(APP_DIR);
+    let database_path = app_dir.join(DATABASE_NAME);
+    let trackers_path = app_dir.join(TRACKERS_LISTS_DIR);
 
-//     // creating files & dirs
-//     create_dir_all(app_dir).expect("Failed to create app directory");
-//     create_dir_all(&trackers_path).expect("Failed to create trackers directory");
-
-//     // set_platform_specific_root_dir_path(root_dir);
-//     insert_update_kv(
-//         APP_ROOT_DIR,
-//         root_dir.to_string_lossy().into_owned().as_str(),
-//     )?;
-
-//     set_database_path(database_file_path);
-//     set_trackers_dir_path(trackers_path);
-
-//     // creating tables
-//     create_tables()?;
-//     // inserting configs.
-//     insert_configs()?;
-//     // insert default settings key values
-//     insert_default_settings_kvs()?;
-
-//     // downloading trackers lists
-//     // need to use Anyhow crate later.....
-//     DefaultTrackers::download_trackers_lists().unwrap();
-
-//     Ok(())
-// }
-
-// this initialize database function is for temp use.,
-// this will be / should be replaced/improved in future.
-// this is not reliable......
-pub fn initialize_database(torrents_digger_database_directory: String) -> Result<()> {
-    let mut database_path: PathBuf = PathBuf::from(torrents_digger_database_directory);
-    //  app root dir i,e database path..
-    let root_dir_path = database_path.clone();
-
-    let trackers_path = database_path.join(DATABASE_DIR).join(TRACKERS_LISTS_DIR);
-    database_path.push(DATABASE_DIR.to_owned() + "/" + DATABASE_NAME);
-
-    // creating database dir/file
-    create_dir_all(database_path.parent().unwrap()).expect("Failed to create database directory");
-    create_dir_all(&trackers_path).expect("Failed to create trackers directory");
+    // creating App Config Dir
+    create_dir_all(app_dir)?;
+    // creating Trackers dir
+    create_dir_all(&trackers_path)?;
 
     set_database_path(database_path);
     set_trackers_dir_path(trackers_path);
@@ -75,7 +36,12 @@ pub fn initialize_database(torrents_digger_database_directory: String) -> Result
     insert_default_settings_kvs()?;
 
     // saving app root dir..
-    insert_update_kv(APP_ROOT_DIR, root_dir_path.to_str().unwrap())?;
+    insert_update_kv(
+        PLATFORM_SPECIFIC_DIR,
+        platform_specific_home_dir
+            .to_str()
+            .ok_or_else(|| anyhow!("Unable to Insert/Update Platform Specific Home Dir"))?,
+    )?;
 
     // downloading trackers lists
     // need to use Anyhow crate later.....

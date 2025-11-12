@@ -10,5 +10,5 @@ git clone https://gitlab.com/ForTheCommunity/torrentsdigger.git
 ```
 6. Build Apk using just.
 ```
-just build_apk
+just build_android_apk
 ```

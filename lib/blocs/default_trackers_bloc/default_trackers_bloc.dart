@@ -21,7 +21,7 @@ class DefaultTrackersBloc
   ) async {
     emit(const DefaultTrackersState.loading());
     try {
-      // loading trackers lists
+      // loading default trackers lists
       final trackersList = await getAllDefaultTrackersList();
       // loading activated trackers list Index.
       final String activatedDefaultTrackersListIndex =
@@ -48,8 +48,8 @@ class DefaultTrackersBloc
       var selectedTrackersListIndex = event.selectedTrackerId;
       // saving to database
       await setDefaultTrackersList(index: selectedTrackersListIndex.toInt());
-      // reloading TRACKERS_STRING in RUST SIDE.
-      await reloadTrackersString();
+      // reloading Trackers List i.e TRACKERS_STRING
+      await loadDefaultTrackersString();
 
       // updating state
       // getting current state to retrieve existing tracker list
@@ -88,8 +88,8 @@ Future<String> processMagnetLink({required String unprocessedMagnet}) async {
 
 Future<void> loadTrackersString() async {
   try {
-    // loading active trackers list i.e TRACKERS_STRING in Rust Side.
-    var _ = await reloadTrackersString();
+    // loading active default trackers String i.e TRACKERS_STRING in Rust Side.
+    bool _ = await loadDefaultTrackersString();
   } catch (e) {
     createSnackBar(
       message: "Error Loading TRACKERS_STRING.\nError: ${e.toString()}",
