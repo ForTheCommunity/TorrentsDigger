@@ -33,7 +33,7 @@
 
 > **Why No Binaries For Windows & Mac OS ?**
 <br>
-> -> It is possible to build this app for Windows and Mac OS; however, we need contributors who can test app on these platforms.
+> It is possible to build this app for Windows and Mac OS; however, we need contributors who can test app on these platforms.
 
 
 ### Note -> Torrents Digger only do the job of Fetching ,Scraping & Listing. It don't host anything , It just list what is already available in the internet.
@@ -46,4 +46,3 @@ See [Build Steps](./building.md) For Building this app.
 ## License
 
 This project is licensed under the **[Unlicense](https://unlicense.org)**. You can view the full license text in the [UNLICENSE](./UNLICENSE) file.
-

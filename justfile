@@ -14,6 +14,13 @@ run:
 rl:
 	clear ; flutter run -d linux
 
+# Clean
+clean:
+    flutter clean
+    cd rust && cargo clean && cd ..
+    cd lib_torrents_digger && cargo clean && cd ..
+    cd tui && cargo clean && cd ..
+
 # For Building Android Apk.
 build_android_apk:
 	clear ; flutter build apk --release

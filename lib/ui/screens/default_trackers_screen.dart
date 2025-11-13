@@ -4,8 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/default_trackers_bloc/default_trackers_bloc.dart';
 import 'package:torrents_digger/configs/colors.dart';
 import 'package:torrents_digger/ui/widgets/circular_progress_bar_widget.dart';
-import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:torrents_digger/ui/widgets/launch_url.dart';
 
 class DefaultTrackersScreen extends StatelessWidget {
   const DefaultTrackersScreen({super.key});
@@ -48,15 +47,12 @@ class DefaultTrackersScreen extends StatelessWidget {
                       ),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () async {
-                          Uri url = Uri.parse(
-                            "https://github.com/ngosang/trackerslist#lists",
+                          openUrl(
+                            urlType: UrlType.normalLink,
+                            clipboardCopy: false,
+                            url:
+                                "https://github.com/ngosang/trackerslist#lists",
                           );
-                          if (!await launchUrl(url)) {
-                            createSnackBar(
-                              message: 'Unable to open Link.',
-                              duration: 2,
-                            );
-                          }
                         },
                     ),
                   ],
@@ -82,15 +78,15 @@ class DefaultTrackersScreen extends StatelessWidget {
                             return ListTile(
                               title: Row(
                                 children: [
-                                  Text(trackerName),
-                                  SizedBox(width: 15),
                                   activatedDefaultTrackersList == trackerId
                                       ? const Icon(
-                                          Icons.check,
+                                          Icons.device_hub,
+                                          size: 27,
                                           color: AppColors.greenColor,
-                                          size: 30,
                                         )
-                                      : const SizedBox.shrink(),
+                                      : Icon(Icons.device_hub),
+                                  SizedBox(width: 10),
+                                  Text(trackerName),
                                 ],
                               ),
                               onTap: () {

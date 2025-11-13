@@ -1,14 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/bookmark_bloc/bookmark_bloc.dart';
 import 'package:torrents_digger/blocs/default_trackers_bloc/default_trackers_bloc.dart';
 import 'package:torrents_digger/configs/colors.dart';
 import 'package:torrents_digger/src/rust/api/internals.dart';
+import 'package:torrents_digger/ui/widgets/launch_url.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class TorrentCard extends StatelessWidget {
   final InternalTorrent torrent;
@@ -155,29 +154,16 @@ class TorrentCard extends StatelessWidget {
                 TextButton(
                   onPressed: () async {
                     try {
+                      // appending Default Tracker List to Magnet link.
                       final processedMagnetLink = await processMagnetLink(
                         unprocessedMagnet: torrent.magnet,
                       );
 
-                      final Uri magnetUri = Uri.parse(processedMagnetLink);
-                      await Clipboard.setData(
-                        ClipboardData(text: magnetUri.toString()),
+                      openUrl(
+                        urlType: UrlType.magentLink,
+                        clipboardCopy: true,
+                        url: processedMagnetLink,
                       );
-                      createSnackBar(
-                        message:
-                            "Magnet Link Copied to Clipboard.\nOpening Torrent Downloader...",
-                        duration: 1,
-                      );
-
-                      await Future.delayed(const Duration(seconds: 2));
-
-                      if (!await launchUrl(magnetUri)) {
-                        createSnackBar(
-                          message:
-                              'Unable to open torrent downloader.\nInstall Torrent App.',
-                          duration: 2,
-                        );
-                      }
                     } catch (e) {
                       createSnackBar(
                         message:

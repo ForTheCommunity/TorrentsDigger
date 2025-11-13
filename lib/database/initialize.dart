@@ -19,7 +19,7 @@ Future<void> initializeDatabase() async {
     throw UnsupportedError('Unsupported platform');
   }
   try {
-    initializeTorrentsDiggerDatabase(
+    await initializeTorrentsDiggerDatabase(
       torrentsDiggerDatabaseDirectory: platformSpecificDatabaseDirectory.path,
     );
   } catch (e) {

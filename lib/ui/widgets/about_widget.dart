@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/settings_bloc/settings_bloc.dart';
 import 'package:torrents_digger/ui/widgets/circular_progress_bar_widget.dart';
+import 'package:torrents_digger/ui/widgets/launch_url.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class AboutWidget extends StatelessWidget {
   const AboutWidget({super.key});
@@ -36,15 +36,11 @@ class AboutWidget extends StatelessWidget {
               children: [
                 TextButton(
                   onPressed: () async {
-                    var url = Uri.parse(
-                      "https://gitlab.com/ForTheCommunity/torrentsdigger",
+                    openUrl(
+                      urlType: UrlType.normalLink,
+                      clipboardCopy: false,
+                      url: "https://gitlab.com/ForTheCommunity/torrentsdigger",
                     );
-                    if (!await launchUrl(url)) {
-                      createSnackBar(
-                        message: 'Unable to open Link.',
-                        duration: 2,
-                      );
-                    }
                   },
                   child: Row(
                     children: [
@@ -57,15 +53,11 @@ class AboutWidget extends StatelessWidget {
 
                 TextButton(
                   onPressed: () async {
-                    var url = Uri.parse(
-                      "https://github.com/ForTheCommunity/torrentsdigger",
+                    openUrl(
+                      urlType: UrlType.normalLink,
+                      clipboardCopy: false,
+                      url: "https://github.com/ForTheCommunity/torrentsdigger",
                     );
-                    if (!await launchUrl(url)) {
-                      createSnackBar(
-                        message: 'Unable to open Link.',
-                        duration: 2,
-                      );
-                    }
                   },
                   child: Row(
                     children: [
@@ -78,15 +70,12 @@ class AboutWidget extends StatelessWidget {
 
                 TextButton(
                   onPressed: () async {
-                    var url = Uri.parse(
-                      "https://gitlab.com/ForTheCommunity/torrentsdigger#license",
+                    openUrl(
+                      urlType: UrlType.normalLink,
+                      clipboardCopy: false,
+                      url:
+                          "https://gitlab.com/ForTheCommunity/torrentsdigger#license",
                     );
-                    if (!await launchUrl(url)) {
-                      createSnackBar(
-                        message: 'Unable to open Link.',
-                        duration: 2,
-                      );
-                    }
                   },
                   child: Row(
                     children: [
@@ -99,15 +88,12 @@ class AboutWidget extends StatelessWidget {
 
                 TextButton(
                   onPressed: () async {
-                    var url = Uri.parse(
-                      "https://gitlab.com/ForTheommunity/torrentsdigger/-/issues",
+                    openUrl(
+                      urlType: UrlType.normalLink,
+                      clipboardCopy: false,
+                      url:
+                          "https://gitlab.com/ForTheommunity/torrentsdigger/-/issues",
                     );
-                    if (!await launchUrl(url)) {
-                      createSnackBar(
-                        message: 'Unable to open Link.',
-                        duration: 2,
-                      );
-                    }
                   },
                   child: Row(
                     children: [
