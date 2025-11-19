@@ -66,4 +66,5 @@ class AppColors {
   );
 
   static const hyperlinkColor = Color.fromRGBO(118, 131, 224, 1);
+  static const defaultTrackersInfoColor = Color.fromRGBO(255, 255, 255, 0.7);
 }

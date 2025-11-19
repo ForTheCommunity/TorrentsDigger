@@ -21,6 +21,7 @@ Future<void> openUrl({
               "Magnet Link Copied to Clipboard.\nOpening Torrent Downloader...",
           duration: 1,
         );
+        await Future.delayed(Duration(seconds: 2));
       }
     } catch (e) {
       if (urlType == UrlType.magentLink) {
