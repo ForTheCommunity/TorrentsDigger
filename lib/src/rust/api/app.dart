@@ -50,5 +50,5 @@ Future<List<String>> getCustomsDetails() =>
     RustLib.instance.api.crateApiAppGetCustomsDetails();
 
 Future<(List<InternalTorrent>, PlatformInt64?)> digCustomTorrents({
-  required String custom,
-}) => RustLib.instance.api.crateApiAppDigCustomTorrents(custom: custom);
+  required BigInt index,
+}) => RustLib.instance.api.crateApiAppDigCustomTorrents(index: index);

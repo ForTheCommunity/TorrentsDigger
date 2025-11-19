@@ -124,8 +124,8 @@ pub fn get_customs_details() -> Vec<String> {
     get_customs()
 }
 
-pub fn dig_custom_torrents(custom: String) -> Result<(Vec<InternalTorrent>, Option<i64>), String> {
-    match search_custom(custom) {
+pub fn dig_custom_torrents(index: usize) -> Result<(Vec<InternalTorrent>, Option<i64>), String> {
+    match search_custom(index) {
         Ok((torrents, next_page)) => {
             let internal_torrents: Vec<InternalTorrent> = torrents
                 .into_iter()

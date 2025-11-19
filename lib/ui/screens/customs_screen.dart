@@ -49,6 +49,7 @@ class CustomsScreen extends StatelessWidget {
                           (
                             customDetails,
                             selectedCustomListing,
+                            selectedCustomListingIndex,
                             torrentsList,
                           ) => Column(
                             children: [
@@ -57,9 +58,12 @@ class CustomsScreen extends StatelessWidget {
                                 items: customDetails,
                                 onChanged: (value) {
                                   if (value != null) {
+                                    final int selectedIndex = customDetails
+                                        .indexOf(value);
                                     context.read<CustomsBloc>().add(
                                       CustomsEvent.selectCustomListing(
                                         selectedListing: value,
+                                        selectedIndex: selectedIndex,
                                       ),
                                     );
                                     context.read<CustomsBloc>().add(

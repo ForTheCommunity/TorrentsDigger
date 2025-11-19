@@ -17,12 +17,10 @@ pub enum Customs {
 }
 
 impl Customs {
-    pub fn to_customs(text_customs: &str) -> Self {
-        match text_customs {
-            "Nyaa Latest" => Self::NyaaLatest,
-            "Sukebei Nyaa Latest" => Self::SukebeiNyaaLatest,
-            &_ => Self::NyaaLatest,
-        }
+    const ALL_VARIANTS: &'static [Customs] = &[Self::NyaaLatest, Self::SukebeiNyaaLatest];
+
+    pub fn from_index(index: usize) -> Option<&'static Customs> {
+        Self::ALL_VARIANTS.get(index)
     }
 
     pub fn all_customs() -> Vec<String> {

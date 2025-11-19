@@ -93,7 +93,7 @@ abstract class RustLibApi extends BaseApi {
   Future<BigInt> crateApiDatabaseProxyDeleteProxy({required int proxyId});
 
   Future<(List<InternalTorrent>, PlatformInt64?)> crateApiAppDigCustomTorrents({
-    required String custom,
+    required BigInt index,
   });
 
   Future<(List<InternalTorrent>, PlatformInt64?)> crateApiAppDigTorrent({
@@ -279,13 +279,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @override
   Future<(List<InternalTorrent>, PlatformInt64?)> crateApiAppDigCustomTorrents({
-    required String custom,
+    required BigInt index,
   }) {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          sse_encode_String(custom, serializer);
+          sse_encode_usize(index, serializer);
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
@@ -299,7 +299,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeErrorData: sse_decode_String,
         ),
         constMeta: kCrateApiAppDigCustomTorrentsConstMeta,
-        argValues: [custom],
+        argValues: [index],
         apiImpl: this,
       ),
     );
@@ -308,7 +308,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   TaskConstMeta get kCrateApiAppDigCustomTorrentsConstMeta =>
       const TaskConstMeta(
         debugName: "dig_custom_torrents",
-        argNames: ["custom"],
+        argNames: ["index"],
       );
 
   @override

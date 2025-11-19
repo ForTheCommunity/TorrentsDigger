@@ -37,7 +37,10 @@ class CustomsBloc extends Bloc<CustomsEvent, CustomsState> {
     if (currentState is _Loaded) {
       try {
         emit(
-          currentState.copyWith(selectedCustomListing: event.selectedListing),
+          currentState.copyWith(
+            selectedCustomListing: event.selectedListing,
+            selectedCustomListingIndex: event.selectedIndex,
+          ),
         );
       } catch (e) {
         emit(CustomsState.error(errorMessage: e.toString()));
@@ -58,7 +61,7 @@ class CustomsBloc extends Bloc<CustomsEvent, CustomsState> {
       emit(CustomsState.loading());
       try {
         final (torrents, _) = await digCustomTorrents(
-          custom: currentState.selectedCustomListing!,
+          index: BigInt.from(currentState.selectedCustomListingIndex!),
         );
 
         emit(currentState.copyWith(torrentsList: torrents));

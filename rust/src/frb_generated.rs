@@ -201,11 +201,11 @@ fn wire__crate__api__app__dig_custom_torrents_impl(
             };
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_custom = <String>::sse_decode(&mut deserializer);
+            let api_index = <usize>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
                 transform_result_sse::<_, String>((move || {
-                    let output_ok = crate::api::app::dig_custom_torrents(api_custom)?;
+                    let output_ok = crate::api::app::dig_custom_torrents(api_index)?;
                     Ok(output_ok)
                 })())
             }
