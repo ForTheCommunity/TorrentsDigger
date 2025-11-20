@@ -232,13 +232,11 @@ pub enum UindexSortings {
 }
 
 impl UindexSortings {
-    pub fn to_sorting(sorting_str: &str) -> Self {
-        match sorting_str {
-            "By Size" => Self::BySize,
-            "By Seeders" => Self::BySeeders,
-            "By Leechers" => Self::ByLeechers,
-            _ => Self::BySeeders,
-        }
+    const ALL_VARIANTS: &'static [UindexSortings] =
+        &[Self::BySize, Self::BySeeders, Self::ByLeechers];
+
+    pub fn from_index(index: usize) -> Option<&'static UindexSortings> {
+        Self::ALL_VARIANTS.get(index)
     }
 
     pub fn sorting_to_value(&self) -> &str {
@@ -250,7 +248,7 @@ impl UindexSortings {
     }
 
     pub fn all_uindex_sortings() -> Vec<String> {
-        [Self::BySize, Self::BySeeders, Self::ByLeechers]
+        Self::ALL_VARIANTS
             .iter()
             .map(|sorting| sorting.to_string())
             .collect()

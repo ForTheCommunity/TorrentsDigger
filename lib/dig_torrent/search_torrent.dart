@@ -6,7 +6,7 @@ Future<(List<InternalTorrent>, int?)> searchTorrent({
   required int sourceIndex,
   required int filterIndex,
   required int categoryIndex,
-  required String sorting,
+  required int sortingIndex,
   int? page,
 }) async {
   // calling rust-side to fetch data from torrent sites
@@ -15,7 +15,7 @@ Future<(List<InternalTorrent>, int?)> searchTorrent({
     sourceIndex: BigInt.from(sourceIndex),
     filterIndex: BigInt.from(filterIndex),
     categoryIndex: BigInt.from(categoryIndex),
-    sorting: sorting,
+    sortingIndex: BigInt.from(sortingIndex),
     page: page,
   );
   return torrents;

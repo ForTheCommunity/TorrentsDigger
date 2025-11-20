@@ -8,7 +8,7 @@ class SearchTorrents extends TorrentEvents {
   final int sourceIndex;
   final int filterIndex;
   final int categoryIndex;
-  final String sorting;
+  final int sortingIndex;
   final int? page;
 
   SearchTorrents({
@@ -16,7 +16,7 @@ class SearchTorrents extends TorrentEvents {
     required this.sourceIndex,
     required this.filterIndex,
     required this.categoryIndex,
-    required this.sorting,
+    required this.sortingIndex,
     this.page,
   });
 }

@@ -376,15 +376,16 @@ pub enum SolidTorrentsSortings {
 }
 
 impl SolidTorrentsSortings {
-    pub fn to_sorting(sorting_str: &str) -> Self {
-        match sorting_str {
-            "By Relevance" => Self::ByRelevance,
-            "By Seeders" => Self::BySeeders,
-            "By Date" => Self::ByDate,
-            "By Size" => Self::ByFileSize,
-            "By Leechers" => Self::ByLeechers,
-            _ => Self::ByRelevance,
-        }
+    const ALL_VARIANTS: &'static [SolidTorrentsSortings] = &[
+        Self::ByRelevance,
+        Self::BySeeders,
+        Self::ByDate,
+        Self::ByFileSize,
+        Self::ByLeechers,
+    ];
+
+    pub fn from_index(index: usize) -> Option<&'static SolidTorrentsSortings> {
+        Self::ALL_VARIANTS.get(index)
     }
 
     pub fn sorting_to_value(&self) -> &str {
@@ -398,16 +399,10 @@ impl SolidTorrentsSortings {
     }
 
     pub fn all_solid_torrents_sortings() -> Vec<String> {
-        [
-            Self::ByRelevance,
-            Self::BySeeders,
-            Self::ByDate,
-            Self::ByFileSize,
-            Self::ByLeechers,
-        ]
-        .iter()
-        .map(|sorting| sorting.to_string())
-        .collect()
+        Self::ALL_VARIANTS
+            .iter()
+            .map(|sorting| sorting.to_string())
+            .collect()
     }
 }
 

@@ -18,7 +18,7 @@ class TorrentBloc extends Bloc<TorrentEvents, TorrentState> {
           sourceIndex: event.sourceIndex,
           filterIndex: event.filterIndex,
           categoryIndex: event.categoryIndex,
-          sorting: event.sorting,
+          sortingIndex: event.sortingIndex,
           page: event.page,
         );
 

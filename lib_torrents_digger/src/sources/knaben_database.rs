@@ -530,14 +530,15 @@ pub enum KnabenDatabaseSortings {
 }
 
 impl KnabenDatabaseSortings {
-    pub fn to_sorting(sorting_str: &str) -> Self {
-        match sorting_str {
-            "By Size" => Self::BySize,
-            "By Date" => Self::ByDate,
-            "By Seeders" => Self::BySeeders,
-            "By Leechers" => Self::ByLeechers,
-            &_ => Self::BySeeders,
-        }
+    const ALL_VARIANTS: &'static [KnabenDatabaseSortings] = &[
+        Self::BySize,
+        Self::ByDate,
+        Self::BySeeders,
+        Self::ByLeechers,
+    ];
+
+    pub fn from_index(index: usize) -> Option<&'static KnabenDatabaseSortings> {
+        Self::ALL_VARIANTS.get(index)
     }
 
     pub fn to_value(&self) -> &str {
@@ -550,15 +551,10 @@ impl KnabenDatabaseSortings {
     }
 
     pub fn all_sortings() -> Vec<String> {
-        [
-            Self::BySize,
-            Self::ByDate,
-            Self::BySeeders,
-            Self::ByLeechers,
-        ]
-        .iter()
-        .map(|sorting| sorting.to_string())
-        .collect()
+        Self::ALL_VARIANTS
+            .iter()
+            .map(|sorting| sorting.to_string())
+            .collect()
     }
 }
 

@@ -26,7 +26,7 @@ pub fn search_torrent(
     source_index: usize,
     category_index: usize,
     filter_index: usize,
-    sorting: String,
+    sorting_index: usize,
     page: Option<i64>,
 ) -> Result<(Vec<torrent::Torrent>, Option<i64>)> {
     let source = AllAvailableSources::from_index(source_index)
@@ -38,12 +38,14 @@ pub fn search_torrent(
                 .ok_or_else(|| anyhow!("Invalid Category Index: {}", source_index))?;
             let filter = NyaaFilter::from_index(filter_index)
                 .ok_or_else(|| anyhow!("Invalid Filter Index: {}", filter_index))?;
+            let sorting = NyaaSortings::from_index(sorting_index)
+                .ok_or_else(|| anyhow!("Invalid Sorting Index: {}", sorting_index))?;
 
             let url = NyaaCategories::request_url_builder(
                 &torrent_name,
                 filter,
                 &category,
-                &NyaaSortings::to_sorting(&sorting),
+                sorting,
                 &page.unwrap_or(0),
             );
             fetch_torrents(&url, AllAvailableSources::Nyaa)
@@ -53,12 +55,14 @@ pub fn search_torrent(
                 .ok_or_else(|| anyhow!("Invalid Category Index: {}", source_index))?;
             let filter = NyaaFilter::from_index(filter_index)
                 .ok_or_else(|| anyhow!("Invalid Filter Index: {}", filter_index))?;
+            let sorting = NyaaSortings::from_index(sorting_index)
+                .ok_or_else(|| anyhow!("Invalid Sorting Index: {}", sorting_index))?;
 
             let url = SukebeiNyaaCategories::request_url_builder(
                 &torrent_name,
                 filter,
                 category,
-                &NyaaSortings::to_sorting(&sorting),
+                sorting,
                 &page.unwrap_or(0),
             );
             fetch_torrents(&url, AllAvailableSources::SukebeiNyaa)
@@ -70,22 +74,22 @@ pub fn search_torrent(
         AllAvailableSources::Uindex => {
             let category = UindexCategories::from_index(category_index)
                 .ok_or_else(|| anyhow!("Invalid Category Index: {}", source_index))?;
+            let sorting = UindexSortings::from_index(sorting_index)
+                .ok_or_else(|| anyhow!("Invalid Sorting Index: {}", sorting_index))?;
 
-            let url = UindexCategories::request_url_builder(
-                &torrent_name,
-                category,
-                &UindexSortings::to_sorting(&sorting),
-            );
+            let url = UindexCategories::request_url_builder(&torrent_name, category, sorting);
             fetch_torrents(&url, AllAvailableSources::Uindex)
         }
         AllAvailableSources::LimeTorrents => {
             let category = LimeTorrentsCategories::from_index(category_index)
                 .ok_or_else(|| anyhow!("Invalid Category Index: {}", source_index))?;
+            let sorting = LimeTorrentsSortings::from_index(sorting_index)
+                .ok_or_else(|| anyhow!("Invalid Sorting Index: {}", sorting_index))?;
 
             let url = LimeTorrentsCategories::request_url_builder(
                 &torrent_name,
                 category,
-                &LimeTorrentsSortings::to_sorting(&sorting),
+                sorting,
                 &page.unwrap_or(0),
             );
             fetch_torrents(&url, AllAvailableSources::LimeTorrents)
@@ -93,11 +97,13 @@ pub fn search_torrent(
         AllAvailableSources::SolidTorrents => {
             let category = SolidTorrentsCategories::from_index(category_index)
                 .ok_or_else(|| anyhow!("Invalid Category Index: {}", source_index))?;
+            let sorting = SolidTorrentsSortings::from_index(sorting_index)
+                .ok_or_else(|| anyhow!("Invalid Sorting Index: {}", sorting_index))?;
 
             let url = SolidTorrentsCategories::request_url_builder(
                 &torrent_name,
                 category,
-                &SolidTorrentsSortings::to_sorting(&sorting),
+                sorting,
                 &page.unwrap_or(0),
             );
             fetch_torrents(&url, AllAvailableSources::SolidTorrents)
@@ -105,11 +111,13 @@ pub fn search_torrent(
         AllAvailableSources::KnabenDatabase => {
             let category = KnabenDatabaseCategories::from_index(category_index)
                 .ok_or_else(|| anyhow!("Invalid Category Index: {}", source_index))?;
+            let sorting = KnabenDatabaseSortings::from_index(sorting_index)
+                .ok_or_else(|| anyhow!("Invalid Sorting Index: {}", sorting_index))?;
 
             let url = KnabenDatabaseCategories::request_url_builder(
                 &torrent_name,
                 category,
-                &KnabenDatabaseSortings::to_sorting(&sorting),
+                sorting,
                 &page.unwrap_or(1),
             );
             fetch_torrents(&url, AllAvailableSources::KnabenDatabase)

@@ -57,7 +57,7 @@ pub fn dig_torrent(
     source_index: usize,
     category_index: usize,
     filter_index: usize,
-    sorting: String,
+    sorting_index: usize,
     page: Option<i64>,
 ) -> Result<(Vec<InternalTorrent>, Option<i64>), String> {
     match search_torrent(
@@ -65,7 +65,7 @@ pub fn dig_torrent(
         source_index,
         category_index,
         filter_index,
-        sorting,
+        sorting_index,
         page,
     ) {
         Ok((torrents, next_page)) => {

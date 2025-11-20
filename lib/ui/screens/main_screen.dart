@@ -102,13 +102,31 @@ class MainScreen extends StatelessWidget {
                             ? listOfFilters.indexOf(sourceState.selectedFilter!)
                             : -1;
 
+                        // Source Sortings
+                        List<String> listOfSortings = sourceState.sources
+                            .firstWhere(
+                              (source) =>
+                                  source.sourceName ==
+                                  sourceState.selectedSource!,
+                            )
+                            .sourceDetails
+                            .sourceSortings;
+
+                        int sortingIndex =
+                            (listOfSortings.isNotEmpty &&
+                                sourceState.selectedSorting != null)
+                            ? listOfSortings.indexOf(
+                                sourceState.selectedSorting!,
+                              )
+                            : -1;
+
                         context.read<TorrentBloc>().add(
                           SearchTorrents(
                             torrentName: torrentName,
                             sourceIndex: sourceIndex,
                             filterIndex: filterIndex,
                             categoryIndex: categoryIndex,
-                            sorting: sourceState.selectedSorting ?? "",
+                            sortingIndex: sortingIndex,
                           ),
                         );
                       } else {

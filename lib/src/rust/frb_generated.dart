@@ -101,7 +101,7 @@ abstract class RustLibApi extends BaseApi {
     required BigInt sourceIndex,
     required BigInt categoryIndex,
     required BigInt filterIndex,
-    required String sorting,
+    required BigInt sortingIndex,
     PlatformInt64? page,
   });
 
@@ -317,7 +317,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     required BigInt sourceIndex,
     required BigInt categoryIndex,
     required BigInt filterIndex,
-    required String sorting,
+    required BigInt sortingIndex,
     PlatformInt64? page,
   }) {
     return handler.executeNormal(
@@ -328,7 +328,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           sse_encode_usize(sourceIndex, serializer);
           sse_encode_usize(categoryIndex, serializer);
           sse_encode_usize(filterIndex, serializer);
-          sse_encode_String(sorting, serializer);
+          sse_encode_usize(sortingIndex, serializer);
           sse_encode_opt_box_autoadd_i_64(page, serializer);
           pdeCallFfi(
             generalizedFrbRustBinding,
@@ -348,7 +348,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           sourceIndex,
           categoryIndex,
           filterIndex,
-          sorting,
+          sortingIndex,
           page,
         ],
         apiImpl: this,
@@ -363,7 +363,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       "sourceIndex",
       "categoryIndex",
       "filterIndex",
-      "sorting",
+      "sortingIndex",
       "page",
     ],
   );

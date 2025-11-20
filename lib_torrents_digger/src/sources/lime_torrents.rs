@@ -286,14 +286,15 @@ pub enum LimeTorrentsSortings {
 }
 
 impl LimeTorrentsSortings {
-    pub fn to_sorting(sorting_str: &str) -> Self {
-        match sorting_str {
-            "By Date" => Self::ByDate,
-            "By Size" => Self::BySize,
-            "By Seeders" => Self::BySeeders,
-            "By Leechers" => Self::ByLeechers,
-            _ => Self::BySeeders,
-        }
+    const ALL_VARIANTS: &'static [LimeTorrentsSortings] = &[
+        Self::ByDate,
+        Self::BySize,
+        Self::BySeeders,
+        Self::ByLeechers,
+    ];
+
+    pub fn from_index(index: usize) -> Option<&'static LimeTorrentsSortings> {
+        Self::ALL_VARIANTS.get(index)
     }
 
     pub fn sorting_to_value(&self) -> &str {
@@ -306,15 +307,10 @@ impl LimeTorrentsSortings {
     }
 
     pub fn all_limetorrents_sortings() -> Vec<String> {
-        [
-            Self::ByDate,
-            Self::BySize,
-            Self::BySeeders,
-            Self::ByLeechers,
-        ]
-        .iter()
-        .map(|sorting| sorting.to_string())
-        .collect()
+        Self::ALL_VARIANTS
+            .iter()
+            .map(|sorting| sorting.to_string())
+            .collect()
     }
 }
 

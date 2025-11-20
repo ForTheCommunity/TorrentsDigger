@@ -24,19 +24,6 @@ impl AllAvailableSources {
     pub fn from_index(index: usize) -> Option<&'static AllAvailableSources> {
         Self::ALL_VARIANTS.get(index)
     }
-
-    // pub fn to_source(text_category: &str) -> AllAvailableSources {
-    //     match text_category {
-    //         "Nyaa" => AllAvailableSources::Nyaa,
-    //         "Nyaa Sukebei" => AllAvailableSources::SukebeiNyaa,
-    //         "Torrents Csv" => AllAvailableSources::TorrentsCsv,
-    //         "Uindex" => AllAvailableSources::Uindex,
-    //         "Lime Torrents" => AllAvailableSources::LimeTorrents,
-    //         "Solid Torrents" => AllAvailableSources::SolidTorrents,
-    //         "Knaben Database" => AllAvailableSources::KnabenDatabase,
-    //         _ => AllAvailableSources::TorrentsCsv,
-    //     }
-    // }
 }
 
 impl fmt::Display for AllAvailableSources {
