@@ -60,6 +60,7 @@ class MainScreen extends StatelessWidget {
                           return;
                         }
 
+                        // Source
                         List<String> listOfSources = sourceState.sources
                             .map((source) => source.sourceName)
                             .toList();
@@ -67,6 +68,7 @@ class MainScreen extends StatelessWidget {
                           sourceState.selectedSource!,
                         );
 
+                        // Source Categories
                         List<String> listOfCategories = sourceState.sources
                             .firstWhere(
                               (source) =>
@@ -84,11 +86,27 @@ class MainScreen extends StatelessWidget {
                               )
                             : -1;
 
+                        // Source Filters
+                        List<String> listOfFilters = sourceState.sources
+                            .firstWhere(
+                              (source) =>
+                                  source.sourceName ==
+                                  sourceState.selectedSource!,
+                            )
+                            .sourceDetails
+                            .sourceFilters;
+
+                        int filterIndex =
+                            (listOfFilters.isNotEmpty &&
+                                sourceState.selectedFilter != null)
+                            ? listOfFilters.indexOf(sourceState.selectedFilter!)
+                            : -1;
+
                         context.read<TorrentBloc>().add(
                           SearchTorrents(
                             torrentName: torrentName,
                             sourceIndex: sourceIndex,
-                            filter: sourceState.selectedFilter ?? "",
+                            filterIndex: filterIndex,
                             categoryIndex: categoryIndex,
                             sorting: sourceState.selectedSorting ?? "",
                           ),

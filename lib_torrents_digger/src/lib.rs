@@ -7,7 +7,7 @@ use crate::{
         lime_torrents::{LimeTorrentsCategories, LimeTorrentsSortings},
         nyaa::{NyaaCategories, NyaaFilter, NyaaSortings},
         solid_torrents::{SolidTorrentsCategories, SolidTorrentsSortings},
-        sukebei_nyaa::{SukebeiNyaaCategories, SukebeiNyaaFilter},
+        sukebei_nyaa::SukebeiNyaaCategories,
         torrents_csv::TorrentsCsvCategories,
         uindex::{UindexCategories, UindexSortings},
     },
@@ -25,7 +25,7 @@ pub fn search_torrent(
     torrent_name: String,
     source_index: usize,
     category_index: usize,
-    filter: String,
+    filter_index: usize,
     sorting: String,
     page: Option<i64>,
 ) -> Result<(Vec<torrent::Torrent>, Option<i64>)> {
@@ -36,10 +36,12 @@ pub fn search_torrent(
         AllAvailableSources::Nyaa => {
             let category = NyaaCategories::from_index(category_index)
                 .ok_or_else(|| anyhow!("Invalid Category Index: {}", source_index))?;
+            let filter = NyaaFilter::from_index(filter_index)
+                .ok_or_else(|| anyhow!("Invalid Filter Index: {}", filter_index))?;
 
             let url = NyaaCategories::request_url_builder(
                 &torrent_name,
-                &NyaaFilter::to_filter(&filter),
+                filter,
                 &category,
                 &NyaaSortings::to_sorting(&sorting),
                 &page.unwrap_or(0),
@@ -49,10 +51,12 @@ pub fn search_torrent(
         AllAvailableSources::SukebeiNyaa => {
             let category = SukebeiNyaaCategories::from_index(category_index)
                 .ok_or_else(|| anyhow!("Invalid Category Index: {}", source_index))?;
+            let filter = NyaaFilter::from_index(filter_index)
+                .ok_or_else(|| anyhow!("Invalid Filter Index: {}", filter_index))?;
 
             let url = SukebeiNyaaCategories::request_url_builder(
                 &torrent_name,
-                &SukebeiNyaaFilter::to_filter(&filter),
+                filter,
                 category,
                 &NyaaSortings::to_sorting(&sorting),
                 &page.unwrap_or(0),

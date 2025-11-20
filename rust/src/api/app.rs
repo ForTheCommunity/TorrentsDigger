@@ -56,7 +56,7 @@ pub fn dig_torrent(
     torrent_name: String,
     source_index: usize,
     category_index: usize,
-    filter: String,
+    filter_index: usize,
     sorting: String,
     page: Option<i64>,
 ) -> Result<(Vec<InternalTorrent>, Option<i64>), String> {
@@ -64,7 +64,7 @@ pub fn dig_torrent(
         torrent_name,
         source_index,
         category_index,
-        filter,
+        filter_index,
         sorting,
         page,
     ) {

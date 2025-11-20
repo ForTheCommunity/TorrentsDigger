@@ -5,7 +5,7 @@ use crate::sources::{
     lime_torrents::{LimeTorrentsCategories, LimeTorrentsSortings},
     nyaa::{NyaaCategories, NyaaFilter, NyaaSortings},
     solid_torrents::{SolidTorrentsCategories, SolidTorrentsSortings},
-    sukebei_nyaa::{SukebeiNyaaCategories, SukebeiNyaaFilter},
+    sukebei_nyaa::SukebeiNyaaCategories,
     torrents_csv::TorrentsCsvCategories,
     uindex::{UindexCategories, UindexSortings},
 };
@@ -47,7 +47,7 @@ pub fn get_source_details() -> Vec<Source> {
     let sukebei_nyaa_source_details: SourceDetails = SourceDetails {
         source_query_options: SukebeiNyaaCategories::get_query_options(),
         source_categories: SukebeiNyaaCategories::all_categories(),
-        source_filters: SukebeiNyaaFilter::all_sukebei_nyaa_filters(),
+        source_filters: NyaaFilter::all_nyaa_filters(),
         source_sortings: NyaaSortings::all_nyaa_sortings(), // same sortings for sukebei
     };
     sources_details.push(Source {

@@ -100,7 +100,7 @@ abstract class RustLibApi extends BaseApi {
     required String torrentName,
     required BigInt sourceIndex,
     required BigInt categoryIndex,
-    required String filter,
+    required BigInt filterIndex,
     required String sorting,
     PlatformInt64? page,
   });
@@ -316,7 +316,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     required String torrentName,
     required BigInt sourceIndex,
     required BigInt categoryIndex,
-    required String filter,
+    required BigInt filterIndex,
     required String sorting,
     PlatformInt64? page,
   }) {
@@ -327,7 +327,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           sse_encode_String(torrentName, serializer);
           sse_encode_usize(sourceIndex, serializer);
           sse_encode_usize(categoryIndex, serializer);
-          sse_encode_String(filter, serializer);
+          sse_encode_usize(filterIndex, serializer);
           sse_encode_String(sorting, serializer);
           sse_encode_opt_box_autoadd_i_64(page, serializer);
           pdeCallFfi(
@@ -347,7 +347,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           torrentName,
           sourceIndex,
           categoryIndex,
-          filter,
+          filterIndex,
           sorting,
           page,
         ],
@@ -362,7 +362,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       "torrentName",
       "sourceIndex",
       "categoryIndex",
-      "filter",
+      "filterIndex",
       "sorting",
       "page",
     ],

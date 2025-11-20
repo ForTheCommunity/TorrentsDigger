@@ -237,7 +237,7 @@ fn wire__crate__api__app__dig_torrent_impl(
             let api_torrent_name = <String>::sse_decode(&mut deserializer);
             let api_source_index = <usize>::sse_decode(&mut deserializer);
             let api_category_index = <usize>::sse_decode(&mut deserializer);
-            let api_filter = <String>::sse_decode(&mut deserializer);
+            let api_filter_index = <usize>::sse_decode(&mut deserializer);
             let api_sorting = <String>::sse_decode(&mut deserializer);
             let api_page = <Option<i64>>::sse_decode(&mut deserializer);
             deserializer.end();
@@ -247,7 +247,7 @@ fn wire__crate__api__app__dig_torrent_impl(
                         api_torrent_name,
                         api_source_index,
                         api_category_index,
-                        api_filter,
+                        api_filter_index,
                         api_sorting,
                         api_page,
                     )?;

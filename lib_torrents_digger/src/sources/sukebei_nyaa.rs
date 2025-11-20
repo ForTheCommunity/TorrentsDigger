@@ -5,7 +5,10 @@ use ureq::{Body, http::Response};
 
 use crate::{
     extract_info_hash_from_magnet,
-    sources::{QueryOptions, nyaa::NyaaSortings},
+    sources::{
+        QueryOptions,
+        nyaa::{NyaaFilter, NyaaSortings},
+    },
     torrent::Torrent,
 };
 
@@ -77,7 +80,7 @@ impl SukebeiNyaaCategories {
 
     pub fn request_url_builder(
         torrent_name: &str,
-        filter: &SukebeiNyaaFilter,
+        filter: &NyaaFilter,
         category: &SukebeiNyaaCategories,
         sorting: &NyaaSortings,
         page_number: &i64,
@@ -235,72 +238,6 @@ impl fmt::Display for SukebeiNyaaCategories {
     }
 }
 
-pub enum SukebeiNyaaFilter {
-    NoFilter,
-    NoRemakes,
-    TrustedOnly,
-}
-
-impl SukebeiNyaaFilter {
-    pub fn filter_to_value(&self) -> i32 {
-        match *self {
-            Self::NoFilter => 0,
-            Self::TrustedOnly => 1,
-            Self::NoRemakes => 2,
-        }
-    }
-
-    pub fn to_filter(filter_str: &str) -> Self {
-        match filter_str {
-            "No Filter" => Self::NoFilter,
-            "Trusted Only" => Self::TrustedOnly,
-            "No Remakes" => Self::NoRemakes,
-            _ => Self::NoFilter,
-        }
-    }
-    pub fn all_sukebei_nyaa_filters() -> Vec<String> {
-        [Self::NoFilter, Self::TrustedOnly, Self::NoRemakes]
-            .iter()
-            .map(|filter| filter.to_string())
-            .collect()
-    }
-}
-
-impl fmt::Display for SukebeiNyaaFilter {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Self::NoFilter => write!(f, "No Filter"),
-            Self::TrustedOnly => write!(f, "Trusted Only"),
-            Self::NoRemakes => write!(f, "No Remakes"),
-        }
-    }
-}
-
-#[derive(Debug)]
-pub enum NyaaError {
-    PageEnded,
-    AlreadyAtStartPage,
-    PaginationNotPossible,
-}
-
-impl std::error::Error for NyaaError {}
-
-impl std::fmt::Display for NyaaError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            NyaaError::AlreadyAtStartPage => {
-                write!(f, "Already to Start Page , i.e page=1")
-            }
-            NyaaError::PageEnded => {
-                write!(f, "Page Ended , No Page Available.")
-            }
-            NyaaError::PaginationNotPossible => {
-                write!(f, "Page Doesn't Exists.")
-            }
-        }
-    }
-}
-
 // _______________________________________________________________________________________
 #[cfg(test)]
 mod tests {
@@ -309,7 +246,7 @@ mod tests {
     #[test]
     fn test_request_builder_nyaa() {
         let torrent_query_name = "FC2-PPV";
-        let filter = SukebeiNyaaFilter::NoFilter;
+        let filter = NyaaFilter::NoFilter;
         let category = SukebeiNyaaCategories::RealLifeVideos;
         let sorting = NyaaSortings::BySeeders;
         let page_number = 1;

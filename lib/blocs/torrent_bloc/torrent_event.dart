@@ -6,7 +6,7 @@ sealed class TorrentEvents {}
 class SearchTorrents extends TorrentEvents {
   final String torrentName;
   final int sourceIndex;
-  final String filter;
+  final int filterIndex;
   final int categoryIndex;
   final String sorting;
   final int? page;
@@ -14,7 +14,7 @@ class SearchTorrents extends TorrentEvents {
   SearchTorrents({
     required this.torrentName,
     required this.sourceIndex,
-    required this.filter,
+    required this.filterIndex,
     required this.categoryIndex,
     required this.sorting,
     this.page,

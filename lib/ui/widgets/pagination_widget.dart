@@ -40,6 +40,7 @@ class PaginationWidget extends StatelessWidget {
               onPressed: state.nextPage != null
                   ? () {
                       if (torrentState is TorrentSearchSuccess) {
+                        // Source
                         List<String> listOfSources = sourceState.sources
                             .map((source) => source.sourceName)
                             .toList();
@@ -47,6 +48,7 @@ class PaginationWidget extends StatelessWidget {
                           sourceState.selectedSource!,
                         );
 
+                        // Source Categories
                         List<String> listOfCategories = sourceState.sources
                             .firstWhere(
                               (source) =>
@@ -59,11 +61,27 @@ class PaginationWidget extends StatelessWidget {
                           sourceState.selectedCategory!,
                         );
 
+                        // Source Filters
+                        List<String> listOfFilters = sourceState.sources
+                            .firstWhere(
+                              (source) =>
+                                  source.sourceName ==
+                                  sourceState.selectedSource!,
+                            )
+                            .sourceDetails
+                            .sourceFilters;
+
+                        int filterIndex =
+                            (listOfFilters.isNotEmpty &&
+                                sourceState.selectedFilter != null)
+                            ? listOfFilters.indexOf(sourceState.selectedFilter!)
+                            : -1;
+
                         context.read<TorrentBloc>().add(
                           SearchTorrents(
                             torrentName: torrentState.torrentName,
                             sourceIndex: sourceIndex,
-                            filter: sourceState.selectedFilter ?? "",
+                            filterIndex: filterIndex,
                             categoryIndex: categoryIndex,
                             sorting: sourceState.selectedSorting ?? "",
                             page: nextPage,

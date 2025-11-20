@@ -4,7 +4,7 @@ import 'package:torrents_digger/src/rust/api/internals.dart';
 Future<(List<InternalTorrent>, int?)> searchTorrent({
   required String torrentName,
   required int sourceIndex,
-  required String filter,
+  required int filterIndex,
   required int categoryIndex,
   required String sorting,
   int? page,
@@ -13,7 +13,7 @@ Future<(List<InternalTorrent>, int?)> searchTorrent({
   (List<InternalTorrent>, int?) torrents = await digTorrent(
     torrentName: torrentName,
     sourceIndex: BigInt.from(sourceIndex),
-    filter: filter,
+    filterIndex: BigInt.from(filterIndex),
     categoryIndex: BigInt.from(categoryIndex),
     sorting: sorting,
     page: page,

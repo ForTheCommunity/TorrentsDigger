@@ -315,16 +315,15 @@ impl NyaaFilter {
         }
     }
 
-    pub fn to_filter(filter_str: &str) -> Self {
-        match filter_str {
-            "No Filter" => Self::NoFilter,
-            "Trusted Only" => Self::TrustedOnly,
-            "No Remakes" => Self::NoRemakes,
-            _ => Self::NoFilter,
-        }
+    const ALL_VARIANTS: &'static [NyaaFilter] =
+        &[Self::NoFilter, Self::TrustedOnly, Self::NoRemakes];
+
+    pub fn from_index(index: usize) -> Option<&'static NyaaFilter> {
+        Self::ALL_VARIANTS.get(index)
     }
+
     pub fn all_nyaa_filters() -> Vec<String> {
-        [Self::NoFilter, Self::TrustedOnly, Self::NoRemakes]
+        Self::ALL_VARIANTS
             .iter()
             .map(|filter| filter.to_string())
             .collect()
@@ -398,31 +397,6 @@ impl fmt::Display for NyaaSortings {
             Self::BySeeders => write!(f, "By Seeders"),
             Self::ByLeechers => write!(f, "By Leechers"),
             Self::ByTotalDownloads => write!(f, "By Total Downloads"),
-        }
-    }
-}
-
-#[derive(Debug)]
-pub enum NyaaError {
-    PageEnded,
-    AlreadyAtStartPage,
-    PaginationNotPossible,
-}
-
-impl std::error::Error for NyaaError {}
-
-impl std::fmt::Display for NyaaError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            NyaaError::AlreadyAtStartPage => {
-                write!(f, "Already to Start Page , i.e page=1")
-            }
-            NyaaError::PageEnded => {
-                write!(f, "Page Ended , No Page Available.")
-            }
-            NyaaError::PaginationNotPossible => {
-                write!(f, "Page Doesn't Exists.")
-            }
         }
     }
 }
