@@ -33,7 +33,7 @@
 
 > **Why No Binaries For Windows & Mac OS ?**
 
-> It is possible to build this app for Windows and Mac OS; however, we need contributors who can test app on these platforms.
+> It is possible to build this app for Windows and Mac OS; however, i need contributors who can test app on these platforms.
 
 
 ### Note -> Torrents Digger only do the job of Fetching ,Scraping & Listing. It don't host anything , It just list what is already available in the internet.

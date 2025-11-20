@@ -47,8 +47,8 @@ impl Customs {
 impl fmt::Display for Customs {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Self::NyaaLatest => write!(f, "Nyaa Latest"),
-            Self::SukebeiNyaaLatest => write!(f, "Sukebei Nyaa Latest"),
+            Self::NyaaLatest => write!(f, "Nyaa Trendings ⤴"),
+            Self::SukebeiNyaaLatest => write!(f, "Sukebei Nyaa Trendings ⤴"),
         }
     }
 }
