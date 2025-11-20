@@ -7,19 +7,19 @@ import '../frb_generated.dart';
 import 'internals.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-Future<Map<String, InternalSourceDetails>> fetchSourceDetails() =>
+Future<List<InternalSource>> fetchSourceDetails() =>
     RustLib.instance.api.crateApiAppFetchSourceDetails();
 
 Future<(List<InternalTorrent>, PlatformInt64?)> digTorrent({
   required String torrentName,
-  required String source,
+  required BigInt sourceIndex,
   required String category,
   required String filter,
   required String sorting,
   PlatformInt64? page,
 }) => RustLib.instance.api.crateApiAppDigTorrent(
   torrentName: torrentName,
-  source: source,
+  sourceIndex: sourceIndex,
   category: category,
   filter: filter,
   sorting: sorting,

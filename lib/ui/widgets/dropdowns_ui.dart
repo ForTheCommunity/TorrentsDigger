@@ -21,7 +21,9 @@ class DropdownsUi extends StatelessWidget {
               children: [
                 Expanded(
                   child: DropdownWidget(
-                    items: state.sources.keys.toList(),
+                    items: state.sources
+                        .map((source) => source.sourceName)
+                        .toList(),
                     selectedValue: state.selectedSource,
                     hintText: "Select Source",
                     onChanged: (value) {

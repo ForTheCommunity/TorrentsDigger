@@ -1,4 +1,4 @@
-use anyhow::Result;
+use anyhow::{Result, anyhow};
 
 use crate::{
     sources::{
@@ -23,13 +23,17 @@ pub mod trackers;
 
 pub fn search_torrent(
     torrent_name: String,
-    source: String,
+    // source: String,
+    source_index: usize,
     category: String,
     filter: String,
     sorting: String,
     page: Option<i64>,
 ) -> Result<(Vec<torrent::Torrent>, Option<i64>)> {
-    let source = AllAvailableSources::to_source(&source);
+    // let source = AllAvailableSources::to_source(&source);
+    let source = AllAvailableSources::from_index(source_index)
+        .ok_or_else(|| anyhow!("Invalid Source Index: {}", source_index))?;
+    println!("[RUST LIB] Source : {}", source);
     match source {
         AllAvailableSources::Nyaa => {
             let url = NyaaCategories::request_url_builder(

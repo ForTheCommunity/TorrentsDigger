@@ -15,7 +15,8 @@ class TorrentBloc extends Bloc<TorrentEvents, TorrentState> {
       try {
         final torrentsListAndNextPage = await searchTorrent(
           torrentName: event.torrentName,
-          source: event.source,
+          // source: event.source,
+          sourceIndex: event.sourceIndex,
           filter: event.filter,
           category: event.category,
           sorting: event.sorting,

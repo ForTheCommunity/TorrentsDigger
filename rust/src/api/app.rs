@@ -5,47 +5,64 @@ use lib_torrents_digger::{
     sync_request::{check_for_update, extract_ip_details},
     trackers::{load_trackers_string, DefaultTrackers},
 };
-use std::collections::HashMap;
 
-use lib_torrents_digger::sources::SourceDetails as ExternalSourceDetails;
+use lib_torrents_digger::sources::Source as ExternalSource;
 use lib_torrents_digger::torrent::Torrent as ExternalTorrent;
 
 use crate::api::internals::{
-    InternalIpDetails, InternalQueryOptions, InternalSourceDetails, InternalTorrent,
+    InternalIpDetails, InternalQueryOptions, InternalSource, InternalSourceDetails, InternalTorrent,
 };
 
-//  Map the external HashMap to an internal HashMap
-pub fn fetch_source_details() -> HashMap<String, InternalSourceDetails> {
-    let source_details: HashMap<String, ExternalSourceDetails> = get_source_details();
+pub fn fetch_source_details() -> Vec<InternalSource> {
+    let external_sources_vec: Vec<ExternalSource> = get_source_details();
+    let mut internal_sources_vec: Vec<InternalSource> = Vec::new();
 
-    let mut internal_details: HashMap<String, InternalSourceDetails> = HashMap::new();
-    for (source_name, details) in source_details {
-        let internal_query_options = InternalQueryOptions {
-            categories: details.source_query_options.categories,
-            sortings: details.source_query_options.sortings,
-            filters: details.source_query_options.filters,
-            pagination: details.source_query_options.pagination,
+    for a_external_source in external_sources_vec {
+        let internal_source_name: String = a_external_source.source_name;
+        let internal_query_options: InternalQueryOptions = InternalQueryOptions {
+            categories: a_external_source
+                .source_details
+                .source_query_options
+                .categories,
+            sortings: a_external_source
+                .source_details
+                .source_query_options
+                .sortings,
+            filters: a_external_source
+                .source_details
+                .source_query_options
+                .filters,
+            pagination: a_external_source
+                .source_details
+                .source_query_options
+                .pagination,
         };
-        let internal_source_details = InternalSourceDetails {
+        let internal_source_details: InternalSourceDetails = InternalSourceDetails {
             query_options: internal_query_options,
-            categories: details.source_categories,
-            source_filters: details.source_filters,
-            source_sortings: details.source_sortings,
+            categories: a_external_source.source_details.source_categories,
+            source_filters: a_external_source.source_details.source_filters,
+            source_sortings: a_external_source.source_details.source_sortings,
         };
-        internal_details.insert(source_name, internal_source_details);
+        let internal_source: InternalSource = InternalSource {
+            source_name: internal_source_name,
+            source_details: internal_source_details,
+        };
+        internal_sources_vec.push(internal_source);
     }
-    internal_details
+    internal_sources_vec
 }
 
 pub fn dig_torrent(
     torrent_name: String,
-    source: String,
+    // source: String,
+    source_index: usize,
     category: String,
     filter: String,
     sorting: String,
     page: Option<i64>,
 ) -> Result<(Vec<InternalTorrent>, Option<i64>), String> {
-    match search_torrent(torrent_name, source, category, filter, sorting, page) {
+    println!("[RUST API] Source Index : {}", source_index);
+    match search_torrent(torrent_name, source_index, category, filter, sorting, page) {
         Ok((torrents, next_page)) => {
             let internal_torrents: Vec<InternalTorrent> = torrents
                 .into_iter()

@@ -36,6 +36,23 @@ impl SukebeiNyaaCategories {
         }
     }
 
+    const ALL_VARIANTS: &'static [SukebeiNyaaCategories] = &[
+        Self::AllCategories,
+        Self::Art,
+        Self::Anime,
+        Self::ArtDoujinshi,
+        Self::ArtGames,
+        Self::ArtManga,
+        Self::ArtPictures,
+        Self::RealLife,
+        Self::RealLifePhotobookAndPictures,
+        Self::RealLifeVideos,
+    ];
+
+    pub fn from_index(index: usize) -> Option<&'static SukebeiNyaaCategories> {
+        Self::ALL_VARIANTS.get(index)
+    }
+
     pub fn to_category(text_category: &str) -> Self {
         match text_category {
             "All Categories" => Self::AllCategories,
@@ -68,21 +85,10 @@ impl SukebeiNyaaCategories {
     }
 
     pub fn all_categories() -> Vec<String> {
-        [
-            Self::AllCategories,
-            Self::Art,
-            Self::Anime,
-            Self::ArtDoujinshi,
-            Self::ArtGames,
-            Self::ArtManga,
-            Self::ArtPictures,
-            Self::RealLife,
-            Self::RealLifePhotobookAndPictures,
-            Self::RealLifeVideos,
-        ]
-        .iter()
-        .map(|category| category.to_string())
-        .collect()
+        Self::ALL_VARIANTS
+            .iter()
+            .map(|category| category.to_string())
+            .collect()
     }
 
     pub fn request_url_builder(

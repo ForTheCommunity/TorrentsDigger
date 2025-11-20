@@ -147,6 +147,24 @@ class InternalQueryOptions {
           pagination == other.pagination;
 }
 
+class InternalSource {
+  final String sourceName;
+  final InternalSourceDetails sourceDetails;
+
+  const InternalSource({required this.sourceName, required this.sourceDetails});
+
+  @override
+  int get hashCode => sourceName.hashCode ^ sourceDetails.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is InternalSource &&
+          runtimeType == other.runtimeType &&
+          sourceName == other.sourceName &&
+          sourceDetails == other.sourceDetails;
+}
+
 class InternalSourceDetails {
   final InternalQueryOptions queryOptions;
   final List<String> categories;

@@ -15,11 +15,9 @@ pub struct InternalTorrent {
     pub total_downloads: String,
 }
 
-pub struct InternalQueryOptions {
-    pub categories: bool,
-    pub sortings: bool,
-    pub filters: bool,
-    pub pagination: bool,
+pub struct InternalSource {
+    pub source_name: String,
+    pub source_details: InternalSourceDetails,
 }
 
 pub struct InternalSourceDetails {
@@ -27,6 +25,13 @@ pub struct InternalSourceDetails {
     pub categories: Vec<String>,
     pub source_filters: Vec<String>,
     pub source_sortings: Vec<String>,
+}
+
+pub struct InternalQueryOptions {
+    pub categories: bool,
+    pub sortings: bool,
+    pub filters: bool,
+    pub pagination: bool,
 }
 
 pub struct InternalProxy {

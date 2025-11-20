@@ -98,14 +98,14 @@ abstract class RustLibApi extends BaseApi {
 
   Future<(List<InternalTorrent>, PlatformInt64?)> crateApiAppDigTorrent({
     required String torrentName,
-    required String source,
+    required BigInt sourceIndex,
     required String category,
     required String filter,
     required String sorting,
     PlatformInt64? page,
   });
 
-  Future<Map<String, InternalSourceDetails>> crateApiAppFetchSourceDetails();
+  Future<List<InternalSource>> crateApiAppFetchSourceDetails();
 
   Future<String> crateApiDatabaseGetSettingsKvGetActiveDefaultTrackersList();
 
@@ -314,7 +314,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @override
   Future<(List<InternalTorrent>, PlatformInt64?)> crateApiAppDigTorrent({
     required String torrentName,
-    required String source,
+    required BigInt sourceIndex,
     required String category,
     required String filter,
     required String sorting,
@@ -325,7 +325,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         callFfi: (port_) {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_String(torrentName, serializer);
-          sse_encode_String(source, serializer);
+          sse_encode_usize(sourceIndex, serializer);
           sse_encode_String(category, serializer);
           sse_encode_String(filter, serializer);
           sse_encode_String(sorting, serializer);
@@ -343,7 +343,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeErrorData: sse_decode_String,
         ),
         constMeta: kCrateApiAppDigTorrentConstMeta,
-        argValues: [torrentName, source, category, filter, sorting, page],
+        argValues: [torrentName, sourceIndex, category, filter, sorting, page],
         apiImpl: this,
       ),
     );
@@ -353,7 +353,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     debugName: "dig_torrent",
     argNames: [
       "torrentName",
-      "source",
+      "sourceIndex",
       "category",
       "filter",
       "sorting",
@@ -362,7 +362,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   );
 
   @override
-  Future<Map<String, InternalSourceDetails>> crateApiAppFetchSourceDetails() {
+  Future<List<InternalSource>> crateApiAppFetchSourceDetails() {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
@@ -375,7 +375,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           );
         },
         codec: SseCodec(
-          decodeSuccessData: sse_decode_Map_String_internal_source_details_None,
+          decodeSuccessData: sse_decode_list_internal_source,
           decodeErrorData: null,
         ),
         constMeta: kCrateApiAppFetchSourceDetailsConstMeta,
@@ -846,17 +846,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  Map<String, InternalSourceDetails>
-  dco_decode_Map_String_internal_source_details_None(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return Map.fromEntries(
-      dco_decode_list_record_string_internal_source_details(
-        raw,
-      ).map((e) => MapEntry(e.$1, e.$2)),
-    );
-  }
-
-  @protected
   String dco_decode_String(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as String;
@@ -965,6 +954,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  InternalSource dco_decode_internal_source(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return InternalSource(
+      sourceName: dco_decode_String(arr[0]),
+      sourceDetails: dco_decode_internal_source_details(arr[1]),
+    );
+  }
+
+  @protected
   InternalSourceDetails dco_decode_internal_source_details(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -1003,6 +1004,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  List<InternalSource> dco_decode_list_internal_source(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_internal_source).toList();
+  }
+
+  @protected
   List<InternalTorrent> dco_decode_list_internal_torrent(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>).map(dco_decode_internal_torrent).toList();
@@ -1018,15 +1025,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   List<(int, String)> dco_decode_list_record_i_32_string(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>).map(dco_decode_record_i_32_string).toList();
-  }
-
-  @protected
-  List<(String, InternalSourceDetails)>
-  dco_decode_list_record_string_internal_source_details(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return (raw as List<dynamic>)
-        .map(dco_decode_record_string_internal_source_details)
-        .toList();
   }
 
   @protected
@@ -1084,20 +1082,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  (String, InternalSourceDetails)
-  dco_decode_record_string_internal_source_details(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    final arr = raw as List<dynamic>;
-    if (arr.length != 2) {
-      throw Exception('Expected 2 elements, got ${arr.length}');
-    }
-    return (
-      dco_decode_String(arr[0]),
-      dco_decode_internal_source_details(arr[1]),
-    );
-  }
-
-  @protected
   (String, String) dco_decode_record_string_string(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -1141,18 +1125,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var inner = sse_decode_list_record_string_string(deserializer);
-    return Map.fromEntries(inner.map((e) => MapEntry(e.$1, e.$2)));
-  }
-
-  @protected
-  Map<String, InternalSourceDetails>
-  sse_decode_Map_String_internal_source_details_None(
-    SseDeserializer deserializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    var inner = sse_decode_list_record_string_internal_source_details(
-      deserializer,
-    );
     return Map.fromEntries(inner.map((e) => MapEntry(e.$1, e.$2)));
   }
 
@@ -1289,6 +1261,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  InternalSource sse_decode_internal_source(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_sourceName = sse_decode_String(deserializer);
+    var var_sourceDetails = sse_decode_internal_source_details(deserializer);
+    return InternalSource(
+      sourceName: var_sourceName,
+      sourceDetails: var_sourceDetails,
+    );
+  }
+
+  @protected
   InternalSourceDetails sse_decode_internal_source_details(
     SseDeserializer deserializer,
   ) {
@@ -1341,6 +1324,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  List<InternalSource> sse_decode_list_internal_source(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <InternalSource>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_internal_source(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
   List<InternalTorrent> sse_decode_list_internal_torrent(
     SseDeserializer deserializer,
   ) {
@@ -1371,21 +1368,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var ans_ = <(int, String)>[];
     for (var idx_ = 0; idx_ < len_; ++idx_) {
       ans_.add(sse_decode_record_i_32_string(deserializer));
-    }
-    return ans_;
-  }
-
-  @protected
-  List<(String, InternalSourceDetails)>
-  sse_decode_list_record_string_internal_source_details(
-    SseDeserializer deserializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-
-    var len_ = sse_decode_i_32(deserializer);
-    var ans_ = <(String, InternalSourceDetails)>[];
-    for (var idx_ = 0; idx_ < len_; ++idx_) {
-      ans_.add(sse_decode_record_string_internal_source_details(deserializer));
     }
     return ans_;
   }
@@ -1473,17 +1455,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  (String, InternalSourceDetails)
-  sse_decode_record_string_internal_source_details(
-    SseDeserializer deserializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    var var_field0 = sse_decode_String(deserializer);
-    var var_field1 = sse_decode_internal_source_details(deserializer);
-    return (var_field0, var_field1);
-  }
-
-  @protected
   (String, String) sse_decode_record_string_string(
     SseDeserializer deserializer,
   ) {
@@ -1527,18 +1498,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_list_record_string_string(
-      self.entries.map((e) => (e.key, e.value)).toList(),
-      serializer,
-    );
-  }
-
-  @protected
-  void sse_encode_Map_String_internal_source_details_None(
-    Map<String, InternalSourceDetails> self,
-    SseSerializer serializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_list_record_string_internal_source_details(
       self.entries.map((e) => (e.key, e.value)).toList(),
       serializer,
     );
@@ -1653,6 +1612,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_internal_source(
+    InternalSource self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.sourceName, serializer);
+    sse_encode_internal_source_details(self.sourceDetails, serializer);
+  }
+
+  @protected
   void sse_encode_internal_source_details(
     InternalSourceDetails self,
     SseSerializer serializer,
@@ -1690,6 +1659,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_list_internal_source(
+    List<InternalSource> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_internal_source(item, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_list_internal_torrent(
     List<InternalTorrent> self,
     SseSerializer serializer,
@@ -1720,18 +1701,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_i_32(self.length, serializer);
     for (final item in self) {
       sse_encode_record_i_32_string(item, serializer);
-    }
-  }
-
-  @protected
-  void sse_encode_list_record_string_internal_source_details(
-    List<(String, InternalSourceDetails)> self,
-    SseSerializer serializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_i_32(self.length, serializer);
-    for (final item in self) {
-      sse_encode_record_string_internal_source_details(item, serializer);
     }
   }
 
@@ -1813,16 +1782,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_list_internal_torrent(self.$1, serializer);
     sse_encode_opt_box_autoadd_i_64(self.$2, serializer);
-  }
-
-  @protected
-  void sse_encode_record_string_internal_source_details(
-    (String, InternalSourceDetails) self,
-    SseSerializer serializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_String(self.$1, serializer);
-    sse_encode_internal_source_details(self.$2, serializer);
   }
 
   @protected

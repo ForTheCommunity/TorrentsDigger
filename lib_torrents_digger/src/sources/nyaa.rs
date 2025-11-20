@@ -45,6 +45,38 @@ impl NyaaCategories {
             pagination: true,
         }
     }
+
+    const ALL_VARIANTS: &'static [NyaaCategories] = &[
+        Self::AllCategories,
+        Self::Anime,
+        Self::AnimeMusicVideo,
+        Self::AnimeEnglishTranslated,
+        Self::AnimeNonEnglishTranslated,
+        Self::AnimeRaw,
+        Self::Audio,
+        Self::AudioLossLess,
+        Self::AudioLossy,
+        Self::Literature,
+        Self::LiteratureEnglishTranslated,
+        Self::LiteratureNonEnglishTranslated,
+        Self::LiteratureRaw,
+        Self::LiveAction,
+        Self::LiveActionEnglishTranslated,
+        Self::LiveActionIdolPromotionalVideo,
+        Self::LiveActionNonEnglishTranslated,
+        Self::LiveActionRaw,
+        Self::Pictures,
+        Self::PicturesGraphics,
+        Self::PicturesPhotos,
+        Self::Software,
+        Self::SoftwareApplications,
+        Self::SoftwareGames,
+    ];
+
+    pub fn from_index(index: usize) -> Option<&'static NyaaCategories> {
+        Self::ALL_VARIANTS.get(index)
+    }
+
     pub fn to_category(text_category: &str) -> Self {
         match text_category {
             "All Categories" => Self::AllCategories,
@@ -105,35 +137,10 @@ impl NyaaCategories {
     }
 
     pub fn all_categories() -> Vec<String> {
-        [
-            Self::AllCategories,
-            Self::Anime,
-            Self::AnimeMusicVideo,
-            Self::AnimeEnglishTranslated,
-            Self::AnimeNonEnglishTranslated,
-            Self::AnimeRaw,
-            Self::Audio,
-            Self::AudioLossLess,
-            Self::AudioLossy,
-            Self::Literature,
-            Self::LiteratureEnglishTranslated,
-            Self::LiteratureNonEnglishTranslated,
-            Self::LiteratureRaw,
-            Self::LiveAction,
-            Self::LiveActionEnglishTranslated,
-            Self::LiveActionIdolPromotionalVideo,
-            Self::LiveActionNonEnglishTranslated,
-            Self::LiveActionRaw,
-            Self::Pictures,
-            Self::PicturesGraphics,
-            Self::PicturesPhotos,
-            Self::Software,
-            Self::SoftwareApplications,
-            Self::SoftwareGames,
-        ]
-        .iter()
-        .map(|category| category.to_string())
-        .collect()
+        Self::ALL_VARIANTS
+            .iter()
+            .map(|category| category.to_string())
+            .collect()
     }
 
     pub fn request_url_builder(

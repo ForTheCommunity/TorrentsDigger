@@ -60,10 +60,20 @@ class MainScreen extends StatelessWidget {
                           return;
                         }
 
+                        List<String> listOfSources = sourceState.sources
+                            .map((source) => source.sourceName)
+                            .toList();
+                        int sourceIndex = listOfSources.indexOf(
+                          sourceState.selectedSource!,
+                        );
+                        print("[DART] List of Sources : $listOfSources");
+                        print("[DART] Source : ${sourceState.selectedSource}");
+                        print("[DART] SOURCE INDEX : $sourceIndex");
                         context.read<TorrentBloc>().add(
                           SearchTorrents(
                             torrentName: torrentName,
-                            source: sourceState.selectedSource!,
+                            // source: sourceState.selectedSource!,
+                            sourceIndex: sourceIndex,
                             filter: sourceState.selectedFilter ?? "",
                             category: sourceState.selectedCategory ?? "",
                             sorting: sourceState.selectedSorting ?? "",

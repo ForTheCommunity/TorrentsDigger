@@ -28,6 +28,22 @@ impl UindexCategories {
         }
     }
 
+    const ALL_VARIANTS: &'static [UindexCategories] = &[
+        Self::AllCategories,
+        Self::Movies,
+        Self::Tv,
+        Self::Games,
+        Self::Music,
+        Self::Softwares,
+        Self::XXX,
+        Self::Anime,
+        Self::Other,
+    ];
+
+    pub fn from_index(index: usize) -> Option<&'static UindexCategories> {
+        Self::ALL_VARIANTS.get(index)
+    }
+
     pub fn to_category(text_category: &str) -> Self {
         match text_category {
             "All Categories" => Self::AllCategories,
@@ -58,20 +74,10 @@ impl UindexCategories {
     }
 
     pub fn all_categories() -> Vec<String> {
-        [
-            Self::AllCategories,
-            Self::Movies,
-            Self::Tv,
-            Self::Games,
-            Self::Music,
-            Self::Softwares,
-            Self::XXX,
-            Self::Anime,
-            Self::Other,
-        ]
-        .iter()
-        .map(|category| category.to_string())
-        .collect()
+        Self::ALL_VARIANTS
+            .iter()
+            .map(|category| category.to_string())
+            .collect()
     }
 
     pub fn request_url_builder(

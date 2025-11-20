@@ -40,10 +40,18 @@ class PaginationWidget extends StatelessWidget {
               onPressed: state.nextPage != null
                   ? () {
                       if (torrentState is TorrentSearchSuccess) {
+                        List<String> listOfSources = sourceState.sources
+                            .map((source) => source.sourceName)
+                            .toList();
+                        int sourceIndex = listOfSources.indexOf(
+                          sourceState.selectedSource!,
+                        );
+
                         context.read<TorrentBloc>().add(
                           SearchTorrents(
                             torrentName: torrentState.torrentName,
-                            source: sourceState.selectedSource!,
+                            // source: sourceState.selectedSource!,
+                            sourceIndex: sourceIndex,
                             filter: sourceState.selectedFilter ?? "",
                             category: sourceState.selectedCategory ?? "",
                             sorting: sourceState.selectedSorting ?? "",

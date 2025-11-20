@@ -27,6 +27,21 @@ impl LimeTorrentsCategories {
         }
     }
 
+    const ALL_VARIANTS: &'static [LimeTorrentsCategories] = &[
+        Self::AllCategories,
+        Self::Anime,
+        Self::Softwares,
+        Self::Games,
+        Self::Movies,
+        Self::Music,
+        Self::Tv,
+        Self::Other,
+    ];
+
+    pub fn from_index(index: usize) -> Option<&'static LimeTorrentsCategories> {
+        Self::ALL_VARIANTS.get(index)
+    }
+
     pub fn to_category(text_category: &str) -> Self {
         match text_category {
             "All Categories" => Self::AllCategories,
@@ -55,19 +70,10 @@ impl LimeTorrentsCategories {
     }
 
     pub fn all_categories() -> Vec<String> {
-        [
-            Self::AllCategories,
-            Self::Anime,
-            Self::Softwares,
-            Self::Games,
-            Self::Movies,
-            Self::Music,
-            Self::Tv,
-            Self::Other,
-        ]
-        .iter()
-        .map(|category| category.to_string())
-        .collect()
+        Self::ALL_VARIANTS
+            .iter()
+            .map(|category| category.to_string())
+            .collect()
     }
 
     pub fn request_url_builder(

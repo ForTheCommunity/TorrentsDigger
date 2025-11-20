@@ -68,6 +68,49 @@ impl SolidTorrentsCategories {
         }
     }
 
+    const ALL_VARIANTS: &'static [SolidTorrentsCategories] = &[
+        Self::AllCategories,
+        Self::Other,
+        Self::Audio,
+        Self::Video,
+        Self::Image,
+        Self::Document,
+        Self::Program,
+        Self::Android,
+        Self::DiskImage,
+        Self::SourceCode,
+        Self::Database,
+        Self::Archive,
+        Self::Movies,
+        Self::MoviesDubDualAudio,
+        Self::Tv,
+        Self::Anime,
+        Self::AnimeDubDualAudio,
+        Self::AnimeSubbed,
+        Self::AnimeRaw,
+        Self::Softwares,
+        Self::SoftwaresWindows,
+        Self::SoftwaresMac,
+        Self::SoftwaresAndroid,
+        Self::Games,
+        Self::GamesPc,
+        Self::GamesMac,
+        Self::GamesLinux,
+        Self::GamesAndroid,
+        Self::Music,
+        Self::MusicMp3,
+        Self::MusicLossless,
+        Self::MusicAlbum,
+        Self::MusicVideo,
+        Self::AudioBook,
+        Self::EbookCourse,
+        Self::XXX,
+    ];
+
+    pub fn from_index(index: usize) -> Option<&'static SolidTorrentsCategories> {
+        Self::ALL_VARIANTS.get(index)
+    }
+
     pub fn to_category(text_category: &str) -> Self {
         match text_category {
             "All Categories" => Self::AllCategories,
@@ -152,47 +195,10 @@ impl SolidTorrentsCategories {
     }
 
     pub fn all_categories() -> Vec<String> {
-        [
-            Self::AllCategories,
-            Self::Other,
-            Self::Audio,
-            Self::Video,
-            Self::Image,
-            Self::Document,
-            Self::Program,
-            Self::Android,
-            Self::DiskImage,
-            Self::SourceCode,
-            Self::Database,
-            Self::Archive,
-            Self::Movies,
-            Self::MoviesDubDualAudio,
-            Self::Tv,
-            Self::Anime,
-            Self::AnimeDubDualAudio,
-            Self::AnimeSubbed,
-            Self::AnimeRaw,
-            Self::Softwares,
-            Self::SoftwaresWindows,
-            Self::SoftwaresMac,
-            Self::SoftwaresAndroid,
-            Self::Games,
-            Self::GamesPc,
-            Self::GamesMac,
-            Self::GamesLinux,
-            Self::GamesAndroid,
-            Self::Music,
-            Self::MusicMp3,
-            Self::MusicLossless,
-            Self::MusicAlbum,
-            Self::MusicVideo,
-            Self::AudioBook,
-            Self::EbookCourse,
-            Self::XXX,
-        ]
-        .iter()
-        .map(|category| category.to_string())
-        .collect()
+        Self::ALL_VARIANTS
+            .iter()
+            .map(|category| category.to_string())
+            .collect()
     }
 
     pub fn request_url_builder(

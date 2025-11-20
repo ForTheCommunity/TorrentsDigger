@@ -9,7 +9,7 @@ part 'source_events.dart';
 part 'source_state.dart';
 
 class SourceBloc extends Bloc<SourceWidgetEvents, SourceState> {
-  SourceBloc() : super(SourceState(sources: {})) {
+  SourceBloc() : super(SourceState(sources: [])) {
     on<LoadSources>(_onLoadSources);
     on<SelectSource>(_onSelectSource);
     on<SelectCategory>(_onSelectCategory);
