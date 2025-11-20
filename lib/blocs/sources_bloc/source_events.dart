@@ -24,3 +24,8 @@ class SelectSorting extends SourceWidgetEvents {
   final String sorting;
   SelectSorting(this.sorting);
 }
+
+class SelectSortingOrder extends SourceWidgetEvents {
+  final String sortingOder;
+  SelectSortingOrder(this.sortingOder);
+}

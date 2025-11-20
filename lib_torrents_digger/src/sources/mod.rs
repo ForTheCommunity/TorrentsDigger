@@ -1,13 +1,15 @@
 use crate::sources::{
     available_sources::AllAvailableSources,
     customs::custom::Customs,
-    knaben_database::{KnabenDatabaseCategories, KnabenDatabaseSortings},
+    knaben_database::{
+        KnabenDatabaseCategories, KnabenDatabaseSortingOrders, KnabenDatabaseSortings,
+    },
     lime_torrents::{LimeTorrentsCategories, LimeTorrentsSortings},
-    nyaa::{NyaaCategories, NyaaFilter, NyaaSortings},
+    nyaa::{NyaaCategories, NyaaFilter, NyaaSortingOrders, NyaaSortings},
     solid_torrents::{SolidTorrentsCategories, SolidTorrentsSortings},
     sukebei_nyaa::SukebeiNyaaCategories,
     torrents_csv::TorrentsCsvCategories,
-    uindex::{UindexCategories, UindexSortings},
+    uindex::{UindexCategories, UindexSortingOrders, UindexSortings},
 };
 
 pub mod available_sources;
@@ -23,8 +25,9 @@ pub mod uindex;
 #[derive(Debug)]
 pub struct QueryOptions {
     pub categories: bool,
-    pub sortings: bool,
     pub filters: bool,
+    pub sortings: bool,
+    pub sorting_orders: bool,
     pub pagination: bool,
 }
 
@@ -37,6 +40,7 @@ pub fn get_source_details() -> Vec<Source> {
         source_categories: NyaaCategories::all_categories(),
         source_filters: NyaaFilter::all_nyaa_filters(),
         source_sortings: NyaaSortings::all_nyaa_sortings(),
+        source_sorting_orders: NyaaSortingOrders::all_nyaa_sorting_orders(),
     };
     sources_details.push(Source {
         source_name: AllAvailableSources::Nyaa.to_string(),
@@ -47,8 +51,9 @@ pub fn get_source_details() -> Vec<Source> {
     let sukebei_nyaa_source_details: SourceDetails = SourceDetails {
         source_query_options: SukebeiNyaaCategories::get_query_options(),
         source_categories: SukebeiNyaaCategories::all_categories(),
-        source_filters: NyaaFilter::all_nyaa_filters(),
+        source_filters: NyaaFilter::all_nyaa_filters(), // same filters for sukebei
         source_sortings: NyaaSortings::all_nyaa_sortings(), // same sortings for sukebei
+        source_sorting_orders: NyaaSortingOrders::all_nyaa_sorting_orders(), // same sorting orders for sukebei
     };
     sources_details.push(Source {
         source_name: AllAvailableSources::SukebeiNyaa.to_string(),
@@ -61,6 +66,7 @@ pub fn get_source_details() -> Vec<Source> {
         source_categories: TorrentsCsvCategories::all_categories(),
         source_filters: vec!["".to_string()],
         source_sortings: vec!["".to_string()],
+        source_sorting_orders: vec!["".to_string()],
     };
     sources_details.push(Source {
         source_name: AllAvailableSources::TorrentsCsv.to_string(),
@@ -72,6 +78,7 @@ pub fn get_source_details() -> Vec<Source> {
         source_categories: UindexCategories::all_categories(),
         source_filters: vec!["".to_string()],
         source_sortings: UindexSortings::all_uindex_sortings(),
+        source_sorting_orders: UindexSortingOrders::all_uindex_sorting_orders(),
     };
     sources_details.push(Source {
         source_name: AllAvailableSources::Uindex.to_string(),
@@ -83,6 +90,7 @@ pub fn get_source_details() -> Vec<Source> {
         source_categories: LimeTorrentsCategories::all_categories(),
         source_filters: vec!["".to_string()],
         source_sortings: LimeTorrentsSortings::all_limetorrents_sortings(),
+        source_sorting_orders: vec!["".to_string()],
     };
     sources_details.push(Source {
         source_name: AllAvailableSources::LimeTorrents.to_string(),
@@ -94,6 +102,7 @@ pub fn get_source_details() -> Vec<Source> {
         source_categories: SolidTorrentsCategories::all_categories(),
         source_filters: vec!["".to_string()],
         source_sortings: SolidTorrentsSortings::all_solid_torrents_sortings(),
+        source_sorting_orders: vec!["".to_string()],
     };
     sources_details.push(Source {
         source_name: AllAvailableSources::SolidTorrents.to_string(),
@@ -105,6 +114,7 @@ pub fn get_source_details() -> Vec<Source> {
         source_categories: KnabenDatabaseCategories::all_categories(),
         source_filters: vec!["".to_string()],
         source_sortings: KnabenDatabaseSortings::all_sortings(),
+        source_sorting_orders: KnabenDatabaseSortingOrders::all_knaben_database_sorting_orders(),
     };
     sources_details.push(Source {
         source_name: AllAvailableSources::KnabenDatabase.to_string(),
@@ -124,6 +134,7 @@ pub struct SourceDetails {
     pub source_categories: Vec<String>,
     pub source_filters: Vec<String>,
     pub source_sortings: Vec<String>,
+    pub source_sorting_orders: Vec<String>,
 }
 
 #[derive(Debug)]

@@ -16,9 +16,10 @@ class TorrentBloc extends Bloc<TorrentEvents, TorrentState> {
         final torrentsListAndNextPage = await searchTorrent(
           torrentName: event.torrentName,
           sourceIndex: event.sourceIndex,
-          filterIndex: event.filterIndex,
           categoryIndex: event.categoryIndex,
+          filterIndex: event.filterIndex,
           sortingIndex: event.sortingIndex,
+          sortingOrderIndex: event.sortingOrderIndex,
           page: event.page,
         );
 

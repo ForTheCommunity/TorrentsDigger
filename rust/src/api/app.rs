@@ -24,14 +24,18 @@ pub fn fetch_source_details() -> Vec<InternalSource> {
                 .source_details
                 .source_query_options
                 .categories,
-            sortings: a_external_source
-                .source_details
-                .source_query_options
-                .sortings,
             filters: a_external_source
                 .source_details
                 .source_query_options
                 .filters,
+            sortings: a_external_source
+                .source_details
+                .source_query_options
+                .sortings,
+            sorting_orders: a_external_source
+                .source_details
+                .source_query_options
+                .sorting_orders,
             pagination: a_external_source
                 .source_details
                 .source_query_options
@@ -42,6 +46,7 @@ pub fn fetch_source_details() -> Vec<InternalSource> {
             categories: a_external_source.source_details.source_categories,
             source_filters: a_external_source.source_details.source_filters,
             source_sortings: a_external_source.source_details.source_sortings,
+            source_sorting_orders: a_external_source.source_details.source_sorting_orders,
         };
         let internal_source: InternalSource = InternalSource {
             source_name: internal_source_name,
@@ -58,6 +63,7 @@ pub fn dig_torrent(
     category_index: usize,
     filter_index: usize,
     sorting_index: usize,
+    sorting_order_index: usize,
     page: Option<i64>,
 ) -> Result<(Vec<InternalTorrent>, Option<i64>), String> {
     match search_torrent(
@@ -66,6 +72,7 @@ pub fn dig_torrent(
         category_index,
         filter_index,
         sorting_index,
+        sorting_order_index,
         page,
     ) {
         Ok((torrents, next_page)) => {

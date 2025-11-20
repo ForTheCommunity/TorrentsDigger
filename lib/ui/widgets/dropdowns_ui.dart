@@ -119,6 +119,34 @@ class DropdownsUi extends StatelessWidget {
                 ],
               ],
             ),
+            SizedBox(height: 15),
+            Row(
+              children: [
+                // Sorting Order Dropdown
+                if (state.selectedDetails != null) ...[
+                  if (state.selectedDetails!.queryOptions.sortingOrders)
+                    Expanded(
+                      child: DropdownWidget(
+                        items: state.selectedDetails!.sourceSortingOrders,
+                        selectedValue:
+                            state.selectedSortingOrder != null &&
+                                state.selectedDetails!.sourceSortingOrders
+                                    .contains(state.selectedSortingOrder)
+                            ? state.selectedSortingOrder
+                            : null,
+                        hintText: "Select Sorting Order",
+                        onChanged: (value) {
+                          if (value != null) {
+                            context.read<SourceBloc>().add(
+                              SelectSortingOrder(value),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                ],
+              ],
+            ),
           ],
         );
       },

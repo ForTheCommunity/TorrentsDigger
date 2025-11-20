@@ -239,6 +239,7 @@ fn wire__crate__api__app__dig_torrent_impl(
             let api_category_index = <usize>::sse_decode(&mut deserializer);
             let api_filter_index = <usize>::sse_decode(&mut deserializer);
             let api_sorting_index = <usize>::sse_decode(&mut deserializer);
+            let api_sorting_order_index = <usize>::sse_decode(&mut deserializer);
             let api_page = <Option<i64>>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
@@ -249,6 +250,7 @@ fn wire__crate__api__app__dig_torrent_impl(
                         api_category_index,
                         api_filter_index,
                         api_sorting_index,
+                        api_sorting_order_index,
                         api_page,
                     )?;
                     Ok(output_ok)
@@ -899,13 +901,15 @@ impl SseDecode for crate::api::internals::InternalQueryOptions {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut var_categories = <bool>::sse_decode(deserializer);
-        let mut var_sortings = <bool>::sse_decode(deserializer);
         let mut var_filters = <bool>::sse_decode(deserializer);
+        let mut var_sortings = <bool>::sse_decode(deserializer);
+        let mut var_sortingOrders = <bool>::sse_decode(deserializer);
         let mut var_pagination = <bool>::sse_decode(deserializer);
         return crate::api::internals::InternalQueryOptions {
             categories: var_categories,
-            sortings: var_sortings,
             filters: var_filters,
+            sortings: var_sortings,
+            sorting_orders: var_sortingOrders,
             pagination: var_pagination,
         };
     }
@@ -932,11 +936,13 @@ impl SseDecode for crate::api::internals::InternalSourceDetails {
         let mut var_categories = <Vec<String>>::sse_decode(deserializer);
         let mut var_sourceFilters = <Vec<String>>::sse_decode(deserializer);
         let mut var_sourceSortings = <Vec<String>>::sse_decode(deserializer);
+        let mut var_sourceSortingOrders = <Vec<String>>::sse_decode(deserializer);
         return crate::api::internals::InternalSourceDetails {
             query_options: var_queryOptions,
             categories: var_categories,
             source_filters: var_sourceFilters,
             source_sortings: var_sourceSortings,
+            source_sorting_orders: var_sourceSortingOrders,
         };
     }
 }
@@ -1327,8 +1333,9 @@ impl flutter_rust_bridge::IntoDart for crate::api::internals::InternalQueryOptio
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
             self.categories.into_into_dart().into_dart(),
-            self.sortings.into_into_dart().into_dart(),
             self.filters.into_into_dart().into_dart(),
+            self.sortings.into_into_dart().into_dart(),
+            self.sorting_orders.into_into_dart().into_dart(),
             self.pagination.into_into_dart().into_dart(),
         ]
         .into_dart()
@@ -1374,6 +1381,7 @@ impl flutter_rust_bridge::IntoDart for crate::api::internals::InternalSourceDeta
             self.categories.into_into_dart().into_dart(),
             self.source_filters.into_into_dart().into_dart(),
             self.source_sortings.into_into_dart().into_dart(),
+            self.source_sorting_orders.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -1502,8 +1510,9 @@ impl SseEncode for crate::api::internals::InternalQueryOptions {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <bool>::sse_encode(self.categories, serializer);
-        <bool>::sse_encode(self.sortings, serializer);
         <bool>::sse_encode(self.filters, serializer);
+        <bool>::sse_encode(self.sortings, serializer);
+        <bool>::sse_encode(self.sorting_orders, serializer);
         <bool>::sse_encode(self.pagination, serializer);
     }
 }
@@ -1523,6 +1532,7 @@ impl SseEncode for crate::api::internals::InternalSourceDetails {
         <Vec<String>>::sse_encode(self.categories, serializer);
         <Vec<String>>::sse_encode(self.source_filters, serializer);
         <Vec<String>>::sse_encode(self.source_sortings, serializer);
+        <Vec<String>>::sse_encode(self.source_sorting_orders, serializer);
     }
 }
 

@@ -62,8 +62,9 @@ impl SolidTorrentsCategories {
     pub fn get_query_options() -> QueryOptions {
         QueryOptions {
             categories: true,
-            sortings: true,
             filters: false,
+            sortings: true,
+            sorting_orders: false,
             pagination: true,
         }
     }

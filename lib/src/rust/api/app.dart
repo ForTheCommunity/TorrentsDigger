@@ -16,6 +16,7 @@ Future<(List<InternalTorrent>, PlatformInt64?)> digTorrent({
   required BigInt categoryIndex,
   required BigInt filterIndex,
   required BigInt sortingIndex,
+  required BigInt sortingOrderIndex,
   PlatformInt64? page,
 }) => RustLib.instance.api.crateApiAppDigTorrent(
   torrentName: torrentName,
@@ -23,6 +24,7 @@ Future<(List<InternalTorrent>, PlatformInt64?)> digTorrent({
   categoryIndex: categoryIndex,
   filterIndex: filterIndex,
   sortingIndex: sortingIndex,
+  sortingOrderIndex: sortingOrderIndex,
   page: page,
 );
 

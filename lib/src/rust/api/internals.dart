@@ -118,22 +118,25 @@ class InternalProxy {
 
 class InternalQueryOptions {
   final bool categories;
-  final bool sortings;
   final bool filters;
+  final bool sortings;
+  final bool sortingOrders;
   final bool pagination;
 
   const InternalQueryOptions({
     required this.categories,
-    required this.sortings,
     required this.filters,
+    required this.sortings,
+    required this.sortingOrders,
     required this.pagination,
   });
 
   @override
   int get hashCode =>
       categories.hashCode ^
-      sortings.hashCode ^
       filters.hashCode ^
+      sortings.hashCode ^
+      sortingOrders.hashCode ^
       pagination.hashCode;
 
   @override
@@ -142,8 +145,9 @@ class InternalQueryOptions {
       other is InternalQueryOptions &&
           runtimeType == other.runtimeType &&
           categories == other.categories &&
-          sortings == other.sortings &&
           filters == other.filters &&
+          sortings == other.sortings &&
+          sortingOrders == other.sortingOrders &&
           pagination == other.pagination;
 }
 
@@ -170,12 +174,14 @@ class InternalSourceDetails {
   final List<String> categories;
   final List<String> sourceFilters;
   final List<String> sourceSortings;
+  final List<String> sourceSortingOrders;
 
   const InternalSourceDetails({
     required this.queryOptions,
     required this.categories,
     required this.sourceFilters,
     required this.sourceSortings,
+    required this.sourceSortingOrders,
   });
 
   @override
@@ -183,7 +189,8 @@ class InternalSourceDetails {
       queryOptions.hashCode ^
       categories.hashCode ^
       sourceFilters.hashCode ^
-      sourceSortings.hashCode;
+      sourceSortings.hashCode ^
+      sourceSortingOrders.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -193,7 +200,8 @@ class InternalSourceDetails {
           queryOptions == other.queryOptions &&
           categories == other.categories &&
           sourceFilters == other.sourceFilters &&
-          sourceSortings == other.sourceSortings;
+          sourceSortings == other.sourceSortings &&
+          sourceSortingOrders == other.sourceSortingOrders;
 }
 
 class InternalTorrent {

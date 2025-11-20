@@ -51,8 +51,12 @@ class MainScreen extends StatelessWidget {
                             !details.queryOptions.sortings ||
                             (details.queryOptions.sortings &&
                                 sourceState.selectedSorting != null);
+                        final bool sortingsOrderOk =
+                            !details.queryOptions.sortingOrders ||
+                            (details.queryOptions.sortingOrders &&
+                                sourceState.selectedSortingOrder != null);
 
-                        if (!categoriesOk || !filtersOk || !sortingsOk) {
+                        if (!categoriesOk || !filtersOk || !sortingsOk || !sortingsOrderOk) {
                           createSnackBar(
                             message: "Use Available Options... :)",
                             duration: 2,
@@ -120,13 +124,32 @@ class MainScreen extends StatelessWidget {
                               )
                             : -1;
 
+                        // Source Sorting Order
+                        List<String> listOfSortingOrders = sourceState.sources
+                            .firstWhere(
+                              (source) =>
+                                  source.sourceName ==
+                                  sourceState.selectedSource!,
+                            )
+                            .sourceDetails
+                            .sourceSortingOrders;
+
+                        int sortingOrderIndex =
+                            (listOfSortingOrders.isNotEmpty &&
+                                sourceState.selectedSortingOrder != null)
+                            ? listOfSortingOrders.indexOf(
+                                sourceState.selectedSortingOrder!,
+                              )
+                            : -1;
+
                         context.read<TorrentBloc>().add(
                           SearchTorrents(
                             torrentName: torrentName,
                             sourceIndex: sourceIndex,
-                            filterIndex: filterIndex,
                             categoryIndex: categoryIndex,
+                            filterIndex: filterIndex,
                             sortingIndex: sortingIndex,
+                            sortingOrderIndex: sortingOrderIndex,
                           ),
                         );
                       } else {

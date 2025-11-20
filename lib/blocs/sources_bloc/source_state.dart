@@ -10,6 +10,7 @@ abstract class SourceState with _$SourceState {
     String? selectedCategory,
     String? selectedFilter,
     String? selectedSorting,
+    String? selectedSortingOrder,
   }) = _SourceState;
 
   InternalSourceDetails? get selectedDetails {

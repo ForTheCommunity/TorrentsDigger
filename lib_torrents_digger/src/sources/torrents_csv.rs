@@ -13,8 +13,9 @@ impl TorrentsCsvCategories {
     pub fn get_query_options() -> QueryOptions {
         QueryOptions {
             categories: false,
-            sortings: false,
             filters: false,
+            sortings: false,
+            sorting_orders: false,
             pagination: true,
         }
     }

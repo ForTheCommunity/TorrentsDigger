@@ -22,8 +22,9 @@ impl UindexCategories {
     pub fn get_query_options() -> QueryOptions {
         QueryOptions {
             categories: true,
-            sortings: true,
             filters: false,
+            sortings: true,
+            sorting_orders: true,
             pagination: false,
         }
     }
@@ -69,6 +70,7 @@ impl UindexCategories {
         torrent_name: &str,
         category: &UindexCategories,
         sorting: &UindexSortings,
+        sorting_order: &UindexSortingOrders,
     ) -> String {
         // https://uindex.org/search.php?search=batman&c=0&sort=seeders&order=DESC
 
@@ -80,12 +82,11 @@ impl UindexCategories {
         let query = format!("search={}", torrent_name);
         let category = format!("c={}", category.category_to_value());
         let sorting = format!("sort={}", sorting.sorting_to_value());
-        // sorting order is hardcoded for now, i.e descending order.
-        let order = "order=DESC";
+        let sorting_order = format!("order={}", sorting_order.sorting_order_to_value());
 
         format!(
             "{}/{}?{}&{}&{}&{}",
-            root_url, path, query, category, sorting, order
+            root_url, path, query, category, sorting, sorting_order
         )
     }
 
@@ -261,6 +262,42 @@ impl fmt::Display for UindexSortings {
             Self::BySize => write!(f, "By Size"),
             Self::BySeeders => write!(f, "By Seeders"),
             Self::ByLeechers => write!(f, "By Leechers"),
+        }
+    }
+}
+
+pub enum UindexSortingOrders {
+    Ascending,
+    Descending,
+}
+
+impl UindexSortingOrders {
+    const ALL_VARIANTS: &'static [UindexSortingOrders] = &[Self::Ascending, Self::Descending];
+
+    pub fn from_index(index: usize) -> Option<&'static UindexSortingOrders> {
+        Self::ALL_VARIANTS.get(index)
+    }
+
+    pub fn sorting_order_to_value(&self) -> &str {
+        match *self {
+            Self::Ascending => "ASC",
+            Self::Descending => "DESC",
+        }
+    }
+
+    pub fn all_uindex_sorting_orders() -> Vec<String> {
+        Self::ALL_VARIANTS
+            .iter()
+            .map(|sorting| sorting.to_string())
+            .collect()
+    }
+}
+
+impl fmt::Display for UindexSortingOrders {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Ascending => write!(f, "Ascending Order ⤵"),
+            Self::Descending => write!(f, "Descending Order ⤴"),
         }
     }
 }

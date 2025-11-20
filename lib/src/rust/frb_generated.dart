@@ -102,6 +102,7 @@ abstract class RustLibApi extends BaseApi {
     required BigInt categoryIndex,
     required BigInt filterIndex,
     required BigInt sortingIndex,
+    required BigInt sortingOrderIndex,
     PlatformInt64? page,
   });
 
@@ -318,6 +319,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     required BigInt categoryIndex,
     required BigInt filterIndex,
     required BigInt sortingIndex,
+    required BigInt sortingOrderIndex,
     PlatformInt64? page,
   }) {
     return handler.executeNormal(
@@ -329,6 +331,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           sse_encode_usize(categoryIndex, serializer);
           sse_encode_usize(filterIndex, serializer);
           sse_encode_usize(sortingIndex, serializer);
+          sse_encode_usize(sortingOrderIndex, serializer);
           sse_encode_opt_box_autoadd_i_64(page, serializer);
           pdeCallFfi(
             generalizedFrbRustBinding,
@@ -349,6 +352,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           categoryIndex,
           filterIndex,
           sortingIndex,
+          sortingOrderIndex,
           page,
         ],
         apiImpl: this,
@@ -364,6 +368,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       "categoryIndex",
       "filterIndex",
       "sortingIndex",
+      "sortingOrderIndex",
       "page",
     ],
   );
@@ -950,13 +955,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   InternalQueryOptions dco_decode_internal_query_options(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 4)
-      throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
+    if (arr.length != 5)
+      throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
     return InternalQueryOptions(
       categories: dco_decode_bool(arr[0]),
-      sortings: dco_decode_bool(arr[1]),
-      filters: dco_decode_bool(arr[2]),
-      pagination: dco_decode_bool(arr[3]),
+      filters: dco_decode_bool(arr[1]),
+      sortings: dco_decode_bool(arr[2]),
+      sortingOrders: dco_decode_bool(arr[3]),
+      pagination: dco_decode_bool(arr[4]),
     );
   }
 
@@ -976,13 +982,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   InternalSourceDetails dco_decode_internal_source_details(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 4)
-      throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
+    if (arr.length != 5)
+      throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
     return InternalSourceDetails(
       queryOptions: dco_decode_internal_query_options(arr[0]),
       categories: dco_decode_list_String(arr[1]),
       sourceFilters: dco_decode_list_String(arr[2]),
       sourceSortings: dco_decode_list_String(arr[3]),
+      sourceSortingOrders: dco_decode_list_String(arr[4]),
     );
   }
 
@@ -1256,13 +1263,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_categories = sse_decode_bool(deserializer);
-    var var_sortings = sse_decode_bool(deserializer);
     var var_filters = sse_decode_bool(deserializer);
+    var var_sortings = sse_decode_bool(deserializer);
+    var var_sortingOrders = sse_decode_bool(deserializer);
     var var_pagination = sse_decode_bool(deserializer);
     return InternalQueryOptions(
       categories: var_categories,
-      sortings: var_sortings,
       filters: var_filters,
+      sortings: var_sortings,
+      sortingOrders: var_sortingOrders,
       pagination: var_pagination,
     );
   }
@@ -1287,11 +1296,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_categories = sse_decode_list_String(deserializer);
     var var_sourceFilters = sse_decode_list_String(deserializer);
     var var_sourceSortings = sse_decode_list_String(deserializer);
+    var var_sourceSortingOrders = sse_decode_list_String(deserializer);
     return InternalSourceDetails(
       queryOptions: var_queryOptions,
       categories: var_categories,
       sourceFilters: var_sourceFilters,
       sourceSortings: var_sourceSortings,
+      sourceSortingOrders: var_sourceSortingOrders,
     );
   }
 
@@ -1613,8 +1624,9 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_bool(self.categories, serializer);
-    sse_encode_bool(self.sortings, serializer);
     sse_encode_bool(self.filters, serializer);
+    sse_encode_bool(self.sortings, serializer);
+    sse_encode_bool(self.sortingOrders, serializer);
     sse_encode_bool(self.pagination, serializer);
   }
 
@@ -1638,6 +1650,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_list_String(self.categories, serializer);
     sse_encode_list_String(self.sourceFilters, serializer);
     sse_encode_list_String(self.sourceSortings, serializer);
+    sse_encode_list_String(self.sourceSortingOrders, serializer);
   }
 
   @protected

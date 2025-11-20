@@ -40,8 +40,9 @@ impl NyaaCategories {
     pub fn get_query_options() -> QueryOptions {
         QueryOptions {
             categories: true,
-            sortings: true,
             filters: true,
+            sortings: true,
+            sorting_orders: true,
             pagination: true,
         }
     }
@@ -118,6 +119,7 @@ impl NyaaCategories {
         filter: &NyaaFilter,
         category: &NyaaCategories,
         sorting: &NyaaSortings,
+        sorting_order: &NyaaSortingOrders,
         page_number: &i64,
     ) -> String {
         //https://nyaa.si/?f=0&c=1_0&q=naruto&s=seeders&o=desc&p=2
@@ -129,12 +131,12 @@ impl NyaaCategories {
         let filter = format!("f={}", filter.filter_to_value());
         let query = format!("q={}", torrent_name);
         let category = format!("c={}", category.category_to_value());
-        //  for now , sorting for High/Desc only.....
-        let sorting = format!("s={}&o=desc", sorting.sorting_to_value());
+        let sorting = format!("s={}", sorting.sorting_to_value());
+        let sorting_order = format!("o={}", sorting_order.sorting_order_to_value());
         let page_number = format!("p={}", page_number);
         format!(
-            "{}/?{}&{}&{}&{}&{}",
-            root_url, filter, category, query, sorting, page_number
+            "{}/?{}&{}&{}&{}&{}&{}",
+            root_url, filter, category, query, sorting, sorting_order, page_number
         )
     }
 
@@ -395,6 +397,42 @@ impl fmt::Display for NyaaSortings {
     }
 }
 
+pub enum NyaaSortingOrders {
+    Ascending,
+    Descending,
+}
+
+impl NyaaSortingOrders {
+    const ALL_VARIANTS: &'static [NyaaSortingOrders] = &[Self::Ascending, Self::Descending];
+
+    pub fn from_index(index: usize) -> Option<&'static NyaaSortingOrders> {
+        Self::ALL_VARIANTS.get(index)
+    }
+
+    pub fn sorting_order_to_value(&self) -> &str {
+        match *self {
+            Self::Ascending => "asc",
+            Self::Descending => "desc",
+        }
+    }
+
+    pub fn all_nyaa_sorting_orders() -> Vec<String> {
+        Self::ALL_VARIANTS
+            .iter()
+            .map(|sorting| sorting.to_string())
+            .collect()
+    }
+}
+
+impl fmt::Display for NyaaSortingOrders {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Ascending => write!(f, "Ascending Order ⤵"),
+            Self::Descending => write!(f, "Descending Order ⤴"),
+        }
+    }
+}
+
 // _______________________________________________________________________________________
 #[cfg(test)]
 mod tests {
@@ -406,6 +444,7 @@ mod tests {
         let filter = NyaaFilter::TrustedOnly;
         let category = NyaaCategories::Anime;
         let sorting = NyaaSortings::BySeeders;
+        let sorting_order = NyaaSortingOrders::Descending;
         let page_number = 1;
 
         assert_eq!(
@@ -415,6 +454,7 @@ mod tests {
                 &filter,
                 &category,
                 &sorting,
+                &sorting_order,
                 &page_number
             )
         );

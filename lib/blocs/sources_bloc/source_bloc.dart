@@ -15,6 +15,7 @@ class SourceBloc extends Bloc<SourceWidgetEvents, SourceState> {
     on<SelectCategory>(_onSelectCategory);
     on<SelectFilter>(_onSelectFilter);
     on<SelectSorting>(_onSelectSorting);
+    on<SelectSortingOrder>(_onSelectSortingOrder);
   }
 
   Future<void> _onLoadSources(
@@ -33,6 +34,7 @@ class SourceBloc extends Bloc<SourceWidgetEvents, SourceState> {
         selectedCategory: null,
         selectedFilter: null,
         selectedSorting: null,
+        selectedSortingOrder: null,
       ),
     );
   }
@@ -47,5 +49,12 @@ class SourceBloc extends Bloc<SourceWidgetEvents, SourceState> {
 
   void _onSelectSorting(SelectSorting event, Emitter<SourceState> emit) {
     emit(state.copyWith(selectedSorting: event.sorting));
+  }
+
+  void _onSelectSortingOrder(
+    SelectSortingOrder event,
+    Emitter<SourceState> emit,
+  ) {
+    emit(state.copyWith(selectedSortingOrder: event.sortingOder));
   }
 }

@@ -25,12 +25,14 @@ pub struct InternalSourceDetails {
     pub categories: Vec<String>,
     pub source_filters: Vec<String>,
     pub source_sortings: Vec<String>,
+    pub source_sorting_orders: Vec<String>,
 }
 
 pub struct InternalQueryOptions {
     pub categories: bool,
-    pub sortings: bool,
     pub filters: bool,
+    pub sortings: bool,
+    pub sorting_orders: bool,
     pub pagination: bool,
 }
 

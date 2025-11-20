@@ -100,8 +100,9 @@ impl KnabenDatabaseCategories {
     pub fn get_query_options() -> QueryOptions {
         QueryOptions {
             categories: true,
-            sortings: true,
             filters: false,
+            sortings: true,
+            sorting_orders: true,
             pagination: true,
         }
     }
@@ -277,6 +278,7 @@ impl KnabenDatabaseCategories {
         torrent_name: &str,
         category: &KnabenDatabaseCategories,
         sorting: &KnabenDatabaseSortings,
+        sorting_order: &KnabenDatabaseSortingOrders,
         page_number: &i64,
     ) -> String {
         // https://knaben.org/search/naruto/6000000/2/seeders
@@ -287,14 +289,16 @@ impl KnabenDatabaseCategories {
         let root_url = "https://knaben.org";
         let path = "search";
         let sorting = sorting.to_value();
+        let sorting_order = sorting_order.sorting_order_to_value();
 
         format!(
-            "{}/{}/{}/{}/{}/{}",
+            "{}/{}/{}/{}/{}/{}{}",
             root_url,
             path,
             torrent_name,
             category.to_value(),
             page_number,
+            sorting_order,
             sorting
         )
     }
@@ -565,6 +569,43 @@ impl fmt::Display for KnabenDatabaseSortings {
             Self::ByDate => write!(f, "By Date"),
             Self::BySeeders => write!(f, "By Seeders"),
             Self::ByLeechers => write!(f, "By Leechers"),
+        }
+    }
+}
+
+pub enum KnabenDatabaseSortingOrders {
+    Ascending,
+    Descending,
+}
+
+impl KnabenDatabaseSortingOrders {
+    const ALL_VARIANTS: &'static [KnabenDatabaseSortingOrders] =
+        &[Self::Ascending, Self::Descending];
+
+    pub fn from_index(index: usize) -> Option<&'static KnabenDatabaseSortingOrders> {
+        Self::ALL_VARIANTS.get(index)
+    }
+
+    pub fn sorting_order_to_value(&self) -> &str {
+        match *self {
+            Self::Ascending => "-",
+            Self::Descending => "",
+        }
+    }
+
+    pub fn all_knaben_database_sorting_orders() -> Vec<String> {
+        Self::ALL_VARIANTS
+            .iter()
+            .map(|sorting| sorting.to_string())
+            .collect()
+    }
+}
+
+impl fmt::Display for KnabenDatabaseSortingOrders {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Ascending => write!(f, "Ascending Order ⤵"),
+            Self::Descending => write!(f, "Descending Order ⤴"),
         }
     }
 }
