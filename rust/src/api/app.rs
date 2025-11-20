@@ -54,15 +54,20 @@ pub fn fetch_source_details() -> Vec<InternalSource> {
 
 pub fn dig_torrent(
     torrent_name: String,
-    // source: String,
     source_index: usize,
-    category: String,
+    category_index: usize,
     filter: String,
     sorting: String,
     page: Option<i64>,
 ) -> Result<(Vec<InternalTorrent>, Option<i64>), String> {
-    println!("[RUST API] Source Index : {}", source_index);
-    match search_torrent(torrent_name, source_index, category, filter, sorting, page) {
+    match search_torrent(
+        torrent_name,
+        source_index,
+        category_index,
+        filter,
+        sorting,
+        page,
+    ) {
         Ok((torrents, next_page)) => {
             let internal_torrents: Vec<InternalTorrent> = torrents
                 .into_iter()

@@ -42,20 +42,6 @@ impl LimeTorrentsCategories {
         Self::ALL_VARIANTS.get(index)
     }
 
-    pub fn to_category(text_category: &str) -> Self {
-        match text_category {
-            "All Categories" => Self::AllCategories,
-            "Anime" => Self::Anime,
-            "Softwares" => Self::Softwares,
-            "Games" => Self::Games,
-            "Movies" => Self::Movies,
-            "Music" => Self::Music,
-            "Tv" => Self::Tv,
-            "Other" => Self::Other,
-            &_ => Self::AllCategories,
-        }
-    }
-
     pub fn category_to_value(&self) -> &str {
         match *self {
             Self::AllCategories => "all",

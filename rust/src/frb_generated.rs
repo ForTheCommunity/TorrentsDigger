@@ -236,7 +236,7 @@ fn wire__crate__api__app__dig_torrent_impl(
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_torrent_name = <String>::sse_decode(&mut deserializer);
             let api_source_index = <usize>::sse_decode(&mut deserializer);
-            let api_category = <String>::sse_decode(&mut deserializer);
+            let api_category_index = <usize>::sse_decode(&mut deserializer);
             let api_filter = <String>::sse_decode(&mut deserializer);
             let api_sorting = <String>::sse_decode(&mut deserializer);
             let api_page = <Option<i64>>::sse_decode(&mut deserializer);
@@ -246,7 +246,7 @@ fn wire__crate__api__app__dig_torrent_impl(
                     let output_ok = crate::api::app::dig_torrent(
                         api_torrent_name,
                         api_source_index,
-                        api_category,
+                        api_category_index,
                         api_filter,
                         api_sorting,
                         api_page,

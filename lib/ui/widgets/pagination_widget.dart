@@ -47,13 +47,24 @@ class PaginationWidget extends StatelessWidget {
                           sourceState.selectedSource!,
                         );
 
+                        List<String> listOfCategories = sourceState.sources
+                            .firstWhere(
+                              (source) =>
+                                  source.sourceName ==
+                                  sourceState.selectedSource!,
+                            )
+                            .sourceDetails
+                            .categories;
+                        int categoryIndex = listOfCategories.indexOf(
+                          sourceState.selectedCategory!,
+                        );
+
                         context.read<TorrentBloc>().add(
                           SearchTorrents(
                             torrentName: torrentState.torrentName,
-                            // source: sourceState.selectedSource!,
                             sourceIndex: sourceIndex,
                             filter: sourceState.selectedFilter ?? "",
-                            category: sourceState.selectedCategory ?? "",
+                            categoryIndex: categoryIndex,
                             sorting: sourceState.selectedSorting ?? "",
                             page: nextPage,
                           ),

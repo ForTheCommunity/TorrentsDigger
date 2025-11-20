@@ -111,48 +111,6 @@ impl SolidTorrentsCategories {
         Self::ALL_VARIANTS.get(index)
     }
 
-    pub fn to_category(text_category: &str) -> Self {
-        match text_category {
-            "All Categories" => Self::AllCategories,
-            "Other" => Self::Other,
-            "Audio" => Self::Audio,
-            "Video" => Self::Video,
-            "Image" => Self::Image,
-            "Document" => Self::Document,
-            "Program" => Self::Program,
-            "Android" => Self::Android,
-            "Disk Image" => Self::DiskImage,
-            "Source Code" => Self::SourceCode,
-            "Database" => Self::Database,
-            "Archive" => Self::Archive,
-            "Movies" => Self::Movies,
-            "Movies Dub Dual Audio" => Self::MoviesDubDualAudio,
-            "Tv" => Self::Tv,
-            "Anime" => Self::Anime,
-            "Anime Dub Dual Audio" => Self::AnimeDubDualAudio,
-            "Anime Subbed" => Self::AnimeSubbed,
-            "Anime Raw" => Self::AnimeRaw,
-            "Softwares" => Self::Softwares,
-            "Softwares Windows" => Self::SoftwaresWindows,
-            "Softwares Mac" => Self::SoftwaresMac,
-            "Softwares Android" => Self::SoftwaresAndroid,
-            "Games" => Self::Games,
-            "Games Pc" => Self::GamesPc,
-            "Games Mac" => Self::GamesMac,
-            "Games Linux" => Self::GamesLinux,
-            "Games Android" => Self::GamesAndroid,
-            "Music" => Self::Music,
-            "Music Mp3" => Self::MusicMp3,
-            "Music Lossless" => Self::MusicLossless,
-            "Music Album" => Self::MusicAlbum,
-            "Music Video" => Self::MusicVideo,
-            "AudioBook" => Self::AudioBook,
-            "Ebook Course" => Self::EbookCourse,
-            "XXX" => Self::XXX,
-            &_ => Self::AllCategories,
-        }
-    }
-
     pub fn category_to_value(&self) -> &str {
         match *self {
             Self::AllCategories => "",

@@ -13,14 +13,14 @@ Future<List<InternalSource>> fetchSourceDetails() =>
 Future<(List<InternalTorrent>, PlatformInt64?)> digTorrent({
   required String torrentName,
   required BigInt sourceIndex,
-  required String category,
+  required BigInt categoryIndex,
   required String filter,
   required String sorting,
   PlatformInt64? page,
 }) => RustLib.instance.api.crateApiAppDigTorrent(
   torrentName: torrentName,
   sourceIndex: sourceIndex,
-  category: category,
+  categoryIndex: categoryIndex,
   filter: filter,
   sorting: sorting,
   page: page,

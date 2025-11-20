@@ -111,7 +111,6 @@ pub fn get_source_details() -> Vec<Source> {
         source_details: knaben_database_source_details,
     });
 
-    println!("[RUST LIB] Source Details : {:?}", sources_details);
     sources_details
 }
 

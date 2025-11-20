@@ -53,22 +53,6 @@ impl SukebeiNyaaCategories {
         Self::ALL_VARIANTS.get(index)
     }
 
-    pub fn to_category(text_category: &str) -> Self {
-        match text_category {
-            "All Categories" => Self::AllCategories,
-            "Art" => Self::Art,
-            "Anime" => Self::Anime,
-            "Art Doujinshi" => Self::ArtDoujinshi,
-            "Art Games" => Self::ArtGames,
-            "Art Manga" => Self::ArtManga,
-            "Art Pictures" => Self::ArtPictures,
-            "Real Life" => Self::RealLife,
-            "Real Life Photobook And Pictures" => Self::RealLifePhotobookAndPictures,
-            "Real Life Videos" => Self::RealLifeVideos,
-            &_ => Self::AllCategories,
-        }
-    }
-
     pub fn category_to_value(&self) -> &str {
         match *self {
             Self::AllCategories => "0_0",

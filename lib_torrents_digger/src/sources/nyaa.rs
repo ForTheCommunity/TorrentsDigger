@@ -77,36 +77,6 @@ impl NyaaCategories {
         Self::ALL_VARIANTS.get(index)
     }
 
-    pub fn to_category(text_category: &str) -> Self {
-        match text_category {
-            "All Categories" => Self::AllCategories,
-            "Anime" => Self::Anime,
-            "Anime Music Video" => Self::AnimeMusicVideo,
-            "Anime English Translated" => Self::AnimeEnglishTranslated,
-            "Anime Non English Translated" => Self::AnimeNonEnglishTranslated,
-            "Anime Raw" => Self::AnimeRaw,
-            "Audio" => Self::Audio,
-            "Audio Lossless" => Self::AudioLossLess,
-            "Audio Lossy" => Self::AudioLossy,
-            "Literature" => Self::Literature,
-            "Literature English Translated" => Self::LiteratureEnglishTranslated,
-            "Literature Non English Translated" => Self::LiteratureNonEnglishTranslated,
-            "Literature Raw" => Self::LiteratureRaw,
-            "Live Action" => Self::LiveAction,
-            "Live Action English Translated" => Self::LiveActionEnglishTranslated,
-            "Live Action Non English Translated" => Self::LiveActionNonEnglishTranslated,
-            "Live Action Idol Promotional Video" => Self::LiveActionIdolPromotionalVideo,
-            "Live Action Raw" => Self::LiveActionRaw,
-            "Pictures" => Self::Pictures,
-            "Pictures Graphics" => Self::PicturesGraphics,
-            "Pictures Photos" => Self::PicturesPhotos,
-            "Software" => Self::Software,
-            "Software Applications" => Self::SoftwareApplications,
-            "Software Games" => Self::SoftwareGames,
-            &_ => Self::AllCategories,
-        }
-    }
-
     pub fn category_to_value(&self) -> &str {
         match *self {
             Self::AllCategories => "0_0",

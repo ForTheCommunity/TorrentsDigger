@@ -187,86 +187,6 @@ impl KnabenDatabaseCategories {
         Self::ALL_VARIANTS.get(index)
     }
 
-    pub fn to_category(text_category: &str) -> Self {
-        match text_category {
-            "All Categories" => Self::AllCategories,
-            "Audio" => Self::Audio,
-            "Audio Mp3" => Self::AudioMp3,
-            "Audio Lossless" => Self::AudioLossless,
-            "AudioBook" => Self::AudioAudioBook,
-            "Audio Video" => Self::AudioVideo,
-            "Audio Radio" => Self::AudioRadio,
-            "Audio Other" => Self::AudioOther,
-            "Tv" => Self::Tv,
-            "HD Tv" => Self::TvHD,
-            "SD Tv" => Self::TvSD,
-            "UHD Tv" => Self::TvUHD,
-            "Tv Documentary" => Self::TvDocumentary,
-            "Foreign Tv" => Self::TvForeign,
-            "Sport Tv" => Self::TvSport,
-            "Cartoon Tv" => Self::TvCartoon,
-            "Other Tv" => Self::TvOther,
-            "Movies" => Self::Movies,
-            "HD Movies" => Self::MoviesHD,
-            "SD Movies" => Self::MoviesSD,
-            "UHD Movies" => Self::MoviesUHD,
-            "DVD Movies" => Self::MoviesDVD,
-            "Foreign Movies" => Self::MoviesForeign,
-            "Bollywood Movies" => Self::MoviesBollywood,
-            "3D Movies" => Self::Movies3D,
-            "Other Movies" => Self::MoviesOther,
-            "PC" => Self::PC,
-            "PC Games" => Self::PCGames,
-            "PC Software" => Self::PCSoftware,
-            "PC Mac" => Self::PCMac,
-            "PC Unix" => Self::PCUnix,
-            "XXX" => Self::XXX,
-            "XXX Video" => Self::XXXVideo,
-            "XXX ImageSet" => Self::XXXImageSet,
-            "XXX Games" => Self::XXXGames,
-            "XXX Hentai" => Self::XXXHentai,
-            "Other XXX" => Self::XXXOther,
-            "Anime" => Self::Anime,
-            "Subbed Anime" => Self::AnimeSubbed,
-            "Dubbed Anime" => Self::AnimeDubbed,
-            "Dual Audio Anime" => Self::AnimeDualAudio,
-            "Raw Anime" => Self::AnimeRaw,
-            "Anime Music Video" => Self::AnimeMusicVideo,
-            "Anime Literature" => Self::AnimeLiterature,
-            "Anime Music" => Self::AnimeMusic,
-            "Non English Translated Anime" => Self::AnimeNonEnglishTranslated,
-            "Console" => Self::Console,
-            "PS4" => Self::ConsolePS4,
-            "PS3" => Self::ConsolePS3,
-            "PS2" => Self::ConsolePS2,
-            "PS1" => Self::ConsolePS1,
-            "PS Vita" => Self::ConsolePSVita,
-            "PSP" => Self::ConsolePSP,
-            "Xbox360" => Self::ConsoleXbox360,
-            "Xbox" => Self::ConsoleXbox,
-            "Switch" => Self::ConsoleSwitch,
-            "Nintendo Switch" => Self::ConsoleNDS,
-            "Nintendo Wii" => Self::ConsoleWii,
-            "Nintendo WiiU" => Self::ConsoleWiiU,
-            "Nintendo 3DS" => Self::Console3DS,
-            "Nintendo GameCube" => Self::ConsoleGameCube,
-            "Other Console" => Self::ConsoleOther,
-            "Mobile" => Self::Mobile,
-            "Android Mobile" => Self::MobileAndroid,
-            "IOS Mobile" => Self::MobileIOS,
-            "Other Mobile" => Self::MobileOther,
-            "Books" => Self::Books,
-            "Ebooks" => Self::BooksEbooks,
-            "Comics" => Self::BooksComics,
-            "Magazines" => Self::BooksMagazines,
-            "Technical Books" => Self::BooksTechnical,
-            "Other Books" => Self::BooksOther,
-            "Other" => Self::Other,
-            "Other Misc" => Self::OtherMisc,
-            &_ => Self::AllCategories,
-        }
-    }
-
     pub fn to_value(&self) -> &str {
         match *self {
             Self::AllCategories => "000000000",
@@ -443,7 +363,7 @@ impl KnabenDatabaseCategories {
                         i_h.to_lowercase()
                     }
                     None => {
-                        eprintln!("Skipping row: Missing data-id (info_hash).");
+                        //  Skipping row: Missing data-id (info_hash)
                         continue;
                     }
                 };

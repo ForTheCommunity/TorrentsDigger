@@ -23,33 +23,37 @@ pub mod trackers;
 
 pub fn search_torrent(
     torrent_name: String,
-    // source: String,
     source_index: usize,
-    category: String,
+    category_index: usize,
     filter: String,
     sorting: String,
     page: Option<i64>,
 ) -> Result<(Vec<torrent::Torrent>, Option<i64>)> {
-    // let source = AllAvailableSources::to_source(&source);
     let source = AllAvailableSources::from_index(source_index)
         .ok_or_else(|| anyhow!("Invalid Source Index: {}", source_index))?;
-    println!("[RUST LIB] Source : {}", source);
+
     match source {
         AllAvailableSources::Nyaa => {
+            let category = NyaaCategories::from_index(category_index)
+                .ok_or_else(|| anyhow!("Invalid Category Index: {}", source_index))?;
+
             let url = NyaaCategories::request_url_builder(
                 &torrent_name,
                 &NyaaFilter::to_filter(&filter),
-                &NyaaCategories::to_category(&category),
+                &category,
                 &NyaaSortings::to_sorting(&sorting),
                 &page.unwrap_or(0),
             );
             fetch_torrents(&url, AllAvailableSources::Nyaa)
         }
         AllAvailableSources::SukebeiNyaa => {
+            let category = SukebeiNyaaCategories::from_index(category_index)
+                .ok_or_else(|| anyhow!("Invalid Category Index: {}", source_index))?;
+
             let url = SukebeiNyaaCategories::request_url_builder(
                 &torrent_name,
                 &SukebeiNyaaFilter::to_filter(&filter),
-                &SukebeiNyaaCategories::to_category(&category),
+                category,
                 &NyaaSortings::to_sorting(&sorting),
                 &page.unwrap_or(0),
             );
@@ -60,35 +64,47 @@ pub fn search_torrent(
             fetch_torrents(&url, AllAvailableSources::TorrentsCsv)
         }
         AllAvailableSources::Uindex => {
+            let category = UindexCategories::from_index(category_index)
+                .ok_or_else(|| anyhow!("Invalid Category Index: {}", source_index))?;
+
             let url = UindexCategories::request_url_builder(
                 &torrent_name,
-                &UindexCategories::to_category(&category),
+                category,
                 &UindexSortings::to_sorting(&sorting),
             );
             fetch_torrents(&url, AllAvailableSources::Uindex)
         }
         AllAvailableSources::LimeTorrents => {
+            let category = LimeTorrentsCategories::from_index(category_index)
+                .ok_or_else(|| anyhow!("Invalid Category Index: {}", source_index))?;
+
             let url = LimeTorrentsCategories::request_url_builder(
                 &torrent_name,
-                &LimeTorrentsCategories::to_category(&category),
+                category,
                 &LimeTorrentsSortings::to_sorting(&sorting),
                 &page.unwrap_or(0),
             );
             fetch_torrents(&url, AllAvailableSources::LimeTorrents)
         }
         AllAvailableSources::SolidTorrents => {
+            let category = SolidTorrentsCategories::from_index(category_index)
+                .ok_or_else(|| anyhow!("Invalid Category Index: {}", source_index))?;
+
             let url = SolidTorrentsCategories::request_url_builder(
                 &torrent_name,
-                &SolidTorrentsCategories::to_category(&category),
+                category,
                 &SolidTorrentsSortings::to_sorting(&sorting),
                 &page.unwrap_or(0),
             );
             fetch_torrents(&url, AllAvailableSources::SolidTorrents)
         }
         AllAvailableSources::KnabenDatabase => {
+            let category = KnabenDatabaseCategories::from_index(category_index)
+                .ok_or_else(|| anyhow!("Invalid Category Index: {}", source_index))?;
+
             let url = KnabenDatabaseCategories::request_url_builder(
                 &torrent_name,
-                &KnabenDatabaseCategories::to_category(&category),
+                category,
                 &KnabenDatabaseSortings::to_sorting(&sorting),
                 &page.unwrap_or(1),
             );

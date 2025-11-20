@@ -5,16 +5,12 @@ abstract class SourceState with _$SourceState {
   const SourceState._();
 
   const factory SourceState({
-    // required Map<String, InternalSourceDetails> sources,
     required List<InternalSource> sources,
     String? selectedSource,
     String? selectedCategory,
     String? selectedFilter,
     String? selectedSorting,
   }) = _SourceState;
-
-  // InternalSourceDetails? get selectedDetails =>
-  //     selectedSource != null ? sources[selectedSource] : null;
 
   InternalSourceDetails? get selectedDetails {
     if (selectedSource == null) {

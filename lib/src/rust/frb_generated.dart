@@ -99,7 +99,7 @@ abstract class RustLibApi extends BaseApi {
   Future<(List<InternalTorrent>, PlatformInt64?)> crateApiAppDigTorrent({
     required String torrentName,
     required BigInt sourceIndex,
-    required String category,
+    required BigInt categoryIndex,
     required String filter,
     required String sorting,
     PlatformInt64? page,
@@ -315,7 +315,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   Future<(List<InternalTorrent>, PlatformInt64?)> crateApiAppDigTorrent({
     required String torrentName,
     required BigInt sourceIndex,
-    required String category,
+    required BigInt categoryIndex,
     required String filter,
     required String sorting,
     PlatformInt64? page,
@@ -326,7 +326,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_String(torrentName, serializer);
           sse_encode_usize(sourceIndex, serializer);
-          sse_encode_String(category, serializer);
+          sse_encode_usize(categoryIndex, serializer);
           sse_encode_String(filter, serializer);
           sse_encode_String(sorting, serializer);
           sse_encode_opt_box_autoadd_i_64(page, serializer);
@@ -343,7 +343,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeErrorData: sse_decode_String,
         ),
         constMeta: kCrateApiAppDigTorrentConstMeta,
-        argValues: [torrentName, sourceIndex, category, filter, sorting, page],
+        argValues: [
+          torrentName,
+          sourceIndex,
+          categoryIndex,
+          filter,
+          sorting,
+          page,
+        ],
         apiImpl: this,
       ),
     );
@@ -354,7 +361,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     argNames: [
       "torrentName",
       "sourceIndex",
-      "category",
+      "categoryIndex",
       "filter",
       "sorting",
       "page",

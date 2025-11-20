@@ -18,12 +18,6 @@ impl TorrentsCsvCategories {
             pagination: true,
         }
     }
-    pub fn to_category(text_category: &str) -> TorrentsCsvCategories {
-        match text_category {
-            "All Categories" => TorrentsCsvCategories::AllCategories,
-            _ => TorrentsCsvCategories::AllCategories,
-        }
-    }
 
     pub fn all_categories() -> Vec<String> {
         [Self::AllCategories]

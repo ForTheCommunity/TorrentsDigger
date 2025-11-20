@@ -44,21 +44,6 @@ impl UindexCategories {
         Self::ALL_VARIANTS.get(index)
     }
 
-    pub fn to_category(text_category: &str) -> Self {
-        match text_category {
-            "All Categories" => Self::AllCategories,
-            "Movies" => Self::Movies,
-            "Tv" => Self::Tv,
-            "Games" => Self::Games,
-            "Music" => Self::Music,
-            "Softwares" => Self::Softwares,
-            "XXX" => Self::XXX,
-            "Anime" => Self::Anime,
-            "Other" => Self::Other,
-            &_ => Self::AllCategories,
-        }
-    }
-
     pub fn category_to_value(&self) -> &str {
         match *self {
             Self::AllCategories => "0",
