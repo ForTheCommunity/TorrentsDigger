@@ -27,28 +27,25 @@ class DefaultTrackersScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              RichText(
-                text: TextSpan(
-                  children: <TextSpan>[
-                    TextSpan(
+              Text.rich(
+                TextSpan(
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: AppColors.defaultTrackersInfoColor,
+                    wordSpacing: 2.0,
+                  ),
+                  children: [
+                    const TextSpan(
                       text:
                           'Select a default trackers list.\nThese Trackers will be added to magnet links.\n'
                           'This can help in discovering more peers when downloading torrents.\n'
                           'If you are unsure about what types of trackers list to use.\n'
                           'You can use default Trackers List [ All Trackers ]\n'
                           'Trackers Lists are fetched from ',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: AppColors.defaultTrackersInfoColor,
-                        wordSpacing: 2.0,
-                      ),
                     ),
                     TextSpan(
                       text: 'https://github.com/ngosang/trackerslist#lists',
-                      style: TextStyle(
-                        color: AppColors.hyperlinkColor,
-                        decoration: TextDecoration.underline,
-                      ),
+                      style: TextStyle(color: AppColors.hyperlinkColor),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () async {
                           openUrl(

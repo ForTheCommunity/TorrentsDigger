@@ -91,8 +91,21 @@ class ProxyAddWidget extends StatelessWidget {
                 controller: proxyNameController,
                 decoration: const InputDecoration(
                   labelText: 'Proxy Name',
-                  border: OutlineInputBorder(),
+                  labelStyle: TextStyle(color: AppColors.greenColor),
                   prefixIcon: Icon(Icons.note),
+                  border: OutlineInputBorder(),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: AppColors.textFormFieldInactiveColor,
+                      width: 1.0,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: AppColors.textFormFieldActiveColor,
+                      width: 2.0,
+                    ),
+                  ),
                 ),
                 keyboardType: TextInputType.text,
                 validator: (value) {
@@ -107,8 +120,21 @@ class ProxyAddWidget extends StatelessWidget {
                 controller: ipController,
                 decoration: const InputDecoration(
                   labelText: 'IP Address',
-                  border: OutlineInputBorder(),
+                  labelStyle: TextStyle(color: AppColors.greenColor),
                   prefixIcon: Icon(Icons.computer),
+                  border: OutlineInputBorder(),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: AppColors.textFormFieldInactiveColor,
+                      width: 1.0,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: AppColors.textFormFieldActiveColor,
+                      width: 2.0,
+                    ),
+                  ),
                 ),
                 keyboardType: TextInputType.text,
                 validator: (value) {
@@ -127,8 +153,21 @@ class ProxyAddWidget extends StatelessWidget {
                 controller: portController,
                 decoration: const InputDecoration(
                   labelText: 'Port Number',
-                  border: OutlineInputBorder(),
+                  labelStyle: TextStyle(color: AppColors.greenColor),
                   prefixIcon: Icon(Icons.lan),
+                  border: OutlineInputBorder(),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: AppColors.textFormFieldInactiveColor,
+                      width: 1.0,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: AppColors.textFormFieldActiveColor,
+                      width: 2.0,
+                    ),
+                  ),
                 ),
                 keyboardType: TextInputType.number,
                 validator: (value) {
@@ -143,8 +182,21 @@ class ProxyAddWidget extends StatelessWidget {
                 controller: usernameController,
                 decoration: const InputDecoration(
                   labelText: 'Username (Optional)',
-                  border: OutlineInputBorder(),
+                  labelStyle: TextStyle(color: AppColors.greenColor),
                   prefixIcon: Icon(Icons.person),
+                  border: OutlineInputBorder(),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: AppColors.textFormFieldInactiveColor,
+                      width: 1.0,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: AppColors.textFormFieldActiveColor,
+                      width: 2.0,
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 16.0),
@@ -152,8 +204,21 @@ class ProxyAddWidget extends StatelessWidget {
                 controller: passwordController,
                 decoration: const InputDecoration(
                   labelText: 'Password (Optional)',
-                  border: OutlineInputBorder(),
+                  labelStyle: TextStyle(color: AppColors.greenColor),
                   prefixIcon: Icon(Icons.key),
+                  border: OutlineInputBorder(),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: AppColors.textFormFieldInactiveColor,
+                      width: 1.0,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: AppColors.textFormFieldActiveColor,
+                      width: 2.0,
+                    ),
+                  ),
                 ),
                 obscureText: true,
               ),

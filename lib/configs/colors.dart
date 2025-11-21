@@ -67,4 +67,6 @@ class AppColors {
 
   static const hyperlinkColor = Color.fromRGBO(118, 131, 224, 1);
   static const defaultTrackersInfoColor = Color.fromRGBO(255, 255, 255, 0.7);
+  static const textFormFieldInactiveColor = Color.fromRGBO(69, 130, 127, 1);
+  static const textFormFieldActiveColor = Color.fromRGBO(0, 255, 0, 1);
 }
