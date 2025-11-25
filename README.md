@@ -29,6 +29,11 @@
     alt="Get it on F-Droid"
     height="80">](https://f-droid.org/packages/org.forthecommunity.torrentsdigger)
 
+## --> Install using [AppMan](https://github.com/ivan-hc/AppMan)/[AM](https://github.com/ivan-hc/AM).
+```
+appman install torrents_digger
+```
+
 ## --> Download binaries from [releases](https://gitlab.com/ForTheCommunity/torrentsdigger/-/releases) Page.
 
 > **Why No Binaries For Windows & Mac OS ?**
