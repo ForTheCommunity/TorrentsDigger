@@ -78,9 +78,18 @@ void importDatabaseAndroid() async {
     //  Reading database file
     List<int> databaseFileData = await file.readAsBytes();
 
-    // Writing file to internal scoped storage
-    await internalScopedStorageDatabaseFilePath.writeAsBytes(databaseFileData);
-    createSnackBar(message: "Database imported...", duration: 2);
+    try {
+      // Writing file to internal scoped storage
+      await internalScopedStorageDatabaseFilePath.writeAsBytes(
+        databaseFileData,
+      );
+      createSnackBar(message: "Database imported...", duration: 2);
+    } catch (e) {
+      createSnackBar(
+        message: "Unable to Import Database.\nError: ${e.toString}",
+        duration: 5,
+      );
+    }
   } else {
     createSnackBar(message: "Failed to Pick database File", duration: 2);
   }

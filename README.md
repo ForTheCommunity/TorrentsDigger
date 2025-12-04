@@ -45,8 +45,8 @@ appman install torrents_digger
 
 
 
-## Building
-See [Build Steps](./building.md) For Building this app.
+## Contribute
+See [Contribution Guide](./contribution_guide.md).
 
 ## License
 
