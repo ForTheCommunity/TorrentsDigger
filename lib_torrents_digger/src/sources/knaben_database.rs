@@ -604,8 +604,8 @@ impl KnabenDatabaseSortingOrders {
 impl fmt::Display for KnabenDatabaseSortingOrders {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Self::Ascending => write!(f, "Ascending Order ⤵"),
-            Self::Descending => write!(f, "Descending Order ⤴"),
+            Self::Ascending => write!(f, "Ascending Order"),
+            Self::Descending => write!(f, "Descending Order"),
         }
     }
 }

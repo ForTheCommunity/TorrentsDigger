@@ -23,6 +23,6 @@ Future<void> initializeDatabase() async {
       torrentsDiggerDatabaseDirectory: platformSpecificDatabaseDirectory.path,
     );
   } catch (e) {
-    createSnackBar(message: "Error : $e", duration: 10);
+    createSnackBar(message: "Error : $e", duration: 5);
   }
 }

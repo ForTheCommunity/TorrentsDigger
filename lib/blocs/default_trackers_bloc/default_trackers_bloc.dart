@@ -93,7 +93,7 @@ Future<void> loadTrackersString() async {
   } catch (e) {
     createSnackBar(
       message: "Error Loading TRACKERS_STRING.\nError: ${e.toString()}",
-      duration: 10,
+      duration: 5,
     );
   }
 }

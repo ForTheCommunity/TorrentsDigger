@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/settings_bloc/settings_bloc.dart';
+import 'package:torrents_digger/configs/colors.dart';
 import 'package:torrents_digger/ui/widgets/circular_progress_bar_widget.dart';
 import 'package:torrents_digger/ui/widgets/launch_url.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
@@ -17,7 +18,7 @@ class AboutWidget extends StatelessWidget {
               const Center(child: CircularProgressBarWidget()),
           loadCurrentVersionError: (errorMessage) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              createSnackBar(message: errorMessage, duration: 10);
+              createSnackBar(message: errorMessage, duration: 5);
             });
             return const AboutDialog(
               applicationName: 'Torrents Digger',
@@ -44,9 +45,12 @@ class AboutWidget extends StatelessWidget {
                   },
                   child: Row(
                     children: [
-                      Icon(Icons.code),
+                      Icon(Icons.code, color: AppColors.aboutDialogIconColor),
                       SizedBox(width: 5),
-                      Text("Source Code (Main Repo)"),
+                      Text(
+                        "Source Code (Main Repo)",
+                        style: TextStyle(color: AppColors.aboutDialogTextColor),
+                      ),
                     ],
                   ),
                 ),
@@ -61,9 +65,12 @@ class AboutWidget extends StatelessWidget {
                   },
                   child: Row(
                     children: [
-                      Icon(Icons.code),
+                      Icon(Icons.code, color: AppColors.aboutDialogIconColor),
                       SizedBox(width: 5),
-                      Text("Source Code (Mirror Repo)"),
+                      Text(
+                        "Source Code (Mirror Repo)",
+                        style: TextStyle(color: AppColors.aboutDialogTextColor),
+                      ),
                     ],
                   ),
                 ),
@@ -79,9 +86,12 @@ class AboutWidget extends StatelessWidget {
                   },
                   child: Row(
                     children: [
-                      Icon(Icons.gavel),
+                      Icon(Icons.gavel, color: AppColors.aboutDialogIconColor),
                       SizedBox(width: 5),
-                      Text("License"),
+                      Text(
+                        "License",
+                        style: TextStyle(color: AppColors.aboutDialogTextColor),
+                      ),
                     ],
                   ),
                 ),
@@ -97,9 +107,15 @@ class AboutWidget extends StatelessWidget {
                   },
                   child: Row(
                     children: [
-                      Icon(Icons.bug_report),
+                      Icon(
+                        Icons.bug_report,
+                        color: AppColors.aboutDialogIconColor,
+                      ),
                       SizedBox(width: 5),
-                      Text("Issues"),
+                      Text(
+                        "Issues",
+                        style: TextStyle(color: AppColors.aboutDialogTextColor),
+                      ),
                     ],
                   ),
                 ),

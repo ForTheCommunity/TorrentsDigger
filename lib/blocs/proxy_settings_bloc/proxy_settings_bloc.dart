@@ -29,7 +29,7 @@ class ProxySettingsBloc extends Bloc<ProxySettingsEvents, ProxySettingsState> {
         state.copyWith(proxyDetails: proxiesDetails, savedProxy: savedProxy),
       );
     } catch (e) {
-      createSnackBar(message: "Error : ${e.toString()}", duration: 10);
+      createSnackBar(message: "Error : ${e.toString()}", duration: 5);
     }
   }
 

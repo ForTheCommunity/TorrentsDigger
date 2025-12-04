@@ -14,7 +14,7 @@ void exportDatabaseLinux() {
   createSnackBar(
     message:
         "Database is in Path :\n$databasePath\n Database Path Copied to Clipboard",
-    duration: 10,
+    duration: 5,
   );
   Clipboard.setData(ClipboardData(text: databasePath));
 }
@@ -49,12 +49,12 @@ void exportDatabaseAndroid() async {
     createSnackBar(
       message:
           "Database Exported at Internal Storage \nPath : Internal Storage/$downloadDirPath/$databaseFileName",
-      duration: 15,
+      duration: 5,
     );
   } else {
     createSnackBar(
       message: "Database Not Found in Internal Scoped Storage",
-      duration: 15,
+      duration: 5,
     );
   }
 }
@@ -78,10 +78,11 @@ void importDatabaseAndroid() async {
     //  Reading database file
     List<int> databaseFileData = await file.readAsBytes();
 
-    // Writing file to shared storage
+    // Writing file to internal scoped storage
     await internalScopedStorageDatabaseFilePath.writeAsBytes(databaseFileData);
+    createSnackBar(message: "Database imported...", duration: 2);
   } else {
-    createSnackBar(message: "Failed to Pick database File", duration: 10);
+    createSnackBar(message: "Failed to Pick database File", duration: 2);
   }
 }
 
@@ -91,6 +92,6 @@ void importDatabaseLinux() {
   String databasePath = "${rootDirPath.path}/.torrents_digger";
   createSnackBar(
     message: "Place your Database file in Path :\n$databasePath",
-    duration: 10,
+    duration: 5,
   );
 }

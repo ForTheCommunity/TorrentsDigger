@@ -318,10 +318,10 @@ impl LimeTorrentsSortings {
 impl fmt::Display for LimeTorrentsSortings {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Self::ByDate => write!(f, "By Date ⤴"),
-            Self::BySize => write!(f, "By Size ⤴"),
-            Self::BySeeders => write!(f, "By Seeders ⤴"),
-            Self::ByLeechers => write!(f, "By Leechers ⤴"),
+            Self::ByDate => write!(f, "By Date"),
+            Self::BySize => write!(f, "By Size"),
+            Self::BySeeders => write!(f, "By Seeders"),
+            Self::ByLeechers => write!(f, "By Leechers"),
         }
     }
 }

@@ -8,7 +8,7 @@ Future<InternalProxy?> getSavedProxyData() async {
 
     return savedProxy;
   } catch (e) {
-    createSnackBar(message: "Error : ${e.toString()}", duration: 10);
+    createSnackBar(message: "Error : ${e.toString()}", duration: 5);
     rethrow;
   }
 }
@@ -18,7 +18,7 @@ Future<BigInt> saveProxy({required InternalProxy proxyData}) {
     var result = saveProxyApi(proxyData: proxyData);
     return result;
   } catch (e) {
-    createSnackBar(message: "Error : ${e.toString()}", duration: 10);
+    createSnackBar(message: "Error : ${e.toString()}", duration: 5);
     rethrow;
   }
 }
@@ -28,7 +28,7 @@ Future<List<(int, String)>> getSupportedProxyData() async {
     var allSupportedProxies = await getSupportedProxyDetails();
     return allSupportedProxies;
   } catch (e) {
-    createSnackBar(message: "Error : ${e.toString()}", duration: 10);
+    createSnackBar(message: "Error : ${e.toString()}", duration: 5);
     rethrow;
   }
 }
@@ -38,7 +38,7 @@ Future<BigInt> removeProxy(int proxyId) {
     var result = deleteProxy(proxyId: proxyId);
     return result;
   } catch (e) {
-    createSnackBar(message: "Error : ${e.toString()}", duration: 10);
+    createSnackBar(message: "Error : ${e.toString()}", duration: 5);
     rethrow;
   }
 }
