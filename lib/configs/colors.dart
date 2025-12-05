@@ -72,4 +72,14 @@ class AppColors {
 
   static const aboutDialogIconColor = Color.fromRGBO(0, 255, 47, 1);
   static const aboutDialogTextColor = Color.fromRGBO(82, 239, 245, 1);
+
+  static const settingsFloatingActionButtonForegroundColor = Color.fromRGBO(
+    0,
+    255,
+    0,
+    1,
+  );
+  static const settingsFloatingActionButtonBackgroundColor = Colors.transparent;
+  static const settingsFloatingActionButtonHoverBackgroundColor =
+      Colors.transparent;
 }

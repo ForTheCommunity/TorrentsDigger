@@ -12,9 +12,9 @@ class SettingButton extends StatelessWidget {
         Navigator.pushNamed(context, RoutesName.settingsScreen);
       },
       tooltip: 'Settings',
-      foregroundColor: AppColors.greenColor,
-      backgroundColor: AppColors.pureBlack,
-      hoverColor: AppColors.pureBlack,
+      foregroundColor: AppColors.settingsFloatingActionButtonForegroundColor,
+      backgroundColor: AppColors.settingsFloatingActionButtonBackgroundColor,
+      hoverColor: AppColors.settingsFloatingActionButtonHoverBackgroundColor,
       child: const Icon(Icons.settings),
     );
   }
