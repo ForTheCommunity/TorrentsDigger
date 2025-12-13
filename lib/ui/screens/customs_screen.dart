@@ -7,8 +7,27 @@ import 'package:torrents_digger/ui/widgets/circular_progress_bar_widget.dart';
 import 'package:torrents_digger/ui/widgets/dropdown_widget.dart';
 import 'package:torrents_digger/ui/widgets/torrent_list_widget.dart';
 
-class CustomsScreen extends StatelessWidget {
+class CustomsScreen extends StatefulWidget {
   const CustomsScreen({super.key});
+
+  @override
+  State<CustomsScreen> createState() => _CustomsScreenState();
+}
+
+class _CustomsScreenState extends State<CustomsScreen> {
+  late final CustomsTorrentsBloc _customsTorrentsBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _customsTorrentsBloc = context.read<CustomsTorrentsBloc>();
+  }
+
+  @override
+  void dispose() {
+    _customsTorrentsBloc.add(const CustomsTorrentsEvent.reset());
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

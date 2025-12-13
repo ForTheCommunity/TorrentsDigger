@@ -5,4 +5,5 @@ sealed class CustomsTorrentsEvent with _$CustomsTorrentsEvent {
   const factory CustomsTorrentsEvent.searchCustomTorrents({
     required int selectedIndex,
   }) = _SearchTorrents;
+  const factory CustomsTorrentsEvent.reset() = _Reset;
 }

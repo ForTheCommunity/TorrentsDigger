@@ -12,6 +12,7 @@ class CustomsTorrentsBloc
     extends Bloc<CustomsTorrentsEvent, CustomsTorrentsState> {
   CustomsTorrentsBloc() : super(_Initial()) {
     on<_SearchTorrents>(_loadCustomTorrents);
+    on<_Reset>(_resetTorrents);
   }
 
   Future<void> _loadCustomTorrents(
@@ -32,5 +33,9 @@ class CustomsTorrentsBloc
         duration: 5,
       );
     }
+  }
+
+  void _resetTorrents(_Reset event, Emitter<CustomsTorrentsState> emit) {
+    emit(const CustomsTorrentsState.initial());
   }
 }
