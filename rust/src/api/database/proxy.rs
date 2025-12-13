@@ -1,6 +1,4 @@
-use lib_torrents_digger::database::proxy::Proxy;
-
-use crate::api::internals::InternalProxy;
+use crate::api::preludes::*;
 
 pub fn get_supported_proxy_details() -> Result<Vec<(i32, String)>, String> {
     match Proxy::fetch_supported_proxies() {

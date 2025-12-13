@@ -1,8 +1,4 @@
-use lib_torrents_digger::database::{
-    default_trackers::{get_active_trackers_list, set_trackers_list},
-    settings_kvs::fetch_all_kv,
-};
-use std::collections::HashMap;
+use crate::api::preludes::*;
 
 pub fn get_settings_kv() -> Result<HashMap<String, String>, String> {
     match fetch_all_kv() {

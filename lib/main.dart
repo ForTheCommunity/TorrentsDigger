@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/bookmark_bloc/bookmark_bloc.dart';
-import 'package:torrents_digger/blocs/customs_bloc/customs_bloc.dart';
+import 'package:torrents_digger/blocs/customs_bloc/customs_dropdown_bloc/customs_bloc.dart';
+import 'package:torrents_digger/blocs/customs_bloc/customs_torrents/customs_torrents_bloc.dart';
 import 'package:torrents_digger/blocs/default_trackers_bloc/default_trackers_bloc.dart';
 import 'package:torrents_digger/blocs/proxy_settings_bloc/proxy_settings_bloc.dart';
 import 'package:torrents_digger/blocs/pagination_bloc/pagination_bloc.dart';
@@ -53,6 +54,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (_) => CustomsBloc()..add(CustomsEvent.loadCustoms()),
         ),
+        BlocProvider(create: (_) => CustomsTorrentsBloc()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

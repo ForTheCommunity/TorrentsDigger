@@ -23,7 +23,7 @@ pub fn fetch_torrents(
     // sending request
     let response = send_request(url)?;
 
-    // scrape & parseNyaaCategories
+    // scrape & parse
     match source {
         AllAvailableSources::Nyaa => NyaaCategories::scrape_and_parse(response),
         AllAvailableSources::SukebeiNyaa => SukebeiNyaaCategories::scrape_and_parse(response),
@@ -91,98 +91,10 @@ pub fn build_proxy_url(proxy_data: &Proxy) -> String {
     }
 }
 
-pub fn extract_ip_details() -> Result<IpDetails> {
-    //  https://api.ipwho.org/me
-    let mut response = send_request("https://api.ipwho.org/me")?;
+pub fn extract_ip_details() -> Result<String> {
+    let mut response = send_request("https://ifconfig.so")?;
     let response_body = response.body_mut().read_to_string()?;
-
-    // Deserializing
-    let api_response: ApiResponse = serde_json::from_str(&response_body)?;
-
-    if !api_response.success {
-        return Err(anyhow!("API Error"));
-    }
-
-    Ok(IpDetails {
-        ip_addr: api_response.data.ip,
-        isp: api_response.data.connection.org,
-        continent: api_response.data.continent,
-        country: api_response.data.country,
-        capital: api_response.data.capital,
-        city: api_response.data.city.unwrap_or("N/A".to_string()),
-        region: api_response.data.region.unwrap_or("N/A".to_string()),
-        latitude: api_response.data.latitude,
-        longitude: api_response.data.longitude,
-        timezone: format!(
-            "{} ({})",
-            api_response.data.timezone.time_zone, api_response.data.timezone.utc
-        ),
-        flag_unicode: api_response.data.flag.flag_unicode,
-        is_vpn: api_response.data.security.is_vpn,
-        is_tor: api_response.data.security.is_tor,
-    })
-}
-
-pub struct IpDetails {
-    pub ip_addr: String,
-    pub isp: String,
-    pub continent: String,
-    pub country: String,
-    pub capital: String,
-    pub city: String,
-    pub region: String,
-    pub latitude: f64,
-    pub longitude: f64,
-    pub timezone: String,
-    pub flag_unicode: String,
-    pub is_vpn: bool,
-    pub is_tor: bool,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct Data {
-    ip: String,
-    continent: String,
-    country: String,
-    capital: String,
-    region: Option<String>,
-    city: Option<String>,
-    latitude: f64,
-    longitude: f64,
-    timezone: Timezone,
-    flag: Flag,
-    connection: Connection,
-    security: Security,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct Timezone {
-    time_zone: String,
-    utc: String,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct Flag {
-    flag_unicode: String,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct Connection {
-    org: String,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct Security {
-    #[serde(rename = "isVpn")]
-    is_vpn: bool,
-    #[serde(rename = "isTor")]
-    is_tor: bool,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct ApiResponse {
-    success: bool,
-    data: Data,
+    Ok(response_body)
 }
 
 pub fn check_for_update() -> Result<u8> {

@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:torrents_digger/src/rust/api/app.dart';
-import 'package:torrents_digger/src/rust/api/internals.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 
 part 'customs_event.dart';
@@ -12,7 +11,6 @@ class CustomsBloc extends Bloc<CustomsEvent, CustomsState> {
   CustomsBloc() : super(_Initial()) {
     on<_LoadCustoms>(_loadCustoms);
     on<_SelectCustomListing>(_selectCustomListing);
-    on<_SearchTorrents>(_searchTorrents);
   }
 
   void _loadCustoms(_LoadCustoms event, Emitter<CustomsState> emit) async {
@@ -46,29 +44,6 @@ class CustomsBloc extends Bloc<CustomsEvent, CustomsState> {
         emit(CustomsState.error(errorMessage: e.toString()));
         createSnackBar(
           message: "Error selecting Custom Listing : ${e.toString()}",
-          duration: 5,
-        );
-      }
-    }
-  }
-
-  Future<void> _searchTorrents(
-    _SearchTorrents event,
-    Emitter<CustomsState> emit,
-  ) async {
-    final currentState = state;
-    if (currentState is _Loaded && currentState.selectedCustomListing != null) {
-      emit(CustomsState.loading());
-      try {
-        final (torrents, _) = await digCustomTorrents(
-          index: BigInt.from(currentState.selectedCustomListingIndex!),
-        );
-
-        emit(currentState.copyWith(torrentsList: torrents));
-      } catch (e) {
-        emit(CustomsState.error(errorMessage: e.toString()));
-        createSnackBar(
-          message: "Error searching torrents: ${e.toString()}",
           duration: 5,
         );
       }

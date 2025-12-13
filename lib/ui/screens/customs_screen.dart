@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:torrents_digger/blocs/customs_bloc/customs_bloc.dart';
+import 'package:torrents_digger/blocs/customs_bloc/customs_dropdown_bloc/customs_bloc.dart';
+import 'package:torrents_digger/blocs/customs_bloc/customs_torrents/customs_torrents_bloc.dart';
 import 'package:torrents_digger/configs/colors.dart';
 import 'package:torrents_digger/ui/widgets/circular_progress_bar_widget.dart';
 import 'package:torrents_digger/ui/widgets/dropdown_widget.dart';
@@ -37,20 +38,24 @@ class CustomsScreen extends StatelessWidget {
             child: Column(
               children: [
                 const SizedBox(height: 16),
+
                 BlocBuilder<CustomsBloc, CustomsState>(
                   builder: (context, state) {
                     return state.when(
                       initial: () => const Center(
-                        child: Text('No Custom Listings Loaded Yet...'),
+                        child: Text("No Custom Listings Loaded Yet..."),
                       ),
                       loading: () =>
-                          Center(child: const CircularProgressBarWidget()),
+                          const Center(child: CircularProgressBarWidget()),
+                      error: (String errorMessage) {
+                        return Text("Error : $errorMessage");
+                      },
+
                       loaded:
                           (
                             customDetails,
                             selectedCustomListing,
                             selectedCustomListingIndex,
-                            torrentsList,
                           ) => Column(
                             children: [
                               DropdownWidget(
@@ -60,26 +65,44 @@ class CustomsScreen extends StatelessWidget {
                                   if (value != null) {
                                     final int selectedIndex = customDetails
                                         .indexOf(value);
+
                                     context.read<CustomsBloc>().add(
                                       CustomsEvent.selectCustomListing(
                                         selectedListing: value,
                                         selectedIndex: selectedIndex,
                                       ),
                                     );
-                                    context.read<CustomsBloc>().add(
-                                      CustomsEvent.searchTorrents(),
+
+                                    context.read<CustomsTorrentsBloc>().add(
+                                      CustomsTorrentsEvent.searchCustomTorrents(
+                                        selectedIndex: selectedIndex,
+                                      ),
                                     );
                                   }
                                 },
                                 selectedValue: selectedCustomListing,
                               ),
-                              if (torrentsList != null)
-                                TorrentListWidget(torrents: torrentsList),
                             ],
                           ),
-                      error: (String errorMessage) {
-                        return Text("Error : $errorMessage");
-                      },
+                    );
+                  },
+                ),
+                const SizedBox(height: 16),
+                BlocBuilder<CustomsTorrentsBloc, CustomsTorrentsState>(
+                  builder: (context, state) {
+                    return state.when(
+                      initial: () => Text(
+                        "Choose a Custom Listing...",
+                        style: TextStyle(color: AppColors.greenColor),
+                      ),
+
+                      loading: () =>
+                          const Center(child: CircularProgressBarWidget()),
+
+                      error: (errorMessage) => Text("Error : $errorMessage"),
+
+                      loaded: (torrentsList) =>
+                          TorrentListWidget(torrents: torrentsList),
                     );
                   },
                 ),

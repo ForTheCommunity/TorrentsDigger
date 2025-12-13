@@ -1,17 +1,4 @@
-use lib_torrents_digger::{
-    search_torrent,
-    sources::{customs::search_custom, get_customs, get_source_details},
-    static_includes::get_current_version,
-    sync_request::{check_for_update, extract_ip_details},
-    trackers::{load_trackers_string, DefaultTrackers},
-};
-
-use lib_torrents_digger::sources::Source as ExternalSource;
-use lib_torrents_digger::torrent::Torrent as ExternalTorrent;
-
-use crate::api::internals::{
-    InternalIpDetails, InternalQueryOptions, InternalSource, InternalSourceDetails, InternalTorrent,
-};
+use crate::api::preludes::*;
 
 pub fn fetch_source_details() -> Vec<InternalSource> {
     let external_sources_vec: Vec<ExternalSource> = get_source_details();
@@ -96,23 +83,9 @@ pub fn dig_torrent(
     }
 }
 
-pub fn get_ip_details() -> Result<InternalIpDetails, String> {
+pub fn get_ip_details() -> Result<String, String> {
     match extract_ip_details() {
-        Ok(a) => Ok(InternalIpDetails {
-            ip_addr: a.ip_addr,
-            isp: a.isp,
-            continent: a.continent,
-            country: a.country,
-            capital: a.capital,
-            city: a.city,
-            region: a.region,
-            latitude: a.latitude,
-            longitude: a.longitude,
-            timezone: a.timezone,
-            flag_unicode: a.flag_unicode,
-            is_vpn: a.is_vpn,
-            is_tor: a.is_tor,
-        }),
+        Ok(a) => Ok(a),
         Err(e) => Err(e.to_string()),
     }
 }

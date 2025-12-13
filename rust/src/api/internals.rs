@@ -45,19 +45,3 @@ pub struct InternalProxy {
     pub proxy_username: Option<String>,
     pub proxy_password: Option<String>,
 }
-
-pub struct InternalIpDetails {
-    pub ip_addr: String,
-    pub isp: String,
-    pub continent: String,
-    pub country: String,
-    pub capital: String,
-    pub city: String,
-    pub region: String,
-    pub latitude: f64,
-    pub longitude: f64,
-    pub timezone: String,
-    pub flag_unicode: String,
-    pub is_vpn: bool,
-    pub is_tor: bool,
-}

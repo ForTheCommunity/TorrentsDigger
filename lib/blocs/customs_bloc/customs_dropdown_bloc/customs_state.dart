@@ -8,7 +8,6 @@ class CustomsState with _$CustomsState {
     required List<String> customsDetails,
     String? selectedCustomListing,
     int? selectedCustomListingIndex,
-    @Default(null) List<InternalTorrent>? torrentsList,
   }) = _Loaded;
   const factory CustomsState.error({required String errorMessage}) = _Error;
 }

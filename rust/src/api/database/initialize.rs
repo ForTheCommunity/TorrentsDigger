@@ -1,4 +1,5 @@
-use lib_torrents_digger::database::initialize::initialize_database;
+use crate::api::preludes::*;
+
 pub fn initialize_torrents_digger_database(
     torrents_digger_database_directory: String,
 ) -> Result<(), String> {
