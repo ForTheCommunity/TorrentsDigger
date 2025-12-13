@@ -7,4 +7,5 @@ class CustomsEvent with _$CustomsEvent {
     required String selectedListing,
     required int selectedIndex,
   }) = _SelectCustomListing;
+  const factory CustomsEvent.reset() = _Reset;
 }

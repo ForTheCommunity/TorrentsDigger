@@ -16,16 +16,19 @@ class CustomsScreen extends StatefulWidget {
 
 class _CustomsScreenState extends State<CustomsScreen> {
   late final CustomsTorrentsBloc _customsTorrentsBloc;
+  late final CustomsBloc _customsBloc;
 
   @override
   void initState() {
     super.initState();
     _customsTorrentsBloc = context.read<CustomsTorrentsBloc>();
+    _customsBloc = context.read<CustomsBloc>();
   }
 
   @override
   void dispose() {
     _customsTorrentsBloc.add(const CustomsTorrentsEvent.reset());
+    _customsBloc.add(const CustomsEvent.reset());
     super.dispose();
   }
 

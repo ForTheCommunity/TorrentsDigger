@@ -11,6 +11,7 @@ class CustomsBloc extends Bloc<CustomsEvent, CustomsState> {
   CustomsBloc() : super(_Initial()) {
     on<_LoadCustoms>(_loadCustoms);
     on<_SelectCustomListing>(_selectCustomListing);
+    on<_Reset>(_reset);
   }
 
   void _loadCustoms(_LoadCustoms event, Emitter<CustomsState> emit) async {
@@ -47,6 +48,18 @@ class CustomsBloc extends Bloc<CustomsEvent, CustomsState> {
           duration: 5,
         );
       }
+    }
+  }
+
+  void _reset(_Reset event, Emitter<CustomsState> emit) {
+    final currentState = state;
+    if (currentState is _Loaded) {
+      emit(
+        currentState.copyWith(
+          selectedCustomListing: null,
+          selectedCustomListingIndex: null,
+        ),
+      );
     }
   }
 }
