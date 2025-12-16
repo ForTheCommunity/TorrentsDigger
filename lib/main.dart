@@ -7,6 +7,7 @@ import 'package:torrents_digger/blocs/default_trackers_bloc/default_trackers_blo
 import 'package:torrents_digger/blocs/proxy_settings_bloc/proxy_settings_bloc.dart';
 import 'package:torrents_digger/blocs/pagination_bloc/pagination_bloc.dart';
 import 'package:torrents_digger/blocs/sources_bloc/source_bloc.dart';
+import 'package:torrents_digger/blocs/themes_bloc/themes_bloc.dart';
 import 'package:torrents_digger/blocs/torrent_bloc/torrent_bloc.dart';
 import 'package:torrents_digger/configs/colors.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
@@ -55,6 +56,7 @@ class MyApp extends StatelessWidget {
           create: (_) => CustomsBloc()..add(CustomsEvent.loadCustoms()),
         ),
         BlocProvider(create: (_) => CustomsTorrentsBloc()),
+        BlocProvider(create: (_) => ThemesBloc()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -68,7 +70,6 @@ class MyApp extends StatelessWidget {
             titleTextStyle: TextStyle(
               color: AppColors.greenColor,
               fontSize: 25,
-              letterSpacing: 5,
             ),
           ),
         ),

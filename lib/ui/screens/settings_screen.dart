@@ -17,33 +17,21 @@ class SettingsScreen extends StatelessWidget {
       child: Builder(
         builder: (context) {
           return Scaffold(
+            appBar: AppBar(
+              title: const Text('Settings'),
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ),
             body: ListView(
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: Icon(Icons.arrow_back),
-                          iconSize: 30,
-                        ),
-                        SizedBox(width: 12),
-                        Text(
-                          'Settings',
-                          style: TextStyle(
-                            color: AppColors.greenColor,
-                            letterSpacing: 2,
-                            fontSize: 25,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 25),
+                    SizedBox(height: 10),
                     ListTile(
                       leading: const Icon(Icons.hub),
                       title: const Text('Default Trackers'),
@@ -69,6 +57,13 @@ class SettingsScreen extends StatelessWidget {
                       title: const Text('Database'),
                       onTap: () {
                         Navigator.pushNamed(context, RoutesName.databaseScreen);
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.color_lens_outlined),
+                      title: const Text("Theme"),
+                      onTap: () {
+                        Navigator.pushNamed(context, RoutesName.themesScreen);
                       },
                     ),
                     BlocConsumer<SettingsBloc, SettingsState>(

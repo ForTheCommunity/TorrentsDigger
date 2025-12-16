@@ -5,6 +5,7 @@ import 'package:torrents_digger/ui/screens/database_screen.dart';
 import 'package:torrents_digger/ui/screens/default_trackers_screen.dart';
 import 'package:torrents_digger/ui/screens/proxy_setting_screen.dart';
 import 'package:torrents_digger/ui/screens/settings_screen.dart';
+import 'package:torrents_digger/ui/screens/themes_screen.dart';
 import '../ui/screens/main_screen.dart';
 import 'routes_name.dart';
 
@@ -35,6 +36,9 @@ class Routes {
 
       case RoutesName.customsScreen:
         return MaterialPageRoute(builder: (context) => const CustomsScreen());
+
+      case RoutesName.themesScreen:
+        return MaterialPageRoute(builder: (context) => const ThemesScreen());
 
       default:
         return MaterialPageRoute(
