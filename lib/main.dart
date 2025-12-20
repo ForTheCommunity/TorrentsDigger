@@ -9,7 +9,7 @@ import 'package:torrents_digger/blocs/pagination_bloc/pagination_bloc.dart';
 import 'package:torrents_digger/blocs/sources_bloc/source_bloc.dart';
 import 'package:torrents_digger/blocs/themes_bloc/themes_bloc.dart';
 import 'package:torrents_digger/blocs/torrent_bloc/torrent_bloc.dart';
-import 'package:torrents_digger/configs/colors.dart';
+import 'package:torrents_digger/configs/build_context_extension.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 import 'package:torrents_digger/database/initialize.dart';
 import 'package:torrents_digger/routes/routes.dart';
@@ -56,25 +56,33 @@ class MyApp extends StatelessWidget {
           create: (_) => CustomsBloc()..add(CustomsEvent.loadCustoms()),
         ),
         BlocProvider(create: (_) => CustomsTorrentsBloc()),
-        BlocProvider(create: (_) => ThemesBloc()),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        scaffoldMessengerKey: scaffoldMessengerKey, // Assigning the global key
-        title: "Torrents Digger",
-        theme: ThemeData(
-          brightness: Brightness.dark,
-          scaffoldBackgroundColor: AppColors.pureBlack,
-          appBarTheme: AppBarTheme(
-            backgroundColor: AppColors.pureBlack,
-            titleTextStyle: TextStyle(
-              color: AppColors.greenColor,
-              fontSize: 25,
-            ),
-          ),
+        BlocProvider(
+          lazy: false,
+          create: (_) => ThemesBloc()..add(ThemesEvent.loadTheme()),
         ),
-        initialRoute: RoutesName.mainScreen,
-        onGenerateRoute: Routes.generateRoute,
+      ],
+      child: BlocBuilder<ThemesBloc, ThemesState>(
+        builder: (context, state) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            scaffoldMessengerKey:
+                scaffoldMessengerKey, // Assigning the global key
+            title: "Torrents Digger",
+            theme: ThemeData(
+              brightness: Brightness.dark,
+              scaffoldBackgroundColor: context.appColors.scaffoldColor,
+              appBarTheme: AppBarTheme(
+                backgroundColor: context.appColors.appBarBackgroundColor,
+                titleTextStyle: TextStyle(
+                  color: context.appColors.appBarTextColor,
+                  fontSize: 25,
+                ),
+              ),
+            ),
+            initialRoute: RoutesName.mainScreen,
+            onGenerateRoute: Routes.generateRoute,
+          );
+        },
       ),
     );
   }

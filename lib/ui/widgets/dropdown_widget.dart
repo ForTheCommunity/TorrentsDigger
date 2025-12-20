@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:torrents_digger/configs/colors.dart';
+import 'package:torrents_digger/configs/build_context_extension.dart';
 
 class DropdownWidget extends StatelessWidget {
   final List<String> items;
@@ -22,7 +22,7 @@ class DropdownWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       decoration: BoxDecoration(
-        color: AppColors.sourcesDropdownBackgroundColor,
+        color: context.appColors.sourcesDropdownBackgroundColor,
         borderRadius: BorderRadius.circular(15),
       ),
 
@@ -30,17 +30,20 @@ class DropdownWidget extends StatelessWidget {
         child: DropdownButton<String>(
           hint: Text(
             hintText,
-            style: TextStyle(color: AppColors.greenColor, wordSpacing: 3),
+            style: TextStyle(
+              color: context.appColors.generalTextColor,
+              wordSpacing: 3,
+            ),
           ),
           value: selectedValue,
           isExpanded: true,
-          style: const TextStyle(
-            color: AppColors.greenColor,
+          style: TextStyle(
+            color: context.appColors.generalTextColor,
             fontSize: 15,
             fontWeight: FontWeight.w600,
             letterSpacing: 0.9,
           ),
-          dropdownColor: AppColors.sourcesDropdownOpenedBackgroundColor,
+          dropdownColor: context.appColors.sourcesDropdownOpenedBackgroundColor,
 
           items: items.map((item) {
             return DropdownMenuItem(value: item, child: Text(item));

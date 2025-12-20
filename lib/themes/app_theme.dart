@@ -1,0 +1,71 @@
+import 'package:flutter/material.dart';
+
+abstract class AppTheme {
+  String get themeName;
+  String get themeCode;
+
+  Color get scaffoldColor;
+  Color get appBarBackgroundColor;
+  Color get appBarTextColor;
+
+  Color get generalTextColor;
+  Color get settingsTextColor;
+
+  Color get searchBarPlaceholderColor;
+  Color get searchBarBackgroundColor;
+
+  Color get sourcesDropdownBackgroundColor;
+  Color get categoriesDropdownBackgroundColor;
+  Color get sourcesDropdownOpenedBackgroundColor;
+  Color get categoriesDropdownOpenedBackgroundColor;
+
+  Color get sourceLabelColor;
+  Color get categoryLabelColor;
+  Color get cardColor;
+
+  Color get cardPrimaryTextColor;
+  Color get cardSecondaryTextColor;
+
+  Color get leechersIconColor;
+  Color get leechersTextColor;
+  Color get seedersIconColor;
+  Color get seedersTextColor;
+  Color get creationDateIconColor;
+  Color get creationDateTextColor;
+
+  Color get magnetBackgroundColor;
+  Color get magnetForegroundColor;
+  Color get magnetIconColor;
+  Color get magnetButtonSurfaceTintColor;
+
+  Color get bookmarkIconColor;
+  Color get bookmarkedIconColor;
+
+  Color get addTrackersListUrlTextFieldBackgroundColor;
+  Color get addTrackersListUrlTextButtonTextColor;
+  Color get addTrackersListUrlTextButtonBorderColor;
+
+  Color get hyperlinkColor;
+  Color get defaultTrackersInfoColor;
+  Color get textFormFieldInactiveColor;
+  Color get textFormFieldActiveColor;
+
+  Color get aboutDialogIconColor;
+  Color get aboutDialogTextColor;
+
+  Color get settingsFloatingActionButtonForegroundColor;
+  Color get settingsFloatingActionButtonBackgroundColor;
+  Color get settingsFloatingActionButtonHoverBackgroundColor;
+
+  Color get activeTrackersListIconColor;
+  Color get circularProgressIndicatorColor;
+
+  Color get proxyIconColor;
+  Color get proxyTextColor;
+  Color get proxyProtocolArrowDropdownIconColor;
+  Color get proxyDeleteIconColor;
+
+  // Color get scaffoldMessengerMessageColor;
+  // Color get scaffoldMessengerBorderColor;
+  // Color get scaffoldMessengerBackgroundColor;
+}

@@ -167,7 +167,8 @@ pub fn load_trackers_string() -> Result<bool> {
     let file_name = trackers_list_type.get_filename();
 
     // platform specific root dir
-    let app_root_dir_path = fetch_kv(PLATFORM_SPECIFIC_DIR)?;
+    let app_root_dir_path = fetch_kv(PLATFORM_SPECIFIC_DIR)?
+        .ok_or_else(|| anyhow!("Platform Specific Root Dir Path not found in database."))?;
 
     let file_path = Path::new(&app_root_dir_path)
         .join(APP_DIR_NAME)

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/proxy_settings_bloc/proxy_settings_bloc.dart';
-import 'package:torrents_digger/configs/colors.dart';
+import 'package:torrents_digger/configs/build_context_extension.dart';
 
 class ProxyAddWidget extends StatelessWidget {
   final List<(int, String)> proxyDetails;
@@ -29,7 +29,7 @@ class ProxyAddWidget extends StatelessWidget {
           children: <Widget>[
             Text(
               "   Add Proxy :",
-              style: TextStyle(color: AppColors.greenColor, fontSize: 15),
+              style: TextStyle(color: context.appColors.generalTextColor, fontSize: 15),
             ),
             // Proxy Protocol Selection Button.
             Padding(
@@ -59,11 +59,11 @@ class ProxyAddWidget extends StatelessWidget {
                     horizontal: 16.0,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.sourcesDropdownBackgroundColor,
+                    color: context.appColors.sourcesDropdownBackgroundColor,
                     border: Border.symmetric(
                       vertical: BorderSide(
                         width: 2,
-                        color: AppColors.greenColor,
+                        color: context.appColors.generalTextColor,
                       ),
                     ),
                     borderRadius: BorderRadius.circular(8.0),
@@ -75,9 +75,9 @@ class ProxyAddWidget extends StatelessWidget {
                         'Protocol: ${selectedProxy ?? 'NONE'}',
                         style: const TextStyle(fontSize: 16),
                       ),
-                      const Icon(
+                       Icon(
                         Icons.arrow_drop_down,
-                        color: AppColors.pureWhite,
+                        color: context.appColors.proxyProtocolArrowDropdownIconColor,
                       ),
                     ],
                   ),
@@ -89,20 +89,20 @@ class ProxyAddWidget extends StatelessWidget {
                 (selectedProxy?.isNotEmpty ?? false)) ...[
               TextFormField(
                 controller: proxyNameController,
-                decoration: const InputDecoration(
+                decoration:  InputDecoration(
                   labelText: 'Proxy Name',
-                  labelStyle: TextStyle(color: AppColors.greenColor),
+                  labelStyle: TextStyle(color: context.appColors.generalTextColor),
                   prefixIcon: Icon(Icons.note),
                   border: OutlineInputBorder(),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: AppColors.textFormFieldInactiveColor,
+                      color: context.appColors.textFormFieldInactiveColor,
                       width: 1.0,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: AppColors.textFormFieldActiveColor,
+                      color: context.appColors.textFormFieldActiveColor,
                       width: 2.0,
                     ),
                   ),
@@ -118,20 +118,20 @@ class ProxyAddWidget extends StatelessWidget {
               const SizedBox(height: 16.0),
               TextFormField(
                 controller: ipController,
-                decoration: const InputDecoration(
+                decoration:  InputDecoration(
                   labelText: 'IP Address',
-                  labelStyle: TextStyle(color: AppColors.greenColor),
+                  labelStyle: TextStyle(color: context.appColors.generalTextColor),
                   prefixIcon: Icon(Icons.computer),
                   border: OutlineInputBorder(),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: AppColors.textFormFieldInactiveColor,
+                      color: context.appColors.textFormFieldInactiveColor,
                       width: 1.0,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: AppColors.textFormFieldActiveColor,
+                      color: context.appColors.textFormFieldActiveColor,
                       width: 2.0,
                     ),
                   ),
@@ -151,20 +151,20 @@ class ProxyAddWidget extends StatelessWidget {
               const SizedBox(height: 16.0),
               TextFormField(
                 controller: portController,
-                decoration: const InputDecoration(
+                decoration:  InputDecoration(
                   labelText: 'Port Number',
-                  labelStyle: TextStyle(color: AppColors.greenColor),
+                  labelStyle: TextStyle(color: context.appColors.generalTextColor),
                   prefixIcon: Icon(Icons.lan),
                   border: OutlineInputBorder(),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: AppColors.textFormFieldInactiveColor,
+                      color: context.appColors.textFormFieldInactiveColor,
                       width: 1.0,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: AppColors.textFormFieldActiveColor,
+                      color: context.appColors.textFormFieldActiveColor,
                       width: 2.0,
                     ),
                   ),
@@ -180,20 +180,20 @@ class ProxyAddWidget extends StatelessWidget {
               const SizedBox(height: 16.0),
               TextFormField(
                 controller: usernameController,
-                decoration: const InputDecoration(
+                decoration:  InputDecoration(
                   labelText: 'Username (Optional)',
-                  labelStyle: TextStyle(color: AppColors.greenColor),
+                  labelStyle: TextStyle(color: context.appColors.generalTextColor),
                   prefixIcon: Icon(Icons.person),
                   border: OutlineInputBorder(),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: AppColors.textFormFieldInactiveColor,
+                      color: context.appColors.textFormFieldInactiveColor,
                       width: 1.0,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: AppColors.textFormFieldActiveColor,
+                      color: context.appColors.textFormFieldActiveColor,
                       width: 2.0,
                     ),
                   ),
@@ -202,20 +202,20 @@ class ProxyAddWidget extends StatelessWidget {
               const SizedBox(height: 16.0),
               TextFormField(
                 controller: passwordController,
-                decoration: const InputDecoration(
+                decoration:  InputDecoration(
                   labelText: 'Password (Optional)',
-                  labelStyle: TextStyle(color: AppColors.greenColor),
+                  labelStyle: TextStyle(color: context.appColors.generalTextColor),
                   prefixIcon: Icon(Icons.key),
                   border: OutlineInputBorder(),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: AppColors.textFormFieldInactiveColor,
+                      color: context.appColors.textFormFieldInactiveColor,
                       width: 1.0,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: AppColors.textFormFieldActiveColor,
+                      color: context.appColors.textFormFieldActiveColor,
                       width: 2.0,
                     ),
                   ),
@@ -241,9 +241,9 @@ class ProxyAddWidget extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                 ),
-                child: const Text(
+                child:  Text(
                   'Save Proxy',
-                  style: TextStyle(color: AppColors.greenColor, fontSize: 18),
+                  style: TextStyle(color: context.appColors.generalTextColor, fontSize: 18),
                 ),
               ),
             ],

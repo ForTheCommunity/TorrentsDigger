@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:torrents_digger/configs/build_context_extension.dart';
 import 'package:torrents_digger/routes/routes_name.dart';
-import '../../configs/colors.dart';
 
 class SettingButton extends StatelessWidget {
   const SettingButton({super.key});
@@ -12,9 +12,12 @@ class SettingButton extends StatelessWidget {
         Navigator.pushNamed(context, RoutesName.settingsScreen);
       },
       tooltip: 'Settings',
-      foregroundColor: AppColors.settingsFloatingActionButtonForegroundColor,
-      backgroundColor: AppColors.settingsFloatingActionButtonBackgroundColor,
-      hoverColor: AppColors.settingsFloatingActionButtonHoverBackgroundColor,
+      foregroundColor:
+          context.appColors.settingsFloatingActionButtonForegroundColor,
+      backgroundColor:
+          context.appColors.settingsFloatingActionButtonBackgroundColor,
+      hoverColor:
+          context.appColors.settingsFloatingActionButtonHoverBackgroundColor,
       child: const Icon(Icons.settings),
     );
   }

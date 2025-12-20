@@ -37,7 +37,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.11.1";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -6537961;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1131822192;
 
 // Section: executor
 
@@ -285,6 +285,40 @@ fn wire__crate__api__app__fetch_source_details_impl(
             move |context| {
                 transform_result_sse::<_, ()>((move || {
                     let output_ok = Result::<_, ()>::Ok(crate::api::app::fetch_source_details())?;
+                    Ok(output_ok)
+                })())
+            }
+        },
+    )
+}
+fn wire__crate__api__database__get_settings_kv__get_a_settings_kv_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "get_a_settings_kv",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_key = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| {
+                transform_result_sse::<_, String>((move || {
+                    let output_ok =
+                        crate::api::database::get_settings_kv::get_a_settings_kv(api_key)?;
                     Ok(output_ok)
                 })())
             }
@@ -646,6 +680,42 @@ fn wire__crate__api__database__initialize__initialize_torrents_digger_database_i
                         crate::api::database::initialize::initialize_torrents_digger_database(
                             api_torrents_digger_database_directory,
                         )?;
+                    Ok(output_ok)
+                })())
+            }
+        },
+    )
+}
+fn wire__crate__api__database__get_settings_kv__insert_or_update_kv_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "insert_or_update_kv",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_key = <String>::sse_decode(&mut deserializer);
+            let api_value = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| {
+                transform_result_sse::<_, String>((move || {
+                    let output_ok = crate::api::database::get_settings_kv::insert_or_update_kv(
+                        api_key, api_value,
+                    )?;
                     Ok(output_ok)
                 })())
             }
@@ -1137,75 +1207,87 @@ fn pde_ffi_dispatcher_primary_impl(
         5 => wire__crate__api__app__dig_custom_torrents_impl(port, ptr, rust_vec_len, data_len),
         6 => wire__crate__api__app__dig_torrent_impl(port, ptr, rust_vec_len, data_len),
         7 => wire__crate__api__app__fetch_source_details_impl(port, ptr, rust_vec_len, data_len),
-        8 => wire__crate__api__database__get_settings_kv__get_active_default_trackers_list_impl(
+        8 => wire__crate__api__database__get_settings_kv__get_a_settings_kv_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        9 => wire__crate__api__database__bookmark__get_all_bookmarks_impl(
+        9 => wire__crate__api__database__get_settings_kv__get_active_default_trackers_list_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        10 => wire__crate__api__app__get_all_default_trackers_list_impl(
+        10 => wire__crate__api__database__bookmark__get_all_bookmarks_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        11 => {
+        11 => wire__crate__api__app__get_all_default_trackers_list_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        12 => {
             wire__crate__api__app__get_app_current_version_impl(port, ptr, rust_vec_len, data_len)
         }
-        12 => wire__crate__api__app__get_customs_details_impl(port, ptr, rust_vec_len, data_len),
-        13 => wire__crate__api__app__get_ip_details_impl(port, ptr, rust_vec_len, data_len),
-        14 => {
+        13 => wire__crate__api__app__get_customs_details_impl(port, ptr, rust_vec_len, data_len),
+        14 => wire__crate__api__app__get_ip_details_impl(port, ptr, rust_vec_len, data_len),
+        15 => {
             wire__crate__api__app__get_processed_magnet_link_impl(port, ptr, rust_vec_len, data_len)
         }
-        15 => wire__crate__api__database__proxy__get_saved_proxy_impl(
+        16 => wire__crate__api__database__proxy__get_saved_proxy_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        16 => wire__crate__api__database__get_settings_kv__get_settings_kv_impl(
+        17 => wire__crate__api__database__get_settings_kv__get_settings_kv_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        17 => wire__crate__api__database__proxy__get_supported_proxy_details_impl(
+        18 => wire__crate__api__database__proxy__get_supported_proxy_details_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        18 => wire__crate__api__database__initialize__initialize_torrents_digger_database_impl(
+        19 => wire__crate__api__database__initialize__initialize_torrents_digger_database_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        19 => wire__crate__api__app__load_default_trackers_string_impl(
+        20 => wire__crate__api__database__get_settings_kv__insert_or_update_kv_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        20 => wire__crate__api__database__bookmark__remove_bookmark_impl(
+        21 => wire__crate__api__app__load_default_trackers_string_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        21 => wire__crate__api__database__proxy__save_proxy_api_impl(
+        22 => wire__crate__api__database__bookmark__remove_bookmark_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        22 => wire__crate__api__database__get_settings_kv__set_default_trackers_list_impl(
+        23 => wire__crate__api__database__proxy__save_proxy_api_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        24 => wire__crate__api__database__get_settings_kv__set_default_trackers_list_impl(
             port,
             ptr,
             rust_vec_len,

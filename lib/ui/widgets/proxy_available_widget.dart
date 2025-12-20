@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/proxy_settings_bloc/proxy_settings_bloc.dart';
-import 'package:torrents_digger/configs/colors.dart';
+import 'package:torrents_digger/configs/build_context_extension.dart';
 import 'package:torrents_digger/src/rust/api/internals.dart';
 
 class ProxyAvailableWidget extends StatelessWidget {
@@ -30,38 +30,38 @@ class ProxyAvailableWidget extends StatelessWidget {
       child: Column(
         children: [
           Card(
-            color: AppColors.cardColor,
+            color: context.appColors.cardColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
             child: ListTile(
-              leading: const Icon(Icons.vpn_lock, color: AppColors.greenColor),
+              leading:  Icon(Icons.vpn_lock, color: context.appColors.proxyIconColor),
               title: Text(
                 proxyName.toUpperCase(),
-                style: TextStyle(color: AppColors.greenColor, fontSize: 16),
+                style: TextStyle(color: context.appColors.proxyTextColor, fontSize: 16),
               ),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     "Type : ${proxyType.toUpperCase()}",
-                    style: const TextStyle(color: AppColors.greenColor),
+                    style:  TextStyle(color: context.appColors.proxyTextColor,)
                   ),
                   Text(
                     "Server : $proxyServer",
-                    style: const TextStyle(color: AppColors.greenColor),
+                    style:  TextStyle(color: context.appColors.proxyTextColor),
                   ),
                   Text(
                     "Port : $proxyServerPort",
-                    style: const TextStyle(color: AppColors.greenColor),
+                    style:  TextStyle(color: context.appColors.proxyTextColor),
                   ),
                   Text(
                     "Username : $proxyServerUsername",
-                    style: const TextStyle(color: AppColors.greenColor),
+                    style:  TextStyle(color: context.appColors.proxyTextColor),
                   ),
                   Text(
                     "Password : $proxyServerPassword",
-                    style: const TextStyle(color: AppColors.greenColor),
+                    style:  TextStyle(color: context.appColors.proxyTextColor),
                   ),
                 ],
               ),
@@ -71,7 +71,7 @@ class ProxyAvailableWidget extends StatelessWidget {
                     DeleteProxyEvent(proxyId: proxyId),
                   );
                 },
-                icon: const Icon(Icons.delete, color: AppColors.brightRed),
+                icon:  Icon(Icons.delete, color: context.appColors.proxyDeleteIconColor),
               ),
             ),
           ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/settings_bloc/settings_bloc.dart';
-import 'package:torrents_digger/configs/colors.dart';
+import 'package:torrents_digger/configs/build_context_extension.dart';
 import 'package:torrents_digger/routes/routes_name.dart';
 import 'package:torrents_digger/ui/widgets/about_widget.dart';
 import 'package:torrents_digger/ui/widgets/circular_progress_bar_widget.dart';
@@ -18,9 +18,15 @@ class SettingsScreen extends StatelessWidget {
         builder: (context) {
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Settings'),
+              title: Text(
+                'Settings',
+                style: TextStyle(color: context.appColors.settingsTextColor),
+              ),
               leading: IconButton(
-                icon: const Icon(Icons.arrow_back),
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: context.appColors.settingsTextColor,
+                ),
                 onPressed: () {
                   Navigator.pop(context);
                 },
@@ -33,8 +39,16 @@ class SettingsScreen extends StatelessWidget {
                   children: [
                     SizedBox(height: 10),
                     ListTile(
-                      leading: const Icon(Icons.hub),
-                      title: const Text('Default Trackers'),
+                      leading: Icon(
+                        color: context.appColors.settingsTextColor,
+                        Icons.hub,
+                      ),
+                      title: Text(
+                        'Default Trackers',
+                        style: TextStyle(
+                          color: context.appColors.settingsTextColor,
+                        ),
+                      ),
                       onTap: () {
                         Navigator.pushNamed(
                           context,
@@ -43,8 +57,16 @@ class SettingsScreen extends StatelessWidget {
                       },
                     ),
                     ListTile(
-                      leading: const Icon(Icons.settings_ethernet),
-                      title: const Text('Proxy'),
+                      leading: Icon(
+                        color: context.appColors.settingsTextColor,
+                        Icons.settings_ethernet,
+                      ),
+                      title: Text(
+                        'Proxy',
+                        style: TextStyle(
+                          color: context.appColors.settingsTextColor,
+                        ),
+                      ),
                       onTap: () {
                         Navigator.pushNamed(
                           context,
@@ -53,15 +75,31 @@ class SettingsScreen extends StatelessWidget {
                       },
                     ),
                     ListTile(
-                      leading: const Icon(Icons.import_export),
-                      title: const Text('Database'),
+                      leading: Icon(
+                        color: context.appColors.settingsTextColor,
+                        Icons.import_export,
+                      ),
+                      title: Text(
+                        'Database',
+                        style: TextStyle(
+                          color: context.appColors.settingsTextColor,
+                        ),
+                      ),
                       onTap: () {
                         Navigator.pushNamed(context, RoutesName.databaseScreen);
                       },
                     ),
                     ListTile(
-                      leading: const Icon(Icons.color_lens_outlined),
-                      title: const Text("Theme"),
+                      leading: Icon(
+                        color: context.appColors.settingsTextColor,
+                        Icons.color_lens_outlined,
+                      ),
+                      title: Text(
+                        "Theme",
+                        style: TextStyle(
+                          color: context.appColors.settingsTextColor,
+                        ),
+                      ),
                       onTap: () {
                         Navigator.pushNamed(context, RoutesName.themesScreen);
                       },
@@ -91,9 +129,17 @@ class SettingsScreen extends StatelessWidget {
                               height: 24,
                               child: CircularProgressBarWidget(),
                             ),
-                            orElse: () => const Icon(Icons.update),
+                            orElse: () => Icon(
+                              color: context.appColors.settingsTextColor,
+                              Icons.update,
+                            ),
                           ),
-                          title: const Text('Check For Update'),
+                          title: Text(
+                            'Check For Update',
+                            style: TextStyle(
+                              color: context.appColors.settingsTextColor,
+                            ),
+                          ),
                           onTap: state.maybeWhen(
                             updateChecking: () => null,
                             orElse: () =>
@@ -105,8 +151,16 @@ class SettingsScreen extends StatelessWidget {
                       },
                     ),
                     ListTile(
-                      leading: const Icon(Icons.details),
-                      title: const Text('About'),
+                      leading: Icon(
+                        color: context.appColors.settingsTextColor,
+                        Icons.details,
+                      ),
+                      title: Text(
+                        'About',
+                        style: TextStyle(
+                          color: context.appColors.settingsTextColor,
+                        ),
+                      ),
                       onTap: () {
                         final settingsBloc = context.read<SettingsBloc>();
                         settingsBloc.add(

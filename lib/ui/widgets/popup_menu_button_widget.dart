@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:torrents_digger/configs/colors.dart';
+import 'package:torrents_digger/configs/build_context_extension.dart';
 import 'package:torrents_digger/routes/routes_name.dart';
 
 class PopupMenuButtonWidget extends StatelessWidget {
@@ -7,8 +7,9 @@ class PopupMenuButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = context.appColors;
     return PopupMenuButton<String>(
-      icon: Icon(Icons.more_vert, color: AppColors.greenColor, size: 25),
+      icon: Icon(Icons.more_vert, color: appColors.generalTextColor, size: 25),
       onSelected: (value) {
         switch (value) {
           case 'bookmarks':
@@ -26,7 +27,7 @@ class PopupMenuButtonWidget extends StatelessWidget {
             child: Text(
               'Customs',
               style: TextStyle(
-                color: AppColors.greenColor,
+                color: appColors.generalTextColor,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 2,
               ),
@@ -37,7 +38,7 @@ class PopupMenuButtonWidget extends StatelessWidget {
             child: Text(
               'Bookmarks',
               style: TextStyle(
-                color: AppColors.greenColor,
+                color: appColors.generalTextColor,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 2,
               ),

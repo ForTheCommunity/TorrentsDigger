@@ -8,5 +8,9 @@ pub fn set_trackers_list(index: &str) -> Result<usize, rusqlite::Error> {
 }
 
 pub fn get_active_trackers_list() -> Result<String, rusqlite::Error> {
-    fetch_kv(ACTIVE_TRACKERS_LIST_KEY)
+    match fetch_kv(ACTIVE_TRACKERS_LIST_KEY) {
+        Ok(Some(trackers)) => Ok(trackers),
+        Ok(None) => Err(rusqlite::Error::QueryReturnedNoRows),
+        Err(e) => Err(e),
+    }
 }

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:torrents_digger/configs/colors.dart';
+import 'package:torrents_digger/configs/build_context_extension.dart';
 import 'package:torrents_digger/database/import_export.dart';
 
 class DatabaseScreen extends StatelessWidget {
@@ -28,7 +28,7 @@ class DatabaseScreen extends StatelessWidget {
                   Text(
                     'Database',
                     style: TextStyle(
-                      color: AppColors.greenColor,
+                      color: context.appColors.appBarTextColor,
                       letterSpacing: 2,
                       fontSize: 25,
                       fontWeight: FontWeight.w500,

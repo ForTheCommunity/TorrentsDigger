@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/bookmark_bloc/bookmark_bloc.dart';
-import 'package:torrents_digger/configs/colors.dart';
+import 'package:torrents_digger/configs/build_context_extension.dart';
 import 'package:torrents_digger/ui/widgets/circular_progress_bar_widget.dart';
 import 'package:torrents_digger/ui/widgets/torrent_list_widget.dart';
 
@@ -27,7 +27,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
         title: Text(
           'Bookmarks',
           style: TextStyle(
-            color: AppColors.greenColor,
+            color: context.appColors.appBarTextColor,
             letterSpacing: 2,
             fontSize: 25,
             fontWeight: FontWeight.w500,
@@ -63,7 +63,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                               Text(
                                 "Bookmark Torrents to save it for later.",
                                 style: TextStyle(
-                                  color: AppColors.greenColor,
+                                  color: context.appColors.generalTextColor,
                                   fontSize: 15,
                                 ),
                               ),

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/pagination_bloc/pagination_bloc.dart';
 import 'package:torrents_digger/blocs/sources_bloc/source_bloc.dart';
 import 'package:torrents_digger/blocs/torrent_bloc/torrent_bloc.dart';
-import 'package:torrents_digger/configs/colors.dart';
+import 'package:torrents_digger/configs/build_context_extension.dart';
 import 'package:torrents_digger/ui/widgets/dropdowns_ui.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 import 'package:torrents_digger/ui/widgets/search_bar_widget.dart';
@@ -18,7 +18,7 @@ class MainScreen extends StatelessWidget {
     final TextEditingController searchController = TextEditingController();
     return Scaffold(
       floatingActionButton: SettingButton(),
-      backgroundColor: AppColors.pureBlack,
+      backgroundColor: context.appColors.scaffoldColor,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -56,7 +56,10 @@ class MainScreen extends StatelessWidget {
                             (details.queryOptions.sortingOrders &&
                                 sourceState.selectedSortingOrder != null);
 
-                        if (!categoriesOk || !filtersOk || !sortingsOk || !sortingsOrderOk) {
+                        if (!categoriesOk ||
+                            !filtersOk ||
+                            !sortingsOk ||
+                            !sortingsOrderOk) {
                           createSnackBar(
                             message: "Use Available Options... :)",
                             duration: 2,

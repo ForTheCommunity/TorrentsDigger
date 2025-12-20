@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/settings_bloc/settings_bloc.dart';
-import 'package:torrents_digger/configs/colors.dart';
+import 'package:torrents_digger/configs/build_context_extension.dart';
 import 'package:torrents_digger/ui/widgets/circular_progress_bar_widget.dart';
 import 'package:torrents_digger/ui/widgets/launch_url.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
@@ -45,11 +45,16 @@ class AboutWidget extends StatelessWidget {
                   },
                   child: Row(
                     children: [
-                      Icon(Icons.code, color: AppColors.aboutDialogIconColor),
+                      Icon(
+                        Icons.code,
+                        color: context.appColors.aboutDialogIconColor,
+                      ),
                       SizedBox(width: 5),
                       Text(
                         "Source Code (Main Repo)",
-                        style: TextStyle(color: AppColors.aboutDialogTextColor),
+                        style: TextStyle(
+                          color: context.appColors.aboutDialogTextColor,
+                        ),
                       ),
                     ],
                   ),
@@ -65,11 +70,16 @@ class AboutWidget extends StatelessWidget {
                   },
                   child: Row(
                     children: [
-                      Icon(Icons.code, color: AppColors.aboutDialogIconColor),
+                      Icon(
+                        Icons.code,
+                        color: context.appColors.aboutDialogIconColor,
+                      ),
                       SizedBox(width: 5),
                       Text(
                         "Source Code (Mirror Repo)",
-                        style: TextStyle(color: AppColors.aboutDialogTextColor),
+                        style: TextStyle(
+                          color: context.appColors.aboutDialogTextColor,
+                        ),
                       ),
                     ],
                   ),
@@ -86,11 +96,16 @@ class AboutWidget extends StatelessWidget {
                   },
                   child: Row(
                     children: [
-                      Icon(Icons.gavel, color: AppColors.aboutDialogIconColor),
+                      Icon(
+                        Icons.gavel,
+                        color: context.appColors.aboutDialogIconColor,
+                      ),
                       SizedBox(width: 5),
                       Text(
                         "License",
-                        style: TextStyle(color: AppColors.aboutDialogTextColor),
+                        style: TextStyle(
+                          color: context.appColors.aboutDialogTextColor,
+                        ),
                       ),
                     ],
                   ),
@@ -109,12 +124,39 @@ class AboutWidget extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.bug_report,
-                        color: AppColors.aboutDialogIconColor,
+                        color: context.appColors.aboutDialogIconColor,
                       ),
                       SizedBox(width: 5),
                       Text(
                         "Issues",
-                        style: TextStyle(color: AppColors.aboutDialogTextColor),
+                        style: TextStyle(
+                          color: context.appColors.aboutDialogTextColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                TextButton(
+                  onPressed: () async {
+                    openUrl(
+                      urlType: UrlType.normalLink,
+                      clipboardCopy: false,
+                      url: "https://matrix.to/#/#torrentsdigger:matrix.org",
+                    );
+                  },
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.chat_outlined,
+                        color: context.appColors.aboutDialogIconColor,
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        "Matrix Chat Room",
+                        style: TextStyle(
+                          color: context.appColors.aboutDialogTextColor,
+                        ),
                       ),
                     ],
                   ),

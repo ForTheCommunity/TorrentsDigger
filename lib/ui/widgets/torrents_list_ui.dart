@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/torrent_bloc/torrent_bloc.dart';
-import 'package:torrents_digger/configs/colors.dart';
+import 'package:torrents_digger/configs/build_context_extension.dart';
 import 'package:torrents_digger/ui/widgets/circular_progress_bar_widget.dart';
 import 'package:torrents_digger/ui/widgets/pagination_widget.dart';
 import 'package:torrents_digger/ui/widgets/torrent_list_widget.dart';
@@ -15,10 +15,13 @@ class TorrentsListUi extends StatelessWidget {
       builder: (context, state) {
         switch (state) {
           case TorrentInitial():
-            return const Center(
+            return Center(
               child: Text(
                 "Search Torrent , Get Torrents...",
-                style: TextStyle(color: AppColors.greenColor, fontSize: 15),
+                style: TextStyle(
+                  color: context.appColors.generalTextColor,
+                  fontSize: 15,
+                ),
               ),
             );
           case TorrentSearchLoading():

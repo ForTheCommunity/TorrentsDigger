@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:torrents_digger/configs/colors.dart';
 
 // global key for Scaffold Messenger so that it can
 // popup in any screen/widget.
@@ -12,11 +11,14 @@ void createSnackBar({required String message, required int duration}) {
   if (scaffoldMessengerKey.currentState != null) {
     scaffoldMessengerKey.currentState!.showSnackBar(
       SnackBar(
-        content: Text(message, style: TextStyle(color: AppColors.pureWhite)),
+        content: Text(
+          message,
+          style: TextStyle(color: Color.fromRGBO(255, 255, 255, 1)),
+        ),
         duration: Duration(seconds: duration),
         behavior: SnackBarBehavior.fixed,
-        backgroundColor: AppColors.categoriesDropdownOpenedBackgroundColor,
-        shape: Border.all(color: AppColors.greenColor, width: 2),
+        backgroundColor: Color.fromRGBO(1, 1, 1, 1),
+        shape: Border.all(color: Color.fromRGBO(38, 255, 0, 1), width: 2),
       ),
     );
   }

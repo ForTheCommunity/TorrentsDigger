@@ -13,7 +13,7 @@ pub fn insert_update_kv(key: &str, value: &str) -> Result<usize, rusqlite::Error
     )
 }
 
-pub fn fetch_kv(key: &str) -> Result<String, rusqlite::Error> {
+pub fn fetch_kv(key: &str) -> Result<Option<String>, rusqlite::Error> {
     let db_conn = get_a_database_connection();
     let mut sql_statement = db_conn.prepare(
         "
@@ -21,10 +21,11 @@ pub fn fetch_kv(key: &str) -> Result<String, rusqlite::Error> {
     ",
     )?;
     let mut rows = sql_statement.query(params![key])?;
-    let row = rows.next()?;
-    match row {
-        Some(r) => r.get(0),
-        None => Err(rusqlite::Error::QueryReturnedNoRows),
+
+    if let Some(row) = rows.next()? {
+        Ok(Some(row.get(0)?))
+    } else {
+        Ok(None)
     }
 }
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:torrents_digger/configs/colors.dart';
+import 'package:torrents_digger/configs/build_context_extension.dart';
 import 'package:torrents_digger/ui/widgets/popup_menu_button_widget.dart';
 
 class SearchBarWidget extends StatelessWidget {
@@ -16,7 +16,7 @@ class SearchBarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.searchBarBackgroundColor,
+        color: context.appColors.searchBarBackgroundColor,
         borderRadius: BorderRadius.circular(12),
       ),
 
@@ -25,7 +25,10 @@ class SearchBarWidget extends StatelessWidget {
         children: [
           Text(
             "-> ",
-            style: TextStyle(color: AppColors.greenColor, fontSize: 20),
+            style: TextStyle(
+              color: context.appColors.generalTextColor,
+              fontSize: 20,
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -38,7 +41,7 @@ class SearchBarWidget extends StatelessWidget {
               decoration: InputDecoration(
                 hintText: 'Search Torrent',
                 hintStyle: TextStyle(
-                  color: AppColors.searchBarPlaceholderColor,
+                  color: context.appColors.searchBarPlaceholderColor,
                 ),
                 border: InputBorder.none,
               ),
@@ -48,7 +51,11 @@ class SearchBarWidget extends StatelessWidget {
           // Search Button that blends into search bar widget
           GestureDetector(
             onTap: onSearchPressed,
-            child: Icon(Icons.search, color: AppColors.greenColor, size: 25),
+            child: Icon(
+              Icons.search,
+              color: context.appColors.generalTextColor,
+              size: 25,
+            ),
           ),
           SizedBox(width: 10),
           PopupMenuButtonWidget(),

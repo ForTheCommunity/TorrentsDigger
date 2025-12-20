@@ -6,6 +6,15 @@
 import '../../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+Future<String?> getASettingsKv({required String key}) =>
+    RustLib.instance.api.crateApiDatabaseGetSettingsKvGetASettingsKv(key: key);
+
+Future<String> insertOrUpdateKv({required String key, required String value}) =>
+    RustLib.instance.api.crateApiDatabaseGetSettingsKvInsertOrUpdateKv(
+      key: key,
+      value: value,
+    );
+
 Future<Map<String, String>> getSettingsKv() =>
     RustLib.instance.api.crateApiDatabaseGetSettingsKvGetSettingsKv();
 

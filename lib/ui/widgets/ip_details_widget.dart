@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/ip_info_bloc/ip_details_bloc.dart';
-import 'package:torrents_digger/configs/colors.dart';
+import 'package:torrents_digger/configs/build_context_extension.dart';
 import 'package:torrents_digger/ui/widgets/circular_progress_bar_widget.dart';
 
 class IpDetailsWidget extends StatelessWidget {
@@ -25,9 +25,9 @@ class IpDetailsWidget extends StatelessWidget {
                   children: [
                     Text(
                       "IP Address : ",
-                      style: TextStyle(color: AppColors.greenColor),
+                      style: TextStyle(color: context.appColors.generalTextColor),
                     ),
-                    Text(ipAddr, style: TextStyle(color: AppColors.greenColor)),
+                    Text(ipAddr, style: TextStyle(color: context.appColors.generalTextColor)),
                   ],
                 );
               },

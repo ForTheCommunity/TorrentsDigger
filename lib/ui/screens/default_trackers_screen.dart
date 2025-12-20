@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/default_trackers_bloc/default_trackers_bloc.dart';
-import 'package:torrents_digger/configs/colors.dart';
+import 'package:torrents_digger/configs/build_context_extension.dart';
 import 'package:torrents_digger/ui/widgets/circular_progress_bar_widget.dart';
 import 'package:torrents_digger/ui/widgets/launch_url.dart';
 
@@ -31,7 +31,7 @@ class DefaultTrackersScreen extends StatelessWidget {
                 TextSpan(
                   style: TextStyle(
                     fontSize: 16,
-                    color: AppColors.defaultTrackersInfoColor,
+                    color: context.appColors.defaultTrackersInfoColor,
                     wordSpacing: 2.0,
                   ),
                   children: [
@@ -45,7 +45,7 @@ class DefaultTrackersScreen extends StatelessWidget {
                     ),
                     TextSpan(
                       text: 'https://github.com/ngosang/trackerslist#lists',
-                      style: TextStyle(color: AppColors.hyperlinkColor),
+                      style: TextStyle(color: context.appColors.hyperlinkColor),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () async {
                           openUrl(
@@ -80,10 +80,12 @@ class DefaultTrackersScreen extends StatelessWidget {
                               title: Row(
                                 children: [
                                   activatedDefaultTrackersList == trackerId
-                                      ? const Icon(
+                                      ? Icon(
                                           Icons.device_hub,
                                           size: 27,
-                                          color: AppColors.greenColor,
+                                          color: context
+                                              .appColors
+                                              .activeTrackersListIconColor,
                                         )
                                       : Icon(Icons.device_hub),
                                   SizedBox(width: 10),

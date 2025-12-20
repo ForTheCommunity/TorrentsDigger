@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:torrents_digger/configs/colors.dart';
+import 'package:torrents_digger/configs/build_context_extension.dart';
 
 class SourcesAndCategoriesDropdown extends StatelessWidget {
   const SourcesAndCategoriesDropdown({
@@ -30,12 +30,12 @@ class SourcesAndCategoriesDropdown extends StatelessWidget {
               Text(
                 'Select Source',
                 style: TextStyle(
-                  color: AppColors.sourceLabelColor,
+                  color: context.appColors.sourceLabelColor,
                   fontSize: 15,
                 ),
               ),
               const SizedBox(height: 8),
-              _buildSourcesDropdown(),
+              _buildSourcesDropdown(context),
             ],
           ),
         ),
@@ -47,12 +47,12 @@ class SourcesAndCategoriesDropdown extends StatelessWidget {
               Text(
                 'Select Category',
                 style: TextStyle(
-                  color: AppColors.categoryLabelColor,
+                  color: context.appColors.categoryLabelColor,
                   fontSize: 15,
                 ),
               ),
               const SizedBox(height: 8),
-              _buildCategoriesDropdown(),
+              _buildCategoriesDropdown(context),
             ],
           ),
         ),
@@ -61,24 +61,24 @@ class SourcesAndCategoriesDropdown extends StatelessWidget {
   }
 
   // Source Dropdown Widget
-  Widget _buildSourcesDropdown() {
+  Widget _buildSourcesDropdown(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       decoration: BoxDecoration(
-        color: AppColors.sourcesDropdownBackgroundColor,
+        color: context.appColors.sourcesDropdownBackgroundColor,
         borderRadius: BorderRadius.circular(15),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           value: selectedSource,
           isExpanded: true,
-          style: const TextStyle(
-            color: AppColors.greenColor,
+          style: TextStyle(
+            color: context.appColors.generalTextColor,
             fontSize: 15,
             fontWeight: FontWeight.w600,
             letterSpacing: 0.9,
           ),
-          dropdownColor: AppColors.sourcesDropdownOpenedBackgroundColor,
+          dropdownColor: context.appColors.sourcesDropdownOpenedBackgroundColor,
           onChanged: onSourceChanged,
           items: categoryMap.keys.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(value: value, child: Text(value));
@@ -89,24 +89,25 @@ class SourcesAndCategoriesDropdown extends StatelessWidget {
   }
 
   // Categories Dropdown Widget
-  Widget _buildCategoriesDropdown() {
+  Widget _buildCategoriesDropdown(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       decoration: BoxDecoration(
-        color: AppColors.categoriesDropdownBackgroundColor,
+        color: context.appColors.categoriesDropdownBackgroundColor,
         borderRadius: BorderRadius.circular(15),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           value: selectedCategory,
           isExpanded: true,
-          style: const TextStyle(
-            color: AppColors.greenColor,
+          style: TextStyle(
+            color: context.appColors.generalTextColor,
             fontSize: 15,
             fontWeight: FontWeight.w600,
             letterSpacing: 0.9,
           ),
-          dropdownColor: AppColors.categoriesDropdownOpenedBackgroundColor,
+          dropdownColor:
+              context.appColors.categoriesDropdownOpenedBackgroundColor,
           onChanged: onCategoryChanged,
           items: categories.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(value: value, child: Text(value));

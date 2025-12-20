@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/bookmark_bloc/bookmark_bloc.dart';
 import 'package:torrents_digger/blocs/default_trackers_bloc/default_trackers_bloc.dart';
-import 'package:torrents_digger/configs/colors.dart';
+import 'package:torrents_digger/configs/build_context_extension.dart';
 import 'package:torrents_digger/src/rust/api/internals.dart';
 import 'package:torrents_digger/ui/widgets/launch_url.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
@@ -16,7 +16,7 @@ class TorrentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: AppColors.cardColor,
+      color: context.appColors.cardColor,
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
@@ -28,7 +28,7 @@ class TorrentCard extends StatelessWidget {
             Text(
               torrent.name,
               style: TextStyle(
-                color: AppColors.cardPrimaryTextColor,
+                color: context.appColors.cardPrimaryTextColor,
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
               ),
@@ -39,12 +39,14 @@ class TorrentCard extends StatelessWidget {
                 Icon(
                   Icons.folder_outlined,
                   size: 16,
-                  color: AppColors.cardSecondaryTextColor,
+                  color: context.appColors.cardSecondaryTextColor,
                 ),
                 const SizedBox(width: 4),
                 Text(
                   torrent.size,
-                  style: TextStyle(color: AppColors.cardSecondaryTextColor),
+                  style: TextStyle(
+                    color: context.appColors.cardSecondaryTextColor,
+                  ),
                 ),
               ],
             ),
@@ -54,13 +56,13 @@ class TorrentCard extends StatelessWidget {
                 Icon(
                   Icons.date_range_sharp,
                   size: 20,
-                  color: AppColors.cardSecondaryTextColor,
+                  color: context.appColors.cardSecondaryTextColor,
                 ),
                 const SizedBox(width: 4),
                 Text(
                   'Created at : ${torrent.date}',
                   style: TextStyle(
-                    color: AppColors.cardSecondaryTextColor,
+                    color: context.appColors.cardSecondaryTextColor,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -72,13 +74,13 @@ class TorrentCard extends StatelessWidget {
                 Icon(
                   Icons.upload_sharp,
                   size: 20,
-                  color: AppColors.seedersIconColor,
+                  color: context.appColors.seedersIconColor,
                 ),
                 const SizedBox(width: 4),
                 Text(
                   'Seeders : ${torrent.seeders}',
                   style: TextStyle(
-                    color: AppColors.seedersTextColor,
+                    color: context.appColors.seedersTextColor,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -86,13 +88,13 @@ class TorrentCard extends StatelessWidget {
                 Icon(
                   Icons.download,
                   size: 20,
-                  color: AppColors.leechersIconColor,
+                  color: context.appColors.leechersIconColor,
                 ),
                 const SizedBox(width: 4),
                 Text(
                   'Leechers : ${torrent.leechers}',
                   style: TextStyle(
-                    color: AppColors.leechersTextColor,
+                    color: context.appColors.leechersTextColor,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -104,13 +106,13 @@ class TorrentCard extends StatelessWidget {
                 Icon(
                   Icons.download_for_offline,
                   size: 20,
-                  color: AppColors.cardSecondaryTextColor,
+                  color: context.appColors.cardSecondaryTextColor,
                 ),
                 const SizedBox(width: 4),
                 Text(
                   'Total Downloads : ${torrent.totalDownloads}',
                   style: TextStyle(
-                    color: AppColors.cardSecondaryTextColor,
+                    color: context.appColors.cardSecondaryTextColor,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -132,8 +134,8 @@ class TorrentCard extends StatelessWidget {
                       icon: Icon(
                         isBookmarked ? Icons.bookmark : Icons.bookmark_border,
                         color: isBookmarked
-                            ? AppColors.bookmarkedIconColor
-                            : AppColors.bookmarkIconColor,
+                            ? context.appColors.bookmarkedIconColor
+                            : context.appColors.bookmarkIconColor,
                         size: 24,
                       ),
                       onPressed: () {

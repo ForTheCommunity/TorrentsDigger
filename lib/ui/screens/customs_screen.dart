@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/customs_bloc/customs_dropdown_bloc/customs_bloc.dart';
 import 'package:torrents_digger/blocs/customs_bloc/customs_torrents/customs_torrents_bloc.dart';
-import 'package:torrents_digger/configs/colors.dart';
+import 'package:torrents_digger/configs/build_context_extension.dart';
 import 'package:torrents_digger/ui/widgets/circular_progress_bar_widget.dart';
 import 'package:torrents_digger/ui/widgets/dropdown_widget.dart';
 import 'package:torrents_digger/ui/widgets/torrent_list_widget.dart';
@@ -39,7 +39,7 @@ class _CustomsScreenState extends State<CustomsScreen> {
         title: Text(
           'Custom Listings',
           style: TextStyle(
-            color: AppColors.greenColor,
+            color: context.appColors.appBarTextColor,
             letterSpacing: 2,
             fontSize: 25,
             fontWeight: FontWeight.w500,
@@ -115,7 +115,7 @@ class _CustomsScreenState extends State<CustomsScreen> {
                     return state.when(
                       initial: () => Text(
                         "Choose a Custom Listing...",
-                        style: TextStyle(color: AppColors.greenColor),
+                        style: TextStyle(color: context.appColors.generalTextColor),
                       ),
 
                       loading: () =>
