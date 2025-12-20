@@ -29,7 +29,10 @@ class ProxyAddWidget extends StatelessWidget {
           children: <Widget>[
             Text(
               "   Add Proxy :",
-              style: TextStyle(color: context.appColors.generalTextColor, fontSize: 15),
+              style: TextStyle(
+                color: context.appColors.generalTextColor,
+                fontSize: 15,
+              ),
             ),
             // Proxy Protocol Selection Button.
             Padding(
@@ -59,7 +62,7 @@ class ProxyAddWidget extends StatelessWidget {
                     horizontal: 16.0,
                   ),
                   decoration: BoxDecoration(
-                    color: context.appColors.sourcesDropdownBackgroundColor,
+                    color: context.appColors.proxyDropdownBackgroundColor,
                     border: Border.symmetric(
                       vertical: BorderSide(
                         width: 2,
@@ -73,11 +76,16 @@ class ProxyAddWidget extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         'Protocol: ${selectedProxy ?? 'NONE'}',
-                        style: const TextStyle(fontSize: 16),
+                        style: TextStyle(
+                          color: context.appColors.proxyProtocolTextColor,
+                          fontSize: 16,
+                        ),
                       ),
-                       Icon(
+                      Icon(
                         Icons.arrow_drop_down,
-                        color: context.appColors.proxyProtocolArrowDropdownIconColor,
+                        color: context
+                            .appColors
+                            .proxyProtocolArrowDropdownIconColor,
                       ),
                     ],
                   ),
@@ -89,10 +97,15 @@ class ProxyAddWidget extends StatelessWidget {
                 (selectedProxy?.isNotEmpty ?? false)) ...[
               TextFormField(
                 controller: proxyNameController,
-                decoration:  InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Proxy Name',
-                  labelStyle: TextStyle(color: context.appColors.generalTextColor),
-                  prefixIcon: Icon(Icons.note),
+                  labelStyle: TextStyle(
+                    color: context.appColors.generalTextColor,
+                  ),
+                  prefixIcon: Icon(
+                    Icons.note,
+                    color: context.appColors.proxyFormFieldIconColor,
+                  ),
                   border: OutlineInputBorder(),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
@@ -105,6 +118,13 @@ class ProxyAddWidget extends StatelessWidget {
                       color: context.appColors.textFormFieldActiveColor,
                       width: 2.0,
                     ),
+                  ),
+                  errorStyle: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: context
+                        .appColors
+                        .proxyFormFieldValidationErrorMessageColor,
                   ),
                 ),
                 keyboardType: TextInputType.text,
@@ -114,14 +134,20 @@ class ProxyAddWidget extends StatelessWidget {
                   }
                   return null;
                 },
+                style: TextStyle(color: context.appColors.generalTextColor),
               ),
               const SizedBox(height: 16.0),
               TextFormField(
                 controller: ipController,
-                decoration:  InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'IP Address',
-                  labelStyle: TextStyle(color: context.appColors.generalTextColor),
-                  prefixIcon: Icon(Icons.computer),
+                  labelStyle: TextStyle(
+                    color: context.appColors.generalTextColor,
+                  ),
+                  prefixIcon: Icon(
+                    Icons.computer,
+                    color: context.appColors.proxyFormFieldIconColor,
+                  ),
                   border: OutlineInputBorder(),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
@@ -134,6 +160,13 @@ class ProxyAddWidget extends StatelessWidget {
                       color: context.appColors.textFormFieldActiveColor,
                       width: 2.0,
                     ),
+                  ),
+                  errorStyle: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: context
+                        .appColors
+                        .proxyFormFieldValidationErrorMessageColor,
                   ),
                 ),
                 keyboardType: TextInputType.text,
@@ -147,14 +180,21 @@ class ProxyAddWidget extends StatelessWidget {
                   }
                   return null;
                 },
+
+                style: TextStyle(color: context.appColors.generalTextColor),
               ),
               const SizedBox(height: 16.0),
               TextFormField(
                 controller: portController,
-                decoration:  InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Port Number',
-                  labelStyle: TextStyle(color: context.appColors.generalTextColor),
-                  prefixIcon: Icon(Icons.lan),
+                  labelStyle: TextStyle(
+                    color: context.appColors.generalTextColor,
+                  ),
+                  prefixIcon: Icon(
+                    Icons.lan,
+                    color: context.appColors.proxyFormFieldIconColor,
+                  ),
                   border: OutlineInputBorder(),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
@@ -168,8 +208,16 @@ class ProxyAddWidget extends StatelessWidget {
                       width: 2.0,
                     ),
                   ),
+                  errorStyle: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: context
+                        .appColors
+                        .proxyFormFieldValidationErrorMessageColor,
+                  ),
                 ),
                 keyboardType: TextInputType.number,
+                style: TextStyle(color: context.appColors.generalTextColor),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a port number';
@@ -180,10 +228,15 @@ class ProxyAddWidget extends StatelessWidget {
               const SizedBox(height: 16.0),
               TextFormField(
                 controller: usernameController,
-                decoration:  InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Username (Optional)',
-                  labelStyle: TextStyle(color: context.appColors.generalTextColor),
-                  prefixIcon: Icon(Icons.person),
+                  labelStyle: TextStyle(
+                    color: context.appColors.generalTextColor,
+                  ),
+                  prefixIcon: Icon(
+                    Icons.person,
+                    color: context.appColors.proxyFormFieldIconColor,
+                  ),
                   border: OutlineInputBorder(),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
@@ -197,15 +250,28 @@ class ProxyAddWidget extends StatelessWidget {
                       width: 2.0,
                     ),
                   ),
+                  errorStyle: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: context
+                        .appColors
+                        .proxyFormFieldValidationErrorMessageColor,
+                  ),
                 ),
+                style: TextStyle(color: context.appColors.generalTextColor),
               ),
               const SizedBox(height: 16.0),
               TextFormField(
                 controller: passwordController,
-                decoration:  InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Password (Optional)',
-                  labelStyle: TextStyle(color: context.appColors.generalTextColor),
-                  prefixIcon: Icon(Icons.key),
+                  labelStyle: TextStyle(
+                    color: context.appColors.generalTextColor,
+                  ),
+                  prefixIcon: Icon(
+                    Icons.key,
+                    color: context.appColors.proxyFormFieldIconColor,
+                  ),
                   border: OutlineInputBorder(),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
@@ -219,8 +285,16 @@ class ProxyAddWidget extends StatelessWidget {
                       width: 2.0,
                     ),
                   ),
+                  errorStyle: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: context
+                        .appColors
+                        .proxyFormFieldValidationErrorMessageColor,
+                  ),
                 ),
                 obscureText: true,
+                style: TextStyle(color: context.appColors.generalTextColor),
               ),
               const SizedBox(height: 32.0),
               ElevatedButton(
@@ -240,10 +314,22 @@ class ProxyAddWidget extends StatelessWidget {
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  backgroundColor:
+                      context.appColors.proxySaveButtonBackgroundColor,
+                  side: BorderSide(
+                    color: context.appColors.proxySaveButtonBorderColor,
+                    width: 2.0,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18),
+                  ),
                 ),
-                child:  Text(
+                child: Text(
                   'Save Proxy',
-                  style: TextStyle(color: context.appColors.generalTextColor, fontSize: 18),
+                  style: TextStyle(
+                    color: context.appColors.proxySaveButtonTextColor,
+                    fontSize: 18,
+                  ),
                 ),
               ),
             ],

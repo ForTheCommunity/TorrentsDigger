@@ -10,6 +10,7 @@ class PopupMenuButtonWidget extends StatelessWidget {
     final appColors = context.appColors;
     return PopupMenuButton<String>(
       icon: Icon(Icons.more_vert, color: appColors.generalTextColor, size: 25),
+      color: appColors.popupMenuBackgroundColor,
       onSelected: (value) {
         switch (value) {
           case 'bookmarks':
@@ -27,7 +28,7 @@ class PopupMenuButtonWidget extends StatelessWidget {
             child: Text(
               'Customs',
               style: TextStyle(
-                color: appColors.generalTextColor,
+                color: appColors.popupMenuTextColor,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 2,
               ),
@@ -38,7 +39,7 @@ class PopupMenuButtonWidget extends StatelessWidget {
             child: Text(
               'Bookmarks',
               style: TextStyle(
-                color: appColors.generalTextColor,
+                color: appColors.popupMenuTextColor,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 2,
               ),

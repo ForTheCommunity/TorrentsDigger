@@ -20,12 +20,12 @@ class SettingsScreen extends StatelessWidget {
             appBar: AppBar(
               title: Text(
                 'Settings',
-                style: TextStyle(color: context.appColors.settingsTextColor),
+                style: TextStyle(color: context.appColors.appBarTextColor),
               ),
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back,
-                  color: context.appColors.settingsTextColor,
+                  color: context.appColors.appBarTextColor,
                 ),
                 onPressed: () {
                   Navigator.pop(context);

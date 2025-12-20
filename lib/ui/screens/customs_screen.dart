@@ -64,13 +64,27 @@ class _CustomsScreenState extends State<CustomsScreen> {
                 BlocBuilder<CustomsBloc, CustomsState>(
                   builder: (context, state) {
                     return state.when(
-                      initial: () => const Center(
-                        child: Text("No Custom Listings Loaded Yet..."),
+                      initial: () => Center(
+                        child: Text(
+                          "No Custom Listings Loaded Yet...",
+                          style: TextStyle(
+                            color: context.appColors.generalTextColor,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                          ),
+                        ),
                       ),
                       loading: () =>
                           const Center(child: CircularProgressBarWidget()),
                       error: (String errorMessage) {
-                        return Text("Error : $errorMessage");
+                        return Text(
+                          "Error : $errorMessage",
+                          style: TextStyle(
+                            color: context.appColors.generalTextColor,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                          ),
+                        );
                       },
 
                       loaded:
@@ -115,13 +129,23 @@ class _CustomsScreenState extends State<CustomsScreen> {
                     return state.when(
                       initial: () => Text(
                         "Choose a Custom Listing...",
-                        style: TextStyle(color: context.appColors.generalTextColor),
+                        style: TextStyle(
+                          color: context.appColors.generalTextColor,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
 
                       loading: () =>
                           const Center(child: CircularProgressBarWidget()),
 
-                      error: (errorMessage) => Text("Error : $errorMessage"),
+                      error: (errorMessage) => Text(
+                        "Error : $errorMessage",
+                        style: TextStyle(
+                          color: context.appColors.generalTextColor,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                        ),
+                      ),
 
                       loaded: (torrentsList) =>
                           TorrentListWidget(torrents: torrentsList),

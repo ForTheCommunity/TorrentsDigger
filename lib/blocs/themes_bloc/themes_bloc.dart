@@ -17,6 +17,7 @@ class ThemesBloc extends Bloc<ThemesEvent, ThemesState> {
   }
 
   Future<void> _loadColors(_LoadTheme event, Emitter<ThemesState> emit) async {
+    emit(ThemesState.loading());
     try {
       // checking saved theme in database..
       var theme = await getASettingsKv(key: "theme");
@@ -25,7 +26,7 @@ class ThemesBloc extends Bloc<ThemesEvent, ThemesState> {
 
       if (theme == null) {
         // setting theme if not available in database..
-        await insertOrUpdateKv(key: "theme", value: "th_matrix");
+        await insertOrUpdateKv(key: "theme", value: lightThemeCode);
       } else {
         // if theme is already set in database.
         switch (theme) {
@@ -56,6 +57,7 @@ class ThemesBloc extends Bloc<ThemesEvent, ThemesState> {
   }
 
   void _changeTheme(_ChangeTheme event, Emitter<ThemesState> emit) async {
+    emit(ThemesState.loading());
     var themeCode = event.appTheme.themeCode;
 
     // updating themeCode in database..

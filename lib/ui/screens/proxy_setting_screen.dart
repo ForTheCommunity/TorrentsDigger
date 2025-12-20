@@ -36,6 +36,7 @@ class ProxySettingScreen extends StatelessWidget {
                 ProxySettingWidget(),
                 SizedBox(height: 30),
                 IpDetailsWidget(),
+                SizedBox(height: 30),
               ],
             ),
           ),

@@ -21,6 +21,7 @@ class TorrentsListUi extends StatelessWidget {
                 style: TextStyle(
                   color: context.appColors.generalTextColor,
                   fontSize: 15,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             );
@@ -28,7 +29,14 @@ class TorrentsListUi extends StatelessWidget {
             return const Center(child: CircularProgressBarWidget());
           case TorrentSearchSuccess():
             return state.torrents.isEmpty
-                ? const Center(child: Text("No Torrent Found..."))
+                ? Center(
+                    child: Text(
+                      "No Torrent Found...",
+                      style: TextStyle(
+                        color: context.appColors.generalTextColor,
+                      ),
+                    ),
+                  )
                 : Column(
                     children: [
                       TorrentListWidget(torrents: state.torrents),
@@ -37,7 +45,14 @@ class TorrentsListUi extends StatelessWidget {
                   );
           case TorrentSearchFailure():
             return Center(
-              child: Text("Failed to fetch Torrents \n Error : ${state.error}"),
+              child: Text(
+                "Failed to fetch Torrents \n Error : ${state.error}",
+                style: TextStyle(
+                  color: context.appColors.generalTextColor,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                ),
+              ),
             );
         }
       },

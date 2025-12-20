@@ -10,9 +10,14 @@ abstract class AppTheme {
 
   Color get generalTextColor;
   Color get settingsTextColor;
+  Color get settingsIconsColor;
 
   Color get searchBarPlaceholderColor;
+  Color get searchBarTextColor;
   Color get searchBarBackgroundColor;
+
+  Color get popupMenuBackgroundColor;
+  Color get popupMenuTextColor;
 
   Color get sourcesDropdownBackgroundColor;
   Color get categoriesDropdownBackgroundColor;
@@ -47,6 +52,9 @@ abstract class AppTheme {
 
   Color get hyperlinkColor;
   Color get defaultTrackersInfoColor;
+  Color get defaultTrackersTextColor;
+  Color get defaultTrackersIconColor;
+
   Color get textFormFieldInactiveColor;
   Color get textFormFieldActiveColor;
 
@@ -60,10 +68,19 @@ abstract class AppTheme {
   Color get activeTrackersListIconColor;
   Color get circularProgressIndicatorColor;
 
+  Color get proxyDropdownBackgroundColor;
+  Color get proxyProtocolTextColor;
   Color get proxyIconColor;
   Color get proxyTextColor;
   Color get proxyProtocolArrowDropdownIconColor;
   Color get proxyDeleteIconColor;
+  Color get proxyFormFieldIconColor;
+  Color get proxyFormFieldValidationErrorMessageColor;
+  Color get proxySaveButtonBackgroundColor;
+  Color get proxySaveButtonTextColor;
+  Color get proxySaveButtonBorderColor;
+
+  Color get activeThemeIconColor;
 
   // Color get scaffoldMessengerMessageColor;
   // Color get scaffoldMessengerBorderColor;

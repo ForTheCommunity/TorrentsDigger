@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:torrents_digger/themes/app_theme.dart';
 
-const String matrixThemeCode = "th_matrix";
+const String matrixThemeCode = "matrix";
 
 class MatrixTheme extends AppTheme {
   @override
@@ -20,11 +20,20 @@ class MatrixTheme extends AppTheme {
   Color get generalTextColor => Color.fromRGBO(0, 255, 0, 1);
   @override
   Color get settingsTextColor => Color.fromRGBO(255, 255, 255, 1);
+  @override
+  Color get settingsIconsColor => const Color.fromARGB(255, 255, 255, 255);
 
   @override
   Color get searchBarPlaceholderColor => Color.fromRGBO(238, 241, 82, 1);
   @override
+  Color get searchBarTextColor => Color.fromARGB(236, 255, 255, 255);
+  @override
   Color get searchBarBackgroundColor => Color.fromRGBO(17, 44, 39, 1);
+
+  @override
+  Color get popupMenuBackgroundColor => const Color.fromARGB(255, 0, 0, 0);
+  @override
+  Color get popupMenuTextColor => const Color.fromARGB(255, 0, 255, 8);
 
   @override
   Color get sourcesDropdownBackgroundColor => Color.fromRGBO(9, 74, 11, 1);
@@ -90,6 +99,16 @@ class MatrixTheme extends AppTheme {
   @override
   Color get defaultTrackersInfoColor => Color.fromRGBO(255, 255, 255, 0.7);
   @override
+  Color get defaultTrackersTextColor =>
+      const Color.fromARGB(255, 255, 255, 255);
+  @override
+  Color get defaultTrackersIconColor =>
+      const Color.fromARGB(255, 255, 255, 255);
+  @override
+  @override
+  Color get activeTrackersListIconColor => Color.fromRGBO(0, 255, 0, 1);
+
+  @override
   Color get textFormFieldInactiveColor => Color.fromRGBO(69, 130, 127, 1);
   @override
   Color get textFormFieldActiveColor => Color.fromRGBO(0, 255, 0, 1);
@@ -109,10 +128,12 @@ class MatrixTheme extends AppTheme {
       Colors.transparent;
 
   @override
-  Color get activeTrackersListIconColor => Color.fromRGBO(0, 255, 0, 1);
-  @override
   Color get circularProgressIndicatorColor => Color.fromRGBO(0, 255, 0, 1);
 
+  @override
+  Color get proxyDropdownBackgroundColor => Color.fromRGBO(9, 74, 11, 1);
+  @override
+  Color get proxyProtocolTextColor => Color.fromRGBO(255, 255, 255, 1);
   @override
   Color get proxyProtocolArrowDropdownIconColor =>
       Color.fromRGBO(255, 255, 255, 1);
@@ -122,6 +143,22 @@ class MatrixTheme extends AppTheme {
   Color get proxyTextColor => Color.fromRGBO(0, 255, 0, 1);
   @override
   Color get proxyDeleteIconColor => Color.fromRGBO(255, 0, 0, 1);
+  @override
+  Color get proxyFormFieldIconColor => const Color.fromARGB(255, 255, 255, 255);
+  @override
+  Color get proxyFormFieldValidationErrorMessageColor =>
+      const Color.fromARGB(255, 255, 17, 0);
+  @override
+  Color get proxySaveButtonBackgroundColor =>
+      const Color.fromARGB(255, 3, 21, 19);
+  @override
+  Color get proxySaveButtonTextColor => const Color.fromARGB(255, 4, 255, 0);
+  @override
+  Color get proxySaveButtonBorderColor =>
+      const Color.fromARGB(255, 152, 173, 153);
+
+  @override
+  Color get activeThemeIconColor => const Color.fromARGB(255, 0, 255, 8);
 
   // @override
   // Color get scaffoldMessengerMessageColor => Color.fromRGBO(255, 255, 255, 1);

@@ -10,118 +10,152 @@ class LightTheme extends AppTheme {
   String get themeCode => lightThemeCode;
 
   @override
-  Color get scaffoldColor => Color.fromRGBO(255, 255, 255, 0.825);
+  Color get scaffoldColor => Colors.white;
   @override
-  Color get appBarBackgroundColor => Color.fromRGBO(160, 153, 153, 1);
+  Color get appBarBackgroundColor => const Color.fromARGB(255, 83, 100, 99);
   @override
-  Color get appBarTextColor => Color.fromRGBO(0, 255, 0, 1);
+  Color get appBarTextColor => Colors.white;
 
   @override
-  Color get generalTextColor => Color.fromRGBO(0, 255, 0, 1);
+  Color get generalTextColor => Colors.black;
   @override
-  Color get settingsTextColor => Color.fromRGBO(0, 0, 0, 1);
+  Color get settingsTextColor => Colors.black;
+  @override
+  Color get settingsIconsColor => const Color.fromARGB(255, 0, 0, 0);
 
   @override
-  Color get searchBarPlaceholderColor => Color.fromRGBO(238, 241, 82, 1);
+  Color get searchBarPlaceholderColor => const Color.fromARGB(255, 20, 19, 19);
   @override
-  Color get searchBarBackgroundColor => Color.fromRGBO(17, 44, 39, 1);
+  Color get searchBarTextColor => const Color.fromARGB(235, 0, 0, 0);
+  @override
+  Color get searchBarBackgroundColor =>
+      const Color.fromARGB(237, 196, 236, 203);
 
   @override
-  Color get sourcesDropdownBackgroundColor => Color.fromRGBO(9, 74, 11, 1);
+  Color get popupMenuBackgroundColor =>
+      const Color.fromARGB(237, 196, 236, 203);
   @override
-  Color get categoriesDropdownBackgroundColor => Color.fromRGBO(9, 74, 11, 1);
-  @override
-  Color get sourcesDropdownOpenedBackgroundColor => Color.fromRGBO(1, 1, 1, 1);
-  @override
-  Color get categoriesDropdownOpenedBackgroundColor =>
-      Color.fromRGBO(1, 1, 1, 1);
+  Color get popupMenuTextColor => Colors.black;
 
   @override
-  Color get sourceLabelColor => Color.fromRGBO(0, 255, 247, 1);
+  Color get sourcesDropdownBackgroundColor =>
+      const Color.fromARGB(255, 164, 241, 223);
   @override
-  Color get categoryLabelColor => Color.fromRGBO(0, 255, 247, 1);
+  Color get categoriesDropdownBackgroundColor => Colors.white;
   @override
-  Color get cardColor => Color.fromRGBO(33, 33, 33, 1);
+  Color get sourcesDropdownOpenedBackgroundColor => Colors.grey[100]!;
+  @override
+  Color get categoriesDropdownOpenedBackgroundColor => Colors.grey[100]!;
 
   @override
-  Color get cardPrimaryTextColor => Color.fromRGBO(255, 255, 255, 1);
+  Color get sourceLabelColor => Colors.blue;
   @override
-  Color get cardSecondaryTextColor => Color.fromRGBO(202, 188, 188, 1);
+  Color get categoryLabelColor => Colors.blue;
+  @override
+  Color get cardColor => const Color.fromARGB(255, 210, 214, 246);
 
   @override
-  Color get leechersIconColor => Color.fromRGBO(255, 0, 0, 1);
+  Color get cardPrimaryTextColor => Colors.black;
   @override
-  Color get leechersTextColor => Color.fromRGBO(223, 33, 33, 1);
-  @override
-  Color get seedersIconColor => Color.fromRGBO(0, 255, 38, 1);
-  @override
-  Color get seedersTextColor => Color.fromRGBO(18, 204, 46, 1);
-  @override
-  Color get creationDateIconColor => Color.fromRGBO(18, 204, 46, 1);
-  @override
-  Color get creationDateTextColor => Color.fromRGBO(18, 204, 46, 1);
+  Color get cardSecondaryTextColor => const Color.fromARGB(255, 28, 38, 28);
 
   @override
-  Color get magnetBackgroundColor => Color.fromRGBO(0, 0, 0, 1);
+  Color get leechersIconColor => const Color.fromARGB(255, 255, 17, 0);
   @override
-  Color get magnetForegroundColor => Color.fromRGBO(0, 255, 132, 0.888);
+  Color get leechersTextColor => const Color.fromARGB(255, 255, 17, 0);
   @override
-  Color get magnetIconColor => Color.fromRGBO(0, 247, 255, 1);
+  Color get seedersIconColor => const Color.fromARGB(255, 2, 170, 7);
   @override
-  Color get magnetButtonSurfaceTintColor => Color.fromRGBO(247, 0, 255, 1);
+  Color get seedersTextColor => const Color.fromARGB(255, 2, 157, 7);
+  @override
+  Color get creationDateIconColor => Colors.blueGrey;
+  @override
+  Color get creationDateTextColor => Colors.blueGrey;
 
   @override
-  Color get bookmarkIconColor => Color.fromRGBO(135, 200, 189, 1);
+  Color get magnetBackgroundColor => Colors.grey[200]!;
   @override
-  Color get bookmarkedIconColor => Color.fromRGBO(145, 255, 0, 1);
+  Color get magnetForegroundColor => Colors.black;
+  @override
+  Color get magnetIconColor => Colors.blue;
+  @override
+  Color get magnetButtonSurfaceTintColor => Colors.blueAccent;
 
   @override
-  Color get addTrackersListUrlTextFieldBackgroundColor =>
-      Color.fromARGB(255, 40, 52, 54);
+  Color get bookmarkIconColor => const Color.fromARGB(255, 1, 134, 121);
   @override
-  Color get addTrackersListUrlTextButtonTextColor =>
-      Color.fromARGB(255, 0, 255, 242);
-  @override
-  Color get addTrackersListUrlTextButtonBorderColor =>
-      Color.fromARGB(255, 41, 55, 57);
+  Color get bookmarkedIconColor => const Color.fromARGB(255, 3, 80, 70);
 
   @override
-  Color get hyperlinkColor => Color.fromRGBO(118, 131, 224, 1);
+  Color get addTrackersListUrlTextFieldBackgroundColor => Colors.grey[200]!;
   @override
-  Color get defaultTrackersInfoColor => Color.fromRGBO(255, 255, 255, 0.7);
+  Color get addTrackersListUrlTextButtonTextColor => Colors.blue;
   @override
-  Color get textFormFieldInactiveColor => Color.fromRGBO(69, 130, 127, 1);
-  @override
-  Color get textFormFieldActiveColor => Color.fromRGBO(0, 255, 0, 1);
+  Color get addTrackersListUrlTextButtonBorderColor => Colors.blue;
 
   @override
-  Color get aboutDialogIconColor => Color.fromRGBO(0, 255, 47, 1);
+  Color get hyperlinkColor => Colors.blue;
   @override
-  Color get aboutDialogTextColor => Color.fromRGBO(82, 239, 245, 1);
+  Color get defaultTrackersInfoColor => const Color.fromARGB(255, 25, 0, 0);
+  @override
+  Color get defaultTrackersTextColor => const Color.fromARGB(255, 25, 0, 0);
+  @override
+  Color get defaultTrackersIconColor => const Color.fromARGB(255, 25, 0, 0);
+  @override
+  Color get activeTrackersListIconColor => const Color.fromARGB(255, 0, 255, 8);
+
+  @override
+  Color get textFormFieldInactiveColor => Colors.grey;
+  @override
+  Color get textFormFieldActiveColor => Colors.blue;
+
+  @override
+  Color get aboutDialogIconColor => const Color.fromARGB(255, 142, 249, 242);
+  @override
+  Color get aboutDialogTextColor => const Color.fromARGB(255, 0, 255, 166);
 
   @override
   Color get settingsFloatingActionButtonForegroundColor =>
-      Color.fromRGBO(0, 0, 0, 1);
+      const Color.fromARGB(255, 0, 0, 0);
   @override
-  Color get settingsFloatingActionButtonBackgroundColor => Colors.transparent;
+  Color get settingsFloatingActionButtonBackgroundColor =>
+      const Color.fromARGB(255, 132, 232, 220);
   @override
   Color get settingsFloatingActionButtonHoverBackgroundColor =>
-      Colors.transparent;
+      const Color.fromARGB(255, 68, 255, 77);
 
   @override
-  Color get activeTrackersListIconColor => Color.fromRGBO(0, 255, 0, 1);
-  @override
-  Color get circularProgressIndicatorColor => Color.fromRGBO(0, 255, 0, 1);
+  Color get circularProgressIndicatorColor => Colors.blue;
 
   @override
-  Color get proxyProtocolArrowDropdownIconColor =>
-      Color.fromRGBO(255, 255, 255, 1);
+  Color get proxyDropdownBackgroundColor =>
+      const Color.fromARGB(255, 211, 168, 223);
   @override
-  Color get proxyIconColor => Color.fromRGBO(0, 255, 0, 1);
+  Color get proxyProtocolTextColor => Color.fromRGBO(0, 0, 0, 1);
   @override
-  Color get proxyTextColor => Color.fromRGBO(0, 255, 0, 1);
+  Color get proxyProtocolArrowDropdownIconColor => Colors.black;
   @override
-  Color get proxyDeleteIconColor => Color.fromRGBO(255, 0, 0, 1);
+  Color get proxyIconColor => Colors.green;
+  @override
+  Color get proxyTextColor => Colors.green;
+  @override
+  Color get proxyDeleteIconColor => Colors.red;
+  @override
+  Color get proxyFormFieldIconColor => const Color.fromARGB(255, 0, 194, 32);
+  @override
+  Color get proxyFormFieldValidationErrorMessageColor =>
+      const Color.fromARGB(255, 255, 17, 0);
+  @override
+  Color get proxySaveButtonBackgroundColor =>
+      const Color.fromARGB(255, 146, 246, 156);
+  @override
+  Color get proxySaveButtonTextColor => const Color.fromARGB(255, 0, 0, 0);
+  @override
+  Color get proxySaveButtonBorderColor =>
+      const Color.fromARGB(255, 255, 0, 208);
+
+  @override
+  Color get activeThemeIconColor => const Color.fromARGB(255, 0, 255, 8);
 
   //   @override
   // Color get scaffoldMessengerMessageColor => Color.fromRGBO(255, 255, 255, 1);

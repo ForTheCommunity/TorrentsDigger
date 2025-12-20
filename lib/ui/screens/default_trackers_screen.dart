@@ -35,7 +35,7 @@ class DefaultTrackersScreen extends StatelessWidget {
                     wordSpacing: 2.0,
                   ),
                   children: [
-                    const TextSpan(
+                    TextSpan(
                       text:
                           'Select a default trackers list.\nThese Trackers will be added to magnet links.\n'
                           'This can help in discovering more peers when downloading torrents.\n'
@@ -63,8 +63,13 @@ class DefaultTrackersScreen extends StatelessWidget {
               BlocBuilder<DefaultTrackersBloc, DefaultTrackersState>(
                 builder: (context, state) {
                   return state.when(
-                    initial: () => const Center(
-                      child: Text('No Trackers List Loaded Yet...'),
+                    initial: () => Center(
+                      child: Text(
+                        'No Trackers List Loaded Yet...',
+                        style: TextStyle(
+                          color: context.appColors.generalTextColor,
+                        ),
+                      ),
                     ),
                     loading: () => const CircularProgressBarWidget(),
                     loaded: (trackersList, activatedDefaultTrackersList) =>
@@ -87,9 +92,21 @@ class DefaultTrackersScreen extends StatelessWidget {
                                               .appColors
                                               .activeTrackersListIconColor,
                                         )
-                                      : Icon(Icons.device_hub),
+                                      : Icon(
+                                          Icons.device_hub,
+                                          color: context
+                                              .appColors
+                                              .defaultTrackersIconColor,
+                                        ),
                                   SizedBox(width: 10),
-                                  Text(trackerName),
+                                  Text(
+                                    trackerName,
+                                    style: TextStyle(
+                                      color: context
+                                          .appColors
+                                          .defaultTrackersTextColor,
+                                    ),
+                                  ),
                                 ],
                               ),
                               onTap: () {

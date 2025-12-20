@@ -34,7 +34,7 @@ class SearchBarWidget extends StatelessWidget {
           Expanded(
             child: TextField(
               controller: searchController,
-              style: const TextStyle(color: Colors.white),
+              style: TextStyle(color: context.appColors.searchBarTextColor),
               onSubmitted: (_) {
                 onSearchPressed();
               },
