@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/default_trackers_bloc/default_trackers_bloc.dart';
@@ -27,36 +26,33 @@ class DefaultTrackersScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text.rich(
-                TextSpan(
+              Text(
+                'Select a default trackers list.\nThese Trackers will be added to magnet links.\n'
+                'This can help in discovering more peers when downloading torrents.\n'
+                'If you are unsure about what types of trackers list to use.\n'
+                'You can use default Trackers List [ All Trackers ]\n'
+                'Trackers Lists are fetched from ',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: context.appColors.defaultTrackersInfoColor,
+                  wordSpacing: 2.0,
+                ),
+              ),
+              GestureDetector(
+                onTap: () async {
+                  openUrl(
+                    urlType: UrlType.normalLink,
+                    clipboardCopy: false,
+                    url: "https://github.com/ngosang/trackerslist#lists",
+                  );
+                },
+                child: Text(
+                  'https://github.com/ngosang/trackerslist#lists',
                   style: TextStyle(
                     fontSize: 16,
-                    color: context.appColors.defaultTrackersInfoColor,
+                    color: context.appColors.hyperlinkColor,
                     wordSpacing: 2.0,
                   ),
-                  children: [
-                    TextSpan(
-                      text:
-                          'Select a default trackers list.\nThese Trackers will be added to magnet links.\n'
-                          'This can help in discovering more peers when downloading torrents.\n'
-                          'If you are unsure about what types of trackers list to use.\n'
-                          'You can use default Trackers List [ All Trackers ]\n'
-                          'Trackers Lists are fetched from ',
-                    ),
-                    TextSpan(
-                      text: 'https://github.com/ngosang/trackerslist#lists',
-                      style: TextStyle(color: context.appColors.hyperlinkColor),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () async {
-                          openUrl(
-                            urlType: UrlType.normalLink,
-                            clipboardCopy: false,
-                            url:
-                                "https://github.com/ngosang/trackerslist#lists",
-                          );
-                        },
-                    ),
-                  ],
                 ),
               ),
               const SizedBox(height: 24),

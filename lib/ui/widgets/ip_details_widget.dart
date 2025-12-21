@@ -40,7 +40,14 @@ class IpDetailsWidget extends StatelessWidget {
                   ],
                 );
               },
-              failed: (String error) => Text(error),
+              failed: (String error) => Text(
+                "Error : $error",
+                style: TextStyle(
+                  color: context.appColors.generalTextColor,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                ),
+              ),
             );
           },
         ),
