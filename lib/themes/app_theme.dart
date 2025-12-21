@@ -20,9 +20,10 @@ abstract class AppTheme {
   Color get popupMenuTextColor;
 
   Color get sourcesDropdownBackgroundColor;
-  Color get categoriesDropdownBackgroundColor;
+  // Color get categoriesDropdownBackgroundColor;
   Color get sourcesDropdownOpenedBackgroundColor;
-  Color get categoriesDropdownOpenedBackgroundColor;
+  Color get dropdownArrowDownColor;
+  // Color get categoriesDropdownOpenedBackgroundColor;
 
   Color get sourceLabelColor;
   Color get categoryLabelColor;
@@ -38,10 +39,7 @@ abstract class AppTheme {
   Color get creationDateIconColor;
   Color get creationDateTextColor;
 
-  Color get magnetBackgroundColor;
-  Color get magnetForegroundColor;
   Color get magnetIconColor;
-  Color get magnetButtonSurfaceTintColor;
 
   Color get bookmarkIconColor;
   Color get bookmarkedIconColor;

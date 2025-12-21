@@ -44,6 +44,7 @@ class DropdownWidget extends StatelessWidget {
             letterSpacing: 0.9,
           ),
           dropdownColor: context.appColors.sourcesDropdownOpenedBackgroundColor,
+          iconEnabledColor: context.appColors.dropdownArrowDownColor,
 
           items: items.map((item) {
             return DropdownMenuItem(value: item, child: Text(item));

@@ -60,6 +60,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
+                              SizedBox(height: 10),
                               Text(
                                 "Bookmark Torrents to save it for later.",
                                 style: TextStyle(

@@ -25,9 +25,18 @@ class IpDetailsWidget extends StatelessWidget {
                   children: [
                     Text(
                       "IP Address : ",
-                      style: TextStyle(color: context.appColors.generalTextColor),
+                      style: TextStyle(
+                        color: context.appColors.generalTextColor,
+                        fontSize: 14,
+                      ),
                     ),
-                    Text(ipAddr, style: TextStyle(color: context.appColors.generalTextColor)),
+                    Text(
+                      ipAddr,
+                      style: TextStyle(
+                        color: context.appColors.generalTextColor,
+                        fontSize: 14,
+                      ),
+                    ),
                   ],
                 );
               },

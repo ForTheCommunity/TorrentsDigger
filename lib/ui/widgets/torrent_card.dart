@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:torrents_digger/blocs/bookmark_bloc/bookmark_bloc.dart';
 import 'package:torrents_digger/blocs/default_trackers_bloc/default_trackers_bloc.dart';
 import 'package:torrents_digger/configs/build_context_extension.dart';
@@ -177,19 +176,31 @@ class TorrentCard extends StatelessWidget {
 
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Image.asset(
-                        "assets/magnet-svgrepo-com.png",
-                        width: Platform.isAndroid ? 25 : 30,
-                        height: Platform.isAndroid ? 25 : 30,
-                      ),
-                    ],
+                    children: [const MagnetSVG()],
                   ),
                 ),
               ],
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class MagnetSVG extends StatelessWidget {
+  const MagnetSVG({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      "assets/magnet-svgrepo-com.svg",
+      semanticsLabel: 'Magnet Link',
+      height: 25,
+      width: 25,
+      colorFilter: ColorFilter.mode(
+        context.appColors.magnetIconColor,
+        BlendMode.srcIn,
       ),
     );
   }

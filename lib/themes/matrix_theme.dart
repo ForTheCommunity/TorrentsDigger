@@ -38,12 +38,9 @@ class MatrixTheme extends AppTheme {
   @override
   Color get sourcesDropdownBackgroundColor => Color.fromRGBO(9, 74, 11, 1);
   @override
-  Color get categoriesDropdownBackgroundColor => Color.fromRGBO(9, 74, 11, 1);
-  @override
   Color get sourcesDropdownOpenedBackgroundColor => Color.fromRGBO(1, 1, 1, 1);
   @override
-  Color get categoriesDropdownOpenedBackgroundColor =>
-      Color.fromRGBO(1, 1, 1, 1);
+  Color get dropdownArrowDownColor => Color.fromRGBO(17, 255, 0, 1);
 
   @override
   Color get sourceLabelColor => Color.fromRGBO(0, 255, 247, 1);
@@ -71,13 +68,7 @@ class MatrixTheme extends AppTheme {
   Color get creationDateTextColor => Color.fromRGBO(18, 204, 46, 1);
 
   @override
-  Color get magnetBackgroundColor => Color.fromRGBO(0, 0, 0, 1);
-  @override
-  Color get magnetForegroundColor => Color.fromRGBO(0, 255, 132, 0.888);
-  @override
-  Color get magnetIconColor => Color.fromRGBO(0, 247, 255, 1);
-  @override
-  Color get magnetButtonSurfaceTintColor => Color.fromRGBO(247, 0, 255, 1);
+  Color get magnetIconColor => Color.fromRGBO(9, 255, 0, 1);
 
   @override
   Color get bookmarkIconColor => Color.fromRGBO(135, 200, 189, 1);

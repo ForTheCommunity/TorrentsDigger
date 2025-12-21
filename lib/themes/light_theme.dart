@@ -41,11 +41,9 @@ class LightTheme extends AppTheme {
   Color get sourcesDropdownBackgroundColor =>
       const Color.fromARGB(255, 164, 241, 223);
   @override
-  Color get categoriesDropdownBackgroundColor => Colors.white;
-  @override
   Color get sourcesDropdownOpenedBackgroundColor => Colors.grey[100]!;
   @override
-  Color get categoriesDropdownOpenedBackgroundColor => Colors.grey[100]!;
+  Color get dropdownArrowDownColor => const Color.fromARGB(255, 0, 0, 0);
 
   @override
   Color get sourceLabelColor => Colors.blue;
@@ -73,13 +71,7 @@ class LightTheme extends AppTheme {
   Color get creationDateTextColor => Colors.blueGrey;
 
   @override
-  Color get magnetBackgroundColor => Colors.grey[200]!;
-  @override
-  Color get magnetForegroundColor => Colors.black;
-  @override
-  Color get magnetIconColor => Colors.blue;
-  @override
-  Color get magnetButtonSurfaceTintColor => Colors.blueAccent;
+  Color get magnetIconColor => const Color.fromARGB(255, 234, 0, 255);
 
   @override
   Color get bookmarkIconColor => const Color.fromARGB(255, 1, 134, 121);
