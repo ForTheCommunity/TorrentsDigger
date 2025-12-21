@@ -137,7 +137,7 @@ class LightTheme extends AppTheme {
   @override
   Color get proxyIconColor => Colors.green;
   @override
-  Color get proxyTextColor => Colors.green;
+  Color get proxyTextColor => const Color.fromARGB(255, 65, 1, 45);
   @override
   Color get proxyDeleteIconColor => Colors.red;
   @override

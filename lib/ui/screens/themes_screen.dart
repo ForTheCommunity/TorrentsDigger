@@ -6,8 +6,19 @@ import 'package:torrents_digger/themes/light_theme.dart';
 import 'package:torrents_digger/themes/matrix_theme.dart';
 import 'package:torrents_digger/ui/widgets/circular_progress_bar_widget.dart';
 
-class ThemesScreen extends StatelessWidget {
+class ThemesScreen extends StatefulWidget {
   const ThemesScreen({super.key});
+
+  @override
+  State<ThemesScreen> createState() => _ThemesScreenState();
+}
+
+class _ThemesScreenState extends State<ThemesScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<ThemesBloc>().add(const ThemesEvent.loadTheme());
+  }
 
   @override
   Widget build(BuildContext context) {
