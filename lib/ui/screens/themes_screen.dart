@@ -53,28 +53,6 @@ class _ThemesScreenState extends State<ThemesScreen> {
                     ) => Column(
                       children: [
                         ListTile(
-                          leading: currentAppThemeCode == matrixThemeCode
-                              ? Icon(
-                                  Icons.color_lens_outlined,
-                                  color: context.appColors.activeThemeIconColor,
-                                )
-                              : Icon(
-                                  Icons.color_lens_outlined,
-                                  color: context.appColors.settingsIconsColor,
-                                ),
-                          title: Text(
-                            "Matrix",
-                            style: TextStyle(
-                              color: context.appColors.settingsTextColor,
-                            ),
-                          ),
-                          onTap: () {
-                            context.read<ThemesBloc>().add(
-                              ThemesEvent.changeTheme(appTheme: MatrixTheme()),
-                            );
-                          },
-                        ),
-                        ListTile(
                           leading: currentAppThemeCode == lightThemeCode
                               ? Icon(
                                   Icons.color_lens_outlined,
@@ -93,6 +71,28 @@ class _ThemesScreenState extends State<ThemesScreen> {
                           onTap: () {
                             context.read<ThemesBloc>().add(
                               ThemesEvent.changeTheme(appTheme: LightTheme()),
+                            );
+                          },
+                        ),
+                        ListTile(
+                          leading: currentAppThemeCode == matrixThemeCode
+                              ? Icon(
+                                  Icons.color_lens_outlined,
+                                  color: context.appColors.activeThemeIconColor,
+                                )
+                              : Icon(
+                                  Icons.color_lens_outlined,
+                                  color: context.appColors.settingsIconsColor,
+                                ),
+                          title: Text(
+                            "Matrix",
+                            style: TextStyle(
+                              color: context.appColors.settingsTextColor,
+                            ),
+                          ),
+                          onTap: () {
+                            context.read<ThemesBloc>().add(
+                              ThemesEvent.changeTheme(appTheme: MatrixTheme()),
                             );
                           },
                         ),
