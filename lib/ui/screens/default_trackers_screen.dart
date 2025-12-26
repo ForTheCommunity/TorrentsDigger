@@ -31,74 +31,66 @@ class DefaultTrackersScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          SizedBox(height: 15),
-          SingleChildScrollView(
-            child: BlocBuilder<DefaultTrackersBloc, DefaultTrackersState>(
-              builder: (context, state) {
-                return state.when(
-                  initial: () => Center(
-                    child: Text(
-                      'No Trackers List Loaded Yet...',
-                      style: TextStyle(
-                        color: context.appColors.generalTextColor,
-                      ),
-                    ),
-                  ),
-                  loading: () => const CircularProgressBarWidget(),
-                  loaded: (trackersList, activatedDefaultTrackersList) =>
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: trackersList.length,
-                        itemBuilder: (context, index) {
-                          final tracker = trackersList[index];
-                          final trackerId = tracker.$1;
-                          final trackerName = tracker.$2;
-                          return ListTile(
-                            title: Row(
-                              children: [
-                                activatedDefaultTrackersList == trackerId
-                                    ? Icon(
-                                        Icons.device_hub,
-                                        size: 27,
-                                        color: context
-                                            .appColors
-                                            .activeTrackersListIconColor,
-                                      )
-                                    : Icon(
-                                        Icons.device_hub,
-                                        color: context
-                                            .appColors
-                                            .defaultTrackersIconColor,
-                                      ),
-                                SizedBox(width: 10),
-                                Text(
-                                  trackerName,
-                                  style: TextStyle(
+      body: SingleChildScrollView(
+        child: BlocBuilder<DefaultTrackersBloc, DefaultTrackersState>(
+          builder: (context, state) {
+            return state.when(
+              initial: () => Center(
+                child: Text(
+                  'No Trackers List Loaded Yet...',
+                  style: TextStyle(color: context.appColors.generalTextColor),
+                ),
+              ),
+              loading: () => const CircularProgressBarWidget(),
+              loaded: (trackersList, activatedDefaultTrackersList) =>
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: trackersList.length,
+                    itemBuilder: (context, index) {
+                      final tracker = trackersList[index];
+                      final trackerId = tracker.$1;
+                      final trackerName = tracker.$2;
+                      return ListTile(
+                        title: Row(
+                          children: [
+                            activatedDefaultTrackersList == trackerId
+                                ? Icon(
+                                    Icons.device_hub,
+                                    size: 27,
                                     color: context
                                         .appColors
-                                        .defaultTrackersTextColor,
+                                        .activeTrackersListIconColor,
+                                  )
+                                : Icon(
+                                    Icons.device_hub,
+                                    color: context
+                                        .appColors
+                                        .defaultTrackersIconColor,
                                   ),
-                                ),
-                              ],
+                            SizedBox(width: 10),
+                            Text(
+                              trackerName,
+                              style: TextStyle(
+                                color:
+                                    context.appColors.defaultTrackersTextColor,
+                              ),
                             ),
-                            onTap: () {
-                              context.read<DefaultTrackersBloc>().add(
-                                DefaultTrackersEvent.setTrackersList(
-                                  selectedTrackerId: trackerId,
-                                ),
-                              );
-                            },
+                          ],
+                        ),
+                        onTap: () {
+                          context.read<DefaultTrackersBloc>().add(
+                            DefaultTrackersEvent.setTrackersList(
+                              selectedTrackerId: trackerId,
+                            ),
                           );
                         },
-                      ),
-                );
-              },
-            ),
-          ),
-        ],
+                      );
+                    },
+                  ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -127,7 +119,7 @@ void _defaultTrackersInfo(BuildContext context) {
                       'Select a default trackers list.\nThese Trackers will be added to magnet links. '
                       'This can help in discovering more peers when downloading torrents. '
                       'If you are unsure about what types of trackers list to use. '
-                      'You can use default Trackers List [ All Trackers ] '
+                      'You can use default Trackers List [ All Trackers ]. '
                       'Trackers Lists are fetched from ',
                 ),
                 WidgetSpan(
