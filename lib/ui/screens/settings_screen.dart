@@ -23,10 +23,7 @@ class SettingsScreen extends StatelessWidget {
                 style: TextStyle(color: context.appColors.appBarTextColor),
               ),
               leading: IconButton(
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: context.appColors.appBarTextColor,
-                ),
+                icon: Icon(Icons.arrow_back),
                 onPressed: () {
                   Navigator.pop(context);
                 },

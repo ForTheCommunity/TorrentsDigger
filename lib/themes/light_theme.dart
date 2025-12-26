@@ -94,6 +94,18 @@ class LightTheme extends AppTheme {
   @override
   Color get defaultTrackersIconColor => const Color.fromARGB(255, 25, 0, 0);
   @override
+  Color get defaultTrackersInfoDialogBackgroundColor =>
+      const Color.fromARGB(255, 255, 255, 255);
+  @override
+  Color get defaultTrackersInfoDialogCloseTextColor =>
+      const Color.fromARGB(255, 0, 0, 0);
+  @override
+  Color get defaultTrackersInfoDialogCloseTextButtonBackgroundColor =>
+      const Color.fromARGB(255, 242, 176, 168);
+  @override
+  Color get defaultTrackersInfoIconColor =>
+      const Color.fromARGB(255, 255, 255, 255);
+  @override
   Color get activeTrackersListIconColor => const Color.fromARGB(255, 0, 255, 8);
 
   @override
@@ -121,7 +133,7 @@ class LightTheme extends AppTheme {
 
   @override
   Color get proxyDropdownBackgroundColor =>
-      const Color.fromARGB(255, 211, 168, 223);
+      const Color.fromARGB(255, 236, 201, 236);
   @override
   Color get proxyProtocolTextColor => Color.fromRGBO(0, 0, 0, 1);
   @override
@@ -139,12 +151,12 @@ class LightTheme extends AppTheme {
       const Color.fromARGB(255, 255, 17, 0);
   @override
   Color get proxySaveButtonBackgroundColor =>
-      const Color.fromARGB(255, 146, 246, 156);
+      const Color.fromARGB(255, 255, 255, 255);
   @override
   Color get proxySaveButtonTextColor => const Color.fromARGB(255, 0, 0, 0);
   @override
   Color get proxySaveButtonBorderColor =>
-      const Color.fromARGB(255, 255, 0, 208);
+      const Color.fromARGB(255, 232, 178, 233);
 
   @override
   Color get activeThemeIconColor => const Color.fromARGB(255, 0, 255, 8);

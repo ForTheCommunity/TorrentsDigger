@@ -52,6 +52,11 @@ abstract class AppTheme {
   Color get defaultTrackersInfoColor;
   Color get defaultTrackersTextColor;
   Color get defaultTrackersIconColor;
+  Color get defaultTrackersInfoDialogBackgroundColor;
+  Color get defaultTrackersInfoDialogCloseTextColor;
+  Color get defaultTrackersInfoDialogCloseTextButtonBackgroundColor;
+  Color get defaultTrackersInfoIconColor;
+  Color get activeTrackersListIconColor;
 
   Color get textFormFieldInactiveColor;
   Color get textFormFieldActiveColor;
@@ -63,7 +68,6 @@ abstract class AppTheme {
   Color get settingsFloatingActionButtonBackgroundColor;
   Color get settingsFloatingActionButtonHoverBackgroundColor;
 
-  Color get activeTrackersListIconColor;
   Color get circularProgressIndicatorColor;
 
   Color get proxyDropdownBackgroundColor;
