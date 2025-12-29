@@ -9,8 +9,9 @@ use crate::{
     sources::{
         available_sources::AllAvailableSources, knaben_database::KnabenDatabaseCategories,
         lime_torrents::LimeTorrentsCategories, nyaa::NyaaCategories,
-        solid_torrents::SolidTorrentsCategories, sukebei_nyaa::SukebeiNyaaCategories,
-        torrents_csv::TorrentsCsvCategories, uindex::UindexCategories,
+        pirate_bay::PirateBayCategories, solid_torrents::SolidTorrentsCategories,
+        sukebei_nyaa::SukebeiNyaaCategories, torrents_csv::TorrentsCsvCategories,
+        uindex::UindexCategories,
     },
     static_includes::get_current_version,
     torrent::Torrent,
@@ -32,6 +33,7 @@ pub fn fetch_torrents(
         AllAvailableSources::LimeTorrents => LimeTorrentsCategories::scrape_and_parse(response),
         AllAvailableSources::SolidTorrents => SolidTorrentsCategories::scrape_and_parse(response),
         AllAvailableSources::KnabenDatabase => KnabenDatabaseCategories::scrape_and_parse(response),
+        AllAvailableSources::ThePirateBay => PirateBayCategories::scrape_and_parse(response),
     }
 }
 

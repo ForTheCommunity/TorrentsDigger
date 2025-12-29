@@ -58,6 +58,10 @@ abstract class AppTheme {
   Color get defaultTrackersInfoIconColor;
   Color get activeTrackersListIconColor;
 
+  Color get paginationNextButtonBackgroundColor;
+  Color get paginationNextButtonTextColor;
+  
+
   Color get textFormFieldInactiveColor;
   Color get textFormFieldActiveColor;
 

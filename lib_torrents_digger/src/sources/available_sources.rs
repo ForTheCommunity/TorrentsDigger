@@ -8,6 +8,7 @@ pub enum AllAvailableSources {
     LimeTorrents,
     SolidTorrents,
     KnabenDatabase,
+    ThePirateBay,
 }
 
 impl AllAvailableSources {
@@ -19,6 +20,7 @@ impl AllAvailableSources {
         Self::LimeTorrents,
         Self::SolidTorrents,
         Self::KnabenDatabase,
+        Self::ThePirateBay,
     ];
 
     pub fn from_index(index: usize) -> Option<&'static AllAvailableSources> {
@@ -36,6 +38,7 @@ impl fmt::Display for AllAvailableSources {
             Self::LimeTorrents => write!(f, "Lime Torrents"),
             Self::SolidTorrents => write!(f, "Solid Torrents"),
             Self::KnabenDatabase => write!(f, "Knaben Database"),
+            Self::ThePirateBay => write!(f, "The Pirate Bay"),
         }
     }
 }

@@ -109,11 +109,17 @@ class MatrixTheme extends AppTheme {
       const Color.fromARGB(255, 90, 205, 233);
   @override
   Color get activeTrackersListIconColor => Color.fromRGBO(0, 255, 0, 1);
+  @override
+  Color get paginationNextButtonBackgroundColor =>
+      const Color.fromARGB(255, 16, 16, 16);
+  @override
+  Color get paginationNextButtonTextColor =>
+      const Color.fromARGB(255, 0, 255, 30);
 
   @override
   Color get textFormFieldInactiveColor => Color.fromRGBO(69, 130, 127, 1);
   @override
-  Color get textFormFieldActiveColor => Color.fromRGBO(0, 255, 0, 1);
+  Color get textFormFieldActiveColor => Color.fromRGBO(91, 181, 87, 1);
 
   @override
   Color get aboutDialogIconColor => Color.fromRGBO(0, 255, 47, 1);

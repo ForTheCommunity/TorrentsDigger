@@ -6,6 +6,7 @@ use crate::sources::{
     },
     lime_torrents::{LimeTorrentsCategories, LimeTorrentsSortings},
     nyaa::{NyaaCategories, NyaaFilter, NyaaSortingOrders, NyaaSortings},
+    pirate_bay::PirateBayCategories,
     solid_torrents::{SolidTorrentsCategories, SolidTorrentsSortings},
     sukebei_nyaa::SukebeiNyaaCategories,
     torrents_csv::TorrentsCsvCategories,
@@ -17,6 +18,7 @@ pub mod customs;
 pub mod knaben_database;
 pub mod lime_torrents;
 pub mod nyaa;
+pub mod pirate_bay;
 pub mod solid_torrents;
 pub mod sukebei_nyaa;
 pub mod torrents_csv;
@@ -119,6 +121,18 @@ pub fn get_source_details() -> Vec<Source> {
     sources_details.push(Source {
         source_name: AllAvailableSources::KnabenDatabase.to_string(),
         source_details: knaben_database_source_details,
+    });
+
+    let the_pirate_bay_source_details = SourceDetails {
+        source_query_options: PirateBayCategories::get_query_options(),
+        source_categories: PirateBayCategories::all_categories(),
+        source_filters: vec!["".to_string()],
+        source_sortings: vec!["".to_string()],
+        source_sorting_orders: vec!["".to_string()],
+    };
+    sources_details.push(Source {
+        source_name: AllAvailableSources::ThePirateBay.to_string(),
+        source_details: the_pirate_bay_source_details,
     });
 
     sources_details

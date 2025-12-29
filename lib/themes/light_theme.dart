@@ -107,11 +107,16 @@ class LightTheme extends AppTheme {
       const Color.fromARGB(255, 255, 255, 255);
   @override
   Color get activeTrackersListIconColor => const Color.fromARGB(255, 0, 255, 8);
+  @override
+  Color get paginationNextButtonBackgroundColor =>
+      const Color.fromARGB(255, 183, 227, 210);
+  @override
+  Color get paginationNextButtonTextColor => const Color.fromARGB(255, 0, 0, 0);
 
   @override
   Color get textFormFieldInactiveColor => Colors.grey;
   @override
-  Color get textFormFieldActiveColor => Colors.blue;
+  Color get textFormFieldActiveColor => const Color.fromARGB(255, 227, 137, 241);
 
   @override
   Color get aboutDialogIconColor => const Color.fromARGB(255, 142, 249, 242);
@@ -122,11 +127,10 @@ class LightTheme extends AppTheme {
   Color get settingsFloatingActionButtonForegroundColor =>
       const Color.fromARGB(255, 0, 0, 0);
   @override
-  Color get settingsFloatingActionButtonBackgroundColor =>
-      const Color.fromARGB(255, 132, 232, 220);
+  Color get settingsFloatingActionButtonBackgroundColor => Colors.transparent;
   @override
   Color get settingsFloatingActionButtonHoverBackgroundColor =>
-      const Color.fromARGB(255, 68, 255, 77);
+      Colors.transparent;
 
   @override
   Color get circularProgressIndicatorColor => Colors.blue;
@@ -159,7 +163,7 @@ class LightTheme extends AppTheme {
       const Color.fromARGB(255, 232, 178, 233);
 
   @override
-  Color get activeThemeIconColor => const Color.fromARGB(255, 0, 255, 8);
+  Color get activeThemeIconColor => const Color.fromARGB(255, 255, 0, 0);
 
   //   @override
   // Color get scaffoldMessengerMessageColor => Color.fromRGBO(255, 255, 255, 1);

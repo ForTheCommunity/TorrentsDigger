@@ -37,6 +37,10 @@ class PaginationWidget extends StatelessWidget {
             // Text(currentPage.toString()),
             // const SizedBox(width: 20),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    context.appColors.paginationNextButtonBackgroundColor,
+              ),
               onPressed: state.nextPage != null
                   ? () {
                       if (torrentState is TorrentSearchSuccess) {
@@ -129,7 +133,9 @@ class PaginationWidget extends StatelessWidget {
                   : null,
               child: Text(
                 "Next ->",
-                style: TextStyle(color: context.appColors.generalTextColor),
+                style: TextStyle(
+                  color: context.appColors.paginationNextButtonTextColor,
+                ),
               ),
             ),
           ],

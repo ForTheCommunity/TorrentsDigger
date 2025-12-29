@@ -8,6 +8,7 @@ use crate::{
         },
         lime_torrents::{LimeTorrentsCategories, LimeTorrentsSortings},
         nyaa::{NyaaCategories, NyaaFilter, NyaaSortingOrders, NyaaSortings},
+        pirate_bay::PirateBayCategories,
         solid_torrents::{SolidTorrentsCategories, SolidTorrentsSortings},
         sukebei_nyaa::SukebeiNyaaCategories,
         torrents_csv::TorrentsCsvCategories,
@@ -140,6 +141,17 @@ pub fn search_torrent(
                 &page.unwrap_or(1),
             );
             fetch_torrents(&url, AllAvailableSources::KnabenDatabase)
+        }
+
+        AllAvailableSources::ThePirateBay => {
+            let category = PirateBayCategories::from_index(category_index)
+                .ok_or_else(|| anyhow!("Invalid Category Index: {}", source_index))?;
+            let url = PirateBayCategories::request_url_builder(
+                &torrent_name,
+                category,
+                &page.unwrap_or(1),
+            );
+            fetch_torrents(&url, AllAvailableSources::ThePirateBay)
         }
     }
 }
