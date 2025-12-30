@@ -1,14 +1,13 @@
 use core::fmt;
-use std::fmt::format;
 
 use anyhow::{Ok, Result, anyhow};
 use scraper::Html;
 use ureq::{Body, http::Response};
 
-use crate::{sources::QueryOptions, torrent::Torrent};
+use crate::{sources::QueryOptions, sync_request::send_request, torrent::Torrent};
 
 #[derive(Debug)]
-pub enum PirateBayCategories {
+pub enum ThePirateBayCategories {
     // All Categories
     AllCategories,
     // Audio Categories
@@ -73,18 +72,18 @@ pub enum PirateBayCategories {
     OtherOthers,
 }
 
-impl PirateBayCategories {
+impl ThePirateBayCategories {
     pub fn get_query_options() -> QueryOptions {
         QueryOptions {
             categories: true,
             filters: false,
-            sortings: false,
-            sorting_orders: false,
+            sortings: true,
+            sorting_orders: true,
             pagination: true,
         }
     }
 
-    const ALL_VARIANTS: &'static [PirateBayCategories] = &[
+    const ALL_VARIANTS: &'static [ThePirateBayCategories] = &[
         Self::AllCategories,
         Self::Audio,
         Self::Music,
@@ -142,7 +141,7 @@ impl PirateBayCategories {
         Self::OtherOthers,
     ];
 
-    pub fn from_index(index: usize) -> Option<&'static PirateBayCategories> {
+    pub fn from_index(index: usize) -> Option<&'static ThePirateBayCategories> {
         Self::ALL_VARIANTS.get(index)
     }
 
@@ -215,23 +214,72 @@ impl PirateBayCategories {
 
     pub fn request_url_builder(
         torrent_name: &str,
-        category: &PirateBayCategories,
+        category: &ThePirateBayCategories,
+        sorting: &ThePirateBaySortings,
+        sorting_order: &ThePirateBaySortingOrders,
         page_number: &i64,
-    ) -> String {
-        // https://thepiratebay.party/search/boruto/1/99/0
-
+    ) -> Result<String> {
         // url encoding
         let torrent_name = urlencoding::encode(torrent_name).to_string();
 
-        let root_url = "https://thepiratebay.party";
+        // Proxies
+        // Proxies Source -> https://piratebayproxy.info
+        let tpb_proxies = [
+            "https://thepiratebay11.com",
+            "https://thepiratebay10.info",
+            "https://thepiratebay7.com",
+            "https://thepiratebay0.org",
+            "https://thepiratebay10.xyz",
+            "https://pirateproxylive.org",
+            "https://thehiddenbay.com",
+            "https://piratebay.live",
+            "https://thepiratebay.zone",
+            "https://tpb.party",
+            "https://thepiratebay.party",
+            "https://piratebay.party",
+            "https://piratebayproxy.live",
+            "https://thepiratebay.xyz",
+            "https://pirate-proxy.thepiratebay.rocks",
+            "https://thepiratebay10.org",
+            "https://pirateproxy.live",
+            "https://thepiratebay1.live",
+            "https://thepiratebays.info",
+            "https://thepiratebays.live",
+            "https://thepiratebay1.top",
+            "https://thepiratebay1.info",
+            "https://thepiratebay.rocks",
+            "https://thepiratebay.vet",
+        ];
+
+        let mut active_domain: &str = "https://pirateproxylive.org";
+
+        for a_proxy in tpb_proxies {
+            println!("---->>> Trying {}", a_proxy);
+
+            let html_response = send_request(a_proxy)?.body_mut().read_to_string()?;
+            // checking if htnl_response contains proxy site url or not,,
+            // if that url is present then this domain is active.
+            // we can check other Texts/Strings also..
+            if html_response.contains("https://piratebayproxy.info") {
+                active_domain = a_proxy;
+                break;
+            } else {
+                continue;
+            }
+        }
+
+        let root_url = active_domain;
         let path = "search";
-
         let category = format!("{}", category.category_to_value());
+        let mut sorting = sorting.sorting_to_value().parse::<u8>()?;
+        if sorting_order == &ThePirateBaySortingOrders::Descending {
+            sorting = sorting - sorting_order.sorting_order_to_value().parse::<u8>()?;
+        }
 
-        format!(
-            "{}/{}/{}/{}/99/{}",
-            root_url, path, torrent_name, page_number, category
-        )
+        Ok(format!(
+            "{}/{}/{}/{}/{}/{}",
+            root_url, path, torrent_name, page_number, sorting, category
+        ))
     }
 
     pub fn scrape_and_parse(mut response: Response<Body>) -> Result<(Vec<Torrent>, Option<i64>)> {
@@ -240,7 +288,7 @@ impl PirateBayCategories {
             .body_mut()
             .read_to_string()
             .map_err(|e| anyhow!(format!("Error reading response body: {}", e)))?;
-        let document = Html::parse_document(&html_response);
+        let _document = Html::parse_document(&html_response);
 
         // TODO
 
@@ -272,7 +320,7 @@ impl PirateBayCategories {
     }
 }
 
-impl fmt::Display for PirateBayCategories {
+impl fmt::Display for ThePirateBayCategories {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::AllCategories => write!(f, "All Categories"),
@@ -330,6 +378,90 @@ impl fmt::Display for PirateBayCategories {
             Self::Covers => write!(f, "Covers"),
             Self::Physibles => write!(f, "Physibles"),
             Self::OtherOthers => write!(f, "Other Others"),
+        }
+    }
+}
+
+pub enum ThePirateBaySortings {
+    ByDate,
+    BySize,
+    BySeeders,
+    ByLeechers,
+}
+
+impl ThePirateBaySortings {
+    const ALL_VARIANTS: &'static [ThePirateBaySortings] = &[
+        Self::ByDate,
+        Self::BySize,
+        Self::BySeeders,
+        Self::ByLeechers,
+    ];
+
+    pub fn from_index(index: usize) -> Option<&'static ThePirateBaySortings> {
+        Self::ALL_VARIANTS.get(index)
+    }
+
+    pub fn sorting_to_value(&self) -> &str {
+        match *self {
+            Self::ByDate => "4",
+            Self::BySize => "6",
+            Self::BySeeders => "8",
+            Self::ByLeechers => "10",
+        }
+    }
+
+    pub fn all_pirate_bay_sortings() -> Vec<String> {
+        Self::ALL_VARIANTS
+            .iter()
+            .map(|sorting| sorting.to_string())
+            .collect()
+    }
+}
+
+impl fmt::Display for ThePirateBaySortings {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::ByDate => write!(f, "By Date"),
+            Self::BySize => write!(f, "By Size"),
+            Self::BySeeders => write!(f, "By Seeders"),
+            Self::ByLeechers => write!(f, "By Leechers"),
+        }
+    }
+}
+
+#[derive(PartialEq)]
+pub enum ThePirateBaySortingOrders {
+    Ascending,
+    Descending,
+}
+
+impl ThePirateBaySortingOrders {
+    const ALL_VARIANTS: &'static [ThePirateBaySortingOrders] = &[Self::Ascending, Self::Descending];
+
+    pub fn from_index(index: usize) -> Option<&'static ThePirateBaySortingOrders> {
+        Self::ALL_VARIANTS.get(index)
+    }
+
+    pub fn sorting_order_to_value(&self) -> &str {
+        match *self {
+            Self::Ascending => "0",
+            Self::Descending => "1",
+        }
+    }
+
+    pub fn all_pirate_bay_sorting_orders() -> Vec<String> {
+        Self::ALL_VARIANTS
+            .iter()
+            .map(|sorting| sorting.to_string())
+            .collect()
+    }
+}
+
+impl fmt::Display for ThePirateBaySortingOrders {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Ascending => write!(f, "Ascending Order"),
+            Self::Descending => write!(f, "Descending Order"),
         }
     }
 }

@@ -6,9 +6,9 @@ use crate::sources::{
     },
     lime_torrents::{LimeTorrentsCategories, LimeTorrentsSortings},
     nyaa::{NyaaCategories, NyaaFilter, NyaaSortingOrders, NyaaSortings},
-    pirate_bay::PirateBayCategories,
     solid_torrents::{SolidTorrentsCategories, SolidTorrentsSortings},
     sukebei_nyaa::SukebeiNyaaCategories,
+    the_pirate_bay::{ThePirateBayCategories, ThePirateBaySortingOrders, ThePirateBaySortings},
     torrents_csv::TorrentsCsvCategories,
     uindex::{UindexCategories, UindexSortingOrders, UindexSortings},
 };
@@ -18,9 +18,9 @@ pub mod customs;
 pub mod knaben_database;
 pub mod lime_torrents;
 pub mod nyaa;
-pub mod pirate_bay;
 pub mod solid_torrents;
 pub mod sukebei_nyaa;
+pub mod the_pirate_bay;
 pub mod torrents_csv;
 pub mod uindex;
 
@@ -75,6 +75,7 @@ pub fn get_source_details() -> Vec<Source> {
         source_details: torrents_csv_source_details,
     });
 
+    // Inserting Uindex
     let uindex_source_details = SourceDetails {
         source_query_options: UindexCategories::get_query_options(),
         source_categories: UindexCategories::all_categories(),
@@ -87,6 +88,7 @@ pub fn get_source_details() -> Vec<Source> {
         source_details: uindex_source_details,
     });
 
+    // Inserting LimeTorrents
     let lime_torrents_source_details = SourceDetails {
         source_query_options: LimeTorrentsCategories::get_query_options(),
         source_categories: LimeTorrentsCategories::all_categories(),
@@ -99,6 +101,7 @@ pub fn get_source_details() -> Vec<Source> {
         source_details: lime_torrents_source_details,
     });
 
+    // Inserting SolidTorrents
     let solid_torrents_source_details = SourceDetails {
         source_query_options: SolidTorrentsCategories::get_query_options(),
         source_categories: SolidTorrentsCategories::all_categories(),
@@ -111,6 +114,7 @@ pub fn get_source_details() -> Vec<Source> {
         source_details: solid_torrents_source_details,
     });
 
+    // Inserting KnabenDatabase
     let knaben_database_source_details = SourceDetails {
         source_query_options: KnabenDatabaseCategories::get_query_options(),
         source_categories: KnabenDatabaseCategories::all_categories(),
@@ -123,12 +127,13 @@ pub fn get_source_details() -> Vec<Source> {
         source_details: knaben_database_source_details,
     });
 
+    // Inserting ThePirateBay
     let the_pirate_bay_source_details = SourceDetails {
-        source_query_options: PirateBayCategories::get_query_options(),
-        source_categories: PirateBayCategories::all_categories(),
+        source_query_options: ThePirateBayCategories::get_query_options(),
+        source_categories: ThePirateBayCategories::all_categories(),
         source_filters: vec!["".to_string()],
-        source_sortings: vec!["".to_string()],
-        source_sorting_orders: vec!["".to_string()],
+        source_sortings: ThePirateBaySortings::all_pirate_bay_sortings(),
+        source_sorting_orders: ThePirateBaySortingOrders::all_pirate_bay_sorting_orders(),
     };
     sources_details.push(Source {
         source_name: AllAvailableSources::ThePirateBay.to_string(),

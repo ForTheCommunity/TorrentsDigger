@@ -8,7 +8,7 @@ use crate::{
         },
         lime_torrents::{LimeTorrentsCategories, LimeTorrentsSortings},
         nyaa::{NyaaCategories, NyaaFilter, NyaaSortingOrders, NyaaSortings},
-        pirate_bay::PirateBayCategories,
+        the_pirate_bay::{ThePirateBayCategories, ThePirateBaySortingOrders, ThePirateBaySortings},
         solid_torrents::{SolidTorrentsCategories, SolidTorrentsSortings},
         sukebei_nyaa::SukebeiNyaaCategories,
         torrents_csv::TorrentsCsvCategories,
@@ -144,13 +144,23 @@ pub fn search_torrent(
         }
 
         AllAvailableSources::ThePirateBay => {
-            let category = PirateBayCategories::from_index(category_index)
+            let category = ThePirateBayCategories::from_index(category_index)
                 .ok_or_else(|| anyhow!("Invalid Category Index: {}", source_index))?;
-            let url = PirateBayCategories::request_url_builder(
+
+            let sorting = ThePirateBaySortings::from_index(sorting_index)
+                .ok_or_else(|| anyhow!("Invalid Sorting Index: {}", sorting_index))?;
+            let sorting_order = ThePirateBaySortingOrders::from_index(sorting_order_index)
+                .ok_or_else(|| anyhow!("Invalid Sorting Index: {}", sorting_order_index))?;
+
+            let url = ThePirateBayCategories::request_url_builder(
                 &torrent_name,
                 category,
+                sorting,
+                sorting_order,
                 &page.unwrap_or(1),
-            );
+            )
+            .map_err(|err| anyhow!("Error building Request URL : {}", err))?;
+
             fetch_torrents(&url, AllAvailableSources::ThePirateBay)
         }
     }
