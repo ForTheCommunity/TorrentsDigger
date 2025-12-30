@@ -145,25 +145,31 @@ void _defaultTrackersInfo(BuildContext context) {
           ),
         ),
         actions: [
-          TextButton(
-            style: TextButton.styleFrom(
-              backgroundColor: context
-                  .appColors
-                  .defaultTrackersInfoDialogCloseTextButtonBackgroundColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: context
+                      .appColors
+                      .defaultTrackersInfoDialogCloseTextButtonBackgroundColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  "Close",
+                  style: TextStyle(
+                    color: context
+                        .appColors
+                        .defaultTrackersInfoDialogCloseTextColor,
+                  ),
+                ),
               ),
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text(
-              "Close",
-              style: TextStyle(
-                color:
-                    context.appColors.defaultTrackersInfoDialogCloseTextColor,
-              ),
-            ),
+            ],
           ),
         ],
       );

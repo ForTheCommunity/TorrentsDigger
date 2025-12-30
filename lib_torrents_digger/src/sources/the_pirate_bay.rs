@@ -257,6 +257,8 @@ impl ThePirateBayCategories {
         let mut active_domain: &str = "https://pirateproxylive.org";
 
         for a_proxy in tpb_proxies {
+            println!("---->>> Trying {}", a_proxy);
+
             let html_response = send_request(a_proxy)?.body_mut().read_to_string()?;
             // checking if htnl_response contains proxy site url or not,,
             // if that url is present then this domain is active.
@@ -315,10 +317,13 @@ impl ThePirateBayCategories {
             .next()
             .ok_or_else(|| anyhow!("Didn't found Table..."))?;
 
-        let table_body = table
-            .select(&table_body_selector)
-            .next()
-            .ok_or_else(|| anyhow!("Didn't found Table Body..."))?;
+        let table_body = table.select(&table_body_selector).next().ok_or_else(|| {
+            anyhow!(
+                // Table Body doesn't exists.
+                // means there are no torrents with this name...
+                "No torrents found with the specified name."
+            )
+        })?;
 
         let mut torrents_vec: Vec<Torrent> = Vec::new();
         let mut next_page: Option<i64> = None;

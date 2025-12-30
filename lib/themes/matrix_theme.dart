@@ -106,7 +106,7 @@ class MatrixTheme extends AppTheme {
       const Color.fromARGB(255, 0, 0, 0);
   @override
   Color get defaultTrackersInfoIconColor =>
-      const Color.fromARGB(255, 90, 205, 233);
+      const Color.fromARGB(255, 25, 223, 15);
   @override
   Color get activeTrackersListIconColor => Color.fromRGBO(0, 255, 0, 1);
   @override
