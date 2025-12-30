@@ -1,10 +1,13 @@
 use core::fmt;
 
-use anyhow::{Ok, Result, anyhow};
-use scraper::Html;
+use anyhow::{Result, anyhow};
+use scraper::{ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
 
-use crate::{sources::QueryOptions, sync_request::send_request, torrent::Torrent};
+use crate::{
+    extract_info_hash_from_magnet, sources::QueryOptions, sync_request::send_request,
+    torrent::Torrent,
+};
 
 #[derive(Debug)]
 pub enum ThePirateBayCategories {
@@ -254,8 +257,6 @@ impl ThePirateBayCategories {
         let mut active_domain: &str = "https://pirateproxylive.org";
 
         for a_proxy in tpb_proxies {
-            println!("---->>> Trying {}", a_proxy);
-
             let html_response = send_request(a_proxy)?.body_mut().read_to_string()?;
             // checking if htnl_response contains proxy site url or not,,
             // if that url is present then this domain is active.
@@ -288,35 +289,114 @@ impl ThePirateBayCategories {
             .body_mut()
             .read_to_string()
             .map_err(|e| anyhow!(format!("Error reading response body: {}", e)))?;
-        let _document = Html::parse_document(&html_response);
+        let document = Html::parse_document(&html_response);
 
-        // TODO
+        // Selectors
+        let table_selector = Selector::parse(r#"table[id="searchResult"]"#)
+            .map_err(|e| anyhow!(format!("Error parsing table selector: {}", e)))?;
 
-        let mock_torrent_1: Torrent = Torrent {
-            info_hash: "mock_ih_1".to_string(),
-            name: "Debian 12 ISO".to_string(),
-            magnet: "magnet:?xt=urn:btih:EE34425D58C94DAme".to_string(),
-            size: "2 GB".to_string(),
-            date: "Today".to_string(),
-            seeders: "100".to_string(),
-            leechers: "2".to_string(),
-            total_downloads: "8346".to_string(),
-        };
+        let table_body_selector = Selector::parse("tbody")
+            .map_err(|e| anyhow!(format!("Error parsing tbody selector: {}", e)))?;
 
-        let mock_torrent_2: Torrent = Torrent {
-            info_hash: "mock_ih_2".to_string(),
-            name: "Debian 11 ISO".to_string(),
-            magnet: "magnet:?xt=urn:btih:EE34425D58C94DAme".to_string(),
-            size: "1.7 GB".to_string(),
-            date: "Yesterday".to_string(),
-            seeders: "158".to_string(),
-            leechers: "513".to_string(),
-            total_downloads: "8346".to_string(),
-        };
+        let table_row_selector = Selector::parse("tr")
+            .map_err(|e| anyhow!(format!("Error parsing tr selector: {}", e)))?;
 
-        let vec_torr: Vec<Torrent> = vec![mock_torrent_1, mock_torrent_2];
-        Ok((vec_torr, None))
-        //         todo!()
+        let table_data_selector = Selector::parse("td")
+            .map_err(|e| anyhow!(format!("Error parsing td selector: {}", e)))?;
+
+        let anchor_tag_selector = Selector::parse("a")
+            .map_err(|e| anyhow!(format!("Error parsing a selector: {}", e)))?;
+
+        let b_tag_selector = Selector::parse("b")
+            .map_err(|e| anyhow!(format!("Error parsing b selector: {}", e)))?;
+
+        let table = document
+            .select(&table_selector)
+            .next()
+            .ok_or_else(|| anyhow!("Didn't found Table..."))?;
+
+        let table_body = table
+            .select(&table_body_selector)
+            .next()
+            .ok_or_else(|| anyhow!("Didn't found Table Body..."))?;
+
+        let mut torrents_vec: Vec<Torrent> = Vec::new();
+        let mut next_page: Option<i64> = None;
+
+        // iterating over table rows.
+        for a_table_row in table_body.select(&table_row_selector) {
+            let table_data_vec: Vec<ElementRef> =
+                a_table_row.select(&table_data_selector).collect();
+
+            if table_data_vec.len() >= 7 {
+                let name = table_data_vec[1]
+                    .select(&anchor_tag_selector)
+                    .next()
+                    .ok_or_else(|| anyhow!("Didn't found Anchor Tag while extracting name.."))?
+                    .inner_html()
+                    .to_string();
+
+                let date = table_data_vec[2]
+                    .inner_html()
+                    .to_string()
+                    .replace("&nbsp;", " ");
+
+                let magnet = table_data_vec[3]
+                    .select(&anchor_tag_selector)
+                    .next()
+                    .ok_or_else(|| {
+                        anyhow!("Didn't found any anchor tag while extracting magnet link.")
+                    })?
+                    .value()
+                    .attr("href")
+                    .ok_or_else(|| anyhow!("Magnet link not found in href..."))?
+                    .to_string();
+
+                let size = table_data_vec[4]
+                    .inner_html()
+                    .to_string()
+                    .replace("&nbsp;", " ");
+
+                let seeders = table_data_vec[5].inner_html().to_string();
+                let leechers = table_data_vec[6].inner_html().to_string();
+
+                let total_downloads = "N/A".to_string();
+
+                let info_hash = extract_info_hash_from_magnet(&magnet);
+
+                torrents_vec.push(Torrent {
+                    info_hash,
+                    name,
+                    magnet,
+                    size,
+                    date,
+                    seeders,
+                    leechers,
+                    total_downloads,
+                });
+            } else if let Some(td_element) = table_data_vec.get(0) {
+                // extracting current page number
+                let current_page = td_element
+                    .select(&b_tag_selector)
+                    .next()
+                    .and_then(|el| el.inner_html().parse::<i64>().ok());
+
+                if let Some(curr) = current_page {
+                    let expected_next_page_number = curr + 1;
+
+                    for link in td_element.select(&anchor_tag_selector) {
+                        if let Ok(page_num) = link.inner_html().parse::<i64>() {
+                            if page_num == expected_next_page_number {
+                                next_page = Some(expected_next_page_number);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        Ok((torrents_vec, next_page))
     }
 }
 
