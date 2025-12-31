@@ -257,8 +257,6 @@ impl ThePirateBayCategories {
         let mut active_domain: &str = "https://pirateproxylive.org";
 
         for a_proxy in tpb_proxies {
-            println!("---->>> Trying {}", a_proxy);
-
             let html_response = send_request(a_proxy)?.body_mut().read_to_string()?;
             // checking if htnl_response contains proxy site url or not,,
             // if that url is present then this domain is active.

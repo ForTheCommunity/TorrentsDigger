@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:external_path/external_path.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 
@@ -31,29 +31,23 @@ void exportDatabaseAndroid() async {
     "${androidDocumentsDirectory.path}/$internalScopedStoragedatabaseDirName/$databaseFileName",
   );
 
-  //   // getting path to the Downloads Directory..
-  final downloadDirPath = await ExternalPath.getExternalStoragePublicDirectory(
-    ExternalPath.DIRECTORY_DOWNLOAD,
-  );
-  File file = File("$downloadDirPath/$databaseFileName");
-
-  // Check if the file exists in private storage
-  if (await internalScopedStorageDatabaseFilePath.exists()) {
-    //  Reading database file from internal scoped storage
-    List<int> databaseFileData = await internalScopedStorageDatabaseFilePath
-        .readAsBytes();
-
-    // Writing file to shared storage
-    await file.writeAsBytes(databaseFileData);
-
-    createSnackBar(
-      message:
-          "Database Exported at Internal Storage \nPath : Internal Storage/$downloadDirPath/$databaseFileName",
-      duration: 5,
+  try {
+    final params = SaveFileDialogParams(
+      sourceFilePath: internalScopedStorageDatabaseFilePath.path,
     );
-  } else {
+    final filePath = await FlutterFileDialog.saveFile(params: params);
+
+    if (filePath != null) {
+      createSnackBar(
+        message: "Database File Exported.\nPath -> $filePath",
+        duration: 5,
+      );
+    } else {
+      createSnackBar(message: "Failed to export Database.", duration: 5);
+    }
+  } catch (e) {
     createSnackBar(
-      message: "Database Not Found in Internal Scoped Storage",
+      message: "Failed To Export Database File !!!\nError : ${e.toString()}",
       duration: 5,
     );
   }
@@ -75,18 +69,29 @@ void importDatabaseAndroid() async {
 
   if (result != null) {
     File file = File(result.files.single.path!);
-    //  Reading database file
-    List<int> databaseFileData = await file.readAsBytes();
 
-    try {
-      // Writing file to internal scoped storage
-      await internalScopedStorageDatabaseFilePath.writeAsBytes(
-        databaseFileData,
-      );
-      createSnackBar(message: "Database imported...", duration: 2);
-    } catch (e) {
+    String importedFileName = file.path.split('/').last;
+
+    // Database file name should contain databaseFileName
+    if (importedFileName.contains(databaseFileName)) {
+      //  Reading database file
+      List<int> databaseFileData = await file.readAsBytes();
+
+      try {
+        // Writing file to internal scoped storage
+        await internalScopedStorageDatabaseFilePath.writeAsBytes(
+          databaseFileData,
+        );
+        createSnackBar(message: "Database imported...", duration: 2);
+      } catch (e) {
+        createSnackBar(
+          message: "Unable to Import Database.\nError: ${e.toString}",
+          duration: 5,
+        );
+      }
+    } else {
       createSnackBar(
-        message: "Unable to Import Database.\nError: ${e.toString}",
+        message: "Invalid File Picked.\nPick a Valid Database File.",
         duration: 5,
       );
     }

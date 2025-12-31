@@ -41,7 +41,7 @@ dependencies:
   path_provider: 2.1.5
   flutter_bloc: 9.1.1
   file_picker: 10.3.8
-  external_path: 2.2.0
+  flutter_file_dialog: 3.0.3
   freezed_annotation: 3.1.0
   flutter_svg: ^2.2.3
 
