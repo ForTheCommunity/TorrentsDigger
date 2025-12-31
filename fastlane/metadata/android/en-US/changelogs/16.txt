@@ -1,0 +1,4 @@
+- Added New Source (ThePirateBay).
+- Added Custom Listings For ThePirateBay.
+- Improved Database Import (Android).
+- Fixed Database Export (Android).

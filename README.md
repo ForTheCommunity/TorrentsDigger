@@ -2,6 +2,34 @@
 
 ### -> Join [Matrix Room](https://matrix.to/#/#torrentsdigger:matrix.org)
 
+
+## Features
+
+- Multi Source/Sites Support.
+
+- Shows Torrent Creation Date, Seeders, Leechers, Total Downloads, Torrent Size.
+
+- User can choose Category, Filters, Sortings, Sortings Order.
+
+- Bookmark : User can Bookmark torrents.
+
+- Copy magnet link to Clipboard.
+
+- Opens Torrent Downloader Apps for Downloading Torrents.
+
+- Default Trackers Lists : User can Select a Default Trackers List & that trackers List will be added to magnet links.
+
+- Custom Listings : There are numbers of Custom Listings that shows certain types of torrents. (Like Trending , Latests, etc.)
+
+- Multiple Themes.
+
+- Proxy Support : User can use Proxy to route Traffic. Supported Proxy Protocols -> ( HTTP, HTTPS, SOCKS4 & SOCKS5. )
+
+- Database Import/Export : User can Export and Import App Database.
+
+- Cross Platform ( Currently Available for Android & Linux ).
+
+
 ## --> Screenshots
 
 <div style="display: flex; justify-content: center; gap: 20px;">
@@ -38,15 +66,38 @@ appman install torrents_digger
 
 > **Why No Binaries For Windows & Mac OS ?**
 
-> It is possible to build this app for Windows and Mac OS; however, i need contributors who can test app on these platforms.
+> It is possible to build this app for Windows and Mac OS; however, i need contributors who can build & test app on these platforms.
 
+### TODOS :
+- Improve Pagination.
 
-### Note -> Torrents Digger only do the job of Fetching ,Scraping & Listing. It don't host anything , It just list what is already available in the internet.
+- Remember Selected Category, Filter, Sorting, Sorting Order of a Source.
 
+- Save Search History.
+
+- All Source Search.
+
+- Automatically Update Bookmarked Torrent Data (Like seeders, leechers , total downloads) when Researched.
+
+- Improve Database Migration. (Currently everything is done manually.)
+
+- Log Screen for showing Execution Logs.
+
+- make a TUI APP (using RataTUI).
+
+- NSFW Toogle Button.
 
 
 ## Contribute
 See [Contribution Guide](./contribution_guide.md).
+
+## Disclaimer ->
+### Torrents Digger doesn't host anything.
+### It just searches and lists publicly available torrents from third party sites.
+### Developers of Torrents Diggers can't be held responsible if anyone downloads copyrighted materials.
+
+### Becarefull what you download; ensure you are following your country's law.
+
 
 ## License
 
