@@ -215,16 +215,7 @@ impl ThePirateBayCategories {
             .collect()
     }
 
-    pub fn request_url_builder(
-        torrent_name: &str,
-        category: &ThePirateBayCategories,
-        sorting: &ThePirateBaySortings,
-        sorting_order: &ThePirateBaySortingOrders,
-        page_number: &i64,
-    ) -> Result<String> {
-        // url encoding
-        let torrent_name = urlencoding::encode(torrent_name).to_string();
-
+    pub fn get_active_domain() -> Result<String> {
         // Proxies
         // Proxies Source -> https://piratebayproxy.info
         let tpb_proxies = [
@@ -255,7 +246,6 @@ impl ThePirateBayCategories {
         ];
 
         let mut active_domain: &str = "https://pirateproxylive.org";
-
         for a_proxy in tpb_proxies {
             let html_response = send_request(a_proxy)?.body_mut().read_to_string()?;
             // checking if htnl_response contains proxy site url or not,,
@@ -268,8 +258,20 @@ impl ThePirateBayCategories {
                 continue;
             }
         }
+        Ok(active_domain.to_string())
+    }
 
-        let root_url = active_domain;
+    pub fn request_url_builder(
+        torrent_name: &str,
+        category: &ThePirateBayCategories,
+        sorting: &ThePirateBaySortings,
+        sorting_order: &ThePirateBaySortingOrders,
+        page_number: &i64,
+    ) -> Result<String> {
+        // url encoding
+        let torrent_name = urlencoding::encode(torrent_name).to_string();
+
+        let root_url = Self::get_active_domain()?;
         let path = "search";
         let category = format!("{}", category.category_to_value());
         let mut sorting = sorting.sorting_to_value().parse::<u8>()?;
@@ -342,7 +344,12 @@ impl ThePirateBayCategories {
                 let date = table_data_vec[2]
                     .inner_html()
                     .to_string()
-                    .replace("&nbsp;", " ");
+                    .replace("&nbsp;", " ")
+                    // Torrents uploaded in last 1 hours are wrapped inside a Bold Tag.
+                    // So Replacing those opening & ending tag with empty string.
+                    // (easy fix)
+                    .replace("<b>", "")
+                    .replace("</b>", "");
 
                 let magnet = table_data_vec[3]
                     .select(&anchor_tag_selector)

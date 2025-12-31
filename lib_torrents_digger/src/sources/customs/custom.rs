@@ -3,7 +3,9 @@ use core::fmt;
 use anyhow::Result;
 
 use crate::{
-    sources::available_sources::AllAvailableSources, sync_request::fetch_torrents, torrent::Torrent,
+    sources::{available_sources::AllAvailableSources, the_pirate_bay::ThePirateBayCategories},
+    sync_request::fetch_torrents,
+    torrent::Torrent,
 };
 
 #[derive(Debug)]
@@ -14,6 +16,11 @@ pub enum Customs {
     SukebeiNyaaTrendings,
     KnabenTrendingMovies,
     KnabenTrendingTvShows,
+    ThePirateBayLatests,
+    ThePirateBayTopMovies,
+    ThePirateBayTopUHDMovies,
+    ThePirateBayTopTvShows,
+    ThePirateBayTopUHDTvShows,
 }
 
 impl Customs {
@@ -24,6 +31,11 @@ impl Customs {
         Self::SukebeiNyaaTrendings,
         Self::KnabenTrendingMovies,
         Self::KnabenTrendingTvShows,
+        Self::ThePirateBayLatests,
+        Self::ThePirateBayTopMovies,
+        Self::ThePirateBayTopUHDMovies,
+        Self::ThePirateBayTopTvShows,
+        Self::ThePirateBayTopUHDTvShows,
     ];
 
     pub fn from_index(index: usize) -> Option<&'static Customs> {
@@ -38,6 +50,11 @@ impl Customs {
             Self::SukebeiNyaaTrendings,
             Self::KnabenTrendingMovies,
             Self::KnabenTrendingTvShows,
+            Self::ThePirateBayLatests,
+            Self::ThePirateBayTopMovies,
+            Self::ThePirateBayTopUHDMovies,
+            Self::ThePirateBayTopTvShows,
+            Self::ThePirateBayTopUHDTvShows,
         ]
         .iter()
         .map(|category| category.to_string())
@@ -70,6 +87,31 @@ impl Customs {
                 let url = "https://knaben.org/browse/2000000/1/seeders";
                 fetch_torrents(url, AllAvailableSources::KnabenDatabase)
             }
+            Self::ThePirateBayLatests => {
+                let active_domain = ThePirateBayCategories::get_active_domain()?;
+                let url = active_domain + "/recent";
+                fetch_torrents(&url, AllAvailableSources::ThePirateBay)
+            }
+            Self::ThePirateBayTopMovies => {
+                let active_domain = ThePirateBayCategories::get_active_domain()?;
+                let url = active_domain + "/top/201";
+                fetch_torrents(&url, AllAvailableSources::ThePirateBay)
+            }
+            Self::ThePirateBayTopUHDMovies => {
+                let active_domain = ThePirateBayCategories::get_active_domain()?;
+                let url = active_domain + "/top/211";
+                fetch_torrents(&url, AllAvailableSources::ThePirateBay)
+            }
+            Self::ThePirateBayTopTvShows => {
+                let active_domain = ThePirateBayCategories::get_active_domain()?;
+                let url = active_domain + "/top/205";
+                fetch_torrents(&url, AllAvailableSources::ThePirateBay)
+            }
+            Self::ThePirateBayTopUHDTvShows => {
+                let active_domain = ThePirateBayCategories::get_active_domain()?;
+                let url = active_domain + "/top/212";
+                fetch_torrents(&url, AllAvailableSources::ThePirateBay)
+            }
         }
     }
 }
@@ -83,6 +125,11 @@ impl fmt::Display for Customs {
             Self::SukebeiNyaaTrendings => write!(f, "Sukebei Nyaa Trendings"),
             Self::KnabenTrendingMovies => write!(f, "Knaben Trending Movies"),
             Self::KnabenTrendingTvShows => write!(f, "Knaben Trending Tv Shows"),
+            Self::ThePirateBayLatests => write!(f, "The Pirate Bay Latests"),
+            Self::ThePirateBayTopMovies => write!(f, "The Pirate Bay Top Movies"),
+            Self::ThePirateBayTopUHDMovies => write!(f, "The Pirate Bay Top UHD Movies"),
+            Self::ThePirateBayTopTvShows => write!(f, "The Pirate Bay Top TV Shows"),
+            Self::ThePirateBayTopUHDTvShows => write!(f, "The Pirate Bay Top UHD TV Shows"),
         }
     }
 }
