@@ -1,6 +1,5 @@
 use crate::sources::{
     available_sources::AllAvailableSources,
-    customs::custom::Customs,
     knaben_database::{
         KnabenDatabaseCategories, KnabenDatabaseSortingOrders, KnabenDatabaseSortings,
     },
@@ -141,10 +140,6 @@ pub fn get_source_details() -> Vec<Source> {
     });
 
     sources_details
-}
-
-pub fn get_customs() -> Vec<String> {
-    Customs::all_customs()
 }
 
 #[derive(Debug)]

@@ -6,6 +6,27 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+class InternalCustomSourceDetails {
+  final String customSourceName;
+  final List<String> customSourceListings;
+
+  const InternalCustomSourceDetails({
+    required this.customSourceName,
+    required this.customSourceListings,
+  });
+
+  @override
+  int get hashCode => customSourceName.hashCode ^ customSourceListings.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is InternalCustomSourceDetails &&
+          runtimeType == other.runtimeType &&
+          customSourceName == other.customSourceName &&
+          customSourceListings == other.customSourceListings;
+}
+
 class InternalProxy {
   final int id;
   final String proxyName;

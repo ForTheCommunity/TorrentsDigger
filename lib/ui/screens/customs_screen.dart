@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/customs_bloc/customs_dropdown_bloc/customs_bloc.dart';
 import 'package:torrents_digger/blocs/customs_bloc/customs_torrents/customs_torrents_bloc.dart';
 import 'package:torrents_digger/configs/build_context_extension.dart';
+import 'package:torrents_digger/src/rust/api/internals.dart';
 import 'package:torrents_digger/ui/widgets/circular_progress_bar_widget.dart';
 import 'package:torrents_digger/ui/widgets/dropdown_widget.dart';
+import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 import 'package:torrents_digger/ui/widgets/torrent_list_widget.dart';
 
 class CustomsScreen extends StatefulWidget {
@@ -89,37 +91,128 @@ class _CustomsScreenState extends State<CustomsScreen> {
 
                       loaded:
                           (
-                            customDetails,
-                            selectedCustomListing,
+                            customListingSourceDetails,
+                            selectedCustomSource,
+                            selectedCustomSourceIndex,
+                            selectedCustomSourceListings,
+                            selectedCustomSourceListing,
                             selectedCustomListingIndex,
-                          ) => Column(
-                            children: [
-                              DropdownWidget(
-                                hintText: "Select Custom Listing",
-                                items: customDetails,
-                                onChanged: (value) {
-                                  if (value != null) {
-                                    final int selectedIndex = customDetails
-                                        .indexOf(value);
+                          ) {
+                            List<String> currentSourceListings = [];
+                            if (selectedCustomSource != null) {
+                              try {
+                                currentSourceListings =
+                                    customListingSourceDetails
+                                        .firstWhere(
+                                          (element) =>
+                                              element.customSourceName ==
+                                              selectedCustomSource,
+                                        )
+                                        .customSourceListings;
+                              } catch (e) {
+                                createSnackBar(
+                                  message: "Error : ${e.toString()}",
+                                  duration: 5,
+                                );
+                              }
+                            }
+                            return Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: DropdownWidget(
+                                        hintText: "Select Source",
+                                        items: customListingSourceDetails
+                                            .map(
+                                              (sourceDetail) =>
+                                                  sourceDetail.customSourceName,
+                                            )
+                                            .toList(),
+                                        onChanged: (value) {
+                                          if (value != null) {
+                                            List<String> customSources =
+                                                customListingSourceDetails
+                                                    .map(
+                                                      (sourceDetail) =>
+                                                          sourceDetail
+                                                              .customSourceName,
+                                                    )
+                                                    .toList();
 
-                                    context.read<CustomsBloc>().add(
-                                      CustomsEvent.selectCustomListing(
-                                        selectedListing: value,
-                                        selectedIndex: selectedIndex,
-                                      ),
-                                    );
+                                            int selectedSourceIndex =
+                                                customSources.indexOf(value);
 
-                                    context.read<CustomsTorrentsBloc>().add(
-                                      CustomsTorrentsEvent.searchCustomTorrents(
-                                        selectedIndex: selectedIndex,
+                                            InternalCustomSourceDetails
+                                            sourceDetail =
+                                                customListingSourceDetails
+                                                    .firstWhere(
+                                                      (sourceDetail) =>
+                                                          sourceDetail
+                                                              .customSourceName ==
+                                                          value,
+                                                    );
+
+                                            context.read<CustomsBloc>().add(
+                                              CustomsEvent.selectCustomSource(
+                                                selectedCustomSource: value,
+                                                selectedCustomSourceIndex:
+                                                    selectedSourceIndex,
+                                                selectedCustomSourceListings:
+                                                    sourceDetail
+                                                        .customSourceListings,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        selectedValue: selectedCustomSource,
                                       ),
-                                    );
-                                  }
-                                },
-                                selectedValue: selectedCustomListing,
-                              ),
-                            ],
-                          ),
+                                    ),
+
+                                    SizedBox(width: 5),
+
+                                    if (currentSourceListings.isNotEmpty) ...[
+                                      Expanded(
+                                        child: DropdownWidget(
+                                          hintText: "Selected Listing",
+                                          items: currentSourceListings,
+                                          onChanged: (value) {
+                                            int selectedListingIndex =
+                                                currentSourceListings.indexOf(
+                                                  value!,
+                                                );
+
+                                            context.read<CustomsBloc>().add(
+                                              CustomsEvent.selectCustomListing(
+                                                selectedListing: value,
+                                                selectedListingIndex:
+                                                    selectedListingIndex,
+                                              ),
+                                            );
+
+                                            context.read<CustomsTorrentsBloc>().add(
+                                              CustomsTorrentsEvent.searchCustomTorrents(
+                                                selectedSourceIndex:
+                                                    selectedCustomSourceIndex!,
+                                                selectedListingIndex:
+                                                    selectedListingIndex,
+                                              ),
+                                            );
+                                          },
+                                          selectedValue:
+                                              currentSourceListings.contains(
+                                                selectedCustomSourceListing,
+                                              )
+                                              ? selectedCustomSourceListing
+                                              : null,
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ],
+                            );
+                          },
                     );
                   },
                 ),

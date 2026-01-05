@@ -23,7 +23,8 @@ class CustomsTorrentsBloc
       emit(CustomsTorrentsState.loading());
 
       final (torrents, _) = await digCustomTorrents(
-        index: BigInt.from(event.selectedIndex),
+        selectedSourceIndex: BigInt.from(event.selectedSourceIndex),
+        selectedListingIndex: BigInt.from(event.selectedListingIndex),
       );
       emit(CustomsTorrentsState.loaded(torrents: torrents));
     } catch (e) {

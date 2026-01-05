@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:torrents_digger/src/rust/api/app.dart';
+import 'package:torrents_digger/src/rust/api/internals.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 
 part 'customs_event.dart';
@@ -10,6 +11,7 @@ part 'customs_bloc.freezed.dart';
 class CustomsBloc extends Bloc<CustomsEvent, CustomsState> {
   CustomsBloc() : super(_Initial()) {
     on<_LoadCustoms>(_loadCustoms);
+    on<_SelectCustomSource>(_selectCustomSource);
     on<_SelectCustomListing>(_selectCustomListing);
     on<_Reset>(_reset);
   }
@@ -18,7 +20,7 @@ class CustomsBloc extends Bloc<CustomsEvent, CustomsState> {
     emit(CustomsState.loading());
     try {
       var customsDetails = await getCustomsDetails();
-      emit(CustomsState.loaded(customsDetails: customsDetails));
+      emit(CustomsState.loaded(customListingSourceDetails: customsDetails));
     } catch (e) {
       emit(CustomsState.error(errorMessage: e.toString()));
       createSnackBar(
@@ -28,8 +30,8 @@ class CustomsBloc extends Bloc<CustomsEvent, CustomsState> {
     }
   }
 
-  void _selectCustomListing(
-    _SelectCustomListing event,
+  void _selectCustomSource(
+    _SelectCustomSource event,
     Emitter<CustomsState> emit,
   ) async {
     final currentState = state;
@@ -37,8 +39,35 @@ class CustomsBloc extends Bloc<CustomsEvent, CustomsState> {
       try {
         emit(
           currentState.copyWith(
-            selectedCustomListing: event.selectedListing,
-            selectedCustomListingIndex: event.selectedIndex,
+            selectedCustomSource: event.selectedCustomSource,
+            selectedCustomSourceIndex: event.selectedCustomSourceIndex,
+            // selectedCustomSourceListings: event.selectedCustomSourceListings,
+            // resetting listings values when source changes
+            selectedCustomSourceListings: null,
+            selectedCustomListingIndex: null,
+          ),
+        );
+      } catch (e) {
+        emit(CustomsState.error(errorMessage: e.toString()));
+        createSnackBar(
+          message: "Error selecting Custom Source : ${e.toString()}",
+          duration: 5,
+        );
+      }
+    }
+  }
+
+  void _selectCustomListing(
+    _SelectCustomListing event,
+    Emitter<CustomsState> emit,
+  ) {
+    final currentState = state;
+    if (currentState is _Loaded) {
+      try {
+        emit(
+          currentState.copyWith(
+            selectedCustomSourceListing: event.selectedListing,
+            selectedCustomListingIndex: event.selectedListingIndex,
           ),
         );
       } catch (e) {
@@ -56,7 +85,10 @@ class CustomsBloc extends Bloc<CustomsEvent, CustomsState> {
     if (currentState is _Loaded) {
       emit(
         currentState.copyWith(
-          selectedCustomListing: null,
+          selectedCustomSource: null,
+          selectedCustomSourceIndex: null,
+          selectedCustomSourceListings: null,
+          selectedCustomSourceListing: null,
           selectedCustomListingIndex: null,
         ),
       );

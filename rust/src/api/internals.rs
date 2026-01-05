@@ -45,3 +45,8 @@ pub struct InternalProxy {
     pub proxy_username: Option<String>,
     pub proxy_password: Option<String>,
 }
+
+pub struct InternalCustomSourceDetails {
+    pub custom_source_name: String,
+    pub custom_source_listings: Vec<String>,
+}

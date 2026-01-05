@@ -17,7 +17,7 @@ impl Proxy {
         let db_conn = get_a_database_connection();
 
         let mut row_count_statement = db_conn.prepare("SELECT COUNT(*) FROM proxy_table")?;
-        let row_count: usize = row_count_statement.query_row([], |row| row.get(0))?;
+        let row_count: i8 = row_count_statement.query_row([], |row| row.get(0))?;
         if row_count == 0 {
             Ok(db_conn.execute(
                 "INSERT INTO proxy_table (

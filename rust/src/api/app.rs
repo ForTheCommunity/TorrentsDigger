@@ -1,4 +1,4 @@
-use crate::api::preludes::*;
+use crate::api::{internals::InternalCustomSourceDetails, preludes::*};
 
 pub fn fetch_source_details() -> Vec<InternalSource> {
     let external_sources_vec: Vec<ExternalSource> = get_source_details();
@@ -122,12 +122,25 @@ pub fn get_processed_magnet_link(unprocessed_magnet: String) -> Result<String, S
     }
 }
 
-pub fn get_customs_details() -> Vec<String> {
-    get_customs()
+pub fn get_customs_details() -> Vec<InternalCustomSourceDetails> {
+    let o_v = get_custom_source_details();
+    let mut n_v: Vec<InternalCustomSourceDetails> = Vec::new();
+    for a in o_v {
+        let n_c_s_n = a.custom_source_name;
+        let n_c_s_d = a.custom_source_listings;
+        n_v.push(InternalCustomSourceDetails {
+            custom_source_name: n_c_s_n,
+            custom_source_listings: n_c_s_d,
+        });
+    }
+    n_v
 }
 
-pub fn dig_custom_torrents(index: usize) -> Result<(Vec<InternalTorrent>, Option<i64>), String> {
-    match search_custom(index) {
+pub fn dig_custom_torrents(
+    selected_source_index: usize,
+    selected_listing_index: usize,
+) -> Result<(Vec<InternalTorrent>, Option<i64>), String> {
+    match search_custom(selected_source_index, selected_listing_index) {
         Ok((torrents, next_page)) => {
             let internal_torrents: Vec<InternalTorrent> = torrents
                 .into_iter()

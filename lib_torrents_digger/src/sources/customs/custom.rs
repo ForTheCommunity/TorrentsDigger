@@ -8,14 +8,138 @@ use crate::{
     torrent::Torrent,
 };
 
-#[derive(Debug)]
-pub enum Customs {
-    NyaaLatests,
-    NyaaTrendings,
-    SukebeiNyaaLatests,
-    SukebeiNyaaTrendings,
-    KnabenTrendingMovies,
-    KnabenTrendingTvShows,
+pub enum NyaaCustomListings {
+    Latests,
+    Trendings,
+}
+
+impl NyaaCustomListings {
+    const ALL_VARIANTS: &'static [NyaaCustomListings] = &[Self::Latests, Self::Trendings];
+
+    pub fn from_index(index: usize) -> Option<&'static NyaaCustomListings> {
+        Self::ALL_VARIANTS.get(index)
+    }
+
+    pub fn all_custom_listings() -> Vec<String> {
+        [Self::Latests, Self::Trendings]
+            .iter()
+            .map(|category| category.to_string())
+            .collect()
+    }
+
+    pub fn fetch_torrents(source: &NyaaCustomListings) -> Result<(Vec<Torrent>, Option<i64>)> {
+        match source {
+            Self::Latests => {
+                let url = "https://nyaa.si";
+                fetch_torrents(url, AllAvailableSources::Nyaa)
+            }
+            Self::Trendings => {
+                let url = "https://nyaa.si/?s=seeders&o=desc";
+                fetch_torrents(url, AllAvailableSources::Nyaa)
+            }
+        }
+    }
+}
+
+impl fmt::Display for NyaaCustomListings {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Latests => write!(f, "Latests"),
+            Self::Trendings => write!(f, "Trendings"),
+        }
+    }
+}
+
+pub enum SukebeiNyaaCustomListings {
+    Latests,
+    Trendings,
+}
+
+impl SukebeiNyaaCustomListings {
+    const ALL_VARIANTS: &'static [SukebeiNyaaCustomListings] = &[Self::Latests, Self::Trendings];
+
+    pub fn from_index(index: usize) -> Option<&'static SukebeiNyaaCustomListings> {
+        Self::ALL_VARIANTS.get(index)
+    }
+
+    pub fn all_custom_listings() -> Vec<String> {
+        [Self::Latests, Self::Trendings]
+            .iter()
+            .map(|category| category.to_string())
+            .collect()
+    }
+
+    pub fn fetch_torrents(
+        source: &SukebeiNyaaCustomListings,
+    ) -> Result<(Vec<Torrent>, Option<i64>)> {
+        match source {
+            Self::Latests => {
+                let url = "https://sukebei.nyaa.si";
+                fetch_torrents(url, AllAvailableSources::SukebeiNyaa)
+            }
+            Self::Trendings => {
+                let url = "https://sukebei.nyaa.si/?s=seeders&o=desc";
+                fetch_torrents(url, AllAvailableSources::SukebeiNyaa)
+            }
+        }
+    }
+}
+
+impl fmt::Display for SukebeiNyaaCustomListings {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Latests => write!(f, "Latests"),
+            Self::Trendings => write!(f, "Trendings"),
+        }
+    }
+}
+
+pub enum KnabenDatabaseCustomListings {
+    TrendingMovies,
+    TrendingTVShows,
+}
+
+impl KnabenDatabaseCustomListings {
+    const ALL_VARIANTS: &'static [KnabenDatabaseCustomListings] =
+        &[Self::TrendingMovies, Self::TrendingTVShows];
+
+    pub fn from_index(index: usize) -> Option<&'static KnabenDatabaseCustomListings> {
+        Self::ALL_VARIANTS.get(index)
+    }
+
+    pub fn all_custom_listings() -> Vec<String> {
+        [Self::TrendingMovies, Self::TrendingTVShows]
+            .iter()
+            .map(|category| category.to_string())
+            .collect()
+    }
+
+    pub fn fetch_torrents(
+        source: &KnabenDatabaseCustomListings,
+    ) -> Result<(Vec<Torrent>, Option<i64>)> {
+        match source {
+            Self::TrendingMovies => {
+                let url = "https://knaben.org/browse/3000000/1/seeders";
+                fetch_torrents(url, AllAvailableSources::KnabenDatabase)
+            }
+            Self::TrendingTVShows => {
+                let url = "https://knaben.org/browse/2000000/1/seeders";
+                fetch_torrents(url, AllAvailableSources::KnabenDatabase)
+            }
+        }
+    }
+}
+
+impl fmt::Display for KnabenDatabaseCustomListings {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::TrendingMovies => write!(f, "Trending Movies"),
+            Self::TrendingTVShows => write!(f, "Trending TV Shows"),
+        }
+    }
+}
+
+pub enum ThePirateBayCustomListings {
     ThePirateBayLatests,
     ThePirateBayTopMovies,
     ThePirateBayTopUHDMovies,
@@ -23,14 +147,8 @@ pub enum Customs {
     ThePirateBayTopUHDTvShows,
 }
 
-impl Customs {
-    const ALL_VARIANTS: &'static [Customs] = &[
-        Self::NyaaLatests,
-        Self::NyaaTrendings,
-        Self::SukebeiNyaaLatests,
-        Self::SukebeiNyaaTrendings,
-        Self::KnabenTrendingMovies,
-        Self::KnabenTrendingTvShows,
+impl ThePirateBayCustomListings {
+    const ALL_VARIANTS: &'static [ThePirateBayCustomListings] = &[
         Self::ThePirateBayLatests,
         Self::ThePirateBayTopMovies,
         Self::ThePirateBayTopUHDMovies,
@@ -38,18 +156,12 @@ impl Customs {
         Self::ThePirateBayTopUHDTvShows,
     ];
 
-    pub fn from_index(index: usize) -> Option<&'static Customs> {
+    pub fn from_index(index: usize) -> Option<&'static ThePirateBayCustomListings> {
         Self::ALL_VARIANTS.get(index)
     }
 
-    pub fn all_customs() -> Vec<String> {
+    pub fn all_custom_listings() -> Vec<String> {
         [
-            Self::NyaaLatests,
-            Self::NyaaTrendings,
-            Self::SukebeiNyaaLatests,
-            Self::SukebeiNyaaTrendings,
-            Self::KnabenTrendingMovies,
-            Self::KnabenTrendingTvShows,
             Self::ThePirateBayLatests,
             Self::ThePirateBayTopMovies,
             Self::ThePirateBayTopUHDMovies,
@@ -61,32 +173,10 @@ impl Customs {
         .collect()
     }
 
-    pub fn fetch_torrents(source: &Customs) -> Result<(Vec<Torrent>, Option<i64>)> {
+    pub fn fetch_torrents(
+        source: &ThePirateBayCustomListings,
+    ) -> Result<(Vec<Torrent>, Option<i64>)> {
         match source {
-            Self::NyaaLatests => {
-                let url = "https://nyaa.si";
-                fetch_torrents(url, AllAvailableSources::Nyaa)
-            }
-            Self::NyaaTrendings => {
-                let url = "https://nyaa.si/?s=seeders&o=desc";
-                fetch_torrents(url, AllAvailableSources::Nyaa)
-            }
-            Self::SukebeiNyaaLatests => {
-                let url = "https://sukebei.nyaa.si";
-                fetch_torrents(url, AllAvailableSources::SukebeiNyaa)
-            }
-            Self::SukebeiNyaaTrendings => {
-                let url = "https://sukebei.nyaa.si/?s=seeders&o=desc";
-                fetch_torrents(url, AllAvailableSources::SukebeiNyaa)
-            }
-            Self::KnabenTrendingMovies => {
-                let url = "https://knaben.org/browse/3000000/1/seeders";
-                fetch_torrents(url, AllAvailableSources::KnabenDatabase)
-            }
-            Self::KnabenTrendingTvShows => {
-                let url = "https://knaben.org/browse/2000000/1/seeders";
-                fetch_torrents(url, AllAvailableSources::KnabenDatabase)
-            }
             Self::ThePirateBayLatests => {
                 let active_domain = ThePirateBayCategories::get_active_domain()?;
                 let url = active_domain + "/recent";
@@ -116,20 +206,14 @@ impl Customs {
     }
 }
 
-impl fmt::Display for Customs {
+impl fmt::Display for ThePirateBayCustomListings {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Self::NyaaLatests => write!(f, "Nyaa Latests"),
-            Self::NyaaTrendings => write!(f, "Nyaa Trendings"),
-            Self::SukebeiNyaaLatests => write!(f, "Sukebei Nyaa Latests"),
-            Self::SukebeiNyaaTrendings => write!(f, "Sukebei Nyaa Trendings"),
-            Self::KnabenTrendingMovies => write!(f, "Knaben Trending Movies"),
-            Self::KnabenTrendingTvShows => write!(f, "Knaben Trending Tv Shows"),
-            Self::ThePirateBayLatests => write!(f, "The Pirate Bay Latests"),
-            Self::ThePirateBayTopMovies => write!(f, "The Pirate Bay Top Movies"),
-            Self::ThePirateBayTopUHDMovies => write!(f, "The Pirate Bay Top UHD Movies"),
-            Self::ThePirateBayTopTvShows => write!(f, "The Pirate Bay Top TV Shows"),
-            Self::ThePirateBayTopUHDTvShows => write!(f, "The Pirate Bay Top UHD TV Shows"),
+            Self::ThePirateBayLatests => write!(f, "Latests"),
+            Self::ThePirateBayTopMovies => write!(f, "Top Movies"),
+            Self::ThePirateBayTopUHDMovies => write!(f, "Top UHD Movies"),
+            Self::ThePirateBayTopTvShows => write!(f, "Top Tv Shows"),
+            Self::ThePirateBayTopUHDTvShows => write!(f, "Top UHD Tv Shows"),
         }
     }
 }

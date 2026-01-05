@@ -51,6 +51,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int dco_decode_i_8(dynamic raw);
 
   @protected
+  InternalCustomSourceDetails dco_decode_internal_custom_source_details(
+    dynamic raw,
+  );
+
+  @protected
   InternalProxy dco_decode_internal_proxy(dynamic raw);
 
   @protected
@@ -67,6 +72,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<String> dco_decode_list_String(dynamic raw);
+
+  @protected
+  List<InternalCustomSourceDetails>
+  dco_decode_list_internal_custom_source_details(dynamic raw);
 
   @protected
   List<InternalSource> dco_decode_list_internal_source(dynamic raw);
@@ -151,6 +160,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int sse_decode_i_8(SseDeserializer deserializer);
 
   @protected
+  InternalCustomSourceDetails sse_decode_internal_custom_source_details(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   InternalProxy sse_decode_internal_proxy(SseDeserializer deserializer);
 
   @protected
@@ -171,6 +185,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<String> sse_decode_list_String(SseDeserializer deserializer);
+
+  @protected
+  List<InternalCustomSourceDetails>
+  sse_decode_list_internal_custom_source_details(SseDeserializer deserializer);
 
   @protected
   List<InternalSource> sse_decode_list_internal_source(
@@ -277,6 +295,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_i_8(int self, SseSerializer serializer);
 
   @protected
+  void sse_encode_internal_custom_source_details(
+    InternalCustomSourceDetails self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_internal_proxy(InternalProxy self, SseSerializer serializer);
 
   @protected
@@ -305,6 +329,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_list_String(List<String> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_internal_custom_source_details(
+    List<InternalCustomSourceDetails> self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_list_internal_source(

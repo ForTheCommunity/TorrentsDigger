@@ -47,9 +47,13 @@ Future<String> getProcessedMagnetLink({required String unprocessedMagnet}) =>
       unprocessedMagnet: unprocessedMagnet,
     );
 
-Future<List<String>> getCustomsDetails() =>
+Future<List<InternalCustomSourceDetails>> getCustomsDetails() =>
     RustLib.instance.api.crateApiAppGetCustomsDetails();
 
 Future<(List<InternalTorrent>, PlatformInt64?)> digCustomTorrents({
-  required BigInt index,
-}) => RustLib.instance.api.crateApiAppDigCustomTorrents(index: index);
+  required BigInt selectedSourceIndex,
+  required BigInt selectedListingIndex,
+}) => RustLib.instance.api.crateApiAppDigCustomTorrents(
+  selectedSourceIndex: selectedSourceIndex,
+  selectedListingIndex: selectedListingIndex,
+);

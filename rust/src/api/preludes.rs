@@ -1,6 +1,6 @@
 pub use lib_torrents_digger::{
     search_torrent,
-    sources::{customs::search_custom, get_customs, get_source_details},
+    sources::get_source_details,
     static_includes::get_current_version,
     sync_request::{check_for_update, extract_ip_details},
     trackers::{load_trackers_string, DefaultTrackers},
@@ -28,3 +28,7 @@ pub use lib_torrents_digger::database::initialize::initialize_database;
 pub use lib_torrents_digger::database::proxy::Proxy;
 
 pub use crate::api::internals::InternalProxy;
+
+pub use lib_torrents_digger::sources::customs::{
+    get_custom_source_details, search_custom, CustomSourceDetails,
+};

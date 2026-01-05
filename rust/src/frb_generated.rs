@@ -201,11 +201,15 @@ fn wire__crate__api__app__dig_custom_torrents_impl(
             };
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_index = <usize>::sse_decode(&mut deserializer);
+            let api_selected_source_index = <usize>::sse_decode(&mut deserializer);
+            let api_selected_listing_index = <usize>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
                 transform_result_sse::<_, String>((move || {
-                    let output_ok = crate::api::app::dig_custom_torrents(api_index)?;
+                    let output_ok = crate::api::app::dig_custom_torrents(
+                        api_selected_source_index,
+                        api_selected_listing_index,
+                    )?;
                     Ok(output_ok)
                 })())
             }
@@ -904,6 +908,18 @@ impl SseDecode for i8 {
     }
 }
 
+impl SseDecode for crate::api::internals::InternalCustomSourceDetails {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_customSourceName = <String>::sse_decode(deserializer);
+        let mut var_customSourceListings = <Vec<String>>::sse_decode(deserializer);
+        return crate::api::internals::InternalCustomSourceDetails {
+            custom_source_name: var_customSourceName,
+            custom_source_listings: var_customSourceListings,
+        };
+    }
+}
+
 impl SseDecode for crate::api::internals::InternalProxy {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -1007,6 +1023,20 @@ impl SseDecode for Vec<String> {
         let mut ans_ = vec![];
         for idx_ in 0..len_ {
             ans_.push(<String>::sse_decode(deserializer));
+        }
+        return ans_;
+    }
+}
+
+impl SseDecode for Vec<crate::api::internals::InternalCustomSourceDetails> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(
+                <crate::api::internals::InternalCustomSourceDetails>::sse_decode(deserializer),
+            );
         }
         return ans_;
     }
@@ -1312,6 +1342,27 @@ fn pde_ffi_dispatcher_sync_impl(
 // Section: rust2dart
 
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::internals::InternalCustomSourceDetails {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.custom_source_name.into_into_dart().into_dart(),
+            self.custom_source_listings.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::internals::InternalCustomSourceDetails
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::internals::InternalCustomSourceDetails>
+    for crate::api::internals::InternalCustomSourceDetails
+{
+    fn into_into_dart(self) -> crate::api::internals::InternalCustomSourceDetails {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::api::internals::InternalProxy {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
@@ -1476,6 +1527,14 @@ impl SseEncode for i8 {
     }
 }
 
+impl SseEncode for crate::api::internals::InternalCustomSourceDetails {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.custom_source_name, serializer);
+        <Vec<String>>::sse_encode(self.custom_source_listings, serializer);
+    }
+}
+
 impl SseEncode for crate::api::internals::InternalProxy {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -1539,6 +1598,16 @@ impl SseEncode for Vec<String> {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
             <String>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for Vec<crate::api::internals::InternalCustomSourceDetails> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::api::internals::InternalCustomSourceDetails>::sse_encode(item, serializer);
         }
     }
 }
