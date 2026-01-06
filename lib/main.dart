@@ -10,6 +10,7 @@ import 'package:torrents_digger/blocs/sources_bloc/source_bloc.dart';
 import 'package:torrents_digger/blocs/themes_bloc/themes_bloc.dart';
 import 'package:torrents_digger/blocs/torrent_bloc/torrent_bloc.dart';
 import 'package:torrents_digger/configs/build_context_extension.dart';
+import 'package:torrents_digger/configs/hydration.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 import 'package:torrents_digger/database/initialize.dart';
 import 'package:torrents_digger/routes/routes.dart';
@@ -22,6 +23,10 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Initializing Database
   await initializeDatabase();
+
+  // Hydration Setup
+  await hydrationSetup();
+
   // loading Active Default TRACKERS_STRING
   await loadTrackersString();
 

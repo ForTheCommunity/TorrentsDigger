@@ -27,6 +27,7 @@ static A_DATABASE_CONNECTION: Lazy<Mutex<Connection>> = Lazy::new(|| {
 
 pub const APP_DIR: &str = ".torrents_digger";
 pub const DATABASE_NAME: &str = "torrents_digger.database";
+pub const HYDRATION_DIR: &str = "hydration";
 
 pub fn get_a_database_connection() -> std::sync::MutexGuard<'static, Connection> {
     A_DATABASE_CONNECTION

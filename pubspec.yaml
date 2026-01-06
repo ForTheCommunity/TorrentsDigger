@@ -44,6 +44,7 @@ dependencies:
   flutter_file_dialog: 3.0.3
   freezed_annotation: 3.1.0
   flutter_svg: ^2.2.3
+  hydrated_bloc: ^10.1.1
 
 dev_dependencies:
   flutter_test:

@@ -5,8 +5,9 @@ use std::{fs::create_dir_all, path::PathBuf, sync::MutexGuard};
 use crate::{
     database::{
         database_config::{
-            ACTIVE_TRACKERS_LIST_KEY, APP_DIR, DATABASE_NAME, DATABASE_PATH, PLATFORM_SPECIFIC_DIR,
-            TRACKERS_DIR_PATH, TRACKERS_LISTS_DIR, get_a_database_connection,
+            ACTIVE_TRACKERS_LIST_KEY, APP_DIR, DATABASE_NAME, DATABASE_PATH, HYDRATION_DIR,
+            PLATFORM_SPECIFIC_DIR, TRACKERS_DIR_PATH, TRACKERS_LISTS_DIR,
+            get_a_database_connection,
         },
         settings_kvs::insert_update_kv,
     },
@@ -18,11 +19,14 @@ pub fn initialize_database(platform_specific_home_dir: String) -> Result<()> {
     let app_dir = platform_specific_home_dir.join(APP_DIR);
     let database_path = app_dir.join(DATABASE_NAME);
     let trackers_path = app_dir.join(TRACKERS_LISTS_DIR);
+    let hydration_path = app_dir.join(HYDRATION_DIR);
 
     // creating App Config Dir
     create_dir_all(app_dir)?;
     // creating Trackers dir
     create_dir_all(&trackers_path)?;
+    // create Hydration dir (for flutter bloc)
+    create_dir_all(&hydration_path)?;
 
     set_database_path(database_path);
     set_trackers_dir_path(trackers_path);
