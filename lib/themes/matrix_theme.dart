@@ -168,6 +168,33 @@ class MatrixTheme extends AppTheme {
   @override
   Color get activeThemeIconColor => const Color.fromARGB(255, 0, 255, 8);
 
+  @override
+  Color get contributeGetInvolvedIconColor =>
+      const Color.fromARGB(255, 255, 255, 255);
+  @override
+  Color get contributeSourceCodeIconColor =>
+      const Color.fromARGB(255, 17, 255, 0);
+  @override
+  Color get contributeSupportDevelopmentDonationIconColor =>
+      const Color.fromARGB(255, 0, 255, 21);
+  @override
+  Color get contributeCryptoAddressBorderColor =>
+      const Color.fromARGB(255, 21, 255, 0);
+  @override
+  Color get contributeCardBackgroundColor =>
+      const Color.fromARGB(255, 19, 18, 18);
+  @override
+  Color get contributeCardShadowColor => const Color.fromARGB(255, 37, 247, 62);
+  @override
+  Color get contributeCryptoAddressTextColor =>
+      const Color.fromARGB(239, 4, 255, 0);
+  @override
+  Color get contributeCryptoAddressBackgroundColor =>
+      const Color.fromARGB(255, 0, 0, 0);
+  @override
+  Color get contributeCryptoAddressButtonBackgroundColor =>
+      const Color.fromARGB(255, 28, 27, 27);
+
   // @override
   // Color get scaffoldMessengerMessageColor => Color.fromRGBO(255, 255, 255, 1);
   // @override

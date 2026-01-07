@@ -88,6 +88,16 @@ abstract class AppTheme {
 
   Color get activeThemeIconColor;
 
+Color get contributeGetInvolvedIconColor;
+Color get contributeSourceCodeIconColor;
+Color get contributeSupportDevelopmentDonationIconColor;
+Color get contributeCryptoAddressBorderColor;
+Color get contributeCardBackgroundColor;
+Color get contributeCardShadowColor;
+Color get contributeCryptoAddressTextColor;
+Color get contributeCryptoAddressBackgroundColor;
+Color get contributeCryptoAddressButtonBackgroundColor;
+
   // Color get scaffoldMessengerMessageColor;
   // Color get scaffoldMessengerBorderColor;
   // Color get scaffoldMessengerBackgroundColor;

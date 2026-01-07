@@ -91,6 +91,13 @@ appman install torrents_digger
 ## Contribute
 See [Contribution Guide](./contribution_guide.md).
 
+## Donate
+If you find this project useful, consider supporting its development.
+<br>
+**Monero (XMR):**
+`83eg4LiD5PEWGu6JpU2mfQVmVdNJQfKzGAi5GUGZKBkBdWBaGxxUrifCj1WyiUEtUfLNaxQjcfHDaDtxfZhr7RboPCVvTYf`
+
+
 ## Disclaimer ->
 ### Torrents Digger doesn't host anything.
 ### It just searches and lists publicly available torrents from third party sites.

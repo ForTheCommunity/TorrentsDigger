@@ -165,6 +165,27 @@ class LightTheme extends AppTheme {
   @override
   Color get activeThemeIconColor => const Color.fromARGB(255, 255, 0, 0);
 
+
+@override
+Color get contributeGetInvolvedIconColor => const Color.fromARGB(255, 216, 27, 27);
+@override
+Color get contributeSourceCodeIconColor => const Color.fromARGB(255, 0, 0, 0);
+@override
+Color get contributeSupportDevelopmentDonationIconColor => const Color.fromARGB(255, 0, 0, 0);
+@override
+Color get contributeCryptoAddressBorderColor => const Color.fromARGB(255, 0, 255, 13);
+@override
+Color get contributeCardBackgroundColor => const Color.fromARGB(255, 193, 232, 228);
+@override
+Color get contributeCardShadowColor => const Color.fromARGB(255, 255, 0, 225);
+@override
+Color get contributeCryptoAddressTextColor => const Color.fromARGB(255, 0, 0, 0);
+@override
+Color get contributeCryptoAddressBackgroundColor => const Color.fromARGB(255, 255, 255, 255);
+@override
+Color get contributeCryptoAddressButtonBackgroundColor => const Color.fromARGB(255, 255, 255, 255);
+
+
   //   @override
   // Color get scaffoldMessengerMessageColor => Color.fromRGBO(255, 255, 255, 1);
   // @override
