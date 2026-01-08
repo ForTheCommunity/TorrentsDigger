@@ -16,6 +16,10 @@ abstract class SourceState with _$SourceState {
     String? selectedFilter,
     String? selectedSorting,
     String? selectedSortingOrder,
+    // this is used to toogle between SourceState & HydratedSourceState.
+    // by default it is 'false' means it is disabled by default.
+    // since this state is hydrated, this setting will also be hydrated.
+    @Default(false) bool rememberSelections,
 
     // This holds the memory of selectedCategory, selectedFilter, selectedSorting,
     // selectedSortingOrder for ALL sources, not just the active one.

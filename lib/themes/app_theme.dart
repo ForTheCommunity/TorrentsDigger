@@ -11,6 +11,9 @@ abstract class AppTheme {
   Color get generalTextColor;
   Color get settingsTextColor;
   Color get settingsIconsColor;
+  Color get settingsSwitchListTileActiveThumbColor;
+  Color get settingsSwitchListTileInactiveThumbColor;
+  Color get settingsSwitchListTileInactiveTrackColor;
 
   Color get searchBarPlaceholderColor;
   Color get searchBarTextColor;
@@ -60,7 +63,6 @@ abstract class AppTheme {
 
   Color get paginationNextButtonBackgroundColor;
   Color get paginationNextButtonTextColor;
-  
 
   Color get textFormFieldInactiveColor;
   Color get textFormFieldActiveColor;
@@ -88,15 +90,15 @@ abstract class AppTheme {
 
   Color get activeThemeIconColor;
 
-Color get contributeGetInvolvedIconColor;
-Color get contributeSourceCodeIconColor;
-Color get contributeSupportDevelopmentDonationIconColor;
-Color get contributeCryptoAddressBorderColor;
-Color get contributeCardBackgroundColor;
-Color get contributeCardShadowColor;
-Color get contributeCryptoAddressTextColor;
-Color get contributeCryptoAddressBackgroundColor;
-Color get contributeCryptoAddressButtonBackgroundColor;
+  Color get contributeGetInvolvedIconColor;
+  Color get contributeSourceCodeIconColor;
+  Color get contributeSupportDevelopmentDonationIconColor;
+  Color get contributeCryptoAddressBorderColor;
+  Color get contributeCardBackgroundColor;
+  Color get contributeCardShadowColor;
+  Color get contributeCryptoAddressTextColor;
+  Color get contributeCryptoAddressBackgroundColor;
+  Color get contributeCryptoAddressButtonBackgroundColor;
 
   // Color get scaffoldMessengerMessageColor;
   // Color get scaffoldMessengerBorderColor;

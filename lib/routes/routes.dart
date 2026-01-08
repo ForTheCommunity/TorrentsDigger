@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:torrents_digger/ui/screens/additional_settings.dart';
 import 'package:torrents_digger/ui/screens/bookmarks_screen.dart';
+import 'package:torrents_digger/ui/screens/contribute_screen.dart';
 import 'package:torrents_digger/ui/screens/customs_screen.dart';
 import 'package:torrents_digger/ui/screens/database_screen.dart';
 import 'package:torrents_digger/ui/screens/default_trackers_screen.dart';
@@ -39,6 +41,16 @@ class Routes {
 
       case RoutesName.themesScreen:
         return MaterialPageRoute(builder: (context) => const ThemesScreen());
+
+      case RoutesName.contributeScreen:
+        return MaterialPageRoute(
+          builder: (context) => const ContributeScreen(),
+        );
+
+      case RoutesName.additionalSettingsScreen:
+        return MaterialPageRoute(
+          builder: (context) => const AdditionalSettings(),
+        );
 
       default:
         return MaterialPageRoute(

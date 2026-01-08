@@ -7,4 +7,6 @@ class RoutesName {
   static const String defaultTrackersScreen = "default_trackers_screen";
   static const String customsScreen = "customs_screen";
   static const String themesScreen = "themes_screen";
+  static const String contributeScreen = "contribute_screen";
+  static const String additionalSettingsScreen = "additional_settings_screen";
 }

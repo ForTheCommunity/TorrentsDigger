@@ -29,3 +29,8 @@ class SelectSortingOrder extends SourceWidgetEvents {
   final String sortingOder;
   SelectSortingOrder(this.sortingOder);
 }
+
+class ToggleRememberSelections extends SourceWidgetEvents {
+  final bool isEnabled;
+  ToggleRememberSelections(this.isEnabled);
+}

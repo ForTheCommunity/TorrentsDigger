@@ -174,7 +174,7 @@ class _CustomsScreenState extends State<CustomsScreen> {
                                     if (currentSourceListings.isNotEmpty) ...[
                                       Expanded(
                                         child: DropdownWidget(
-                                          hintText: "Selected Listing",
+                                          hintText: "Select Listing",
                                           items: currentSourceListings,
                                           onChanged: (value) {
                                             int selectedListingIndex =

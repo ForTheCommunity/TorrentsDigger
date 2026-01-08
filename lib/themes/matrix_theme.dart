@@ -22,6 +22,15 @@ class MatrixTheme extends AppTheme {
   Color get settingsTextColor => Color.fromRGBO(255, 255, 255, 1);
   @override
   Color get settingsIconsColor => const Color.fromARGB(255, 255, 255, 255);
+  @override
+  Color get settingsSwitchListTileActiveThumbColor =>
+      const Color.fromARGB(255, 0, 255, 4);
+  @override
+  Color get settingsSwitchListTileInactiveThumbColor =>
+      const Color.fromARGB(255, 111, 226, 209);
+  @override
+  Color get settingsSwitchListTileInactiveTrackColor =>
+      const Color.fromARGB(255, 34, 34, 34);
 
   @override
   Color get searchBarPlaceholderColor => Color.fromRGBO(238, 241, 82, 1);

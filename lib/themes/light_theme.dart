@@ -22,6 +22,15 @@ class LightTheme extends AppTheme {
   Color get settingsTextColor => Colors.black;
   @override
   Color get settingsIconsColor => const Color.fromARGB(255, 0, 0, 0);
+  @override
+  Color get settingsSwitchListTileActiveThumbColor =>
+      const Color.fromARGB(255, 137, 0, 132);
+  @override
+  Color get settingsSwitchListTileInactiveThumbColor =>
+      const Color.fromARGB(255, 255, 69, 249);
+@override
+  Color get settingsSwitchListTileInactiveTrackColor =>
+      const Color.fromARGB(255, 255, 255, 255);
 
   @override
   Color get searchBarPlaceholderColor => const Color.fromARGB(255, 20, 19, 19);
@@ -116,7 +125,8 @@ class LightTheme extends AppTheme {
   @override
   Color get textFormFieldInactiveColor => Colors.grey;
   @override
-  Color get textFormFieldActiveColor => const Color.fromARGB(255, 227, 137, 241);
+  Color get textFormFieldActiveColor =>
+      const Color.fromARGB(255, 227, 137, 241);
 
   @override
   Color get aboutDialogIconColor => const Color.fromARGB(255, 142, 249, 242);
@@ -127,7 +137,8 @@ class LightTheme extends AppTheme {
   Color get settingsFloatingActionButtonForegroundColor =>
       const Color.fromARGB(255, 0, 0, 0);
   @override
-  Color get settingsFloatingActionButtonBackgroundColor => const Color.fromARGB(255, 255, 255, 255);
+  Color get settingsFloatingActionButtonBackgroundColor =>
+      const Color.fromARGB(255, 255, 255, 255);
   @override
   Color get settingsFloatingActionButtonHoverBackgroundColor =>
       const Color.fromARGB(255, 255, 255, 255);
@@ -165,26 +176,31 @@ class LightTheme extends AppTheme {
   @override
   Color get activeThemeIconColor => const Color.fromARGB(255, 255, 0, 0);
 
-
-@override
-Color get contributeGetInvolvedIconColor => const Color.fromARGB(255, 216, 27, 27);
-@override
-Color get contributeSourceCodeIconColor => const Color.fromARGB(255, 0, 0, 0);
-@override
-Color get contributeSupportDevelopmentDonationIconColor => const Color.fromARGB(255, 0, 0, 0);
-@override
-Color get contributeCryptoAddressBorderColor => const Color.fromARGB(255, 0, 255, 13);
-@override
-Color get contributeCardBackgroundColor => const Color.fromARGB(255, 193, 232, 228);
-@override
-Color get contributeCardShadowColor => const Color.fromARGB(255, 255, 0, 225);
-@override
-Color get contributeCryptoAddressTextColor => const Color.fromARGB(255, 0, 0, 0);
-@override
-Color get contributeCryptoAddressBackgroundColor => const Color.fromARGB(255, 255, 255, 255);
-@override
-Color get contributeCryptoAddressButtonBackgroundColor => const Color.fromARGB(255, 255, 255, 255);
-
+  @override
+  Color get contributeGetInvolvedIconColor =>
+      const Color.fromARGB(255, 216, 27, 27);
+  @override
+  Color get contributeSourceCodeIconColor => const Color.fromARGB(255, 0, 0, 0);
+  @override
+  Color get contributeSupportDevelopmentDonationIconColor =>
+      const Color.fromARGB(255, 0, 0, 0);
+  @override
+  Color get contributeCryptoAddressBorderColor =>
+      const Color.fromARGB(255, 0, 255, 13);
+  @override
+  Color get contributeCardBackgroundColor =>
+      const Color.fromARGB(255, 193, 232, 228);
+  @override
+  Color get contributeCardShadowColor => const Color.fromARGB(255, 255, 0, 225);
+  @override
+  Color get contributeCryptoAddressTextColor =>
+      const Color.fromARGB(255, 0, 0, 0);
+  @override
+  Color get contributeCryptoAddressBackgroundColor =>
+      const Color.fromARGB(255, 255, 255, 255);
+  @override
+  Color get contributeCryptoAddressButtonBackgroundColor =>
+      const Color.fromARGB(255, 255, 255, 255);
 
   //   @override
   // Color get scaffoldMessengerMessageColor => Color.fromRGBO(255, 255, 255, 1);

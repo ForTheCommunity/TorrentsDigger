@@ -16,6 +16,7 @@ class SourceBloc extends HydratedBloc<SourceWidgetEvents, SourceState> {
     on<SelectFilter>(_onSelectFilter);
     on<SelectSorting>(_onSelectSorting);
     on<SelectSortingOrder>(_onSelectSortingOrder);
+    on<ToggleRememberSelections>(_onToggleRememberSelections);
   }
 
   Future<void> _onLoadSources(
@@ -26,10 +27,25 @@ class SourceBloc extends HydratedBloc<SourceWidgetEvents, SourceState> {
     emit(state.copyWith(sources: data));
   }
 
+  void _onToggleRememberSelections(
+    ToggleRememberSelections event,
+    Emitter<SourceState> emit,
+  ) {
+    emit(
+      _updateSavedSourceData(
+        state.copyWith(rememberSelections: event.isEnabled),
+      ),
+    );
+  }
+
   void _onSelectSource(SelectSource event, Emitter<SourceState> emit) {
     // Checking if this newly selected source is in savedSelectedSourceData Map.
-    SourceStateHydration? savedSelectedSourceData =
-        state.savedSelectedSourceData[event.selectedSource];
+    SourceStateHydration? savedSelectedSourceData;
+    // check if rememberSelections is enabled
+    if (state.rememberSelections) {
+      savedSelectedSourceData =
+          state.savedSelectedSourceData[event.selectedSource];
+    }
     emit(
       state.copyWith(
         selectedSource: event.selectedSource,
@@ -70,8 +86,8 @@ class SourceBloc extends HydratedBloc<SourceWidgetEvents, SourceState> {
   }
 
   SourceState _updateSavedSourceData(SourceState state) {
-    // if no source is selected, we can't save any data.
-    if (state.selectedSource == null) return state;
+    // if no source is selected or hydration is disabled, we can't save any data.
+    if (state.selectedSource == null || !state.rememberSelections) return state;
 
     // getting existing data for this source
     // or create a new blank one if it is new;
