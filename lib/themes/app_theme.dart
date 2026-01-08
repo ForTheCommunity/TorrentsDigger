@@ -67,7 +67,9 @@ abstract class AppTheme {
   Color get textFormFieldInactiveColor;
   Color get textFormFieldActiveColor;
 
+  Color get aboutDialogBackgroundColor;
   Color get aboutDialogIconColor;
+  Color get aboutDialogHyperlinkTextColor;
   Color get aboutDialogTextColor;
 
   Color get settingsFloatingActionButtonForegroundColor;

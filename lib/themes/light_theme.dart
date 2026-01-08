@@ -28,7 +28,7 @@ class LightTheme extends AppTheme {
   @override
   Color get settingsSwitchListTileInactiveThumbColor =>
       const Color.fromARGB(255, 255, 69, 249);
-@override
+  @override
   Color get settingsSwitchListTileInactiveTrackColor =>
       const Color.fromARGB(255, 255, 255, 255);
 
@@ -115,7 +115,7 @@ class LightTheme extends AppTheme {
   Color get defaultTrackersInfoIconColor =>
       const Color.fromARGB(255, 255, 255, 255);
   @override
-  Color get activeTrackersListIconColor => const Color.fromARGB(255, 0, 255, 8);
+  Color get activeTrackersListIconColor => const Color.fromARGB(255, 26, 192, 181);
   @override
   Color get paginationNextButtonBackgroundColor =>
       const Color.fromARGB(255, 183, 227, 210);
@@ -129,9 +129,13 @@ class LightTheme extends AppTheme {
       const Color.fromARGB(255, 227, 137, 241);
 
   @override
-  Color get aboutDialogIconColor => const Color.fromARGB(255, 142, 249, 242);
+  Color get aboutDialogBackgroundColor => Colors.white;
   @override
-  Color get aboutDialogTextColor => const Color.fromARGB(255, 0, 255, 166);
+  Color get aboutDialogIconColor => Colors.black;
+  @override
+  Color get aboutDialogHyperlinkTextColor => const Color.fromARGB(255, 0, 87, 158);
+  @override
+  Color get aboutDialogTextColor => Colors.black;
 
   @override
   Color get settingsFloatingActionButtonForegroundColor =>
@@ -174,7 +178,7 @@ class LightTheme extends AppTheme {
       const Color.fromARGB(255, 232, 178, 233);
 
   @override
-  Color get activeThemeIconColor => const Color.fromARGB(255, 255, 0, 0);
+  Color get activeThemeIconColor => const Color.fromARGB(255, 208, 0, 184);
 
   @override
   Color get contributeGetInvolvedIconColor =>

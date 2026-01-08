@@ -131,9 +131,13 @@ class MatrixTheme extends AppTheme {
   Color get textFormFieldActiveColor => Color.fromRGBO(91, 181, 87, 1);
 
   @override
+  Color get aboutDialogBackgroundColor => const Color.fromARGB(255, 20, 20, 20);
+  @override
   Color get aboutDialogIconColor => Color.fromRGBO(0, 255, 47, 1);
   @override
-  Color get aboutDialogTextColor => Color.fromRGBO(82, 239, 245, 1);
+  Color get aboutDialogHyperlinkTextColor => Color.fromRGBO(82, 239, 245, 1);
+  @override
+  Color get aboutDialogTextColor => const Color.fromARGB(255, 239, 237, 237);
 
   @override
   Color get settingsFloatingActionButtonForegroundColor =>

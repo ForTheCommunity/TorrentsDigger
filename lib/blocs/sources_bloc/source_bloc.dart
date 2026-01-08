@@ -118,8 +118,21 @@ class SourceBloc extends HydratedBloc<SourceWidgetEvents, SourceState> {
   }
 
   @override
-  SourceState? fromJson(Map<String, dynamic> json) =>
-      SourceState.fromJson(json);
+  SourceState? fromJson(Map<String, dynamic> json) {
+    final state = SourceState.fromJson(json);
+    // if Remember Selection is disabled then
+    // resetting all values to null.
+    if (!state.rememberSelections) {
+      return state.copyWith(
+        selectedSource: null,
+        selectedCategory: null,
+        selectedFilter: null,
+        selectedSorting: null,
+        selectedSortingOrder: null,
+      );
+    }
+    return state;
+  }
 
   @override
   Map<String, dynamic>? toJson(SourceState state) => state.toJson();
