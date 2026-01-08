@@ -7,11 +7,7 @@ use ureq::{Agent, Body, http::Response};
 use crate::{
     database::proxy::Proxy,
     sources::{
-        available_sources::AllAvailableSources, knaben_database::KnabenDatabaseCategories,
-        lime_torrents::LimeTorrentsCategories, nyaa::NyaaCategories,
-        the_pirate_bay::ThePirateBayCategories, solid_torrents::SolidTorrentsCategories,
-        sukebei_nyaa::SukebeiNyaaCategories, torrents_csv::TorrentsCsvCategories,
-        uindex::UindexCategories,
+        Pagination, available_sources::AllAvailableSources, knaben_database::KnabenDatabaseCategories, lime_torrents::LimeTorrentsCategories, nyaa::NyaaCategories, solid_torrents::SolidTorrentsCategories, sukebei_nyaa::SukebeiNyaaCategories, the_pirate_bay::ThePirateBayCategories, torrents_csv::TorrentsCsvCategories, uindex::UindexCategories
     },
     static_includes::get_current_version,
     torrent::Torrent,
@@ -20,7 +16,7 @@ use crate::{
 pub fn fetch_torrents(
     url: &str,
     source: AllAvailableSources,
-) -> Result<(Vec<Torrent>, Option<i64>)> {
+) -> Result<(Vec<Torrent>, Pagination)> {
     // sending request
     let response = send_request(url)?;
 

@@ -6,7 +6,10 @@ use core::fmt;
 use scraper::{ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
 
-use crate::{sources::QueryOptions, torrent::Torrent};
+use crate::{
+    sources::{Pagination, QueryOptions},
+    torrent::Torrent,
+};
 
 #[derive(Debug)]
 pub enum KnabenDatabaseCategories {
@@ -304,7 +307,7 @@ impl KnabenDatabaseCategories {
     }
 
     // Scraping
-    pub fn scrape_and_parse(mut response: Response<Body>) -> Result<(Vec<Torrent>, Option<i64>)> {
+    pub fn scrape_and_parse(mut response: Response<Body>) -> Result<(Vec<Torrent>, Pagination)> {
         // Scraping
         let html_response = response.body_mut().read_to_string()?;
         let document = Html::parse_document(&html_response);
@@ -327,21 +330,61 @@ impl KnabenDatabaseCategories {
         let title_anchor_selector = Selector::parse("td:nth-child(2) > a:nth-child(1)")
             .map_err(|e| anyhow!(format!("Error parsing title anchor selector: {}", e)))?;
 
-        let next_page_link_selector = Selector::parse("a#nextPage")
-            .map_err(|e| anyhow!(format!("Error parsing next page link selector: {}", e)))?;
+        let pagination_container_selector = Selector::parse("div.pageNumbers")
+            .map_err(|e| anyhow!(format!("Error parsing pagination selector: {}", e)))?;
+
+        let active_page_selector = Selector::parse("a.active")
+            .map_err(|e| anyhow!(format!("Error parsing active page selector: {}", e)))?;
+
+        let prev_page_selector = Selector::parse("a#prevPage")
+            .map_err(|e| anyhow!(format!("Error parsing previous page selector: {}", e)))?;
+
+        let next_page_selector = Selector::parse("a#nextPage")
+            .map_err(|e| anyhow!(format!("Error parsing next page selector: {}", e)))?;
 
         // Vector of Torrent to Store all Torrents
         let mut all_torrents: Vec<Torrent> = Vec::new();
 
-        // extracting next page number
-        let next_page_num: Option<i64> = document
-            .select(&next_page_link_selector)
-            .next()
-            .and_then(|element| element.attr("href"))
-            .and_then(|href| {
-                href.split('/').nth(4) // Get the 5th item (index 4)
-            })
-            .and_then(|page_segment| page_segment.parse::<i64>().ok());
+        let mut pagination = Pagination::new();
+
+        // Target only the first pagination container found.
+        // there are 2 pagination container, btw :)
+        if let Some(nav) = document.select(&pagination_container_selector).next() {
+            // for Current Page
+            if let Some(active_el) = nav.select(&active_page_selector).next() {
+                if let Ok(curr) = active_el.text().collect::<String>().trim().parse::<i32>() {
+                    pagination.current_page = Some(curr);
+
+                    // for Previous Page
+                    // (Must exist & be less than current)
+                    if let Some(prev_el) = nav.select(&prev_page_selector).next() {
+                        if let Some(href) = prev_el.attr("href") {
+                            if let Some(page_val) =
+                                href.split('/').nth(4).and_then(|s| s.parse::<i32>().ok())
+                            {
+                                if page_val < curr {
+                                    pagination.previous_page = Some(page_val);
+                                }
+                            }
+                        }
+                    }
+
+                    // for Next Page
+                    // Must exist & be greater than current
+                    if let Some(next_el) = nav.select(&next_page_selector).next() {
+                        if let Some(href) = next_el.attr("href") {
+                            if let Some(page_val) =
+                                href.split('/').nth(4).and_then(|s| s.parse::<i32>().ok())
+                            {
+                                if page_val > curr {
+                                    pagination.next_page = Some(page_val);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         if let Some(table_body) = document.select(&table_body_selector).next() {
             for table_row in table_body.select(&table_row_selector) {
@@ -441,7 +484,7 @@ impl KnabenDatabaseCategories {
             }
         }
 
-        Ok((all_torrents, next_page_num))
+        Ok((all_torrents, pagination))
     }
 }
 

@@ -1,10 +1,7 @@
 use crate::api::preludes::*;
 
-pub fn get_supported_proxy_details() -> Result<Vec<(i32, String)>, String> {
-    match Proxy::fetch_supported_proxies() {
-        Ok(pd) => Ok(pd),
-        Err(e) => Err(e.to_string()),
-    }
+pub fn get_supported_proxy_details() -> Vec<(i32, String)> {
+    Proxy::fetch_supported_proxies()
 }
 
 pub fn save_proxy_api(proxy_data: InternalProxy) -> Result<usize, String> {

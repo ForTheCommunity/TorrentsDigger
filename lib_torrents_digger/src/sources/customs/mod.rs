@@ -1,12 +1,12 @@
 use anyhow::anyhow;
 
-use crate::sources::customs::{
+use crate::sources::{Pagination, customs::{
     available_custom_sources::AllAvailableCustomSources,
     custom::{
         KnabenDatabaseCustomListings, NyaaCustomListings, SukebeiNyaaCustomListings,
         ThePirateBayCustomListings,
     },
-};
+}};
 
 pub mod available_custom_sources;
 pub mod custom;
@@ -14,7 +14,7 @@ pub mod custom;
 pub fn search_custom(
     source_index: usize,
     listing_index: usize,
-) -> Result<(Vec<crate::torrent::Torrent>, Option<i64>), anyhow::Error> {
+) -> Result<(Vec<crate::torrent::Torrent>, Pagination), anyhow::Error> {
     let custom_source_varient = AllAvailableCustomSources::from_index(source_index)
         .ok_or_else(|| anyhow!("Invalid Custom Listing Source Index: {}", source_index))?;
     match custom_source_varient {

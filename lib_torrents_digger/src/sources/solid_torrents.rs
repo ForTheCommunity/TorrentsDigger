@@ -6,7 +6,11 @@ use core::fmt;
 use scraper::{Html, Selector};
 use ureq::{Body, http::Response};
 
-use crate::{extract_info_hash_from_magnet, sources::QueryOptions, torrent::Torrent};
+use crate::{
+    extract_info_hash_from_magnet,
+    sources::{Pagination, QueryOptions},
+    torrent::Torrent,
+};
 
 #[derive(Debug)]
 pub enum SolidTorrentsCategories {
@@ -185,7 +189,7 @@ impl SolidTorrentsCategories {
     }
 
     // Scraping
-    pub fn scrape_and_parse(mut response: Response<Body>) -> Result<(Vec<Torrent>, Option<i64>)> {
+    pub fn scrape_and_parse(mut response: Response<Body>) -> Result<(Vec<Torrent>, Pagination)> {
         // Scraping
         let html_response = response.body_mut().read_to_string()?;
         let document = Html::parse_document(&html_response);
@@ -224,30 +228,33 @@ impl SolidTorrentsCategories {
 
         // let active_page_selector = Selector::parse("span.bg-primary.text-white")?;
         // Target all links within the <nav>
-        let next_button_selector = Selector::parse("nav.flex a")
-            .map_err(|e| anyhow!(format!("Error parsing next button selector: {}", e)))?;
+        // let next_button_selector = Selector::parse("nav.flex a")
+        // .map_err(|e| anyhow!(format!("Error parsing next button selector: {}", e)))?;
 
         // Vector to Store all Torrents
         let mut all_torrents: Vec<Torrent> = Vec::new();
 
-        let mut next_page_num: Option<i64> = None;
-        // Iterate over all 'a' tags in the pagination <nav>
-        for a_tag in document.select(&next_button_selector) {
-            if a_tag.inner_html().contains("Next")
-                && let Some(href) = a_tag.attr("href")
-            {
-                if let Some(query) = href.split('?').nth(1)
-                    && let Some(page_param) =
-                        query.split('&').find(|param| param.starts_with("page="))
-                    && let Some(next_page_str) = page_param.split('=').nth(1)
-                    && let Ok(num) = next_page_str.parse::<i64>()
-                {
-                    next_page_num = Some(num);
-                }
-                // Break after finding the 'Next' button
-                break;
-            }
-        }
+        // let mut next_page_num: Option<i64> = None;
+        // // Iterate over all 'a' tags in the pagination <nav>
+        // for a_tag in document.select(&next_button_selector) {
+        //     if a_tag.inner_html().contains("Next")
+        //         && let Some(href) = a_tag.attr("href")
+        //     {
+        //         if let Some(query) = href.split('?').nth(1)
+        //             && let Some(page_param) =
+        //                 query.split('&').find(|param| param.starts_with("page="))
+        //             && let Some(next_page_str) = page_param.split('=').nth(1)
+        //             && let Ok(num) = next_page_str.parse::<i64>()
+        //         {
+        //             next_page_num = Some(num);
+        //         }
+        //         // Break after finding the 'Next' button
+        //         break;
+        //     }
+        // }
+        //
+
+        let pagination = Pagination::new();
 
         // iterating over all torrents
         for item_element in document.select(&torrent_item_container_selector) {
@@ -321,7 +328,7 @@ impl SolidTorrentsCategories {
             });
         }
 
-        Ok((all_torrents, next_page_num))
+        Ok((all_torrents, pagination))
     }
 }
 

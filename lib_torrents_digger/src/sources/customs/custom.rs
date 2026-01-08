@@ -3,7 +3,7 @@ use core::fmt;
 use anyhow::Result;
 
 use crate::{
-    sources::{available_sources::AllAvailableSources, the_pirate_bay::ThePirateBayCategories},
+    sources::{Pagination, available_sources::AllAvailableSources, the_pirate_bay::ThePirateBayCategories},
     sync_request::fetch_torrents,
     torrent::Torrent,
 };
@@ -27,7 +27,7 @@ impl NyaaCustomListings {
             .collect()
     }
 
-    pub fn fetch_torrents(source: &NyaaCustomListings) -> Result<(Vec<Torrent>, Option<i64>)> {
+    pub fn fetch_torrents(source: &NyaaCustomListings) -> Result<(Vec<Torrent>, Pagination)> {
         match source {
             Self::Latests => {
                 let url = "https://nyaa.si";
@@ -71,7 +71,7 @@ impl SukebeiNyaaCustomListings {
 
     pub fn fetch_torrents(
         source: &SukebeiNyaaCustomListings,
-    ) -> Result<(Vec<Torrent>, Option<i64>)> {
+    ) -> Result<(Vec<Torrent>, Pagination)> {
         match source {
             Self::Latests => {
                 let url = "https://sukebei.nyaa.si";
@@ -116,7 +116,7 @@ impl KnabenDatabaseCustomListings {
 
     pub fn fetch_torrents(
         source: &KnabenDatabaseCustomListings,
-    ) -> Result<(Vec<Torrent>, Option<i64>)> {
+    ) -> Result<(Vec<Torrent>, Pagination)> {
         match source {
             Self::TrendingMovies => {
                 let url = "https://knaben.org/browse/3000000/1/seeders";
@@ -175,7 +175,7 @@ impl ThePirateBayCustomListings {
 
     pub fn fetch_torrents(
         source: &ThePirateBayCustomListings,
-    ) -> Result<(Vec<Torrent>, Option<i64>)> {
+    ) -> Result<(Vec<Torrent>, Pagination)> {
         match source {
             Self::ThePirateBayLatests => {
                 let active_domain = ThePirateBayCategories::get_active_domain()?;

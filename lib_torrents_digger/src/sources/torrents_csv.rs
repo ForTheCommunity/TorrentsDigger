@@ -1,4 +1,7 @@
-use crate::{sources::QueryOptions, torrent::Torrent};
+use crate::{
+    sources::{Pagination, QueryOptions},
+    torrent::Torrent,
+};
 use anyhow::{Result, anyhow};
 use chrono::{DateTime, Utc};
 use core::fmt;
@@ -51,7 +54,7 @@ impl TorrentsCsvCategories {
         }
     }
 
-    pub fn parse_response(mut response: Response<Body>) -> Result<(Vec<Torrent>, Option<i64>)> {
+    pub fn parse_response(mut response: Response<Body>) -> Result<(Vec<Torrent>, Pagination)> {
         let json_response_txt = response.body_mut().read_to_string()?;
         let json_root: JsonRoot = serde_json::from_str(&json_response_txt)?;
 
@@ -62,11 +65,14 @@ impl TorrentsCsvCategories {
             .collect::<Result<Vec<Torrent>>>()?;
         let next_page = json_root.next;
 
+        let mut pagination = Pagination::new();
+        pagination.next_page = next_page;
+
         if torrents.is_empty() {
             return Err(anyhow!("No torrents found with the specified name."));
         }
 
-        Ok((torrents, next_page))
+        Ok((torrents, pagination))
     }
 }
 
@@ -81,7 +87,7 @@ impl fmt::Display for TorrentsCsvCategories {
 #[derive(Serialize, Deserialize, Debug)]
 struct JsonRoot {
     torrents: Vec<JsonTorrentData>,
-    next: Option<i64>,
+    next: Option<i32>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]

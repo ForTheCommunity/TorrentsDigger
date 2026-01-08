@@ -646,8 +646,10 @@ fn wire__crate__api__database__proxy__get_supported_proxy_details_impl(
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             deserializer.end();
             move |context| {
-                transform_result_sse::<_, String>((move || {
-                    let output_ok = crate::api::database::proxy::get_supported_proxy_details()?;
+                transform_result_sse::<_, ()>((move || {
+                    let output_ok = Result::<_, ()>::Ok(
+                        crate::api::database::proxy::get_supported_proxy_details(),
+                    )?;
                     Ok(output_ok)
                 })())
             }
@@ -920,6 +922,20 @@ impl SseDecode for crate::api::internals::InternalCustomSourceDetails {
     }
 }
 
+impl SseDecode for crate::api::internals::InternalPagination {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_previousPage = <Option<i32>>::sse_decode(deserializer);
+        let mut var_currentPage = <Option<i32>>::sse_decode(deserializer);
+        let mut var_nextPage = <Option<i32>>::sse_decode(deserializer);
+        return crate::api::internals::InternalPagination {
+            previous_page: var_previousPage,
+            current_page: var_currentPage,
+            next_page: var_nextPage,
+        };
+    }
+}
+
 impl SseDecode for crate::api::internals::InternalProxy {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -1129,6 +1145,17 @@ impl SseDecode for Option<String> {
     }
 }
 
+impl SseDecode for Option<i32> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(<i32>::sse_decode(deserializer));
+        } else {
+            return None;
+        }
+    }
+}
+
 impl SseDecode for Option<i64> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -1162,12 +1189,17 @@ impl SseDecode for (i32, String) {
     }
 }
 
-impl SseDecode for (Vec<crate::api::internals::InternalTorrent>, Option<i64>) {
+impl SseDecode
+    for (
+        Vec<crate::api::internals::InternalTorrent>,
+        crate::api::internals::InternalPagination,
+    )
+{
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut var_field0 =
             <Vec<crate::api::internals::InternalTorrent>>::sse_decode(deserializer);
-        let mut var_field1 = <Option<i64>>::sse_decode(deserializer);
+        let mut var_field1 = <crate::api::internals::InternalPagination>::sse_decode(deserializer);
         return (var_field0, var_field1);
     }
 }
@@ -1363,6 +1395,28 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::internals::InternalCustomSour
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::internals::InternalPagination {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.previous_page.into_into_dart().into_dart(),
+            self.current_page.into_into_dart().into_dart(),
+            self.next_page.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::internals::InternalPagination
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::internals::InternalPagination>
+    for crate::api::internals::InternalPagination
+{
+    fn into_into_dart(self) -> crate::api::internals::InternalPagination {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::api::internals::InternalProxy {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
@@ -1535,6 +1589,15 @@ impl SseEncode for crate::api::internals::InternalCustomSourceDetails {
     }
 }
 
+impl SseEncode for crate::api::internals::InternalPagination {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <Option<i32>>::sse_encode(self.previous_page, serializer);
+        <Option<i32>>::sse_encode(self.current_page, serializer);
+        <Option<i32>>::sse_encode(self.next_page, serializer);
+    }
+}
+
 impl SseEncode for crate::api::internals::InternalProxy {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -1682,6 +1745,16 @@ impl SseEncode for Option<String> {
     }
 }
 
+impl SseEncode for Option<i32> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <i32>::sse_encode(value, serializer);
+        }
+    }
+}
+
 impl SseEncode for Option<i64> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -1710,11 +1783,16 @@ impl SseEncode for (i32, String) {
     }
 }
 
-impl SseEncode for (Vec<crate::api::internals::InternalTorrent>, Option<i64>) {
+impl SseEncode
+    for (
+        Vec<crate::api::internals::InternalTorrent>,
+        crate::api::internals::InternalPagination,
+    )
+{
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <Vec<crate::api::internals::InternalTorrent>>::sse_encode(self.0, serializer);
-        <Option<i64>>::sse_encode(self.1, serializer);
+        <crate::api::internals::InternalPagination>::sse_encode(self.1, serializer);
     }
 }
 

@@ -3,7 +3,11 @@ use core::fmt;
 use scraper::{self, ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
 
-use crate::{extract_info_hash_from_magnet, sources::QueryOptions, torrent::Torrent};
+use crate::{
+    extract_info_hash_from_magnet,
+    sources::{Pagination, QueryOptions},
+    torrent::Torrent,
+};
 
 // https://nyaa.si
 
@@ -141,7 +145,7 @@ impl NyaaCategories {
     }
 
     // Scraping
-    pub fn scrape_and_parse(mut response: Response<Body>) -> Result<(Vec<Torrent>, Option<i64>)> {
+    pub fn scrape_and_parse(mut response: Response<Body>) -> Result<(Vec<Torrent>, Pagination)> {
         // Scraping
         let html_response = response
             .body_mut()
@@ -168,8 +172,14 @@ impl NyaaCategories {
         let anchor_tag_selector = Selector::parse("a")
             .map_err(|e| anyhow!(format!("Error parsing a selector: {}", e)))?;
 
-        let pagination_selector = Selector::parse("ul.pagination li.active")
-            .map_err(|e| anyhow!(format!("Error parsing pagination selector: {}", e)))?;
+        let active_li_selector = Selector::parse("li.active")
+            .map_err(|e| anyhow!(format!("Error parsing active li selector: {}", e)))?;
+
+        let prev_li_selector = Selector::parse("li.previous")
+            .map_err(|e| anyhow!(format!("Error parsing previous li selector: {}", e)))?;
+
+        let next_li_selector = Selector::parse("li.next")
+            .map_err(|e| anyhow!(format!("Error parsing next li pagination selector: {}", e)))?;
 
         // Vector of Torrent to Store all Torrents
         let mut all_torrents: Vec<Torrent> = Vec::new();
@@ -186,27 +196,6 @@ impl NyaaCategories {
             .select(&table_body_selector)
             .next()
             .ok_or_else(|| anyhow!("Didn't found Table Body."))?;
-
-        let next_page_num: Option<i64> =
-            if let Some(active_li) = document.select(&pagination_selector).next() {
-                if let Some(anchor) = active_li.select(&anchor_tag_selector).next() {
-                    let text = anchor.text().collect::<String>();
-                    let current_page_str = text.split_whitespace().next().unwrap_or("1");
-                    let current_page_num = current_page_str
-                        .trim()
-                        .parse::<i64>()
-                        .map_err(|e| anyhow!("Error parsing page number: {}", e))?;
-                    Some(current_page_num + 1)
-                } else {
-                    // Fallback in case there is no anchor tag
-                    let current_page_num =
-                        active_li.text().collect::<String>().trim().parse::<i64>()?;
-                    Some(current_page_num + 1)
-                }
-            } else {
-                // No active pagination element found, so no next page.
-                None
-            };
 
         // iterating over table rows.
         for table_row in table_body.select(&table_row_selector) {
@@ -257,7 +246,39 @@ impl NyaaCategories {
             all_torrents.push(torrent);
         }
 
-        Ok((all_torrents, next_page_num))
+        let mut pagination = Pagination {
+            previous_page: None,
+            current_page: None,
+            next_page: None,
+        };
+
+        // Current Page
+        if let Some(active_li) = document.select(&active_li_selector).next() {
+            // extracting the number inside the <a>1</a>
+            let text = active_li.text().collect::<String>();
+            if let Ok(curr) = text.trim().parse::<i32>() {
+                pagination.current_page = Some(curr);
+
+                // for Previous Page
+                if let Some(prev_li) = document.select(&prev_li_selector).next() {
+                    let class = prev_li.value().attr("class").unwrap_or("");
+                    // Only set if it doesn't contain disabled or unavailable
+                    if !class.contains("disabled") && !class.contains("unavailable") {
+                        pagination.previous_page = Some(curr - 1);
+                    }
+                }
+
+                // for Next Page
+                if let Some(next_li) = document.select(&next_li_selector).next() {
+                    let class = next_li.value().attr("class").unwrap_or("");
+                    if !class.contains("disabled") && !class.contains("unavailable") {
+                        pagination.next_page = Some(curr + 1);
+                    }
+                }
+            }
+        }
+
+        Ok((all_torrents, pagination))
     }
 }
 

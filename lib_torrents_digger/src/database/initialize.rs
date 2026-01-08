@@ -33,8 +33,6 @@ pub fn initialize_database(platform_specific_home_dir: String) -> Result<()> {
 
     // creating tables
     create_tables()?;
-    // inserting configs.
-    insert_configs()?;
 
     // insert default settings key values
     insert_default_settings_kvs()?;
@@ -104,40 +102,6 @@ fn create_tables() -> Result<(), rusqlite::Error> {
         params![],
     )?;
 
-    // Supported Protocols Table
-    // creating table to store supported protocols of proxy server..
-    db_conn.execute(
-        "
-        CREATE TABLE IF NOT EXISTS supported_proxy_protocols (
-            id INTEGER PRIMARY KEY NOT NULL,
-            protocol VARCHAR(50) NOT NULL UNIQUE
-        )
-    ",
-        params![],
-    )?;
-
-    Ok(())
-}
-
-fn insert_configs() -> Result<(), rusqlite::Error> {
-    let db_conn = get_a_database_connection();
-
-    let supported_protocols: [(i32, &str); 5] = [
-        (0, "NONE"),
-        (1, "HTTP"),
-        (2, "HTTPS"),
-        (3, "SOCKS4"),
-        (4, "SOCKS5"),
-    ];
-
-    for (id, protocol) in supported_protocols.iter() {
-        db_conn.execute(
-            "
-        INSERT OR IGNORE INTO supported_proxy_protocols (id,protocol) VALUES (?1,?2)
-    ",
-            params![id, protocol],
-        )?;
-    }
     Ok(())
 }
 

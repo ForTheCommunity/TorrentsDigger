@@ -5,7 +5,9 @@ use scraper::{ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
 
 use crate::{
-    extract_info_hash_from_magnet, sources::QueryOptions, sync_request::send_request,
+    extract_info_hash_from_magnet,
+    sources::{Pagination, QueryOptions},
+    sync_request::send_request,
     torrent::Torrent,
 };
 
@@ -285,7 +287,7 @@ impl ThePirateBayCategories {
         ))
     }
 
-    pub fn scrape_and_parse(mut response: Response<Body>) -> Result<(Vec<Torrent>, Option<i64>)> {
+    pub fn scrape_and_parse(mut response: Response<Body>) -> Result<(Vec<Torrent>, Pagination)> {
         // Scraping
         let html_response = response
             .body_mut()
@@ -312,6 +314,9 @@ impl ThePirateBayCategories {
         let b_tag_selector = Selector::parse("b")
             .map_err(|e| anyhow!(format!("Error parsing b selector: {}", e)))?;
 
+        let img_selector = Selector::parse("img")
+            .map_err(|e| anyhow!(format!("Error parsing img selector: {}", e)))?;
+
         let table = document
             .select(&table_selector)
             .next()
@@ -326,7 +331,7 @@ impl ThePirateBayCategories {
         })?;
 
         let mut torrents_vec: Vec<Torrent> = Vec::new();
-        let mut next_page: Option<i64> = None;
+        let mut pagination = Pagination::new();
 
         // iterating over table rows.
         for a_table_row in table_body.select(&table_row_selector) {
@@ -384,21 +389,32 @@ impl ThePirateBayCategories {
                     leechers,
                     total_downloads,
                 });
-            } else if let Some(td_element) = table_data_vec.get(0) {
+            }
+            // this is a pagination row...
+            else if let Some(td_element) = table_data_vec.get(0) {
                 // extracting current page number
-                let current_page = td_element
-                    .select(&b_tag_selector)
-                    .next()
-                    .and_then(|el| el.inner_html().parse::<i64>().ok());
+                // For current page, We look for the number inside the <b> tag
+                if let Some(b_tag) = td_element.select(&b_tag_selector).next() {
+                    if let Ok(curr) = b_tag.inner_html().parse::<i32>() {
+                        pagination.current_page = Some(curr);
+                    }
+                }
 
-                if let Some(curr) = current_page {
-                    let expected_next_page_number = curr + 1;
-
+                // predecting previous page and next page based on arrow images
+                // calculating next/prev if we successfully found the current page
+                if let Some(curr) = pagination.current_page {
                     for link in td_element.select(&anchor_tag_selector) {
-                        if let Ok(page_num) = link.inner_html().parse::<i64>() {
-                            if page_num == expected_next_page_number {
-                                next_page = Some(expected_next_page_number);
-                                break;
+                        if let Some(img) = link.select(&img_selector).next() {
+                            let alt_text = img.value().attr("alt").unwrap_or("");
+
+                            match alt_text {
+                                "Previous" => {
+                                    pagination.previous_page = Some(curr - 1);
+                                }
+                                "Next" => {
+                                    pagination.next_page = Some(curr + 1);
+                                }
+                                _ => {}
                             }
                         }
                     }
@@ -406,7 +422,7 @@ impl ThePirateBayCategories {
             }
         }
 
-        Ok((torrents_vec, next_page))
+        Ok((torrents_vec, pagination))
     }
 }
 

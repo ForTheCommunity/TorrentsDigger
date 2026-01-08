@@ -1,4 +1,7 @@
-use crate::api::{internals::InternalCustomSourceDetails, preludes::*};
+use crate::api::{
+    internals::{InternalCustomSourceDetails, InternalPagination},
+    preludes::*,
+};
 
 pub fn fetch_source_details() -> Vec<InternalSource> {
     let external_sources_vec: Vec<ExternalSource> = get_source_details();
@@ -52,7 +55,7 @@ pub fn dig_torrent(
     sorting_index: usize,
     sorting_order_index: usize,
     page: Option<i64>,
-) -> Result<(Vec<InternalTorrent>, Option<i64>), String> {
+) -> Result<(Vec<InternalTorrent>, InternalPagination), String> {
     match search_torrent(
         torrent_name,
         source_index,
@@ -62,7 +65,7 @@ pub fn dig_torrent(
         sorting_order_index,
         page,
     ) {
-        Ok((torrents, next_page)) => {
+        Ok((torrents, pagination)) => {
             let internal_torrents: Vec<InternalTorrent> = torrents
                 .into_iter()
                 .map(|t: ExternalTorrent| InternalTorrent {
@@ -76,7 +79,14 @@ pub fn dig_torrent(
                     total_downloads: t.total_downloads,
                 })
                 .collect();
-            Ok((internal_torrents, next_page))
+
+            let internal_pagination = InternalPagination {
+                previous_page: pagination.previous_page,
+                current_page: pagination.current_page,
+                next_page: pagination.next_page,
+            };
+
+            Ok((internal_torrents, internal_pagination))
         }
 
         Err(error) => Err(error.to_string()),
@@ -139,9 +149,9 @@ pub fn get_customs_details() -> Vec<InternalCustomSourceDetails> {
 pub fn dig_custom_torrents(
     selected_source_index: usize,
     selected_listing_index: usize,
-) -> Result<(Vec<InternalTorrent>, Option<i64>), String> {
+) -> Result<(Vec<InternalTorrent>, InternalPagination), String> {
     match search_custom(selected_source_index, selected_listing_index) {
-        Ok((torrents, next_page)) => {
+        Ok((torrents, pagination)) => {
             let internal_torrents: Vec<InternalTorrent> = torrents
                 .into_iter()
                 .map(|t: ExternalTorrent| InternalTorrent {
@@ -155,7 +165,13 @@ pub fn dig_custom_torrents(
                     total_downloads: t.total_downloads,
                 })
                 .collect();
-            Ok((internal_torrents, next_page))
+
+            let internal_pagination = InternalPagination {
+                previous_page: pagination.previous_page,
+                current_page: pagination.current_page,
+                next_page: pagination.next_page,
+            };
+            Ok((internal_torrents, internal_pagination))
         }
         Err(error) => Err(error.to_string()),
     }

@@ -3,7 +3,10 @@ use core::fmt;
 use scraper::{ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
 
-use crate::{sources::QueryOptions, torrent::Torrent};
+use crate::{
+    sources::{Pagination, QueryOptions},
+    torrent::Torrent,
+};
 
 #[derive(Debug)]
 pub enum LimeTorrentsCategories {
@@ -92,7 +95,7 @@ impl LimeTorrentsCategories {
     }
 
     // Scraping
-    pub fn scrape_and_parse(mut response: Response<Body>) -> Result<(Vec<Torrent>, Option<i64>)> {
+    pub fn scrape_and_parse(mut response: Response<Body>) -> Result<(Vec<Torrent>, Pagination)> {
         // Scraping
         let html_response = response.body_mut().read_to_string()?;
         let document = Html::parse_document(&html_response);
@@ -117,8 +120,14 @@ impl LimeTorrentsCategories {
         let anchor_tag_selector = Selector::parse("a")
             .map_err(|e| anyhow!(format!("Error parsing anchor tag selector: {}", e)))?;
 
-        let active_page_selector = Selector::parse("span.active")
-            .map_err(|e| anyhow!(format!("Error parsing active page selector: {}", e)))?;
+        let span_active_selector = Selector::parse("span.active")
+            .map_err(|e| anyhow!(format!("Error parsing span selector: {}", e)))?;
+
+        let next_id_selector = Selector::parse("#next")
+            .map_err(|e| anyhow!(format!("Error parsing #next selector: {}", e)))?;
+
+        let span_disabled_selector = Selector::parse("span.disabled")
+            .map_err(|e| anyhow!(format!("Error parsing span.disabled selector: {}", e)))?;
 
         let torrent_name_and_magnet_div_selector = Selector::parse("div.tt-name").map_err(|e| {
             anyhow!(format!(
@@ -143,18 +152,39 @@ impl LimeTorrentsCategories {
             .next()
             .ok_or_else(|| anyhow!("No Table Body Found......"))?;
 
-        // Active Page Number
-        let next_page_num: Option<i64> =
-            if let Some(active_page_element) = document.select(&active_page_selector).next() {
-                let current_page_num = active_page_element
-                    .text()
-                    .collect::<String>()
-                    .parse::<i64>()?;
-                Some(current_page_num + 1)
-            } else {
-                // No active pagination element found, so no next page.
-                None
-            };
+        let mut pagination = Pagination {
+            previous_page: None,
+            current_page: None,
+            next_page: None,
+        };
+
+        // for Current Page (span.active)
+        if let Some(active_span) = document.select(&span_active_selector).next() {
+            if let Ok(curr) = active_span.text().collect::<String>().trim().parse::<i32>() {
+                pagination.current_page = Some(curr);
+
+                // for Next Page
+                // Check if an anchor with id="next" exists (it won't exist if on the last page)
+                if let Some(next_anchor) = document.select(&next_id_selector).next() {
+                    // check it's not the 'disabled' span variant
+                    if next_anchor.value().name() == "a" {
+                        pagination.next_page = Some(curr + 1);
+                    }
+                }
+
+                // for Previous Page
+                // if Previous exists, it's an 'a' tag.
+                // If it's disabled, it's a 'span' with class 'disabled'.
+                // We find all links and check if any contain the text "Previous page"
+                let is_prev_disabled = document
+                    .select(&span_disabled_selector)
+                    .any(|el| el.text().collect::<String>().contains("Previous page"));
+
+                if !is_prev_disabled && curr > 1 {
+                    pagination.previous_page = Some(curr - 1);
+                }
+            }
+        }
 
         for table_row in table_body.select(&table_row_selector) {
             let table_row_data: Vec<ElementRef> = table_row.select(&table_data_selector).collect();
@@ -260,7 +290,7 @@ impl LimeTorrentsCategories {
             all_torrents.push(torrent);
         }
 
-        Ok((all_torrents, next_page_num))
+        Ok((all_torrents, pagination))
     }
 }
 

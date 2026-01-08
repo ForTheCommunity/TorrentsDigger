@@ -3,7 +3,11 @@ use core::fmt;
 use scraper::{ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
 
-use crate::{extract_info_hash_from_magnet, sources::QueryOptions, torrent::Torrent};
+use crate::{
+    extract_info_hash_from_magnet,
+    sources::{Pagination, QueryOptions},
+    torrent::Torrent,
+};
 
 #[derive(Debug)]
 pub enum UindexCategories {
@@ -91,8 +95,7 @@ impl UindexCategories {
     }
 
     // Scraping
-    pub fn scrape_and_parse(mut response: Response<Body>) -> Result<(Vec<Torrent>, Option<i64>)> {
-        // Scraping
+    pub fn scrape_and_parse(mut response: Response<Body>) -> Result<(Vec<Torrent>, Pagination)> {
         let html_response = response.body_mut().read_to_string()?;
         let document = Html::parse_document(&html_response);
 
@@ -132,6 +135,8 @@ impl UindexCategories {
         {
             return Err(anyhow!("No torrents found with the specified name."));
         }
+
+        let pagination = Pagination::new();
 
         // iterating over table rows.
         for table_row in table_body.select(&table_row_selector) {
@@ -206,7 +211,7 @@ impl UindexCategories {
             });
         }
 
-        Ok((all_torrents, None))
+        Ok((all_torrents, pagination))
     }
 }
 

@@ -156,3 +156,19 @@ pub struct Source {
     pub source_name: String,
     pub source_details: SourceDetails,
 }
+
+pub struct Pagination {
+    pub previous_page: Option<i32>,
+    pub current_page: Option<i32>,
+    pub next_page: Option<i32>,
+}
+
+impl Pagination {
+    fn new() -> Self {
+        Self {
+            previous_page: None,
+            current_page: None,
+            next_page: None,
+        }
+    }
+}

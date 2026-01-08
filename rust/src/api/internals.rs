@@ -50,3 +50,9 @@ pub struct InternalCustomSourceDetails {
     pub custom_source_name: String,
     pub custom_source_listings: Vec<String>,
 }
+
+pub struct InternalPagination {
+    pub previous_page: Option<i32>,
+    pub current_page: Option<i32>,
+    pub next_page: Option<i32>,
+}

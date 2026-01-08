@@ -43,23 +43,14 @@ impl Proxy {
         }
     }
 
-    pub fn fetch_supported_proxies() -> Result<Vec<(i32, String)>, rusqlite::Error> {
-        let db_conn = get_a_database_connection();
-
-        let mut sql_statement = db_conn.prepare(
-            "
-        SELECT id, protocol FROM supported_proxy_protocols
-        ORDER BY id ASC
-    ",
-        )?;
-
-        let proxies_iter =
-            sql_statement.query_map([], |a_row| Ok((a_row.get(0)?, a_row.get(1)?)))?;
-
-        let all_proxies: Vec<(i32, String)> =
-            proxies_iter.collect::<Result<Vec<(i32, String)>, _>>()?;
-
-        Ok(all_proxies)
+    pub fn fetch_supported_proxies() -> Vec<(i32, String)> {
+        vec![
+            (0, "NONE".into()),
+            (1, "HTTP".into()),
+            (2, "HTTPS".into()),
+            (3, "SOCKS4".into()),
+            (4, "SOCKS5".into()),
+        ]
     }
 
     pub fn fetch_saved_proxy() -> Result<Option<Proxy>, rusqlite::Error> {
