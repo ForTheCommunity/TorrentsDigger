@@ -27,6 +27,31 @@ class InternalCustomSourceDetails {
           customSourceListings == other.customSourceListings;
 }
 
+class InternalPagination {
+  final int? previousPage;
+  final int? currentPage;
+  final int? nextPage;
+
+  const InternalPagination({
+    this.previousPage,
+    this.currentPage,
+    this.nextPage,
+  });
+
+  @override
+  int get hashCode =>
+      previousPage.hashCode ^ currentPage.hashCode ^ nextPage.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is InternalPagination &&
+          runtimeType == other.runtimeType &&
+          previousPage == other.previousPage &&
+          currentPage == other.currentPage &&
+          nextPage == other.nextPage;
+}
+
 class InternalProxy {
   final int id;
   final String proxyName;

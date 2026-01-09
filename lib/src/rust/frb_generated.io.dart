@@ -33,6 +33,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   bool dco_decode_bool(dynamic raw);
 
   @protected
+  int dco_decode_box_autoadd_i_32(dynamic raw);
+
+  @protected
   PlatformInt64 dco_decode_box_autoadd_i_64(dynamic raw);
 
   @protected
@@ -54,6 +57,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   InternalCustomSourceDetails dco_decode_internal_custom_source_details(
     dynamic raw,
   );
+
+  @protected
+  InternalPagination dco_decode_internal_pagination(dynamic raw);
 
   @protected
   InternalProxy dco_decode_internal_proxy(dynamic raw);
@@ -99,6 +105,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   String? dco_decode_opt_String(dynamic raw);
 
   @protected
+  int? dco_decode_opt_box_autoadd_i_32(dynamic raw);
+
+  @protected
   PlatformInt64? dco_decode_opt_box_autoadd_i_64(dynamic raw);
 
   @protected
@@ -108,8 +117,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   (int, String) dco_decode_record_i_32_string(dynamic raw);
 
   @protected
-  (List<InternalTorrent>, PlatformInt64?)
-  dco_decode_record_list_internal_torrent_opt_box_autoadd_i_64(dynamic raw);
+  (List<InternalTorrent>, InternalPagination)
+  dco_decode_record_list_internal_torrent_internal_pagination(dynamic raw);
 
   @protected
   (String, String) dco_decode_record_string_string(dynamic raw);
@@ -138,6 +147,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   bool sse_decode_bool(SseDeserializer deserializer);
 
   @protected
+  int sse_decode_box_autoadd_i_32(SseDeserializer deserializer);
+
+  @protected
   PlatformInt64 sse_decode_box_autoadd_i_64(SseDeserializer deserializer);
 
   @protected
@@ -161,6 +173,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   InternalCustomSourceDetails sse_decode_internal_custom_source_details(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  InternalPagination sse_decode_internal_pagination(
     SseDeserializer deserializer,
   );
 
@@ -222,6 +239,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   String? sse_decode_opt_String(SseDeserializer deserializer);
 
   @protected
+  int? sse_decode_opt_box_autoadd_i_32(SseDeserializer deserializer);
+
+  @protected
   PlatformInt64? sse_decode_opt_box_autoadd_i_64(SseDeserializer deserializer);
 
   @protected
@@ -233,8 +253,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   (int, String) sse_decode_record_i_32_string(SseDeserializer deserializer);
 
   @protected
-  (List<InternalTorrent>, PlatformInt64?)
-  sse_decode_record_list_internal_torrent_opt_box_autoadd_i_64(
+  (List<InternalTorrent>, InternalPagination)
+  sse_decode_record_list_internal_torrent_internal_pagination(
     SseDeserializer deserializer,
   );
 
@@ -268,6 +288,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_bool(bool self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_i_32(int self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_i_64(
     PlatformInt64 self,
     SseSerializer serializer,
@@ -297,6 +320,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_internal_custom_source_details(
     InternalCustomSourceDetails self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_internal_pagination(
+    InternalPagination self,
     SseSerializer serializer,
   );
 
@@ -376,6 +405,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_opt_String(String? self, SseSerializer serializer);
 
   @protected
+  void sse_encode_opt_box_autoadd_i_32(int? self, SseSerializer serializer);
+
+  @protected
   void sse_encode_opt_box_autoadd_i_64(
     PlatformInt64? self,
     SseSerializer serializer,
@@ -394,8 +426,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
-  void sse_encode_record_list_internal_torrent_opt_box_autoadd_i_64(
-    (List<InternalTorrent>, PlatformInt64?) self,
+  void sse_encode_record_list_internal_torrent_internal_pagination(
+    (List<InternalTorrent>, InternalPagination) self,
     SseSerializer serializer,
   );
 

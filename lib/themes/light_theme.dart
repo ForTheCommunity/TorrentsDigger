@@ -15,6 +15,8 @@ class LightTheme extends AppTheme {
   Color get appBarBackgroundColor => const Color.fromARGB(255, 83, 100, 99);
   @override
   Color get appBarTextColor => Colors.white;
+  @override
+  Color get scrollbarColor => const Color.fromARGB(255, 0, 0, 0);
 
   @override
   Color get generalTextColor => Colors.black;
@@ -115,12 +117,17 @@ class LightTheme extends AppTheme {
   Color get defaultTrackersInfoIconColor =>
       const Color.fromARGB(255, 255, 255, 255);
   @override
-  Color get activeTrackersListIconColor => const Color.fromARGB(255, 26, 192, 181);
+  Color get activeTrackersListIconColor =>
+      const Color.fromARGB(255, 26, 192, 181);
+
+  @override
+  Color get paginationCurrentTextColor => const Color.fromARGB(255, 0, 0, 0);
   @override
   Color get paginationNextButtonBackgroundColor =>
-      const Color.fromARGB(255, 183, 227, 210);
+      const Color.fromARGB(255, 0, 106, 255);
   @override
-  Color get paginationNextButtonTextColor => const Color.fromARGB(255, 0, 0, 0);
+  Color get paginationPreviousButtonBackgroundColor =>
+      const Color.fromARGB(255, 0, 106, 255);
 
   @override
   Color get textFormFieldInactiveColor => Colors.grey;
@@ -133,7 +140,8 @@ class LightTheme extends AppTheme {
   @override
   Color get aboutDialogIconColor => Colors.black;
   @override
-  Color get aboutDialogHyperlinkTextColor => const Color.fromARGB(255, 0, 87, 158);
+  Color get aboutDialogHyperlinkTextColor =>
+      const Color.fromARGB(255, 0, 87, 158);
   @override
   Color get aboutDialogTextColor => Colors.black;
 

@@ -10,7 +10,7 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 Future<List<InternalSource>> fetchSourceDetails() =>
     RustLib.instance.api.crateApiAppFetchSourceDetails();
 
-Future<(List<InternalTorrent>, PlatformInt64?)> digTorrent({
+Future<(List<InternalTorrent>, InternalPagination)> digTorrent({
   required String torrentName,
   required BigInt sourceIndex,
   required BigInt categoryIndex,
@@ -50,7 +50,7 @@ Future<String> getProcessedMagnetLink({required String unprocessedMagnet}) =>
 Future<List<InternalCustomSourceDetails>> getCustomsDetails() =>
     RustLib.instance.api.crateApiAppGetCustomsDetails();
 
-Future<(List<InternalTorrent>, PlatformInt64?)> digCustomTorrents({
+Future<(List<InternalTorrent>, InternalPagination)> digCustomTorrents({
   required BigInt selectedSourceIndex,
   required BigInt selectedListingIndex,
 }) => RustLib.instance.api.crateApiAppDigCustomTorrents(

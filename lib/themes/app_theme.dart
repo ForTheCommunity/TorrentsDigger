@@ -7,6 +7,7 @@ abstract class AppTheme {
   Color get scaffoldColor;
   Color get appBarBackgroundColor;
   Color get appBarTextColor;
+  Color get scrollbarColor;
 
   Color get generalTextColor;
   Color get settingsTextColor;
@@ -61,8 +62,9 @@ abstract class AppTheme {
   Color get defaultTrackersInfoIconColor;
   Color get activeTrackersListIconColor;
 
+  Color get paginationCurrentTextColor;
   Color get paginationNextButtonBackgroundColor;
-  Color get paginationNextButtonTextColor;
+  Color get paginationPreviousButtonBackgroundColor;
 
   Color get textFormFieldInactiveColor;
   Color get textFormFieldActiveColor;

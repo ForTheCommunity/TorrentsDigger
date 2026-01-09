@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/pagination_bloc/pagination_bloc.dart';
@@ -22,7 +23,12 @@ class MainScreen extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 7.0),
+            padding: EdgeInsets.symmetric(
+              vertical: 0,
+              horizontal: Platform.isLinux
+                  ? 15
+                  : (Platform.isAndroid ? 7.0 : 7.0),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -33,8 +39,11 @@ class MainScreen extends StatelessWidget {
                   onSearchPressed: () {
                     String torrentName = searchController.text.trim();
                     final sourceState = context.read<SourceBloc>().state;
+
                     // resetting pagination
-                    context.read<PaginationBloc>().add(ResetPagination());
+                    context.read<PaginationBloc>().add(
+                      PaginationEvent.resetPagination(),
+                    );
 
                     if (torrentName.isNotEmpty) {
                       if (sourceState.selectedSource != null) {

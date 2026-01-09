@@ -92,12 +92,13 @@ abstract class RustLibApi extends BaseApi {
 
   Future<BigInt> crateApiDatabaseProxyDeleteProxy({required int proxyId});
 
-  Future<(List<InternalTorrent>, PlatformInt64?)> crateApiAppDigCustomTorrents({
+  Future<(List<InternalTorrent>, InternalPagination)>
+  crateApiAppDigCustomTorrents({
     required BigInt selectedSourceIndex,
     required BigInt selectedListingIndex,
   });
 
-  Future<(List<InternalTorrent>, PlatformInt64?)> crateApiAppDigTorrent({
+  Future<(List<InternalTorrent>, InternalPagination)> crateApiAppDigTorrent({
     required String torrentName,
     required BigInt sourceIndex,
     required BigInt categoryIndex,
@@ -289,7 +290,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "delete_proxy", argNames: ["proxyId"]);
 
   @override
-  Future<(List<InternalTorrent>, PlatformInt64?)> crateApiAppDigCustomTorrents({
+  Future<(List<InternalTorrent>, InternalPagination)>
+  crateApiAppDigCustomTorrents({
     required BigInt selectedSourceIndex,
     required BigInt selectedListingIndex,
   }) {
@@ -308,7 +310,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         },
         codec: SseCodec(
           decodeSuccessData:
-              sse_decode_record_list_internal_torrent_opt_box_autoadd_i_64,
+              sse_decode_record_list_internal_torrent_internal_pagination,
           decodeErrorData: sse_decode_String,
         ),
         constMeta: kCrateApiAppDigCustomTorrentsConstMeta,
@@ -325,7 +327,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<(List<InternalTorrent>, PlatformInt64?)> crateApiAppDigTorrent({
+  Future<(List<InternalTorrent>, InternalPagination)> crateApiAppDigTorrent({
     required String torrentName,
     required BigInt sourceIndex,
     required BigInt categoryIndex,
@@ -354,7 +356,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         },
         codec: SseCodec(
           decodeSuccessData:
-              sse_decode_record_list_internal_torrent_opt_box_autoadd_i_64,
+              sse_decode_record_list_internal_torrent_internal_pagination,
           decodeErrorData: sse_decode_String,
         ),
         constMeta: kCrateApiAppDigTorrentConstMeta,
@@ -714,7 +716,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_list_record_i_32_string,
-          decodeErrorData: sse_decode_String,
+          decodeErrorData: null,
         ),
         constMeta: kCrateApiDatabaseProxyGetSupportedProxyDetailsConstMeta,
         argValues: [],
@@ -947,6 +949,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  int dco_decode_box_autoadd_i_32(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as int;
+  }
+
+  @protected
   PlatformInt64 dco_decode_box_autoadd_i_64(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_i_64(raw);
@@ -993,6 +1001,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return InternalCustomSourceDetails(
       customSourceName: dco_decode_String(arr[0]),
       customSourceListings: dco_decode_list_String(arr[1]),
+    );
+  }
+
+  @protected
+  InternalPagination dco_decode_internal_pagination(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return InternalPagination(
+      previousPage: dco_decode_opt_box_autoadd_i_32(arr[0]),
+      currentPage: dco_decode_opt_box_autoadd_i_32(arr[1]),
+      nextPage: dco_decode_opt_box_autoadd_i_32(arr[2]),
     );
   }
 
@@ -1131,6 +1152,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  int? dco_decode_opt_box_autoadd_i_32(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_i_32(raw);
+  }
+
+  @protected
   PlatformInt64? dco_decode_opt_box_autoadd_i_64(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw == null ? null : dco_decode_box_autoadd_i_64(raw);
@@ -1153,8 +1180,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  (List<InternalTorrent>, PlatformInt64?)
-  dco_decode_record_list_internal_torrent_opt_box_autoadd_i_64(dynamic raw) {
+  (List<InternalTorrent>, InternalPagination)
+  dco_decode_record_list_internal_torrent_internal_pagination(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
     if (arr.length != 2) {
@@ -1162,7 +1189,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     }
     return (
       dco_decode_list_internal_torrent(arr[0]),
-      dco_decode_opt_box_autoadd_i_64(arr[1]),
+      dco_decode_internal_pagination(arr[1]),
     );
   }
 
@@ -1227,6 +1254,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  int sse_decode_box_autoadd_i_32(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_i_32(deserializer));
+  }
+
+  @protected
   PlatformInt64 sse_decode_box_autoadd_i_64(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return (sse_decode_i_64(deserializer));
@@ -1276,6 +1309,21 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return InternalCustomSourceDetails(
       customSourceName: var_customSourceName,
       customSourceListings: var_customSourceListings,
+    );
+  }
+
+  @protected
+  InternalPagination sse_decode_internal_pagination(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_previousPage = sse_decode_opt_box_autoadd_i_32(deserializer);
+    var var_currentPage = sse_decode_opt_box_autoadd_i_32(deserializer);
+    var var_nextPage = sse_decode_opt_box_autoadd_i_32(deserializer);
+    return InternalPagination(
+      previousPage: var_previousPage,
+      currentPage: var_currentPage,
+      nextPage: var_nextPage,
     );
   }
 
@@ -1486,6 +1534,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  int? sse_decode_opt_box_autoadd_i_32(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_i_32(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
   PlatformInt64? sse_decode_opt_box_autoadd_i_64(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
 
@@ -1518,13 +1577,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  (List<InternalTorrent>, PlatformInt64?)
-  sse_decode_record_list_internal_torrent_opt_box_autoadd_i_64(
+  (List<InternalTorrent>, InternalPagination)
+  sse_decode_record_list_internal_torrent_internal_pagination(
     SseDeserializer deserializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_field0 = sse_decode_list_internal_torrent(deserializer);
-    var var_field1 = sse_decode_opt_box_autoadd_i_64(deserializer);
+    var var_field1 = sse_decode_internal_pagination(deserializer);
     return (var_field0, var_field1);
   }
 
@@ -1590,6 +1649,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_box_autoadd_i_32(int self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self, serializer);
+  }
+
+  @protected
   void sse_encode_box_autoadd_i_64(
     PlatformInt64 self,
     SseSerializer serializer,
@@ -1642,6 +1707,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_String(self.customSourceName, serializer);
     sse_encode_list_String(self.customSourceListings, serializer);
+  }
+
+  @protected
+  void sse_encode_internal_pagination(
+    InternalPagination self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_opt_box_autoadd_i_32(self.previousPage, serializer);
+    sse_encode_opt_box_autoadd_i_32(self.currentPage, serializer);
+    sse_encode_opt_box_autoadd_i_32(self.nextPage, serializer);
   }
 
   @protected
@@ -1810,6 +1886,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_opt_box_autoadd_i_32(int? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_i_32(self, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_opt_box_autoadd_i_64(
     PlatformInt64? self,
     SseSerializer serializer,
@@ -1846,13 +1932,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void sse_encode_record_list_internal_torrent_opt_box_autoadd_i_64(
-    (List<InternalTorrent>, PlatformInt64?) self,
+  void sse_encode_record_list_internal_torrent_internal_pagination(
+    (List<InternalTorrent>, InternalPagination) self,
     SseSerializer serializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_list_internal_torrent(self.$1, serializer);
-    sse_encode_opt_box_autoadd_i_64(self.$2, serializer);
+    sse_encode_internal_pagination(self.$2, serializer);
   }
 
   @protected

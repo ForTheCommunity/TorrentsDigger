@@ -242,11 +242,6 @@ impl SukebeiNyaaCategories {
             }
         }
 
-        println!(
-            "Current Page -> {:?}\nPrevious Page -> {:?}\nNext Page -> {:?}",
-            pagination.current_page, pagination.previous_page, pagination.next_page
-        );
-
         Ok((all_torrents, pagination))
     }
 }

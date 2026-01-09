@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/customs_bloc/customs_dropdown_bloc/customs_bloc.dart';
@@ -58,7 +59,12 @@ class _CustomsScreenState extends State<CustomsScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 7.0),
+            padding: EdgeInsets.symmetric(
+              vertical: 0,
+              horizontal: Platform.isLinux
+                  ? 15
+                  : (Platform.isAndroid ? 7.0 : 7.0),
+            ),
             child: Column(
               children: [
                 const SizedBox(height: 16),

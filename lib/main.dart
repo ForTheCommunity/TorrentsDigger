@@ -89,6 +89,11 @@ class MyApp extends StatelessWidget {
                   fontSize: 25,
                 ),
               ),
+              scrollbarTheme: ScrollbarThemeData(
+                thumbColor: WidgetStateProperty.all(
+                  context.appColors.scrollbarColor,
+                ),
+              ),
             ),
             initialRoute: RoutesName.mainScreen,
             onGenerateRoute: Routes.generateRoute,

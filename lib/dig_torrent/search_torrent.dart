@@ -1,7 +1,7 @@
 import 'package:torrents_digger/src/rust/api/app.dart';
 import 'package:torrents_digger/src/rust/api/internals.dart';
 
-Future<(List<InternalTorrent>, int?)> searchTorrent({
+Future<(List<InternalTorrent>, InternalPagination)> searchTorrent({
   required String torrentName,
   required int sourceIndex,
   required int filterIndex,
@@ -11,7 +11,7 @@ Future<(List<InternalTorrent>, int?)> searchTorrent({
   int? page,
 }) async {
   // calling rust-side to fetch data from torrent sites
-  (List<InternalTorrent>, int?) torrents = await digTorrent(
+  (List<InternalTorrent>, InternalPagination) torrents = await digTorrent(
     torrentName: torrentName,
     sourceIndex: BigInt.from(sourceIndex),
     categoryIndex: BigInt.from(categoryIndex),

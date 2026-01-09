@@ -15,6 +15,8 @@ class MatrixTheme extends AppTheme {
   Color get appBarBackgroundColor => Color.fromRGBO(0, 0, 0, 1);
   @override
   Color get appBarTextColor => Color.fromRGBO(0, 255, 0, 1);
+  @override
+  Color get scrollbarColor => const Color.fromARGB(255, 17, 255, 0);
 
   @override
   Color get generalTextColor => Color.fromRGBO(0, 255, 0, 1);
@@ -118,12 +120,16 @@ class MatrixTheme extends AppTheme {
       const Color.fromARGB(255, 25, 223, 15);
   @override
   Color get activeTrackersListIconColor => Color.fromRGBO(0, 255, 0, 1);
+
+  @override
+  Color get paginationCurrentTextColor =>
+      const Color.fromARGB(226, 255, 255, 255);
   @override
   Color get paginationNextButtonBackgroundColor =>
-      const Color.fromARGB(255, 16, 16, 16);
+      const Color.fromARGB(255, 34, 255, 0);
   @override
-  Color get paginationNextButtonTextColor =>
-      const Color.fromARGB(255, 0, 255, 30);
+  Color get paginationPreviousButtonBackgroundColor =>
+      const Color.fromARGB(255, 34, 255, 0);
 
   @override
   Color get textFormFieldInactiveColor => Color.fromRGBO(69, 130, 127, 1);

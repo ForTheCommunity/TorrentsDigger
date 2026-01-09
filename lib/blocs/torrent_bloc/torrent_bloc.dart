@@ -13,7 +13,7 @@ class TorrentBloc extends Bloc<TorrentEvents, TorrentState> {
     on<SearchTorrents>((event, emit) async {
       emit(TorrentSearchLoading());
       try {
-        final torrentsListAndNextPage = await searchTorrent(
+        final torrentsListAndPagination = await searchTorrent(
           torrentName: event.torrentName,
           sourceIndex: event.sourceIndex,
           categoryIndex: event.categoryIndex,
@@ -25,15 +25,17 @@ class TorrentBloc extends Bloc<TorrentEvents, TorrentState> {
 
         emit(
           TorrentSearchSuccess(
-            torrents: torrentsListAndNextPage.$1,
+            torrents: torrentsListAndPagination.$1,
             torrentName: event.torrentName,
           ),
         );
+
         // emitting pagination state
-        final nextPage = torrentsListAndNextPage.$2;
-        if (nextPage != null) {
-          paginationBloc.add(SetNextPage(nextPage));
-        }
+        final pagination = torrentsListAndPagination.$2;
+        paginationBloc.add(
+          PaginationEvent.initPagination(pagination: pagination),
+        );
+        
       } catch (e) {
         emit(TorrentSearchFailure(error: e.toString()));
       }

@@ -1,6 +1,7 @@
 // this build program will create a file named 'current_version.txt'
 // which will contain current version of the app..
-// this is a temporary solution....
+// version of app can be fetched directly from flutter using libraries
+// but i prefer this technique....
 
 use std::{env, fs, path::Path};
 
