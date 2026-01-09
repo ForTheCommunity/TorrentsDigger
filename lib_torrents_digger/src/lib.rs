@@ -2,9 +2,18 @@ use anyhow::{Result, anyhow};
 
 use crate::{
     sources::{
-        Pagination, available_sources::AllAvailableSources, knaben_database::{
+        Pagination,
+        available_sources::AllAvailableSources,
+        knaben_database::{
             KnabenDatabaseCategories, KnabenDatabaseSortingOrders, KnabenDatabaseSortings,
-        }, lime_torrents::{LimeTorrentsCategories, LimeTorrentsSortings}, nyaa::{NyaaCategories, NyaaFilter, NyaaSortingOrders, NyaaSortings}, solid_torrents::{SolidTorrentsCategories, SolidTorrentsSortings}, sukebei_nyaa::SukebeiNyaaCategories, the_pirate_bay::{ThePirateBayCategories, ThePirateBaySortingOrders, ThePirateBaySortings}, torrents_csv::TorrentsCsvCategories, uindex::{UindexCategories, UindexSortingOrders, UindexSortings}
+        },
+        lime_torrents::{LimeTorrentsCategories, LimeTorrentsSortings},
+        nyaa::{NyaaCategories, NyaaFilter, NyaaSortingOrders, NyaaSortings},
+        solid_torrents::{SolidTorrentsCategories, SolidTorrentsSortings},
+        sukebei_nyaa::SukebeiNyaaCategories,
+        the_pirate_bay::{ThePirateBayCategories, ThePirateBaySortingOrders, ThePirateBaySortings},
+        torrents_csv::TorrentsCsvCategories,
+        uindex::{UindexCategories, UindexSortingOrders, UindexSortings},
     },
     sync_request::fetch_torrents,
 };
@@ -42,7 +51,7 @@ pub fn search_torrent(
             let url = NyaaCategories::request_url_builder(
                 &torrent_name,
                 filter,
-                &category,
+                category,
                 sorting,
                 sorting_order,
                 &page.unwrap_or(0),

@@ -156,7 +156,7 @@ class ContributeScreen extends StatelessWidget {
                         ),
                       ),
                       subtitle: Text(
-                        'Donate Monero (XMR) to keep the project alive.',
+                        'Your support is essential for keeping the project alive.',
                         style: TextStyle(
                           color: context.appColors.settingsTextColor,
                         ),
@@ -176,13 +176,29 @@ class ContributeScreen extends StatelessWidget {
                               .contributeCryptoAddressBorderColor,
                         ),
                       ),
-                      child: SelectableText(
-                        _xmrAddress,
-                        style: TextStyle(
-                          color: context.appColors.contributeCryptoAddressTextColor,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
-                        ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Monero XMR Address",
+                            style: TextStyle(
+                              color: context.appColors.settingsTextColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          SelectableText(
+                            _xmrAddress,
+                            style: TextStyle(
+                              color: context
+                                  .appColors
+                                  .contributeCryptoAddressTextColor,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(height: 16),

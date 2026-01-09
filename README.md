@@ -69,21 +69,17 @@ appman install torrents_digger
 > It is possible to build this app for Windows and Mac OS; however, i need contributors who can build & test app on these platforms.
 
 ### TODOS :
-- Improve Pagination.
-
-- Remember Selected Category, Filter, Sorting, Sorting Order of a Source.
-
 - Save Search History.
 
 - All Source Search.
 
-- Automatically Update Bookmarked Torrent Data (Like seeders, leechers , total downloads) when Researched.
+- Automatically Update Bookmarked Torrent Data (Like seeders, leechers , total downloads) when Researched (opt-in,opt-out).
 
 - Improve Database Migration. (Currently everything is done manually.)
 
 - Log Screen for showing Execution Logs.
 
-- make a TUI APP (using RataTUI).
+- TUI APP (using Ratatui, basic project structure is made in tui directory).
 
 - NSFW Toogle Button.
 

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/bookmark_bloc/bookmark_bloc.dart';
@@ -93,6 +94,10 @@ class MyApp extends StatelessWidget {
                 thumbColor: WidgetStateProperty.all(
                   context.appColors.scrollbarColor,
                 ),
+                thickness: WidgetStateProperty.all(
+                  Platform.isLinux ? 8.0 : (Platform.isAndroid ? 10.0 : 8.0),
+                ),
+                interactive: true,
               ),
             ),
             initialRoute: RoutesName.mainScreen,

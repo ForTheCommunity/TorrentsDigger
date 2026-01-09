@@ -159,8 +159,8 @@ impl LimeTorrentsCategories {
         };
 
         // for Current Page (span.active)
-        if let Some(active_span) = document.select(&span_active_selector).next() {
-            if let Ok(curr) = active_span.text().collect::<String>().trim().parse::<i32>() {
+        if let Some(active_span) = document.select(&span_active_selector).next()
+            && let Ok(curr) = active_span.text().collect::<String>().trim().parse::<i32>() {
                 pagination.current_page = Some(curr);
 
                 // for Next Page
@@ -184,7 +184,6 @@ impl LimeTorrentsCategories {
                     pagination.previous_page = Some(curr - 1);
                 }
             }
-        }
 
         for table_row in table_body.select(&table_row_selector) {
             let table_row_data: Vec<ElementRef> = table_row.select(&table_data_selector).collect();

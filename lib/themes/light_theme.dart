@@ -16,7 +16,7 @@ class LightTheme extends AppTheme {
   @override
   Color get appBarTextColor => Colors.white;
   @override
-  Color get scrollbarColor => const Color.fromARGB(255, 0, 0, 0);
+  Color get scrollbarColor => const Color.fromARGB(255, 1, 173, 170);
 
   @override
   Color get generalTextColor => Colors.black;

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/bookmark_bloc/bookmark_bloc.dart';
@@ -42,52 +43,59 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: BlocBuilder<BookmarkBloc, BookmarkState>(
-            builder: (context, state) {
-              switch (state) {
-                case BookmarkInitialState():
-                  // Show a loading indicator while in the initial state
-                  // as we are dispatching the load event immediately.
-                  return const Center(child: CircularProgressBarWidget());
+        child: Scrollbar(
+          child: SingleChildScrollView(
+            primary: true,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: 0,
+                horizontal: Platform.isLinux
+                    ? 15
+                    : (Platform.isAndroid ? 7.0 : 7.0),
+              ),
 
-                case BookmarksLoadingState():
-                  return const Center(child: CircularProgressBarWidget());
+              child: BlocBuilder<BookmarkBloc, BookmarkState>(
+                builder: (context, state) {
+                  switch (state) {
+                    case BookmarkInitialState():
+                      // Show a loading indicator while in the initial state
+                      // as we are dispatching the load event immediately.
+                      return const Center(child: CircularProgressBarWidget());
 
-                case BookmarksLoadedState():
-                  return state.bookmarkedTorrents.isEmpty
-                      ? Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox(height: 10),
-                              Text(
-                                "Bookmark Torrents to save it for later.",
-                                style: TextStyle(
-                                  color: context.appColors.generalTextColor,
-                                  fontSize: 15,
-                                ),
+                    case BookmarksLoadingState():
+                      return const Center(child: CircularProgressBarWidget());
+
+                    case BookmarksLoadedState():
+                      return state.bookmarkedTorrents.isEmpty
+                          ? Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(height: 10),
+                                  Text(
+                                    "Bookmark Torrents to save it for later.",
+                                    style: TextStyle(
+                                      color: context.appColors.generalTextColor,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        )
-                      : Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 0,
-                            horizontal: 7.0,
-                          ),
-                          child: TorrentListWidget(
-                            torrents: state.bookmarkedTorrents,
-                          ),
-                        );
-                case BookmarksLoadFailedState():
-                  return Center(
-                    child: Text(
-                      "Failed to fetch Torrents \n Error : ${state.error}",
-                    ),
-                  );
-              }
-            },
+                            )
+                          : TorrentListWidget(
+                              torrents: state.bookmarkedTorrents,
+                            );
+
+                    case BookmarksLoadFailedState():
+                      return Center(
+                        child: Text(
+                          "Failed to fetch Torrents \n Error : ${state.error}",
+                        ),
+                      );
+                  }
+                },
+              ),
+            ),
           ),
         ),
       ),

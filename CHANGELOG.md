@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.7] - 2026-01-09
+
+- Added feature : Remember selected fields of sources, this feature can be enabled from setting (Opt-in / Opt-out).
+- Added feature : Scrollbar for scrolling.
+- Added Contribute Screen.
+- Improved Pagination.
+- Redesigned Custom Listings UI.
+- And Other Minor Improvements.
 
 ## [1.1.6] - 2025-12-31
 

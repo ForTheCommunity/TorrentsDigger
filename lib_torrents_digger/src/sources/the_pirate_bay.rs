@@ -275,10 +275,10 @@ impl ThePirateBayCategories {
 
         let root_url = Self::get_active_domain()?;
         let path = "search";
-        let category = format!("{}", category.category_to_value());
+        let category =  category.category_to_value().to_string();
         let mut sorting = sorting.sorting_to_value().parse::<u8>()?;
         if sorting_order == &ThePirateBaySortingOrders::Descending {
-            sorting = sorting - sorting_order.sorting_order_to_value().parse::<u8>()?;
+            sorting -= sorting_order.sorting_order_to_value().parse::<u8>()?;
         }
 
         Ok(format!(
@@ -391,14 +391,13 @@ impl ThePirateBayCategories {
                 });
             }
             // this is a pagination row...
-            else if let Some(td_element) = table_data_vec.get(0) {
+            else if let Some(td_element) = table_data_vec.first() {
                 // extracting current page number
                 // For current page, We look for the number inside the <b> tag
-                if let Some(b_tag) = td_element.select(&b_tag_selector).next() {
-                    if let Ok(curr) = b_tag.inner_html().parse::<i32>() {
+                if let Some(b_tag) = td_element.select(&b_tag_selector).next()
+                    && let Ok(curr) = b_tag.inner_html().parse::<i32>() {
                         pagination.current_page = Some(curr);
                     }
-                }
 
                 // predecting previous page and next page based on arrow images
                 // calculating next/prev if we successfully found the current page
