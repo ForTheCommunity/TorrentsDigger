@@ -1,6 +1,6 @@
 # Torrents Digger - Digs Torrents from the Internet.
 
-### -> Join [Matrix Room](https://matrix.to/#/#torrentsdigger:matrix.org)
+### -> Join [Matrix Room](https://matrix.to/#/#forthecommunity_space:matrix.org)
 
 
 ## Features
@@ -87,7 +87,7 @@ appman install torrents_digger
 ## Contribute
 See [Contribution Guide](./contribution_guide.md).
 
-## Donate
+## Support
 If you find this project useful, consider supporting its development.
 <br>
 **Monero (XMR):**
