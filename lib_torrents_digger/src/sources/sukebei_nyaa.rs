@@ -274,7 +274,7 @@ mod tests {
         let filter = NyaaFilter::NoFilter;
         let category = SukebeiNyaaCategories::RealLifeVideos;
         let sorting = NyaaSortings::BySeeders;
-        let sorting_order = NyaaSortingOrders::Ascending;
+        let sorting_order = NyaaSortingOrders::Descending;
         let page_number = 1;
 
         assert_eq!(

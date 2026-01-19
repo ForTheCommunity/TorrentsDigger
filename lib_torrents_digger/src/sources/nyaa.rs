@@ -462,7 +462,7 @@ mod tests {
     #[test]
     fn test_request_builder_nyaa() {
         let torrent_query_name = "naruto";
-        let filter = NyaaFilter::TrustedOnly;
+        let filter = NyaaFilter::NoFilter;
         let category = NyaaCategories::Anime;
         let sorting = NyaaSortings::BySeeders;
         let sorting_order = NyaaSortingOrders::Descending;
