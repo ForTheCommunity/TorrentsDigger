@@ -40,7 +40,7 @@ dependencies:
   url_launcher: 6.3.2
   path_provider: 2.1.5
   flutter_bloc: 9.1.1
-  file_picker: 10.3.8
+  file_picker: 10.3.9
   flutter_file_dialog: 3.0.3
   freezed_annotation: 3.1.0
   flutter_svg: ^2.2.3
@@ -61,9 +61,9 @@ dev_dependencies:
     sdk: flutter
   flutter_launcher_icons: 0.14.4
   change_app_package_name: 1.5.0
-  build_runner: 2.10.4
-  freezed: 3.2.3
-  json_serializable: ^6.11.2
+  build_runner: 2.10.5
+  freezed: 3.2.4
+  json_serializable: ^6.11.4
 
 flutter_launcher_icons:
   android: true
