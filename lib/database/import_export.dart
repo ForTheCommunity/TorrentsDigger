@@ -65,7 +65,7 @@ void importDatabaseAndroid() async {
     "${androidDocumentsDirectory.path}/$internalScopedStoragedatabaseDirName/$databaseFileName",
   );
 
-  FilePickerResult? result = await FilePicker.pickFiles();
+  FilePickerResult? result = await FilePicker.platform.pickFiles();
 
   if (result != null) {
     File file = File(result.files.single.path!);

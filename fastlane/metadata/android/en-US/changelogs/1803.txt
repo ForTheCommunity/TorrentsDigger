@@ -1,0 +1,4 @@
+- Added feature : Added go to top button.
+- improved random UA Generation.
+- improved Pagination for Solid Torrents.
+- And Other Minor Improvements.
