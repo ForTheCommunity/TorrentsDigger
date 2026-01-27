@@ -27,3 +27,6 @@ just run
 ```
 just --list
 ```
+
+
+## Note : Check [Current Versions File](./.current_versions.txt) for Rust & Flutter version. Use these version for developing this project.

@@ -85,7 +85,7 @@ appman install torrents_digger
 
 
 ## Contribute
-See [Contribution Guide](./contribution_guide.md).
+See [Contribution Guide](./CONTRIBUTING.md).
 
 ## Support
 If you find this project useful, consider supporting its development.
