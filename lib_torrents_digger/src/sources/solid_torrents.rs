@@ -1,5 +1,6 @@
-// https://solidtorrents.to/search?q=fate&sortBy=seeders&page=1&category=1
+// https://solidtorrents.to/
 // https://torrentz2.nz/
+// https://bitsearch.to/
 
 use anyhow::{Result, anyhow};
 use core::fmt;
@@ -223,38 +224,46 @@ impl SolidTorrentsCategories {
         let downloads_selector = Selector::parse(".text-blue-600 .font-medium")
             .map_err(|e| anyhow!(format!("Error parsing downloads selector: {}", e)))?;
 
-        // let active_page_selector = Selector::parse("span.bg-primary.text-white")?;
-        // let next_button_selector = Selector::parse("nav.flex a")?;
+        let pagination_nav_selector = Selector::parse("nav.flex.items-center")
+            .map_err(|e| anyhow!(format!("Error parsing pagination selector: {}", e)))?;
 
-        // let active_page_selector = Selector::parse("span.bg-primary.text-white")?;
-        // Target all links within the <nav>
-        // let next_button_selector = Selector::parse("nav.flex a")
-        // .map_err(|e| anyhow!(format!("Error parsing next button selector: {}", e)))?;
+        let pagination_current_selector = Selector::parse("span.bg-primary")
+            .map_err(|e| anyhow!(format!("Error parsing pagination selector: {}", e)))?;
+
+        let pagination_anchor_selector = Selector::parse("a")
+            .map_err(|e| anyhow!(format!("Error parsing pagination selector: {}", e)))?;
 
         // Vector to Store all Torrents
         let mut all_torrents: Vec<Torrent> = Vec::new();
 
-        // let mut next_page_num: Option<i64> = None;
-        // // Iterate over all 'a' tags in the pagination <nav>
-        // for a_tag in document.select(&next_button_selector) {
-        //     if a_tag.inner_html().contains("Next")
-        //         && let Some(href) = a_tag.attr("href")
-        //     {
-        //         if let Some(query) = href.split('?').nth(1)
-        //             && let Some(page_param) =
-        //                 query.split('&').find(|param| param.starts_with("page="))
-        //             && let Some(next_page_str) = page_param.split('=').nth(1)
-        //             && let Ok(num) = next_page_str.parse::<i64>()
-        //         {
-        //             next_page_num = Some(num);
-        //         }
-        //         // Break after finding the 'Next' button
-        //         break;
-        //     }
-        // }
-        //
+        let mut pagination = Pagination::new();
 
-        let pagination = Pagination::new();
+        if let Some(nav) = document.select(&pagination_nav_selector).next() {
+            // extracting current page number.
+            if let Some(active_el) = nav.select(&pagination_current_selector).next() {
+                if let Ok(currrent_page) =
+                    active_el.text().collect::<String>().trim().parse::<i32>()
+                {
+                    pagination.current_page = Some(currrent_page);
+                }
+            }
+
+            // Extracting Previous/Next via text matching
+            // We iterate over anchors because if they are disabled, they are spans (and thus ignored)
+            for anchor in nav.select(&pagination_anchor_selector) {
+                let text = anchor.text().collect::<String>().to_lowercase();
+
+                if text.contains("previous") {
+                    if let Some(curr) = pagination.current_page {
+                        pagination.previous_page = Some(curr - 1);
+                    }
+                } else if text.contains("next") {
+                    if let Some(curr) = pagination.current_page {
+                        pagination.next_page = Some(curr + 1);
+                    }
+                }
+            }
+        }
 
         // iterating over all torrents
         for item_element in document.select(&torrent_item_container_selector) {
