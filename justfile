@@ -75,7 +75,7 @@ build_apk_per_abi:
 build_appimage:
     # installing dependencies
     apt-get update -y && sudo apt-get upgrade -y
-    apt-get install curl git unzip xz-utils zip libglu1-mesa  build-essential libgtk-3-dev clang cmake ninja-build pkg-config liblzma-dev -y
+    apt-get install curl git unzip xz-utils zip libglu1-mesa build-essential libgtk-3-dev clang lld cmake ninja-build pkg-config liblzma-dev -y
     apt install file fuse -y
     # creating temporary dir for downloading/saving appimagetool and this is ignored in VCS.
     # Downloading AppImageToolKit
