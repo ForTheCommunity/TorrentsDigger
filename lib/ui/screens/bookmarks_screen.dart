@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/bookmark_bloc/bookmark_bloc.dart';
 import 'package:torrents_digger/configs/build_context_extension.dart';
 import 'package:torrents_digger/ui/widgets/circular_progress_bar_widget.dart';
+import 'package:torrents_digger/ui/widgets/scroll_to_top_button.dart';
+import 'package:torrents_digger/ui/widgets/settings_button.dart';
 import 'package:torrents_digger/ui/widgets/torrent_list_widget.dart';
 
 class BookmarksScreen extends StatefulWidget {
@@ -42,6 +44,18 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
           iconSize: 30,
         ),
       ),
+
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ScrollToTopButton(
+            scrollController: PrimaryScrollController.of(context),
+          ),
+          const SizedBox(height: 10),
+          SettingButton(),
+        ],
+      ),
+
       body: SafeArea(
         child: Scrollbar(
           child: SingleChildScrollView(

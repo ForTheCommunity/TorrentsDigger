@@ -214,6 +214,12 @@ class MatrixTheme extends AppTheme {
   Color get contributeCryptoAddressButtonBackgroundColor =>
       const Color.fromARGB(255, 28, 27, 27);
 
+  @override
+  Color get scrollToTopButtonBackgroundColor =>
+      const Color.fromARGB(1, 1, 1, 1);
+  @override
+  Color get scrollToTopButtonIconColor => const Color.fromARGB(255, 0, 255, 0);
+
   // @override
   // Color get scaffoldMessengerMessageColor => Color.fromRGBO(255, 255, 255, 1);
   // @override

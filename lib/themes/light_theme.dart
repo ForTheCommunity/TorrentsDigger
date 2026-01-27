@@ -214,6 +214,13 @@ class LightTheme extends AppTheme {
   Color get contributeCryptoAddressButtonBackgroundColor =>
       const Color.fromARGB(255, 255, 255, 255);
 
+  @override
+  Color get scrollToTopButtonBackgroundColor =>
+      const Color.fromARGB(212, 255, 255, 255);
+  @override
+  Color get scrollToTopButtonIconColor =>
+      const Color.fromARGB(255, 226, 27, 173);
+
   //   @override
   // Color get scaffoldMessengerMessageColor => Color.fromRGBO(255, 255, 255, 1);
   // @override

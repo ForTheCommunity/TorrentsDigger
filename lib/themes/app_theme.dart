@@ -104,6 +104,9 @@ abstract class AppTheme {
   Color get contributeCryptoAddressBackgroundColor;
   Color get contributeCryptoAddressButtonBackgroundColor;
 
+  Color get scrollToTopButtonBackgroundColor;
+  Color get scrollToTopButtonIconColor;
+
   // Color get scaffoldMessengerMessageColor;
   // Color get scaffoldMessengerBorderColor;
   // Color get scaffoldMessengerBackgroundColor;
