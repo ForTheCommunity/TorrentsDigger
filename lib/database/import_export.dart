@@ -6,7 +6,7 @@ import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 
-void exportDatabaseLinux() {
+void exportDatabaseDesktop() {
   final rootPath = Platform.environment['HOME'] ?? '.';
   Directory rootDirPath = Directory(rootPath);
   String databasePath =
@@ -100,7 +100,7 @@ void importDatabaseAndroid() async {
   }
 }
 
-void importDatabaseLinux() {
+void importDatabaseDesktop() {
   final rootPath = Platform.environment['HOME'] ?? '.';
   Directory rootDirPath = Directory(rootPath);
   String databasePath = "${rootDirPath.path}/.torrents_digger";

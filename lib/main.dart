@@ -24,6 +24,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Initializing Database
   await initializeDatabase();
+  
 
   // Hydration Setup
   await hydrationSetup();

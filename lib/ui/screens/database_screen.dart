@@ -39,7 +39,23 @@ class DatabaseScreen extends StatelessWidget {
                     ),
                   ),
                   onTap: () {
-                    importDatabaseLinux();
+                    importDatabaseDesktop();
+                  },
+                )
+              else if (Platform.isWindows)
+                ListTile(
+                  leading: Icon(
+                    Icons.keyboard_double_arrow_down,
+                    color: context.appColors.settingsIconsColor,
+                  ),
+                  title: Text(
+                    'Import Database',
+                    style: TextStyle(
+                      color: context.appColors.settingsTextColor,
+                    ),
+                  ),
+                  onTap: () {
+                    importDatabaseDesktop();
                   },
                 )
               else if (Platform.isAndroid)
@@ -86,7 +102,23 @@ class DatabaseScreen extends StatelessWidget {
                     ),
                   ),
                   onTap: () {
-                    exportDatabaseLinux();
+                    exportDatabaseDesktop();
+                  },
+                )
+              else if (Platform.isWindows)
+                ListTile(
+                  leading: Icon(
+                    Icons.keyboard_double_arrow_up,
+                    color: context.appColors.settingsIconsColor,
+                  ),
+                  title: Text(
+                    'Export Database',
+                    style: TextStyle(
+                      color: context.appColors.settingsTextColor,
+                    ),
+                  ),
+                  onTap: () {
+                    exportDatabaseDesktop();
                   },
                 )
               else if (Platform.isAndroid)
