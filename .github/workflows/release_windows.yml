@@ -1,0 +1,53 @@
+name: Build & Release for Windows Platform.
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+*'
+
+jobs:
+  build-release:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Repository.
+        uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          targets: x86_64-pc-windows-msvc
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Get Flutter Dependencies
+        run: flutter pub get
+
+      - name: Dart Build Runner
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Build App
+        run: flutter build windows --release
+
+      - name: Extract App Version from pubspec.yaml
+        id: extract_version
+        run: |
+          $version = (Get-Content pubspec.yaml | Where-Object { $_ -match 'version:' } | ForEach-Object { ($_.Split(' ')[1]).Split('+')[0] })
+          echo "APP_VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        shell: powershell
+
+      - name: Instal Inno Setup
+        uses: crazy-max/ghaction-chocolatey@v3
+        with:
+          args: install innosetup
+
+      - name: Create Windows Installer
+        run: iscc.exe "windows/installer.iss" /DAppVersion=${{ env.APP_VERSION }}
+
+      - name: Create Release and Upload Artifact
+        uses: softprops/action-gh-release@v2
+        with:
+          files: installers/*.exe
