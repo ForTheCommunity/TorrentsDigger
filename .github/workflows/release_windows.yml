@@ -8,6 +8,8 @@ on:
 jobs:
   build-release:
     runs-on: windows-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout Repository.
         uses: actions/checkout@v4

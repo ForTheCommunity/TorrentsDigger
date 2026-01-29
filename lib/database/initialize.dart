@@ -18,8 +18,6 @@ Future<void> initializeDatabase() async {
   } else if (Platform.isWindows) {
     platformSpecificDatabaseDirectory = await getApplicationSupportDirectory();
     platformSpecificDatabaseDirectory.create(recursive: true);
-
-    print(platformSpecificDatabaseDirectory.path);
   } else {
     throw UnsupportedError('Unsupported platform');
   }
