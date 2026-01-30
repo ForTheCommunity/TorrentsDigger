@@ -64,9 +64,6 @@ appman install torrents_digger
 
 ## --> Download binaries from [releases](https://gitlab.com/ForTheCommunity/torrentsdigger/-/releases) Page.
 
-> **Why No Binaries For Windows & Mac OS ?**
-
-> It is possible to build this app for Windows and Mac OS; however, i need contributors who can build & test app on these platforms.
 
 ### TODOS :
 - Save Search History.

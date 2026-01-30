@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.8] - 2026-01-29
+
+- Added feature : Added go to top button.
+- improved random UA Generation.
+- improved Pagination for Solid Torrents.
+- And Other Minor Improvements.
+
 ## [1.1.7] - 2026-01-09
 
 - Added feature : Remember selected fields of sources, this feature can be enabled from setting (Opt-in / Opt-out).
