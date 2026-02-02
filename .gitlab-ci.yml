@@ -7,7 +7,7 @@ image: instrumentisto/flutter
 build_binaries:
   stage: build
   rules:
-    - if: $CI_COMMIT_TAG
+    - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+\+\d+$/
   script:
     # Install Rust
     - apt update -y && apt upgrade -y
