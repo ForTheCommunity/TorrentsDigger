@@ -68,6 +68,10 @@ dev_dependencies:
 flutter_launcher_icons:
   android: true
   image_path: "assets/icon.png"
+  windows:
+    generate: true
+    image_path: "assets/icon.ico"
+    icon_size: 48
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
