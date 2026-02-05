@@ -2,6 +2,7 @@ use std::net::IpAddr;
 
 use anyhow::{Result, anyhow};
 
+use regex::Regex;
 use serde::Deserialize;
 use ua_generator::ua::spoof_ua;
 use ureq::{Agent, Body, http::Response};
@@ -106,18 +107,54 @@ pub fn extract_ip_details() -> Result<String> {
         "https://checkip.dyndns.org",
     ];
 
+    // Regex for extracting IPV4 / IPV6 address from response body.
+    let ip_regex =
+        Regex::new(r"(\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b|[0-9a-fA-F:]{1,}/[0-9]{1,3})")?;
+
+    // Vec of Tuple of String to store error for specific endpoint.
+    let mut error_messages: Vec<(String, String)> = Vec::new();
+
     for endpoint in ip_check_endpoints {
-        let mut response = send_request(endpoint)?;
-        let response_body = response.body_mut().read_to_string()?;
-
-        let ip_str = response_body.trim();
-
-        if let Ok(ip) = ip_str.parse::<IpAddr>() {
-            return Ok(ip.to_string());
+        match send_request(endpoint) {
+            Ok(mut response) => {
+                match response.body_mut().read_to_string() {
+                    Ok(response_body) => {
+                        // Check for IP addresses in the response body
+                        if let Some(captures) = ip_regex.captures(&response_body) {
+                            if let Some(ip_str) = captures.get(0) {
+                                // parsing to IPV4/6 Address
+                                if let Ok(parsed_valid_ip_addr) = ip_str.as_str().parse::<IpAddr>()
+                                {
+                                    return Ok(parsed_valid_ip_addr.to_string());
+                                } else {
+                                    let msg = "Invalid IP captured from response".to_string();
+                                    error_messages.push((endpoint.into(), msg));
+                                    continue;
+                                }
+                            }
+                        } else {
+                            let msg = "No IP captured from response".to_string();
+                            error_messages.push((endpoint.into(), msg));
+                        }
+                    }
+                    Err(e) => {
+                        error_messages.push((endpoint.into(), e.to_string()));
+                    }
+                }
+            }
+            Err(e) => {
+                error_messages.push((endpoint.into(), e.to_string()));
+            }
         }
     }
 
-    Err(anyhow!("No Valid IP Found !!!"))
+    let error_message_str = error_messages
+        .into_iter()
+        .map(|(endpoint, error)| format!("{} -> {}", endpoint, error))
+        .collect::<Vec<String>>()
+        .join(", ");
+
+    Err(anyhow!(error_message_str))
 }
 
 pub fn check_for_update() -> Result<u8> {

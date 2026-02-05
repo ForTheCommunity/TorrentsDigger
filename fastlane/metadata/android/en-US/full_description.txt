@@ -18,7 +18,7 @@
     <li> -> Multiple Themes. </li>
     <li> -> Proxy Support : User can use Proxy to route Traffic. Supported Proxy Protocols -> ( HTTP, HTTPS, SOCKS4 & SOCKS5. ) </li>
     <li> -> Database Import/Export : User can Export and Import App Database. </li>
-    <li> -> Cross Platform ( Currently Available for Android & Linux ). </li>
+    <li> -> Cross Platform ( Available for Android, Windows & Linux ). </li>
 </ul>
 
 <br>
