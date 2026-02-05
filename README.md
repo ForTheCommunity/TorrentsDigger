@@ -27,7 +27,7 @@
 
 - Database Import/Export : User can Export and Import App Database.
 
-- Cross Platform ( Currently Available for Android & Linux ).
+- Cross Platform ( Available for Android, Windows & Linux ).
 
 
 ## --> Screenshots

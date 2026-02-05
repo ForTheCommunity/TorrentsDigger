@@ -1,3 +1,5 @@
+use std::net::IpAddr;
+
 use anyhow::{Result, anyhow};
 
 use serde::Deserialize;
@@ -85,9 +87,37 @@ pub fn build_proxy_url(proxy_data: &Proxy) -> String {
 }
 
 pub fn extract_ip_details() -> Result<String> {
-    let mut response = send_request("https://ifconfig.so")?;
-    let response_body = response.body_mut().read_to_string()?;
-    Ok(response_body)
+    // some ip check endpoints :
+    // https://api64.ipify.org/
+    // https://api.my-ip.io/v1/ip
+    // https://whatismyip.akamai.com/
+    // https://ipinfo.io/ip
+    // https://ifconfig.so
+    // https://checkip.amasonaws.com
+    // https://checkip.dyndns.org
+
+    let ip_check_endpoints = [
+        "https://api64.ipify.org",
+        "https://api.my-ip.io/v1/ip",
+        "https://whatismyip.akamai.com",
+        "https://ipinfo.io/ip",
+        "https://ifconfig.so",
+        "https://checkip.amasonaws.com",
+        "https://checkip.dyndns.org",
+    ];
+
+    for endpoint in ip_check_endpoints {
+        let mut response = send_request(endpoint)?;
+        let response_body = response.body_mut().read_to_string()?;
+
+        let ip_str = response_body.trim();
+
+        if let Ok(ip) = ip_str.parse::<IpAddr>() {
+            return Ok(ip.to_string());
+        }
+    }
+
+    Err(anyhow!("No Valid IP Found !!!"))
 }
 
 pub fn check_for_update() -> Result<u8> {
