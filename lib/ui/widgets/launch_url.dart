@@ -32,7 +32,7 @@ Future<void> openUrl({
       }
     }
 
-    if (!await launchUrl(uri)) {
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
       if (urlType == UrlType.magentLink) {
         createSnackBar(
           message: "Unable to open torrent downloader.\nInstall Torrent App.",
@@ -47,7 +47,7 @@ Future<void> openUrl({
   }
 
   if (clipboardCopy == false) {
-    if (!await launchUrl(uri)) {
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
       if (urlType == UrlType.magentLink) {
         createSnackBar(
           message: "Unable to open torrent downloader.\nInstall Torrent App.",

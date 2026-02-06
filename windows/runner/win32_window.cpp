@@ -145,6 +145,19 @@ bool Win32Window::Create(const std::wstring& title,
   }
 
   UpdateTheme(window);
+  
+  // Set the window icon for both the title bar and taskbar
+  HINSTANCE hInstance = GetModuleHandle(nullptr);
+  HICON hIconSmall = (HICON)LoadImage(hInstance, MAKEINTRESOURCE(IDI_APP_ICON), IMAGE_ICON, 32, 32, 0);
+  HICON hIconLarge = (HICON)LoadImage(hInstance, MAKEINTRESOURCE(IDI_APP_ICON), IMAGE_ICON, 256, 256, 0);
+  
+  if (hIconSmall) {
+    SendMessage(window, WM_SETICON, ICON_SMALL, (LPARAM)hIconSmall);
+  }
+  if (hIconLarge) {
+    SendMessage(window, WM_SETICON, ICON_BIG, (LPARAM)hIconLarge);
+  }
+
 
   return OnCreate();
 }
