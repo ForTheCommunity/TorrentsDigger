@@ -24,7 +24,6 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Initializing Database
   await initializeDatabase();
-  
 
   // Hydration Setup
   await hydrationSetup();
@@ -96,8 +95,13 @@ class MyApp extends StatelessWidget {
                   context.appColors.scrollbarColor,
                 ),
                 thickness: WidgetStateProperty.all(
-                  Platform.isLinux ? 8.0 : (Platform.isAndroid ? 10.0 : 8.0),
+                  Platform.isAndroid || Platform.isIOS
+                      ? 10.0
+                      : Platform.isWindows || Platform.isLinux || Platform.isMacOS
+                      ? 8.0
+                      : 9.0,
                 ),
+
                 interactive: true,
               ),
             ),

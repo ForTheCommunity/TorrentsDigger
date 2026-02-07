@@ -152,7 +152,8 @@ class TorrentCard extends StatelessWidget {
                   },
                 ),
                 const SizedBox(width: 10),
-                TextButton(
+                IconButton(
+                  icon: const MagnetSVG(),
                   onPressed: () async {
                     try {
                       // appending Default Tracker List to Magnet link.
@@ -173,11 +174,6 @@ class TorrentCard extends StatelessWidget {
                       );
                     }
                   },
-
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [const MagnetSVG()],
-                  ),
                 ),
               ],
             ),

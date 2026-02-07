@@ -224,7 +224,7 @@ class LightTheme extends AppTheme {
   @override
   Color get scaffoldMessengerMessageColor => const Color.fromARGB(255, 0, 0, 0);
   @override
-  Color get scaffoldMessengerBorderColor => const Color.fromARGB(255, 1, 173, 170);
+  Color get scaffoldMessengerBorderColor => const Color.fromARGB(255, 0, 0, 0);
   @override
   Color get scaffoldMessengerBackgroundColor => const Color.fromARGB(255, 255, 255, 255);
 }

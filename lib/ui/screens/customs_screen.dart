@@ -75,9 +75,10 @@ class _CustomsScreenState extends State<CustomsScreen> {
             child: Padding(
               padding: EdgeInsets.symmetric(
                 vertical: 0,
-                horizontal: Platform.isLinux
+                horizontal:
+                    Platform.isLinux || Platform.isWindows || Platform.isMacOS
                     ? 15
-                    : (Platform.isAndroid ? 7.0 : 7.0),
+                    : (Platform.isAndroid || Platform.isIOS ? 7.0 : 7.0),
               ),
               child: Column(
                 children: [
