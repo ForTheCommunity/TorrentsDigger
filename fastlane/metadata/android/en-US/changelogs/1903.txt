@@ -4,3 +4,4 @@
 - Fixed App Icon not showing issue in Taskbar (Window OS). Fixed By @Wind Xebec.
 - Improved IP Checking Mechanism.
 - Magent URL Launch Fixed for Windows OS. Fixed By @Wind Xebec.
+- Improved Update Checking Mechanism.

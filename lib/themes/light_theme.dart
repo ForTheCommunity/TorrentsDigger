@@ -198,7 +198,7 @@ class LightTheme extends AppTheme {
       const Color.fromARGB(255, 0, 0, 0);
   @override
   Color get contributeCryptoAddressBorderColor =>
-      const Color.fromARGB(255, 0, 255, 13);
+      const Color.fromARGB(255, 255, 0, 251);
   @override
   Color get contributeCardBackgroundColor =>
       const Color.fromARGB(255, 193, 232, 228);
