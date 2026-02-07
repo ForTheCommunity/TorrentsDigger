@@ -220,10 +220,10 @@ class MatrixTheme extends AppTheme {
   @override
   Color get scrollToTopButtonIconColor => const Color.fromARGB(255, 0, 255, 0);
 
-  // @override
-  // Color get scaffoldMessengerMessageColor => Color.fromRGBO(255, 255, 255, 1);
-  // @override
-  // Color get scaffoldMessengerBorderColor => Color.fromRGBO(0, 255, 0, 1);
-  // @override
-  // Color get scaffoldMessengerBackgroundColor => Color.fromRGBO(0, 0, 0, 1);
+  @override
+  Color get scaffoldMessengerMessageColor => Color.fromRGBO(255, 255, 255, 1);
+  @override
+  Color get scaffoldMessengerBorderColor => Color.fromRGBO(0, 255, 0, 1);
+  @override
+  Color get scaffoldMessengerBackgroundColor => Color.fromRGBO(0, 0, 0, 1);
 }

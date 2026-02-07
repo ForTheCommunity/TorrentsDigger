@@ -221,10 +221,10 @@ class LightTheme extends AppTheme {
   Color get scrollToTopButtonIconColor =>
       const Color.fromARGB(255, 226, 27, 173);
 
-  //   @override
-  // Color get scaffoldMessengerMessageColor => Color.fromRGBO(255, 255, 255, 1);
-  // @override
-  // Color get scaffoldMessengerBorderColor => Color.fromRGBO(5, 166, 152, 1);
-  // @override
-  // Color get scaffoldMessengerBackgroundColor => Color.fromRGBO(59, 2, 60, 1);
+  @override
+  Color get scaffoldMessengerMessageColor => const Color.fromARGB(255, 0, 0, 0);
+  @override
+  Color get scaffoldMessengerBorderColor => const Color.fromARGB(255, 1, 173, 170);
+  @override
+  Color get scaffoldMessengerBackgroundColor => const Color.fromARGB(255, 255, 255, 255);
 }

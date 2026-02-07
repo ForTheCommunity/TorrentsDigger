@@ -107,7 +107,7 @@ abstract class AppTheme {
   Color get scrollToTopButtonBackgroundColor;
   Color get scrollToTopButtonIconColor;
 
-  // Color get scaffoldMessengerMessageColor;
-  // Color get scaffoldMessengerBorderColor;
-  // Color get scaffoldMessengerBackgroundColor;
+  Color get scaffoldMessengerMessageColor;
+  Color get scaffoldMessengerBorderColor;
+  Color get scaffoldMessengerBackgroundColor;
 }
