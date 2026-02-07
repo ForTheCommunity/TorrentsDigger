@@ -20,7 +20,7 @@ fn main() {
             Ok(deserialized_pubspec) => {
                 if let Some(version) = deserialized_pubspec.version {
                     println!("App version: {}", version);
-                    match fs::write(current_version_file_path, version) {
+                    match fs::write(current_version_file_path, format!("v{}", version)) {
                         Ok(_) => {}
                         Err(e) => {
                             println!("Error : {}", e);
