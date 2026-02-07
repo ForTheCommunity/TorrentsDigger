@@ -81,9 +81,6 @@ appman install torrents_digger
 - NSFW Toogle Button.
 
 
-## Contribute
-See [Contribution Guide](./CONTRIBUTING.md).
-
 ## Support
 If you find this project useful, consider supporting its development.
 <br>
@@ -102,3 +99,19 @@ If you find this project useful, consider supporting its development.
 ## License
 
 This project is licensed under the **[Unlicense](https://unlicense.org)**. You can view the full license text in the [UNLICENSE](./UNLICENSE) file.
+
+
+## Contribute
+See [Contribution Guide](./CONTRIBUTING.md).
+
+
+## Contributors :
+1. ShaswotNepal [Role ⮞ Maintainer] ([Gitlab](https://gitlab.com/ShaswotNepal)).
+
+2. Wind Xebec [Role ⮚ Contributor] ([Gitlab](https://gitlab.com/sameerchettri707) / [Github](https://github.com/ybsa)) :
+- @Wind Xebec : [Added Support For Windows 0S.](https://gitlab.com/ForTheCommunity/torrentsdigger/-/merge_requests/3)
+- @Wind Xebec : [Fixed URL Launch Issue & Fixed Icon not showing issue on Taskbar in Windows OS.](https://gitlab.com/ForTheCommunity/torrentsdigger/-/merge_requests/5)
+- @Wind Xebec : [Fixed Scaffold Messenger / SnackBar Theme Issue.](https://gitlab.com/ForTheCommunity/torrentsdigger/-/merge_requests/6)
+
+3. @Nia Ward [Role ⮚ Contributor] ([Gitlab](https://gitlab.com/Nia_Ward)) :
+- @Nia Ward : [Added Russian Metadata Translation for F-droid.](https://gitlab.com/ForTheCommunity/torrentsdigger/-/merge_requests/1)

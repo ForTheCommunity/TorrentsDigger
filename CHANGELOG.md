@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.1.9] - 2026-02-XX
+
+- Fixed Snackbar for Multiple Themes. Fixed By [@Wind Xebec](https://gitlab.com/sameerchettri707).
+- Improved UI : Snackbar (Scaffold Messenger).
+- Made UI Compatible for Major Platforms.
+- Fixed App Icon not showing issue in Taskbar (Window OS). Fixed By [@Wind Xebec](https://gitlab.com/sameerchettri707).
+- Improved IP Checking Mechanism.
+- Magent URL Launch Fixed for Windows OS. Fixed By [@Wind Xebec](https://gitlab.com/sameerchettri707).
+
 ## [1.1.8] - 2026-01-29
 
 - Added feature : Added go to top button.

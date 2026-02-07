@@ -1,0 +1,6 @@
+- Fixed Snackbar for Multiple Themes. Fixed By @Wind Xebec.
+- Improved UI : Snackbar (Scaffold Messenger).
+- Made UI Compatible for Major Platforms.
+- Fixed App Icon not showing issue in Taskbar (Window OS). Fixed By @Wind Xebec.
+- Improved IP Checking Mechanism.
+- Magent URL Launch Fixed for Windows OS. Fixed By @Wind Xebec.
