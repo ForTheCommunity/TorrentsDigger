@@ -177,7 +177,7 @@ pub fn check_for_update() -> Result<u8> {
 
     let current_version_full = get_current_version()?;
 
-    if latest_valid_tag.name.trim() != current_version_full {
+    if latest_valid_tag.name.trim() == current_version_full {
         Ok(1)
     } else {
         Ok(0)
