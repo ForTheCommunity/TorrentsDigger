@@ -38,10 +38,19 @@ modules:
       - install -D $BUNDLE_PATH/torrents_digger /app/bin/torrents_digger
       - cp -r $BUNDLE_PATH/lib /app/bin/lib
       - cp -r $BUNDLE_PATH/data /app/bin/data
+      - install -D linux/org.forthecommunity.torrents_digger.desktop /app/share/applications/org.forthecommunity.torrents_digger.desktop
+      - install -D linux/icons/hicolor/64x64/apps/org.forthecommunity.torrents_digger.png
+        /app/share/icons/hicolor/64x64/apps/org.forthecommunity.torrents_digger.png
+      - install -D linux/icons/hicolor/128x128/apps/org.forthecommunity.torrents_digger.png
+        /app/share/icons/hicolor/128x128/apps/org.forthecommunity.torrents_digger.png
+      - install -D linux/icons/hicolor/256x256/apps/org.forthecommunity.torrents_digger.png
+        /app/share/icons/hicolor/256x256/apps/org.forthecommunity.torrents_digger.png
+      - install -D linux/icons/hicolor/512x512/apps/org.forthecommunity.torrents_digger.png
+        /app/share/icons/hicolor/512x512/apps/org.forthecommunity.torrents_digger.png
     sources:
       - type: git
         url: https://gitlab.com/ForTheCommunity/torrentsdigger.git
-        commit: 5b9a3959955240384ae5d3ce737ca485e5c7b3b2
+        commit: 7e545e5b3ba64074f283659db43f18efb3b9dce9
       - generated/sources/cargo.json
       - generated/sources/pubspec.json
     modules:
