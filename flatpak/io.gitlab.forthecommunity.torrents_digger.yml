@@ -51,7 +51,7 @@ modules:
     sources:
       - type: git
         url: https://gitlab.com/ForTheCommunity/torrentsdigger.git
-        commit: 8d86d5e7da2db97f2f6ac138f2964788e8a206d3
+        commit: 605ae5200f2bdced553d409a6862e506f07fdf03
       - generated/sources/cargo.json
       - generated/sources/pubspec.json
     modules:
