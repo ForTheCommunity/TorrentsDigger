@@ -63,13 +63,17 @@
   <launchable type="desktop-id">io.gitlab.forthecommunity.torrents_digger.desktop</launchable>
   <screenshots>
     <screenshot type="default">
-      <image>https://gitlab.com/ForTheCommunity/torrentsdigger/-/blob/8d86d5e7da2db97f2f6ac138f2964788e8a206d3/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_1.jpg</image>
+      <image>https://gitlab.com/ForTheCommunity/torrentsdigger/-/raw/main/flatpak/screenshots/1.png</image>
     </screenshot>
     <screenshot>
-      <image>https://gitlab.com/ForTheCommunity/torrentsdigger/-/blob/8d86d5e7da2db97f2f6ac138f2964788e8a206d3/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_1.jpg</image>
+      <image>https://gitlab.com/ForTheCommunity/torrentsdigger/-/raw/main/flatpak/screenshots/1.png</image>
     </screenshot>
     <screenshot>
-      <image>https://gitlab.com/ForTheCommunity/torrentsdigger/-/blob/8d86d5e7da2db97f2f6ac138f2964788e8a206d3/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_1.jpg</image>
+      <image>https://gitlab.com/ForTheCommunity/torrentsdigger/-/raw/main/flatpak/screenshots/3.png</image>
+    </screenshot>
+    </screenshot>
+    <screenshot>
+      <image>https://gitlab.com/ForTheCommunity/torrentsdigger/-/raw/main/flatpak/screenshots/4.png</image>
     </screenshot>
   </screenshots>
 </component>
