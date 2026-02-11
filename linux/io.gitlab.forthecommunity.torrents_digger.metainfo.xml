@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.gitlab.forthecommunity.torrents_digger</id>
+  
+  <name>Torrents Digger</name>
+  <summary>Digs Torrents From The Internet</summary>
+  
+  <metadata_license>MIT</metadata_license>
+  <project_license>Unlicense</project_license>
+  
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+    <control>touch</control>
+  </supports>
+  
+  <description>
+    <p>
+	    Torrents Digger is a tool to dig torrents from the Internet.
+	    You can search torrents from different sources.
+    </p>
+    <p>
+      # Features :
+    </p>
+    <p>
+      * Multi Source/Sites Support.
+    </p>
+    <p>
+      * Shows Torrent Creation Date, Seeders, Leechers, Total Downloads, Torrent Size.
+    </p>
+    <p>
+      * User can choose Category, Filters, Sortings, Sortings Order.
+    </p>
+    <p>
+      * Bookmark : User can Bookmark torrents.
+    </p>
+    <p>
+      * Copy magnet link to Clipboard.
+    </p>
+    <p>
+      * Opens Torrent Downloader Apps for Downloading Torrents.
+    </p>
+    <p>
+      * Default Trackers Lists : User can Select a Default Trackers List &amp; that trackers List will be added to magnet links.
+    </p>
+    <p>
+      * Custom Listings : There are numbers of Custom Listings that shows certain types of torrents. (Like Trending , Latests, etc.)
+    </p>
+    <p>
+      * Multiple Themes.
+    </p>
+    <p>
+      * Proxy Support : User can use Proxy to route Traffic. Supported Proxy Protocols -&gt; ( HTTP, HTTPS, SOCKS4 &amp; SOCKS5. )
+    </p>
+    <p>
+      * Database Import/Export : User can Export and Import App Database.
+    </p>
+    <p>
+      * Cross Platform ( Available for Android, Windows &amp; Linux ).
+    </p>
+  </description>
+  
+  <launchable type="desktop-id">io.gitlab.forthecommunity.torrents_digger.desktop</launchable>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://gitlab.com/ForTheCommunity/torrentsdigger/-/blob/8d86d5e7da2db97f2f6ac138f2964788e8a206d3/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_1.jpg</image>
+    </screenshot>
+    <screenshot>
+      <image>https://gitlab.com/ForTheCommunity/torrentsdigger/-/blob/8d86d5e7da2db97f2f6ac138f2964788e8a206d3/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_1.jpg</image>
+    </screenshot>
+    <screenshot>
+      <image>https://gitlab.com/ForTheCommunity/torrentsdigger/-/blob/8d86d5e7da2db97f2f6ac138f2964788e8a206d3/fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_1.jpg</image>
+    </screenshot>
+  </screenshots>
+</component>
