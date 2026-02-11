@@ -10,6 +10,7 @@ command: torrents_digger
 finish-args:
   - --share=ipc
   - --share=network
+  - --filesystem=home
   - --socket=fallback-x11
   - --socket=wayland
   - --device=dri
@@ -32,6 +33,7 @@ modules:
         RUSTUP_HOME: /var/lib/rustup
     build-commands:
       - setup-flutter.sh
+      - dart run build_runner build --delete-conflicting-outputs
       - flutter build linux --release --no-pub
       - install -D $BUNDLE_PATH/torrents_digger /app/bin/torrents_digger
       - cp -r $BUNDLE_PATH/lib /app/bin/lib
