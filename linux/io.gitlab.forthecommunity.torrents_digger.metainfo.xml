@@ -3,11 +3,17 @@
   <id>io.gitlab.forthecommunity.torrents_digger</id>
   
   <name>Torrents Digger</name>
+  <developer_name>ForTheCommunity</developer_name>
   <summary>Digs Torrents From The Internet</summary>
   
   <metadata_license>MIT</metadata_license>
   <project_license>Unlicense</project_license>
   
+  <url type="homepage">https://gitlab.com/ForTheCommunity/torrentsdigger</url>
+  <url type="bugtracker">https://github.com/ForTheCommunity/TorrentsDigger/issues/1</url>
+  <url type="contribute">https://gitlab.com/ForTheCommunity/torrentsdigger/-/blob/main/CONTRIBUTING.md</url>
+  <url type="help">https://gitlab.com/ForTheCommunity/torrentsdigger#support</url>
+
   <supports>
     <control>pointing</control>
     <control>keyboard</control>
@@ -63,17 +69,32 @@
   <launchable type="desktop-id">io.gitlab.forthecommunity.torrents_digger.desktop</launchable>
   <screenshots>
     <screenshot type="default">
-      <image>https://gitlab.com/ForTheCommunity/torrentsdigger/-/raw/main/flatpak/screenshots/1.png</image>
+      <image type="source">https://gitlab.com/ForTheCommunity/torrentsdigger/-/raw/main/flatpak/screenshots/1.png</image>
+      <caption>Main Screen</caption>
     </screenshot>
     <screenshot>
-      <image>https://gitlab.com/ForTheCommunity/torrentsdigger/-/raw/main/flatpak/screenshots/1.png</image>
+      <image type="source">https://gitlab.com/ForTheCommunity/torrentsdigger/-/raw/main/flatpak/screenshots/1.png</image>
+      <caption>Bookmarks Screen</caption>
     </screenshot>
     <screenshot>
-      <image>https://gitlab.com/ForTheCommunity/torrentsdigger/-/raw/main/flatpak/screenshots/3.png</image>
+      <image type="source">https://gitlab.com/ForTheCommunity/torrentsdigger/-/raw/main/flatpak/screenshots/3.png</image>
+      <caption>Custom Listings Screen</caption>
     </screenshot>
     </screenshot>
     <screenshot>
-      <image>https://gitlab.com/ForTheCommunity/torrentsdigger/-/raw/main/flatpak/screenshots/4.png</image>
+      <image type="source">https://gitlab.com/ForTheCommunity/torrentsdigger/-/raw/main/flatpak/screenshots/4.png</image>
+      <caption>Settings Screen</caption>
     </screenshot>
   </screenshots>
+  <releases>  
+    <release version="x.x.x" date="xxxx-xx-xx">
+      <url type="details">https://gitlab.com/ForTheCommunity/torrentsdigger/-/blob/main/CHANGELOG.md</url>
+    </release>
+  </releases>
+  <update_contact>cefd2dlmasked@duck.com</update_contact>
+  <keywords>
+    <keyword>Torrent</keyword>
+    <keyword>Torrents Search</keyword>
+    <keyword>Torrents Management</keyword>
+  </keywords>
 </component>
