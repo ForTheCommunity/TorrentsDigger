@@ -8,6 +8,8 @@ use std::{env, fs, path::Path};
 use serde::Deserialize;
 
 fn main() {
+    println!("cargo:rerun-if-changed=src/database/migrations/");
+
     let current_version_file_name = "current_version.txt";
     // project root dir
     let menifest_dir = env::var("CARGO_MANIFEST_DIR").expect("CARGO_MANIFEST_DIR not set");
