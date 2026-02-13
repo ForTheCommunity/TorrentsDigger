@@ -1,12 +1,15 @@
 use anyhow::anyhow;
 
-use crate::sources::{Pagination, customs::{
-    available_custom_sources::AllAvailableCustomSources,
-    custom::{
-        KnabenDatabaseCustomListings, NyaaCustomListings, SukebeiNyaaCustomListings,
-        ThePirateBayCustomListings,
+use crate::sources::{
+    Pagination,
+    customs::{
+        available_custom_sources::AllAvailableCustomSources,
+        custom::{
+            KnabenDatabaseCustomListings, NyaaCustomListings, SukebeiNyaaCustomListings,
+            ThePirateBayCustomListings,
+        },
     },
-}};
+};
 
 pub mod available_custom_sources;
 pub mod custom;

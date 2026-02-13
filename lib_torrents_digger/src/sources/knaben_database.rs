@@ -352,29 +352,32 @@ impl KnabenDatabaseCategories {
         if let Some(nav) = document.select(&pagination_container_selector).next() {
             // for Current Page
             if let Some(active_el) = nav.select(&active_page_selector).next()
-                && let Ok(curr) = active_el.text().collect::<String>().trim().parse::<i32>() {
-                    pagination.current_page = Some(curr);
+                && let Ok(curr) = active_el.text().collect::<String>().trim().parse::<i32>()
+            {
+                pagination.current_page = Some(curr);
 
-                    // for Previous Page
-                    // (Must exist & be less than current)
-                    if let Some(prev_el) = nav.select(&prev_page_selector).next()
-                        && let Some(href) = prev_el.attr("href")
-                            && let Some(page_val) =
-                                href.split('/').nth(4).and_then(|s| s.parse::<i32>().ok())
-                                && page_val < curr {
-                                    pagination.previous_page = Some(page_val);
-                                }
-
-                    // for Next Page
-                    // Must exist & be greater than current
-                    if let Some(next_el) = nav.select(&next_page_selector).next()
-                        && let Some(href) = next_el.attr("href")
-                            && let Some(page_val) =
-                                href.split('/').nth(4).and_then(|s| s.parse::<i32>().ok())
-                                && page_val > curr {
-                                    pagination.next_page = Some(page_val);
-                                }
+                // for Previous Page
+                // (Must exist & be less than current)
+                if let Some(prev_el) = nav.select(&prev_page_selector).next()
+                    && let Some(href) = prev_el.attr("href")
+                    && let Some(page_val) =
+                        href.split('/').nth(4).and_then(|s| s.parse::<i32>().ok())
+                    && page_val < curr
+                {
+                    pagination.previous_page = Some(page_val);
                 }
+
+                // for Next Page
+                // Must exist & be greater than current
+                if let Some(next_el) = nav.select(&next_page_selector).next()
+                    && let Some(href) = next_el.attr("href")
+                    && let Some(page_val) =
+                        href.split('/').nth(4).and_then(|s| s.parse::<i32>().ok())
+                    && page_val > curr
+                {
+                    pagination.next_page = Some(page_val);
+                }
+            }
         }
 
         if let Some(table_body) = document.select(&table_body_selector).next() {

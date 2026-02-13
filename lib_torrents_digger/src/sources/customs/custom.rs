@@ -3,7 +3,9 @@ use core::fmt;
 use anyhow::Result;
 
 use crate::{
-    sources::{Pagination, available_sources::AllAvailableSources, the_pirate_bay::ThePirateBayCategories},
+    sources::{
+        Pagination, available_sources::AllAvailableSources, the_pirate_bay::ThePirateBayCategories,
+    },
     sync_request::fetch_torrents,
     torrent::Torrent,
 };

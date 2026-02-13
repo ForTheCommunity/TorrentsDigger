@@ -160,30 +160,31 @@ impl LimeTorrentsCategories {
 
         // for Current Page (span.active)
         if let Some(active_span) = document.select(&span_active_selector).next()
-            && let Ok(curr) = active_span.text().collect::<String>().trim().parse::<i32>() {
-                pagination.current_page = Some(curr);
+            && let Ok(curr) = active_span.text().collect::<String>().trim().parse::<i32>()
+        {
+            pagination.current_page = Some(curr);
 
-                // for Next Page
-                // Check if an anchor with id="next" exists (it won't exist if on the last page)
-                if let Some(next_anchor) = document.select(&next_id_selector).next() {
-                    // check it's not the 'disabled' span variant
-                    if next_anchor.value().name() == "a" {
-                        pagination.next_page = Some(curr + 1);
-                    }
-                }
-
-                // for Previous Page
-                // if Previous exists, it's an 'a' tag.
-                // If it's disabled, it's a 'span' with class 'disabled'.
-                // We find all links and check if any contain the text "Previous page"
-                let is_prev_disabled = document
-                    .select(&span_disabled_selector)
-                    .any(|el| el.text().collect::<String>().contains("Previous page"));
-
-                if !is_prev_disabled && curr > 1 {
-                    pagination.previous_page = Some(curr - 1);
+            // for Next Page
+            // Check if an anchor with id="next" exists (it won't exist if on the last page)
+            if let Some(next_anchor) = document.select(&next_id_selector).next() {
+                // check it's not the 'disabled' span variant
+                if next_anchor.value().name() == "a" {
+                    pagination.next_page = Some(curr + 1);
                 }
             }
+
+            // for Previous Page
+            // if Previous exists, it's an 'a' tag.
+            // If it's disabled, it's a 'span' with class 'disabled'.
+            // We find all links and check if any contain the text "Previous page"
+            let is_prev_disabled = document
+                .select(&span_disabled_selector)
+                .any(|el| el.text().collect::<String>().contains("Previous page"));
+
+            if !is_prev_disabled && curr > 1 {
+                pagination.previous_page = Some(curr - 1);
+            }
+        }
 
         for table_row in table_body.select(&table_row_selector) {
             let table_row_data: Vec<ElementRef> = table_row.select(&table_data_selector).collect();
