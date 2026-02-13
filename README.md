@@ -89,11 +89,10 @@ If you find this project useful, consider supporting its development.
 
 
 ## Disclaimer ->
-### Torrents Digger doesn't host anything.
-### It just searches and lists publicly available torrents from third party sites.
-### Developers of Torrents Diggers can't be held responsible if anyone downloads copyrighted materials.
-
-### Becarefull what you download; ensure you are following your country's law.
+`Torrents Digger doesn't host anything.
+It just searches and lists publicly available torrents from third party sites.
+Developers of Torrents Diggers can't be held responsible if anyone downloads copyrighted materials.
+Becarefull what you download; ensure you are following your country's law.`
 
 
 ## License

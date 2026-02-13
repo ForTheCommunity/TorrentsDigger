@@ -1,18 +1,14 @@
 use anyhow::{Result, anyhow};
 use include_dir::{Dir, include_dir};
-use rusqlite::Connection;
+
 use rusqlite_migration::Migrations;
-use std::{
-    fs::create_dir_all,
-    path::PathBuf,
-    sync::{LazyLock, MutexGuard},
-};
+use std::{fs::create_dir_all, path::PathBuf, sync::LazyLock};
 
 use crate::{
     database::{
         database_config::{
-            APP_DIR, DATABASE_NAME, DATABASE_PATH, HYDRATION_DIR, PLATFORM_SPECIFIC_DIR,
-            TRACKERS_DIR_PATH, TRACKERS_LISTS_DIR, get_a_database_connection,
+            APP_DIR, DATABASE_NAME, HYDRATION_DIR, PLATFORM_SPECIFIC_DIR, TRACKERS_DIR_PATH,
+            TRACKERS_LISTS_DIR, get_a_database_connection, init_database_pool,
         },
         settings_kvs::insert_update_kv,
     },
@@ -38,7 +34,9 @@ pub fn initialize_database(platform_specific_home_dir: String) -> Result<()> {
     // create Hydration dir (for flutter bloc)
     create_dir_all(&hydration_path)?;
 
-    set_database_path(database_path);
+    // initializing db pool..
+    init_database_pool(&database_path);
+
     set_trackers_dir_path(trackers_path);
 
     migrate();
@@ -52,25 +50,18 @@ pub fn initialize_database(platform_specific_home_dir: String) -> Result<()> {
     )?;
 
     // downloading trackers lists
-    // need to use Anyhow crate later.....
     DefaultTrackers::download_trackers_lists()?;
 
     Ok(())
 }
 
 fn migrate() {
-    let mut db_conn: MutexGuard<'static, Connection> = get_a_database_connection();
+    let mut db_conn = get_a_database_connection();
 
     match MIGRATIONS.to_latest(&mut db_conn) {
         Ok(_) => println!("Mirgated Successfully...."),
         Err(e) => println!("Error -> {}", e.to_string()),
     }
-}
-
-fn set_database_path(database_path: PathBuf) {
-    DATABASE_PATH
-        .set(database_path)
-        .expect("Database path can only be set once");
 }
 
 fn set_trackers_dir_path(trackers_dir_path: PathBuf) {
