@@ -39,7 +39,8 @@ pub fn initialize_database(platform_specific_home_dir: String) -> Result<()> {
 
     set_trackers_dir_path(trackers_path);
 
-    migrate();
+    let mut db_conn = get_a_database_connection();
+    MIGRATIONS.to_latest(&mut db_conn)?;
 
     // saving app root dir..
     insert_update_kv(
@@ -53,15 +54,6 @@ pub fn initialize_database(platform_specific_home_dir: String) -> Result<()> {
     DefaultTrackers::download_trackers_lists()?;
 
     Ok(())
-}
-
-fn migrate() {
-    let mut db_conn = get_a_database_connection();
-
-    match MIGRATIONS.to_latest(&mut db_conn) {
-        Ok(_) => println!("Mirgated Successfully...."),
-        Err(e) => println!("Error -> {}", e.to_string()),
-    }
 }
 
 fn set_trackers_dir_path(trackers_dir_path: PathBuf) {

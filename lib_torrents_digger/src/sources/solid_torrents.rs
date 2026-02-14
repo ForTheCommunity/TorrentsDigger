@@ -273,6 +273,10 @@ impl SolidTorrentsCategories {
                 a.text().collect::<String>().trim().to_string()
             });
 
+            let source_url = anchor_tag
+                .and_then(|a| a.attr("href"))
+                .map(|s| format!("{}{}", "https://bitsearch.to", s));
+
             // size
             let size = item_element
                 .select(&size_selector)
@@ -334,7 +338,7 @@ impl SolidTorrentsCategories {
                 seeders,
                 leechers,
                 total_downloads,
-                source_url: None,
+                source_url,
             });
         }
 

@@ -218,9 +218,14 @@ impl LimeTorrentsCategories {
             // finding index for .torrent
             let info_hash_end_index = info_hash_start
                 .find(".torrent")
-                .ok_or_else(|| anyhow!("unable t extract info_hash"))?;
+                .ok_or_else(|| anyhow!("unable to extract info_hash"))?;
             // actual info hash
             let info_hash = &info_hash_start[..info_hash_end_index].to_lowercase();
+
+            let source_url = anchor_tags
+                .get(1)
+                .and_then(|a| a.attr("href"))
+                .map(|s| format!("{}{}", "https://www.limetorrents.lol", s));
 
             // Extracting Display Name
             // using display name as Torrent Name
@@ -285,7 +290,7 @@ impl LimeTorrentsCategories {
                 seeders,
                 leechers,
                 total_downloads,
-                source_url: None,
+                source_url,
             };
 
             all_torrents.push(torrent);

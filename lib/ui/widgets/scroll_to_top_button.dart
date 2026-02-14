@@ -50,7 +50,7 @@ class _ScrollToTopButtonState extends State<ScrollToTopButton> {
       heroTag: null,
       onPressed: () => widget.scrollController.animateTo(
         0,
-        duration: const Duration(milliseconds: 1500),
+        duration: const Duration(milliseconds: 500),
         curve: Curves.slowMiddle,
       ),
       child: Icon(

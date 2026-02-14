@@ -339,12 +339,14 @@ impl ThePirateBayCategories {
                 a_table_row.select(&table_data_selector).collect();
 
             if table_data_vec.len() >= 7 {
-                let name = table_data_vec[1]
+                let name_anchor_tag = table_data_vec[1]
                     .select(&anchor_tag_selector)
                     .next()
-                    .ok_or_else(|| anyhow!("Didn't found Anchor Tag while extracting name.."))?
-                    .inner_html()
-                    .to_string();
+                    .ok_or_else(|| anyhow!("Didn't found Name Anchor Tag.."))?;
+
+                let name = name_anchor_tag.inner_html().to_string();
+
+                let source_url = name_anchor_tag.value().attr("href").map(|l| l.to_string());
 
                 let date = table_data_vec[2]
                     .inner_html()
@@ -388,7 +390,7 @@ impl ThePirateBayCategories {
                     seeders,
                     leechers,
                     total_downloads,
-                    source_url: None,
+                    source_url,
                 });
             }
             // this is a pagination row...
