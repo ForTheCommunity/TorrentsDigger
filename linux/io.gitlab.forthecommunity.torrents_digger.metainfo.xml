@@ -3,7 +3,9 @@
   <id>io.gitlab.forthecommunity.torrents_digger</id>
   
   <name>Torrents Digger</name>
-  <developer_name>ForTheCommunity</developer_name>
+  <developer id="io.gitlab.forthecommunity">
+    <name>ForTheCommunity</name>
+  </developer>
   <summary>Digs Torrents From The Internet</summary>
   
   <metadata_license>MIT</metadata_license>
@@ -26,46 +28,48 @@
 	    You can search torrents from different sources.
     </p>
     <p>
-      # Features :
+      Features :
     </p>
     <p>
-      * Multi Source/Sites Support.
+      Multi Source/Sites Support.
     </p>
     <p>
-      * Shows Torrent Creation Date, Seeders, Leechers, Total Downloads, Torrent Size.
+      Shows Torrent Creation Date, Seeders, Leechers, Total Downloads, Torrent Size.
     </p>
     <p>
-      * User can choose Category, Filters, Sortings, Sortings Order.
+      User can choose Category, Filters, Sortings, Sortings Order.
     </p>
     <p>
-      * Bookmark : User can Bookmark torrents.
+      Bookmark : User can Bookmark torrents.
     </p>
     <p>
-      * Copy magnet link to Clipboard.
+      Copy magnet link to Clipboard.
     </p>
     <p>
-      * Opens Torrent Downloader Apps for Downloading Torrents.
+      Opens Torrent Downloader Apps for Downloading Torrents.
     </p>
     <p>
-      * Default Trackers Lists : User can Select a Default Trackers List &amp; that trackers List will be added to magnet links.
+      Default Trackers Lists : User can Select a Default Trackers List &amp; that trackers List will be added to magnet links.
     </p>
     <p>
-      * Custom Listings : There are numbers of Custom Listings that shows certain types of torrents. (Like Trending , Latests, etc.)
+      Custom Listings : There are numbers of Custom Listings that shows certain types of torrents. (Like Trending , Latests, etc.)
     </p>
     <p>
-      * Multiple Themes.
+      Multiple Themes.
     </p>
     <p>
-      * Proxy Support : User can use Proxy to route Traffic. Supported Proxy Protocols -&gt; ( HTTP, HTTPS, SOCKS4 &amp; SOCKS5. )
+      Proxy Support : User can use Proxy to route Traffic. Supported Proxy Protocols -&gt; ( HTTP, HTTPS, SOCKS4 &amp; SOCKS5. )
     </p>
     <p>
-      * Database Import/Export : User can Export and Import App Database.
+      Database Import/Export : User can Export and Import App Database.
     </p>
     <p>
-      * Cross Platform ( Available for Android, Windows &amp; Linux ).
+      Cross Platform ( Available for Android, Windows &amp; Linux ).
     </p>
   </description>
   
+  <content_rating type="oars-1.1" />
+
   <launchable type="desktop-id">io.gitlab.forthecommunity.torrents_digger.desktop</launchable>
   <screenshots>
     <screenshot type="default">
