@@ -124,6 +124,7 @@ impl JsonTorrentData {
             seeders: self.seeders.to_string(),
             leechers: self.leechers.to_string(),
             total_downloads: self.completed.to_string(),
+            source_url: None,
         })
     }
 }

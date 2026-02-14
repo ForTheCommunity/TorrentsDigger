@@ -181,6 +181,11 @@ impl SukebeiNyaaCategories {
                 .unwrap_or("Name title attribute missing")
                 .to_string();
 
+            let source_url: Option<String> = a_name[name_index]
+                .value()
+                .attr("href")
+                .map(|value| format!("{}{}", "https://sukebei.nyaa.si", value));
+
             let magnet = if torrent_data.len() > 1 {
                 torrent_data[1].attr("href").unwrap_or_default().to_string()
             } else {
@@ -205,6 +210,7 @@ impl SukebeiNyaaCategories {
                 seeders,
                 leechers,
                 total_downloads,
+                source_url,
             };
 
             all_torrents.push(torrent);

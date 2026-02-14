@@ -342,6 +342,9 @@ impl KnabenDatabaseCategories {
         let next_page_selector = Selector::parse("a#nextPage")
             .map_err(|e| anyhow!(format!("Error parsing next page selector: {}", e)))?;
 
+        let anchor_tag_selector = Selector::parse("a")
+            .map_err(|e| anyhow!(format!("Error parsing anchor tag selector: {}", e)))?;
+
         // Vector of Torrent to Store all Torrents
         let mut all_torrents: Vec<Torrent> = Vec::new();
 
@@ -461,6 +464,17 @@ impl KnabenDatabaseCategories {
                     .trim()
                     .to_string();
 
+                // source
+                let mut source_url: Option<String> = None;
+                if let Some(anchor) = table_row_data[6].select(&anchor_tag_selector).next() {
+                    if let Some(source_link) = anchor.attr("href") {
+                        source_url = Some(source_link.into());
+                    }
+                } else {
+                    source_url = None;
+                }
+               
+
                 // Downloads
                 let total_downloads = "N/A".to_string();
 
@@ -473,6 +487,7 @@ impl KnabenDatabaseCategories {
                     seeders,
                     leechers,
                     total_downloads,
+                    source_url,
                 };
                 all_torrents.push(torrent);
             }

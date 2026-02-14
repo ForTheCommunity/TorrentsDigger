@@ -168,6 +168,12 @@ impl UindexCategories {
                     a.text().collect::<String>()
                 });
 
+            let source_url = magnet_and_torrent_name_elem_vec
+                .get(1)
+                .and_then(|element| element.value().attr("href"))
+                .map(|url| url.to_string())
+                .map(|url| format!("{}{}", "https://uindex.org", url));
+
             let date_elem = table_row_data[1].select(&sub_div_selector).next();
             let date = date_elem.map_or("N/A".to_string(), |d| {
                 d.text().collect::<String>().trim().to_string()
@@ -208,6 +214,7 @@ impl UindexCategories {
                 seeders,
                 leechers,
                 total_downloads,
+                source_url,
             });
         }
 

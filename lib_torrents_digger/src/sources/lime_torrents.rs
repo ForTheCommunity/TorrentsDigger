@@ -285,6 +285,7 @@ impl LimeTorrentsCategories {
                 seeders,
                 leechers,
                 total_downloads,
+                source_url: None,
             };
 
             all_torrents.push(torrent);

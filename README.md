@@ -72,8 +72,6 @@ appman install torrents_digger
 
 - Automatically Update Bookmarked Torrent Data (Like seeders, leechers , total downloads) when Researched (opt-in,opt-out).
 
-- Improve Database Migration. (Currently everything is done manually.)
-
 - Log Screen for showing Execution Logs.
 
 - TUI APP (using Ratatui, basic project structure is made in tui directory).

@@ -77,6 +77,7 @@ pub fn dig_torrent(
                     seeders: t.seeders,
                     leechers: t.leechers,
                     total_downloads: t.total_downloads,
+                    source_url: t.source_url,
                 })
                 .collect();
 
@@ -163,6 +164,7 @@ pub fn dig_custom_torrents(
                     seeders: t.seeders,
                     leechers: t.leechers,
                     total_downloads: t.total_downloads,
+                    source_url: t.source_url,
                 })
                 .collect();
 

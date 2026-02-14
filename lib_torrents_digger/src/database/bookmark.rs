@@ -14,8 +14,9 @@ pub fn create_a_bookmark(torrent: Torrent) -> Result<usize, rusqlite::Error> {
             date,
             seeders,
             leechers,
-            total_downloads
-        ) VALUES (?1,?2,?3,?4,?5,?6,?7,?8)",
+            total_downloads,
+            source_url
+        ) VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9)",
         params![
             torrent.info_hash,
             torrent.name,
@@ -24,7 +25,8 @@ pub fn create_a_bookmark(torrent: Torrent) -> Result<usize, rusqlite::Error> {
             torrent.date,
             torrent.seeders,
             torrent.leechers,
-            torrent.total_downloads
+            torrent.total_downloads,
+            torrent.source_url
         ],
     )
 }
@@ -48,13 +50,13 @@ pub fn fetch_all_bookmarks() -> Result<Vec<Torrent>, rusqlite::Error> {
             seeders: a_row.get(5)?,
             leechers: a_row.get(6)?,
             total_downloads: a_row.get(7)?,
+            source_url: a_row.get(8)?,
         })
     })?;
 
     let all_bookmarked_torrents: Vec<Torrent> =
         torrents_iter.collect::<Result<Vec<Torrent>, _>>()?;
 
-    // dbg!(&all_bookmarked_torrents);
     Ok(all_bookmarked_torrents)
 }
 

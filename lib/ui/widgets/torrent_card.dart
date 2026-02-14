@@ -175,6 +175,46 @@ class TorrentCard extends StatelessWidget {
                     }
                   },
                 ),
+                const SizedBox(width: 10),
+                IconButton(
+                  icon:
+                      torrent.sourceUrl != null && torrent.sourceUrl!.isNotEmpty
+                      ? Icon(
+                          Icons.link,
+                          color: context.appColors.sourceUrlAvailableColor,
+                        )
+                      : Icon(
+                          Icons.link,
+                          color: context.appColors.sourceUrlUnAvailableColor,
+                        ),
+                  onPressed: () async {
+                    if (torrent.sourceUrl != null) {
+                      try {
+                        createSnackBar(
+                          message: "Opening Torrent Description Page....",
+                          duration: 2,
+                        );
+                        openUrl(
+                          urlType: UrlType.normalLink,
+                          clipboardCopy: false,
+                          url: torrent.sourceUrl!,
+                        );
+                      } catch (e) {
+                        createSnackBar(
+                          message:
+                              "Error Opening Source URL...\nError: ${e.toString}",
+                          duration: 10,
+                        );
+                      }
+                    } else {
+                      createSnackBar(
+                        message:
+                            "This source doesn't provide a description page for torrents.",
+                        duration: 2,
+                      );
+                    }
+                  },
+                ),
               ],
             ),
           ],

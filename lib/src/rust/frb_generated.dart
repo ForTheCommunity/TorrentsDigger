@@ -1080,8 +1080,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   InternalTorrent dco_decode_internal_torrent(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 8)
-      throw Exception('unexpected arr length: expect 8 but see ${arr.length}');
+    if (arr.length != 9)
+      throw Exception('unexpected arr length: expect 9 but see ${arr.length}');
     return InternalTorrent(
       infoHash: dco_decode_String(arr[0]),
       name: dco_decode_String(arr[1]),
@@ -1091,6 +1091,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       seeders: dco_decode_String(arr[5]),
       leechers: dco_decode_String(arr[6]),
       totalDownloads: dco_decode_String(arr[7]),
+      sourceUrl: dco_decode_opt_String(arr[8]),
     );
   }
 
@@ -1408,6 +1409,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_seeders = sse_decode_String(deserializer);
     var var_leechers = sse_decode_String(deserializer);
     var var_totalDownloads = sse_decode_String(deserializer);
+    var var_sourceUrl = sse_decode_opt_String(deserializer);
     return InternalTorrent(
       infoHash: var_infoHash,
       name: var_name,
@@ -1417,6 +1419,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       seeders: var_seeders,
       leechers: var_leechers,
       totalDownloads: var_totalDownloads,
+      sourceUrl: var_sourceUrl,
     );
   }
 
@@ -1782,6 +1785,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_String(self.seeders, serializer);
     sse_encode_String(self.leechers, serializer);
     sse_encode_String(self.totalDownloads, serializer);
+    sse_encode_opt_String(self.sourceUrl, serializer);
   }
 
   @protected

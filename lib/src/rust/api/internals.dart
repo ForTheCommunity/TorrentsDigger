@@ -192,6 +192,7 @@ class InternalTorrent {
   final String seeders;
   final String leechers;
   final String totalDownloads;
+  final String? sourceUrl;
 
   const InternalTorrent({
     required this.infoHash,
@@ -202,6 +203,7 @@ class InternalTorrent {
     required this.seeders,
     required this.leechers,
     required this.totalDownloads,
+    this.sourceUrl,
   });
 
   @override
@@ -213,7 +215,8 @@ class InternalTorrent {
       date.hashCode ^
       seeders.hashCode ^
       leechers.hashCode ^
-      totalDownloads.hashCode;
+      totalDownloads.hashCode ^
+      sourceUrl.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -227,5 +230,6 @@ class InternalTorrent {
           date == other.date &&
           seeders == other.seeders &&
           leechers == other.leechers &&
-          totalDownloads == other.totalDownloads;
+          totalDownloads == other.totalDownloads &&
+          sourceUrl == other.sourceUrl;
 }

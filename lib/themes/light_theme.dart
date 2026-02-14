@@ -90,6 +90,11 @@ class LightTheme extends AppTheme {
   Color get bookmarkedIconColor => const Color.fromARGB(255, 3, 80, 70);
 
   @override
+  Color get sourceUrlAvailableColor => const Color.fromARGB(255, 0, 21, 255);
+  @override
+  Color get sourceUrlUnAvailableColor => const Color.fromARGB(255, 37, 37, 37);
+
+  @override
   Color get addTrackersListUrlTextFieldBackgroundColor => Colors.grey[200]!;
   @override
   Color get addTrackersListUrlTextButtonTextColor => Colors.blue;
@@ -226,5 +231,6 @@ class LightTheme extends AppTheme {
   @override
   Color get scaffoldMessengerBorderColor => const Color.fromARGB(255, 0, 0, 0);
   @override
-  Color get scaffoldMessengerBackgroundColor => const Color.fromARGB(255, 255, 255, 255);
+  Color get scaffoldMessengerBackgroundColor =>
+      const Color.fromARGB(255, 255, 255, 255);
 }

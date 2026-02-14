@@ -388,6 +388,7 @@ impl ThePirateBayCategories {
                     seeders,
                     leechers,
                     total_downloads,
+                    source_url: None,
                 });
             }
             // this is a pagination row...

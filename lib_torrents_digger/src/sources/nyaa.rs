@@ -217,6 +217,11 @@ impl NyaaCategories {
                 .unwrap_or("Name title attribute missing")
                 .to_string();
 
+            let source_url: Option<String> = a_name[name_index]
+                .value()
+                .attr("href")
+                .map(|value| format!("{}{}", "https://nyaa.si", value));
+
             let magnet = if torrent_data.len() > 1 {
                 torrent_data[1].attr("href").unwrap_or_default().to_string()
             } else {
@@ -241,6 +246,7 @@ impl NyaaCategories {
                 seeders,
                 leechers,
                 total_downloads,
+                source_url,
             };
 
             all_torrents.push(torrent);

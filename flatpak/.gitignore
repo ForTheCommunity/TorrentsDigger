@@ -1,4 +1,5 @@
 build/
 repo/
+build-dir/
 .flatpak-builder
 torrents_digger.flatpak

@@ -15,6 +15,7 @@ fn create_bookmark(torrent: InternalTorrent) -> Result<usize, String> {
         seeders: torrent.seeders,
         leechers: torrent.leechers,
         total_downloads: torrent.total_downloads,
+        source_url: torrent.source_url
     }) {
         Ok(a) => Ok(a),
         Err(e) => Err(e.to_string()),
@@ -46,6 +47,7 @@ fn get_bookmarks() -> Result<Vec<InternalTorrent>, String> {
                 seeders: t.seeders,
                 leechers: t.leechers,
                 total_downloads: t.total_downloads,
+                source_url: t.source_url
             })
             .collect()),
         Err(e) => Err(e.to_string()),

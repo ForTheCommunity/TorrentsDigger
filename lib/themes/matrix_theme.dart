@@ -87,6 +87,11 @@ class MatrixTheme extends AppTheme {
   Color get bookmarkedIconColor => Color.fromRGBO(145, 255, 0, 1);
 
   @override
+  Color get sourceUrlAvailableColor => const Color.fromARGB(255, 96, 190, 181);
+  @override
+  Color get sourceUrlUnAvailableColor => const Color.fromARGB(255, 138, 129, 129);
+
+  @override
   Color get addTrackersListUrlTextFieldBackgroundColor =>
       Color.fromARGB(255, 40, 52, 54);
   @override

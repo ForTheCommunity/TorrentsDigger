@@ -334,6 +334,7 @@ impl SolidTorrentsCategories {
                 seeders,
                 leechers,
                 total_downloads,
+                source_url: None,
             });
         }
 

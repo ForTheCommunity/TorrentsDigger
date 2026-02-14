@@ -13,6 +13,7 @@ pub struct InternalTorrent {
     pub seeders: String,
     pub leechers: String,
     pub total_downloads: String,
+    pub source_url: Option<String>,
 }
 
 pub struct InternalSource {

@@ -48,6 +48,10 @@ abstract class AppTheme {
   Color get bookmarkIconColor;
   Color get bookmarkedIconColor;
 
+  Color get sourceUrlAvailableColor;
+  Color get sourceUrlUnAvailableColor;
+
+
   Color get addTrackersListUrlTextFieldBackgroundColor;
   Color get addTrackersListUrlTextButtonTextColor;
   Color get addTrackersListUrlTextButtonBorderColor;

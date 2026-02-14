@@ -1019,6 +1019,7 @@ impl SseDecode for crate::api::internals::InternalTorrent {
         let mut var_seeders = <String>::sse_decode(deserializer);
         let mut var_leechers = <String>::sse_decode(deserializer);
         let mut var_totalDownloads = <String>::sse_decode(deserializer);
+        let mut var_sourceUrl = <Option<String>>::sse_decode(deserializer);
         return crate::api::internals::InternalTorrent {
             info_hash: var_infoHash,
             name: var_name,
@@ -1028,6 +1029,7 @@ impl SseDecode for crate::api::internals::InternalTorrent {
             seeders: var_seeders,
             leechers: var_leechers,
             total_downloads: var_totalDownloads,
+            source_url: var_sourceUrl,
         };
     }
 }
@@ -1523,6 +1525,7 @@ impl flutter_rust_bridge::IntoDart for crate::api::internals::InternalTorrent {
             self.seeders.into_into_dart().into_dart(),
             self.leechers.into_into_dart().into_dart(),
             self.total_downloads.into_into_dart().into_dart(),
+            self.source_url.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -1652,6 +1655,7 @@ impl SseEncode for crate::api::internals::InternalTorrent {
         <String>::sse_encode(self.seeders, serializer);
         <String>::sse_encode(self.leechers, serializer);
         <String>::sse_encode(self.total_downloads, serializer);
+        <Option<String>>::sse_encode(self.source_url, serializer);
     }
 }
 
