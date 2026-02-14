@@ -30,42 +30,44 @@
     <p>
       Features :
     </p>
-    <p>
+    <ul>
+    <li>
       Multi Source/Sites Support.
-    </p>
-    <p>
+    </li>
+    <li>
       Shows Torrent Creation Date, Seeders, Leechers, Total Downloads, Torrent Size.
-    </p>
-    <p>
+    </li>
+    <li>
       User can choose Category, Filters, Sortings, Sortings Order.
-    </p>
-    <p>
+    </li>
+    <li>
       Bookmark : User can Bookmark torrents.
-    </p>
-    <p>
+    </li>
+    <li>
       Copy magnet link to Clipboard.
-    </p>
-    <p>
+    </li>
+    <li>
       Opens Torrent Downloader Apps for Downloading Torrents.
-    </p>
-    <p>
+    </li>
+    <li>
       Default Trackers Lists : User can Select a Default Trackers List &amp; that trackers List will be added to magnet links.
-    </p>
-    <p>
+    </li>
+    <li>
       Custom Listings : There are numbers of Custom Listings that shows certain types of torrents. (Like Trending , Latests, etc.)
-    </p>
-    <p>
+    </li>
+    <li>
       Multiple Themes.
-    </p>
-    <p>
+    </li>
+    <li>
       Proxy Support : User can use Proxy to route Traffic. Supported Proxy Protocols -&gt; ( HTTP, HTTPS, SOCKS4 &amp; SOCKS5. )
-    </p>
-    <p>
+    </li>
+    <li>
       Database Import/Export : User can Export and Import App Database.
-    </p>
-    <p>
+    </li>
+    <li>
       Cross Platform ( Available for Android, Windows &amp; Linux ).
-    </p>
+    </li>
+    </ul>
   </description>
   
   <content_rating type="oars-1.1" />
