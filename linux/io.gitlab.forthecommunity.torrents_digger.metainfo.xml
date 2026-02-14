@@ -80,14 +80,13 @@
       <image type="source">https://gitlab.com/ForTheCommunity/torrentsdigger/-/raw/main/flatpak/screenshots/3.png</image>
       <caption>Custom Listings Screen</caption>
     </screenshot>
-    </screenshot>
     <screenshot>
       <image type="source">https://gitlab.com/ForTheCommunity/torrentsdigger/-/raw/main/flatpak/screenshots/4.png</image>
       <caption>Settings Screen</caption>
     </screenshot>
   </screenshots>
   <releases>  
-    <release version="x.x.x" date="xxxx-xx-xx">
+    <release version="1.2.0" date="2026-02-14">
       <url type="details">https://gitlab.com/ForTheCommunity/torrentsdigger/-/blob/main/CHANGELOG.md</url>
     </release>
   </releases>
