@@ -49,7 +49,32 @@ jobs:
       - name: Create Windows Installer
         run: iscc.exe "windows/installer.iss" /DAppVersion=${{ env.APP_VERSION }}
 
+      - name: Generate Checksum
+        shell: powershell
+        run: |
+          # Locate the generated installer
+          $installer = Get-ChildItem -Path installers/*.exe | Select-Object -First 1
+          
+          if ($installer) {
+              # Calculate SHA256 Hash
+              $hash = (Get-FileHash $installer.FullName -Algorithm SHA256).Hash.ToLower()
+              
+              # Construct the new filename: original_name_SHA256.txt
+              $checksumName = "$($installer.BaseName)_SHA256.txt"
+              $checksumPath = Join-Path "installers" $checksumName
+              
+              # Write the hash and the filename to the .txt file
+              "$hash  $($installer.Name)" | Out-File -FilePath $checksumPath -Encoding ascii
+              
+              Write-Host "Created checksum file: $checksumName"
+          } else {
+              Write-Error "No .exe found in installers directory!"
+              exit 1
+          }
+
       - name: Create Release and Upload Artifact
         uses: softprops/action-gh-release@v2
         with:
-          files: installers/*.exe
+          files: |
+            installers/*.exe
+            installers/*_SHA256.txt

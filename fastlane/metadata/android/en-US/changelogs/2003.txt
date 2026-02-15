@@ -1,0 +1,3 @@
+- Added Torrent Description Page Button.
+- Added Support for Flatpak / Flathub.
+- And other Internal Improvements.

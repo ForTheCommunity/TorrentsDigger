@@ -67,6 +67,13 @@ build_binaries:
     # Save .env for release job
     - echo "NEW_APPIMAGE_NAME=$NEW_APPIMAGE_NAME" >> build.env
 
+    # Flatpak
+    - just build_flatpak
+    - export FLATPAK_FILENAME="${APP_NAME}_${APP_VERSION}_x86_64.flatpak"
+
+    # Checksum File
+    - export CHECKSUM_FILENAME="${APP_NAME}_${APP_VERSION}_sha256.txt"
+
   artifacts:
     paths:
       - releases
@@ -94,25 +101,21 @@ create-release:
         # Android Universal Fat Apk
         - name: "$UNIVERSAL_APK_NAME"
           url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$UNIVERSAL_APK_NAME?job=build_binaries"
-        - name: "$UNIVERSAL_APK_NAME.sha256.txt"
-          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$UNIVERSAL_APK_NAME.sha256.txt?job=build_binaries"
         # Android armeabi-v7a-release
         - name: "$ARMEABI_V7A_APK_NAME"
           url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$ARMEABI_V7A_APK_NAME?job=build_binaries"
-        - name: "$ARMEABI_V7A_APK_NAME.sha256.txt"
-          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$ARMEABI_V7A_APK_NAME.sha256.txt?job=build_binaries"
         # Android arm64-v8a-release
         - name: "$ARM64_V8A_APK_NAME"
           url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$ARM64_V8A_APK_NAME?job=build_binaries"
-        - name: "$ARM64_V8A_APK_NAME.sha256.txt"
-          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$ARM64_V8A_APK_NAME.sha256.txt?job=build_binaries"
         # Android x86_64-release
         - name: "$X86_64_APK_NAME"
           url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$X86_64_APK_NAME?job=build_binaries"
-        - name: "$X86_64_APK_NAME.sha256.txt"
-          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$X86_64_APK_NAME.sha256.txt?job=build_binaries"
         # AppImage
         - name: "$NEW_APPIMAGE_NAME"
           url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$NEW_APPIMAGE_NAME?job=build_binaries"
-        - name: "$NEW_APPIMAGE_NAME.sha256.txt"
-          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$NEW_APPIMAGE_NAME.sha256.txt?job=build_binaries"
+        # Flatpak
+        - name: "$FLATPAK_FILENAME"
+          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$FLATPAK_FILENAME?job=build_binaries"
+        # SHA-256 Checksum
+        - name: "$CHECKSUM_FILENAME"
+          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$CHECKSUM_FILENAME?job=build_binaries"

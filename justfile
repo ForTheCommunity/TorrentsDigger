@@ -44,7 +44,7 @@ build_apk:
     # Rename APK
     mv releases/app-release.apk releases/{{ env('UNIVERSAL_APK_NAME') }}
     # Generate SHA256
-    sha256sum releases/{{ env('UNIVERSAL_APK_NAME') }} > releases/{{ env('UNIVERSAL_APK_NAME') }}.sha256.txt
+    sha256sum releases/{{ env('UNIVERSAL_APK_NAME') }} > releases/{{ env('CHECKSUM_FILENAME') }}
 
 # For Building APK per ABI in CI/CD
 build_apk_per_abi:
@@ -55,21 +55,21 @@ build_apk_per_abi:
     # Rename APK
     mv releases/app-armeabi-v7a-release.apk releases/{{ env('ARMEABI_V7A_APK_NAME') }}
     # Generate SHA256
-    sha256sum releases/{{ env('ARMEABI_V7A_APK_NAME') }} > releases/{{ env('ARMEABI_V7A_APK_NAME') }}.sha256.txt
+    sha256sum releases/{{ env('ARMEABI_V7A_APK_NAME') }} >> releases/{{ env('CHECKSUM_FILENAME') }}
     # ARM64-V8A APK
     # moving to releases dir
     mv build/app/outputs/flutter-apk/app-arm64-v8a-release.apk releases
     # Rename APK
     mv releases/app-arm64-v8a-release.apk releases/{{ env('ARM64_V8A_APK_NAME') }}
     # Generate SHA256
-    sha256sum releases/{{ env('ARM64_V8A_APK_NAME') }} > releases/{{ env('ARM64_V8A_APK_NAME') }}.sha256.txt
+    sha256sum releases/{{ env('ARM64_V8A_APK_NAME') }} >> releases/{{ env('CHECKSUM_FILENAME') }}
     # X86_64 APK
     # moving to releases dir
     mv build/app/outputs/flutter-apk/app-x86_64-release.apk releases
     # Rename APK
     mv releases/app-x86_64-release.apk releases/{{ env('X86_64_APK_NAME') }}
     # Generate SHA256
-    sha256sum releases/{{ env('X86_64_APK_NAME') }} > releases/{{ env('X86_64_APK_NAME') }}.sha256.txt
+    sha256sum releases/{{ env('X86_64_APK_NAME') }} >> releases/{{ env('CHECKSUM_FILENAME') }}
 
 # For Building AppImage in CI/CD
 build_appimage:
@@ -91,4 +91,25 @@ build_appimage:
     chmod +x AppImage/AppDir/AppRun
     ARCH=x86_64 ./build_deps_dir/appimagetool-x86_64.AppImage AppImage/AppDir {{ env('NEW_APPIMAGE_NAME') }}
     mv {{ env('NEW_APPIMAGE_NAME') }} releases/
-    sha256sum releases/{{ env('NEW_APPIMAGE_NAME') }} > releases/{{ env('NEW_APPIMAGE_NAME') }}.sha256.txt
+    sha256sum releases/{{ env('NEW_APPIMAGE_NAME') }} >> releases/{{ env('CHECKSUM_FILENAME') }}
+
+# Flatpak Build in CI/CD
+build_flatpak:
+    cd flatpak
+    # Installing flatpak & flatpak-builder.
+    apt install flatpak flatpak-builder -y
+    # Adding Flathub Repo.
+    flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+    # Installing Free Desktop Platform.
+    flatpak install flathub org.freedesktop.Platform//25.08 -y
+    # Installing Free Desktop SDK
+    flatpak install flathub org.freedesktop.Sdk//25.08 -y
+    # Installing Free Desktop LLVM.
+    flatpak install flathub org.freedesktop.Sdk.Extension.llvm20//25.08 -y
+    # Building App
+    flatpak-builder --repo=repo --force-clean build-dir io.gitlab.forthecommunity.torrents_digger.yml
+    # Packaging .flatpak file
+    flatpak build-bundle repo {{ env('FLATPAK_FILENAME') }} io.gitlab.forthecommunity.torrents_digger
+    mv {{ env('FLATPAK_FILENAME') }} ../releases/
+    cd ..
+    sha256sum releases/{{ env('FLATPAK_FILENAME') }} >> releases/{{ env('CHECKSUM_FILENAME') }}

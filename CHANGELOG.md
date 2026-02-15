@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.0] - 2026-02-15
+
+- Added Torrent Description Page Button.
+- Added Support for Flatpak / Flathub.
+- Added Database Migration.
+- Improved Database access with Connection Pooling.
+
+
 ## [1.1.9] - 2026-02-07
 
 - Fixed Snackbar for Multiple Themes. Fixed By [@Wind Xebec](https://gitlab.com/sameerchettri707).
