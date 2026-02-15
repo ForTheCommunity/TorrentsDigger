@@ -3,7 +3,7 @@ name: Build & Release for Windows Platform.
 on:
   push:
     tags:
-      - 'windows_build*'
+      - "windows_build*"
 
 jobs:
   build-release:
@@ -23,7 +23,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: "stable"
 
       - name: Get Flutter Dependencies
         run: flutter pub get
@@ -52,23 +52,22 @@ jobs:
       - name: Generate Checksum
         shell: powershell
         run: |
-          # Locate the generated installer
+          # 1. Find the installer
           $installer = Get-ChildItem -Path installers/*.exe | Select-Object -First 1
-          
+
           if ($installer) {
-              # Calculate SHA256 Hash
+              # 2. Calculate SHA256 Hash
               $hash = (Get-FileHash $installer.FullName -Algorithm SHA256).Hash.ToLower()
               
-              # Construct the new filename: original_name_SHA256.txt
-              $checksumName = "$($installer.BaseName).exe_SHA256.txt"
-              $checksumPath = Join-Path "installers" $checksumName
+              # 3. Create a clean filename (e.g., app_windows_checksum.txt)
+              $checksumPath = "installers/checksum_sha256.txt"
               
-              # Write the hash and the filename to the .txt file
-              "$hash  $($installer.Name)" | Out-File -FilePath $checksumPath -Encoding ascii
+              # 4. Write hash - Use Set-Content to avoid BOM or extra spacing issues
+              "$hash  $($installer.Name)" | Set-Content -Path $checksumPath
               
-              Write-Host "Created checksum file: $checksumName"
+              Write-Host "Created unique checksum at: $checksumPath"
           } else {
-              Write-Error "No .exe found in installers directory!"
+              Write-Error "No .exe found!"
               exit 1
           }
 
@@ -77,4 +76,4 @@ jobs:
         with:
           files: |
             installers/*.exe
-            installers/*.exe_SHA256.txt
+            installers/checksum_sha256.txt
