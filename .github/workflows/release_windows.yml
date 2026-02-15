@@ -60,7 +60,7 @@ jobs:
               $hash = (Get-FileHash $installer.FullName -Algorithm SHA256).Hash.ToLower()
               
               # Construct the new filename: original_name_SHA256.txt
-              $checksumName = "$($installer.BaseName)_SHA256.txt"
+              $checksumName = "$($installer.BaseName).exe_SHA256.txt"
               $checksumPath = Join-Path "installers" $checksumName
               
               # Write the hash and the filename to the .txt file
@@ -77,4 +77,4 @@ jobs:
         with:
           files: |
             installers/*.exe
-            installers/*_SHA256.txt
+            installers/*.exe_SHA256.txt

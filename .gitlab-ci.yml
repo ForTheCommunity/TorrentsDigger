@@ -36,6 +36,9 @@ build_binaries:
     - export APP_NAME=$(grep 'name:' pubspec.yaml | head -1 | awk '{print $2}' | sed 's/-/_/g' | sed 's/\r//g')
     - export APP_VERSION=$(grep 'version:' pubspec.yaml | head -1 | awk '{print $2}' | sed 's/+//' | sed 's/ /_/g' | sed 's/\r//g')
 
+    # Checksum File
+    - export CHECKSUM_FILENAME="${APP_NAME}_${APP_VERSION}_sha256.txt"
+
     # Setting Apk Name according to cpu architectures
     - export UNIVERSAL_APK_NAME="${APP_NAME}_${APP_VERSION}_universal.apk"
     - export ARMEABI_V7A_APK_NAME="${APP_NAME}_${APP_VERSION}_armeabi-v7a.apk"
@@ -68,11 +71,8 @@ build_binaries:
     - echo "NEW_APPIMAGE_NAME=$NEW_APPIMAGE_NAME" >> build.env
 
     # Flatpak
-    - just build_flatpak
     - export FLATPAK_FILENAME="${APP_NAME}_${APP_VERSION}_x86_64.flatpak"
-
-    # Checksum File
-    - export CHECKSUM_FILENAME="${APP_NAME}_${APP_VERSION}_sha256.txt"
+    - just build_flatpak
 
   artifacts:
     paths:
