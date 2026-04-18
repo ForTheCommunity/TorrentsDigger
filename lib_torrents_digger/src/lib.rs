@@ -95,6 +95,7 @@ pub fn search_torrent(
                 category,
                 sorting,
                 sorting_order,
+                &page.unwrap_or(0),
             );
             fetch_torrents(&url, AllAvailableSources::Uindex)
         }

@@ -29,7 +29,7 @@ impl UindexCategories {
             filters: false,
             sortings: true,
             sorting_orders: true,
-            pagination: false,
+            pagination: true,
         }
     }
 
@@ -75,8 +75,9 @@ impl UindexCategories {
         category: &UindexCategories,
         sorting: &UindexSortings,
         sorting_order: &UindexSortingOrders,
+        page_number: &i64,
     ) -> String {
-        // https://uindex.org/search.php?search=batman&c=0&sort=seeders&order=DESC
+        // https://uindex.org/search.php?search=batman&c=0&sort=seeders&order=DESC&p=1
 
         // url encoding
         let torrent_name = urlencoding::encode(torrent_name).to_string();
@@ -87,10 +88,11 @@ impl UindexCategories {
         let category = format!("c={}", category.category_to_value());
         let sorting = format!("sort={}", sorting.sorting_to_value());
         let sorting_order = format!("order={}", sorting_order.sorting_order_to_value());
+        let page_number = format!("p={}", page_number);
 
         format!(
-            "{}/{}?{}&{}&{}&{}",
-            root_url, path, query, category, sorting, sorting_order
+            "{}/{}?{}&{}&{}&{}&{}",
+            root_url, path, query, category, sorting, sorting_order, page_number
         )
     }
 
@@ -118,8 +120,8 @@ impl UindexCategories {
         let anchor_tag_selector = Selector::parse("a")
             .map_err(|e| anyhow!(format!("Error parsing anchor tag selector: {}", e)))?;
 
-        let sub_div_selector = Selector::parse("div.sub")
-            .map_err(|e| anyhow!(format!("Error parsing sub div selector: {}", e)))?;
+        let pagination_selector = Selector::parse("div.sr-pagination-wrap")
+            .map_err(|e| anyhow!(format!("Error parsing pagination div selector: {}", e)))?;
 
         // Vector of Torrent to Store all Torrents
         let mut all_torrents: Vec<Torrent> = Vec::new();
@@ -136,7 +138,45 @@ impl UindexCategories {
             return Err(anyhow!("No torrents found with the specified name."));
         }
 
-        let pagination = Pagination::new();
+        // Pagination
+        let mut pagination = Pagination::new();
+        let current_li_selector = Selector::parse("li.current")
+            .map_err(|e| anyhow!(format!("Error parsing current page selector: {}", e)))?;
+        // Previous/Next Page Anchor Tag Selector
+        let pn_link_selector = Selector::parse("li a")
+            .map_err(|e| anyhow!(format!("Error parsing pevious/next page selector: {}", e)))?;
+
+        // finding pagination container
+        if let Some(container) = document.select(&pagination_selector).next() {
+            // current pagination
+            pagination.current_page =
+                container
+                    .select(&current_li_selector)
+                    .next()
+                    .and_then(|element| {
+                        element
+                            .text()
+                            .collect::<String>()
+                            .trim()
+                            .parse::<i32>()
+                            .ok()
+                    });
+
+            // for prev/next page.,.
+            for link_elem in container.select(&pn_link_selector) {
+                let title = link_elem.value().attr("title").unwrap_or("").to_lowercase();
+                let href = link_elem.value().attr("href").unwrap_or("");
+
+                // page value extractor
+                let page_num_extr = href.split("p=").last().and_then(|p| p.parse::<i32>().ok());
+
+                if title == "previous page" {
+                    pagination.previous_page = page_num_extr;
+                } else if title == "next page" {
+                    pagination.next_page = page_num_extr;
+                }
+            }
+        }
 
         // iterating over table rows.
         for table_row in table_body.select(&table_row_selector) {
@@ -174,10 +214,10 @@ impl UindexCategories {
                 .map(|url| url.to_string())
                 .map(|url| format!("{}{}", "https://uindex.org", url));
 
-            let date_elem = table_row_data[1].select(&sub_div_selector).next();
-            let date = date_elem.map_or("N/A".to_string(), |d| {
-                d.text().collect::<String>().trim().to_string()
-            });
+            let date: String = table_row_data[3]
+                .attr("title")
+                .unwrap_or_else(|| "N/A")
+                .into();
 
             // extracting size.
             let size = table_row_data[2]
@@ -187,14 +227,14 @@ impl UindexCategories {
                 .to_string();
 
             // extracting seeders
-            let seeders = table_row_data[3]
+            let seeders = table_row_data[4]
                 .text()
                 .collect::<String>()
                 .trim()
                 .to_string();
 
             // extracting leechers
-            let leechers = table_row_data[4]
+            let leechers = table_row_data[5]
                 .text()
                 .collect::<String>()
                 .trim()
