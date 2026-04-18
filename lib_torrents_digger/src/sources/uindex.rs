@@ -260,6 +260,130 @@ impl UindexCategories {
 
         Ok((all_torrents, pagination))
     }
+
+    // for parsing top torrents.
+    pub fn custom_scrape_and_parse(
+        mut response: Response<Body>,
+    ) -> Result<(Vec<Torrent>, Pagination)> {
+        let html_response = response.body_mut().read_to_string()?;
+        let document = Html::parse_document(&html_response);
+
+        // Selectors
+        let top_container_sel = Selector::parse("div.top-table-container")
+            .map_err(|e| anyhow!(format!("Error parsing div selector: {}", e)))?;
+
+        let table_selector = Selector::parse("table")
+            .map_err(|e| anyhow!(format!("Error parsing table selector: {}", e)))?;
+
+        let table_body_selector = Selector::parse("tbody")
+            .map_err(|e| anyhow!(format!("Error parsing table body selector: {}", e)))?;
+
+        let table_row_selector = Selector::parse("tr")
+            .map_err(|e| anyhow!(format!("Error parsing table row selector: {}", e)))?;
+
+        let table_data_selector = Selector::parse("td")
+            .map_err(|e| anyhow!(format!("Error parsing table data selector: {}", e)))?;
+
+        let anchor_tag_selector = Selector::parse("a")
+            .map_err(|e| anyhow!(format!("Error parsing anchor tag selector: {}", e)))?;
+
+        // Vector of Torrent to Store all Torrents
+        let mut all_torrents: Vec<Torrent> = Vec::new();
+
+        let div = document.select(&top_container_sel).next().unwrap();
+        let table = div.select(&table_selector).next().unwrap();
+        let table_body = table.select(&table_body_selector).next().unwrap();
+
+        // checking if torrent is available or not.
+        if table_body
+            .text()
+            .any(|error_text_response| error_text_response.trim() == "No results found.")
+        {
+            return Err(anyhow!("No torrents found with the specified name."));
+        }
+
+        // iterating over table rows.
+        for table_row in table_body.select(&table_row_selector) {
+            let table_row_data: Vec<ElementRef> = table_row.select(&table_data_selector).collect();
+
+            if table_row_data.len() < 5 {
+                // Skip rows that don't have the expected structure
+                continue;
+            }
+
+            // magnet link and torrent name is in 2nd td.
+            let magnet_and_torrent_name_elem_vec: Vec<ElementRef> =
+                table_row_data[2].select(&anchor_tag_selector).collect();
+
+            // extracting magnet link
+            let magnet = magnet_and_torrent_name_elem_vec
+                .first()
+                .and_then(|a| a.attr("href"))
+                .unwrap_or("No Magnet Link Found..")
+                .to_string();
+
+            // extracting info hash from magnet
+            let info_hash = extract_info_hash_from_magnet(&magnet).to_lowercase();
+
+            // extracting torrent name
+            let name = magnet_and_torrent_name_elem_vec
+                .get(1)
+                .map_or("Failed to Extract Torrent Name".to_string(), |a| {
+                    a.text().collect::<String>()
+                });
+
+            let source_url = magnet_and_torrent_name_elem_vec
+                .get(1)
+                .and_then(|element| element.value().attr("href"))
+                .map(|url| url.to_string())
+                .map(|url| format!("{}{}", "https://uindex.org", url));
+
+            let date: String = table_row_data[4]
+                .attr("title")
+                .unwrap_or_else(|| "N/A")
+                .into();
+
+            // extracting size.
+            let size = table_row_data[3]
+                .text()
+                .collect::<String>()
+                .trim()
+                .to_string();
+
+            // extracting seeders
+            let seeders = table_row_data[5]
+                .text()
+                .collect::<String>()
+                .trim()
+                .to_string();
+
+            // extracting leechers
+            let leechers = table_row_data[6]
+                .text()
+                .collect::<String>()
+                .trim()
+                .to_string();
+
+            // total downloads
+            // this source doesn't provide total downloads number.
+            let total_downloads = "N/A".to_string();
+
+            // saving to vector of torrents.
+            all_torrents.push(Torrent {
+                info_hash,
+                name,
+                magnet,
+                size,
+                date,
+                seeders,
+                leechers,
+                total_downloads,
+                source_url,
+            });
+        }
+
+        Ok((all_torrents, Pagination::new()))
+    }
 }
 
 impl fmt::Display for UindexCategories {

@@ -5,8 +5,9 @@ use anyhow::Result;
 use crate::{
     sources::{
         Pagination, available_sources::AllAvailableSources, the_pirate_bay::ThePirateBayCategories,
+        uindex::UindexCategories,
     },
-    sync_request::fetch_torrents,
+    sync_request::{fetch_torrents, send_request},
     torrent::Torrent,
 };
 
@@ -216,6 +217,127 @@ impl fmt::Display for ThePirateBayCustomListings {
             Self::ThePirateBayTopUHDMovies => write!(f, "Top UHD Movies"),
             Self::ThePirateBayTopTvShows => write!(f, "Top Tv Shows"),
             Self::ThePirateBayTopUHDTvShows => write!(f, "Top UHD Tv Shows"),
+        }
+    }
+}
+
+pub enum UindexCustomListings {
+    TopAll,
+    TopMovies,
+    TopTV,
+    TopGames,
+    TopMusic,
+    TopApps,
+    TopXXX,
+    TopAnime,
+    TopOthers,
+}
+
+impl UindexCustomListings {
+    const ALL_VARIANTS: &'static [UindexCustomListings] = &[
+        Self::TopAll,
+        Self::TopMovies,
+        Self::TopTV,
+        Self::TopGames,
+        Self::TopMusic,
+        Self::TopApps,
+        Self::TopXXX,
+        Self::TopAnime,
+        Self::TopOthers,
+    ];
+
+    pub fn from_index(index: usize) -> Option<&'static UindexCustomListings> {
+        Self::ALL_VARIANTS.get(index)
+    }
+
+    pub fn all_custom_listings() -> Vec<String> {
+        [
+            Self::TopAll,
+            Self::TopMovies,
+            Self::TopTV,
+            Self::TopGames,
+            Self::TopMusic,
+            Self::TopApps,
+            Self::TopXXX,
+            Self::TopAnime,
+            Self::TopOthers,
+        ]
+        .iter()
+        .map(|category| category.to_string())
+        .collect()
+    }
+
+    pub fn fetch_torrents(source: &UindexCustomListings) -> Result<(Vec<Torrent>, Pagination)> {
+        match source {
+            Self::TopAll => {
+                let url = "https://uindex.org/top.php?t=7d";
+                let response = send_request(url)?;
+                UindexCategories::custom_scrape_and_parse(response)
+            }
+
+            Self::TopMovies => {
+                let url = "https://uindex.org/top.php?c=1&t=7d";
+                let response = send_request(url)?;
+                UindexCategories::custom_scrape_and_parse(response)
+            }
+
+            Self::TopTV => {
+                let url = "https://uindex.org/top.php?c=2&t=7d";
+                let response = send_request(url)?;
+                UindexCategories::custom_scrape_and_parse(response)
+            }
+
+            Self::TopGames => {
+                let url = "https://uindex.org/top.php?c=3&t=7d";
+                let response = send_request(url)?;
+                UindexCategories::custom_scrape_and_parse(response)
+            }
+
+            Self::TopMusic => {
+                let url = "https://uindex.org/top.php?c=4&t=7d";
+                let response = send_request(url)?;
+                UindexCategories::custom_scrape_and_parse(response)
+            }
+
+            Self::TopApps => {
+                let url = "https://uindex.org/top.php?c=5&t=7d";
+                let response = send_request(url)?;
+                UindexCategories::custom_scrape_and_parse(response)
+            }
+
+            Self::TopXXX => {
+                let url = "https://uindex.org/top.php?c=6&t=7d";
+                let response = send_request(url)?;
+                UindexCategories::custom_scrape_and_parse(response)
+            }
+
+            Self::TopAnime => {
+                let url = "https://uindex.org/top.php?c=7&t=7d";
+                let response = send_request(url)?;
+                UindexCategories::custom_scrape_and_parse(response)
+            }
+
+            Self::TopOthers => {
+                let url = "https://uindex.org/top.php?c=8&t=6m";
+                let response = send_request(url)?;
+                UindexCategories::custom_scrape_and_parse(response)
+            }
+        }
+    }
+}
+
+impl fmt::Display for UindexCustomListings {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::TopAll => write!(f, "All Trending"),
+            Self::TopMovies => write!(f, "Trending Movies"),
+            Self::TopTV => write!(f, "Trending TV Shows"),
+            Self::TopGames => write!(f, "Trending Games"),
+            Self::TopMusic => write!(f, "Trending Music"),
+            Self::TopApps => write!(f, "Trending Apps"),
+            Self::TopXXX => write!(f, "Trending XXX"),
+            Self::TopAnime => write!(f, "Trending Anime"),
+            Self::TopOthers => write!(f, "Other Trendings"),
         }
     }
 }

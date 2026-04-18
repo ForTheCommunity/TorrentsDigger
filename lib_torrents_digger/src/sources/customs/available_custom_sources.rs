@@ -3,6 +3,7 @@ use core::fmt;
 pub enum AllAvailableCustomSources {
     Nyaa,
     SukebeiNyaa,
+    Uindex,
     KnabenDatabase,
     ThePirateBay,
 }
@@ -11,6 +12,7 @@ impl AllAvailableCustomSources {
     const ALL_VARIANTS: &'static [AllAvailableCustomSources] = &[
         Self::Nyaa,
         Self::SukebeiNyaa,
+        Self::Uindex,
         Self::KnabenDatabase,
         Self::ThePirateBay,
     ];
@@ -25,6 +27,7 @@ impl fmt::Display for AllAvailableCustomSources {
         match self {
             Self::Nyaa => write!(f, "Nyaa"),
             Self::SukebeiNyaa => write!(f, "Nyaa Sukebei"),
+            Self::Uindex => write!(f, "Uindex"),
             Self::KnabenDatabase => write!(f, "Knaben Database"),
             Self::ThePirateBay => write!(f, "The Pirate Bay"),
         }
