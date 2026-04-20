@@ -5,15 +5,19 @@ import 'package:torrents_digger/src/rust/api/database/initialize.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 
 Future<void> initializeDatabase() async {
+  // new db path fix.
+  await moveDatabase();
+
   Directory platformSpecificDatabaseDirectory;
 
   if (Platform.isLinux) {
-    final homeDirectory = Platform.environment['HOME'] ?? '.';
-    platformSpecificDatabaseDirectory = Directory(homeDirectory);
-    await platformSpecificDatabaseDirectory.create(recursive: true);
+    // ignore: non_constant_identifier_names
+    var XDGDatadir = await (await getApplicationSupportDirectory()).create(
+      recursive: true,
+    );
+    platformSpecificDatabaseDirectory = XDGDatadir;
   } else if (Platform.isAndroid) {
-    platformSpecificDatabaseDirectory =
-        await getApplicationDocumentsDirectory();
+    platformSpecificDatabaseDirectory = await getApplicationSupportDirectory();
     platformSpecificDatabaseDirectory.create(recursive: true);
   } else if (Platform.isWindows) {
     platformSpecificDatabaseDirectory = await getApplicationSupportDirectory();
@@ -27,5 +31,28 @@ Future<void> initializeDatabase() async {
     );
   } catch (e) {
     createSnackBar(message: "Error : $e", duration: 5);
+  }
+}
+
+// moving database path.
+Future<void> moveDatabase() async {
+  if (Platform.isAndroid) {
+    // Old App Root Path
+    Directory oldAppRootPath = await getApplicationDocumentsDirectory();
+    String oldDBPath =
+        "${oldAppRootPath.path}/.torrents_digger/torrents_digger.database";
+
+    // New App Root Path
+    Directory newAppRootPath = await getApplicationSupportDirectory();
+    String newDBPath = "${newAppRootPath.path}/torrents_digger.database";
+
+    // if db is in old path and if new db path is empty
+    // then moving old db to new path...
+    if (await File(oldDBPath).exists() && !await File(newDBPath).exists()) {
+      // creating new path (Fail Safe)
+      newAppRootPath.create(recursive: true);
+      // copying db to new path
+      await File(oldDBPath).copy(newDBPath);
+    }
   }
 }

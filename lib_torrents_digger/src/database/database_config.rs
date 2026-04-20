@@ -3,10 +3,8 @@ use std::{path::PathBuf, sync::OnceLock};
 use r2d2::{Pool, PooledConnection};
 use r2d2_sqlite::SqliteConnectionManager;
 
-pub const APP_DIR_NAME: &str = ".torrents_digger";
 pub const TRACKERS_LISTS_DIR: &str = "trackers/";
 
-pub const APP_DIR: &str = ".torrents_digger";
 pub const DATABASE_NAME: &str = "torrents_digger.database";
 pub const HYDRATION_DIR: &str = "hydration";
 

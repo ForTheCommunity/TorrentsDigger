@@ -7,7 +7,7 @@ use std::{fs::create_dir_all, path::PathBuf, sync::LazyLock};
 use crate::{
     database::{
         database_config::{
-            APP_DIR, DATABASE_NAME, HYDRATION_DIR, PLATFORM_SPECIFIC_DIR, TRACKERS_DIR_PATH,
+            DATABASE_NAME, HYDRATION_DIR, PLATFORM_SPECIFIC_DIR, TRACKERS_DIR_PATH,
             TRACKERS_LISTS_DIR, get_a_database_connection, init_database_pool,
         },
         settings_kvs::insert_update_kv,
@@ -21,14 +21,13 @@ static MIGRATIONS: LazyLock<Migrations<'static>> =
     LazyLock::new(|| Migrations::from_directory(&MIGRATIONS_DIR).unwrap());
 
 pub fn initialize_database(platform_specific_home_dir: String) -> Result<()> {
-    let platform_specific_home_dir = PathBuf::from(platform_specific_home_dir);
-    let app_dir = platform_specific_home_dir.join(APP_DIR);
-    let database_path = app_dir.join(DATABASE_NAME);
-    let trackers_path = app_dir.join(TRACKERS_LISTS_DIR);
-    let hydration_path = app_dir.join(HYDRATION_DIR);
+    let platform_specific_data_dir = PathBuf::from(platform_specific_home_dir);
+    let database_path = platform_specific_data_dir.join(DATABASE_NAME);
+    let trackers_path = platform_specific_data_dir.join(TRACKERS_LISTS_DIR);
+    let hydration_path = platform_specific_data_dir.join(HYDRATION_DIR);
 
     // creating App Config Dir
-    create_dir_all(app_dir)?;
+    create_dir_all(&platform_specific_data_dir)?;
     // creating Trackers dir
     create_dir_all(&trackers_path)?;
     // create Hydration dir (for flutter bloc)
@@ -45,7 +44,7 @@ pub fn initialize_database(platform_specific_home_dir: String) -> Result<()> {
     // saving app root dir..
     insert_update_kv(
         PLATFORM_SPECIFIC_DIR,
-        platform_specific_home_dir
+        platform_specific_data_dir
             .to_str()
             .ok_or_else(|| anyhow!("Unable to Insert/Update Platform Specific Home Dir"))?,
     )?;
