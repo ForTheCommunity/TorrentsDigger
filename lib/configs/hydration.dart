@@ -11,7 +11,7 @@ Future<void> hydrationSetup() async {
   Directory hydrationDir;
 
   if (appRootDirPath != null) {
-    var hPath = path.join(appRootDirPath, ".torrents_digger", "hydration");
+    var hPath = path.join(appRootDirPath, "hydration");
     hydrationDir = Directory(hPath);
   } else {
     // fallback hydration point

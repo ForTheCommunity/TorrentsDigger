@@ -30,3 +30,54 @@ just --list
 
 
 ## Note : Check [Current Versions File](./.current_versions.txt) for Rust & Flutter version. Use these version for developing this project.
+
+
+
+
+# Guides for building Torrents Digger for Flatpak.
+
+## 1. We use [Flatpak-Flutter](https://github.com/TheAppgineer/flatpak-flutter) for generating essential files, that is necessary for building our project for Flatpak.
+```
+{..<PATH>..}/flatpak-flutter.py flatpak-flutter.yml
+```
+
+## 2. Install Required Platform Extensions:
+```
+flatpak install flathub org.freedesktop.Sdk//25.08 org.freedesktop.Platform//25.08 org.freedesktop.Sdk.Extension.llvm20/x86_64/25.08
+```
+
+## 2. Compiling App & Preparing Local Repository.
+
+```
+flatpak-builder --repo=repo --force-clean --sandbox --user build io.gitlab.forthecommunity.torrents_digger.yml
+```
+
+## 3. Building .flatpak package.
+```
+flatpak build-bundle repo torrents_digger.flatpak io.gitlab.forthecommunity.torrents_digger
+```
+
+## 4. Install Generated Flatpak (in Userspace).
+```
+ flatpak install --user ./torrents_digger.flatpak
+```
+
+## 5. Run Installed Flatpak.
+```
+flatpak run io.gitlab.forthecommunity.torrents_digger
+```
+
+## 6. Installing Flatpak-Builder.
+```
+flatpak install flathub org.flatpak.Builder
+```
+
+## 7. Manifest Lint Check.
+```
+flatpak run --command=flatpak-builder-lint org.flatpak.Builder manifest io.gitlab.forthecommunity.torrents_digger.yml
+```
+
+## 8. Repo Lint Check:
+```
+flatpak run --command=flatpak-builder-lint org.flatpak.Builder repo repo
+```
