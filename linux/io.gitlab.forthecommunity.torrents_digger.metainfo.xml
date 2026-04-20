@@ -51,19 +51,19 @@
   <launchable type="desktop-id">io.gitlab.forthecommunity.torrents_digger.desktop</launchable>
   <screenshots>
     <screenshot type="default">
-      <image type="source">https://gitlab.com/ForTheCommunity/torrentsdigger/-/raw/main/flatpak/screenshots/1.png</image>
+      <image type="source">https://gitlab.com/ForTheCommunity/torrentsdigger/-/raw/7e5d3fa835ee529bbd96e12efb896afc6debfd91/flatpak/screenshots/1.png</image>
       <caption>Main Screen</caption>
     </screenshot>
     <screenshot>
-      <image type="source">https://gitlab.com/ForTheCommunity/torrentsdigger/-/raw/main/flatpak/screenshots/1.png</image>
+      <image type="source">https://gitlab.com/ForTheCommunity/torrentsdigger/-/raw/7e5d3fa835ee529bbd96e12efb896afc6debfd91/flatpak/screenshots/2.png</image>
       <caption>Bookmarks Screen</caption>
     </screenshot>
     <screenshot>
-      <image type="source">https://gitlab.com/ForTheCommunity/torrentsdigger/-/raw/main/flatpak/screenshots/3.png</image>
+      <image type="source">https://gitlab.com/ForTheCommunity/torrentsdigger/-/raw/7e5d3fa835ee529bbd96e12efb896afc6debfd91/flatpak/screenshots/3.png</image>
       <caption>Custom Listings Screen</caption>
     </screenshot>
     <screenshot>
-      <image type="source">https://gitlab.com/ForTheCommunity/torrentsdigger/-/raw/main/flatpak/screenshots/4.png</image>
+      <image type="source">https://gitlab.com/ForTheCommunity/torrentsdigger/-/raw/7e5d3fa835ee529bbd96e12efb896afc6debfd91/flatpak/screenshots/4.png</image>
       <caption>Settings Screen</caption>
     </screenshot>
   </screenshots>
