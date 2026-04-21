@@ -36,10 +36,6 @@ modules:
       - flutter build linux --release --no-pub
       - mkdir -p /app/lib/io.gitlab.forthecommunity.torrents_digger
       - cp -r $BUNDLE_PATH/* /app/lib/io.gitlab.forthecommunity.torrents_digger/
-      - echo '#!/bin/sh' > /app/bin/torrents_digger
-      - echo 'exec /app/lib/io.gitlab.forthecommunity.torrents_digger/torrents_digger
-        "$@"' >> /app/bin/torrents_digger
-      - chmod +x /app/bin/torrents_digger
       - install -Dm644 linux/io.gitlab.forthecommunity.torrents_digger.desktop -t
         /app/share/applications/
       - install -Dm644 linux/io.gitlab.forthecommunity.torrents_digger.metainfo.xml
@@ -52,10 +48,11 @@ modules:
         -t /app/share/icons/hicolor/256x256/apps/
       - install -Dm644 linux/icons/hicolor/512x512/apps/io.gitlab.forthecommunity.torrents_digger.png
         -t /app/share/icons/hicolor/512x512/apps/
+      - install -Dm755 linux/torrents_digger.sh /app/bin/torrents_digger
     sources:
       - type: git
         url: https://gitlab.com/ForTheCommunity/torrentsdigger.git
-        commit: a29b72cc8cf884d7a51279ff827d767c36ebb599
+        commit: 446af316988871b3557f3163212430f6e45da96f
       - generated/sources/cargo.json
       - generated/sources/pubspec.json
     modules:

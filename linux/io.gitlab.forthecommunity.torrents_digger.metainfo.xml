@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
   <id>io.gitlab.forthecommunity.torrents_digger</id>
-  
+
   <name>Torrents Digger</name>
   <developer id="io.gitlab.forthecommunity">
     <name>ForTheCommunity</name>
   </developer>
   <summary>Digs Torrents From The Internet</summary>
-  
-  <metadata_license>MIT</metadata_license>
+
+  <metadata_license>Unlicense</metadata_license>
   <project_license>Unlicense</project_license>
-  
+
   <url type="homepage">https://gitlab.com/ForTheCommunity/torrentsdigger</url>
   <url type="bugtracker">https://github.com/ForTheCommunity/TorrentsDigger/issues/1</url>
   <url type="contribute">https://gitlab.com/ForTheCommunity/torrentsdigger/-/blob/main/CONTRIBUTING.md</url>
@@ -21,7 +21,7 @@
     <control>keyboard</control>
     <control>touch</control>
   </supports>
-  
+
   <description>
     <p>
 	    Torrents Digger is a tool to dig torrents from the Internet.
@@ -45,7 +45,7 @@
     <li>Cross Platform ( Available for Android, Windows &amp; Linux ).</li>
     </ul>
   </description>
-  
+
   <content_rating type="oars-1.1" />
 
   <launchable type="desktop-id">io.gitlab.forthecommunity.torrents_digger.desktop</launchable>
@@ -67,7 +67,7 @@
       <caption>Settings Screen</caption>
     </screenshot>
   </screenshots>
-  <releases>  
+  <releases>
     <release version="1.2.0" date="2026-02-15">
       <url type="details">https://gitlab.com/ForTheCommunity/torrentsdigger/-/blob/main/CHANGELOG.md</url>
     </release>
