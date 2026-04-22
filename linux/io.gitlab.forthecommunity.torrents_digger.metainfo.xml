@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>io.gitlab.forthecommunity.torrents_digger</id>
+  <id>io.gitlab.forthecommunity.torrentsdigger</id>
 
   <name>Torrents Digger</name>
   <developer id="io.gitlab.forthecommunity">
@@ -48,7 +48,7 @@
 
   <content_rating type="oars-1.1" />
 
-  <launchable type="desktop-id">io.gitlab.forthecommunity.torrents_digger.desktop</launchable>
+  <launchable type="desktop-id">io.gitlab.forthecommunity.torrentsdigger.desktop</launchable>
   <screenshots>
     <screenshot type="default">
       <image type="source">https://gitlab.com/ForTheCommunity/torrentsdigger/-/raw/7e5d3fa835ee529bbd96e12efb896afc6debfd91/flatpak/screenshots/1.png</image>

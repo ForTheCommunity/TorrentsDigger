@@ -1,2 +1,2 @@
 #!/bin/sh
-exec /app/lib/io.gitlab.forthecommunity.torrents_digger/torrents_digger "$@"
+exec /app/lib/io.gitlab.forthecommunity.torrentsdigger/torrents_digger "$@"
