@@ -46,38 +46,38 @@ just --list
 flatpak install flathub org.freedesktop.Sdk//25.08 org.freedesktop.Platform//25.08 org.freedesktop.Sdk.Extension.llvm20/x86_64/25.08
 ```
 
-## 2. Compiling App & Preparing Local Repository.
+## 3. Compiling App & Preparing Local Repository.
 
 ```
-flatpak-builder --repo=repo --force-clean --sandbox --user build io.gitlab.forthecommunity.torrents_digger.yml
+flatpak-builder --repo=repo --force-clean --sandbox --user build io.gitlab.forthecommunity.torrentsdigger.yml
 ```
 
-## 3. Building .flatpak package.
+## 4. Building .flatpak package.
 ```
-flatpak build-bundle repo torrents_digger.flatpak io.gitlab.forthecommunity.torrents_digger
+flatpak build-bundle repo torrents_digger.flatpak io.gitlab.forthecommunity.torrentsdigger
 ```
 
-## 4. Install Generated Flatpak (in Userspace).
+## 5. Install Generated Flatpak (in Userspace).
 ```
  flatpak install --user ./torrents_digger.flatpak
 ```
 
-## 5. Run Installed Flatpak.
+## 6. Run Installed Flatpak.
 ```
-flatpak run io.gitlab.forthecommunity.torrents_digger
+flatpak run io.gitlab.forthecommunity.torrentsdigger
 ```
 
-## 6. Installing Flatpak-Builder.
+## 7. Installing Flatpak-Builder.
 ```
 flatpak install flathub org.flatpak.Builder
 ```
 
-## 7. Manifest Lint Check.
+## 8. Manifest Lint Check.
 ```
-flatpak run --command=flatpak-builder-lint org.flatpak.Builder manifest io.gitlab.forthecommunity.torrents_digger.yml
+flatpak run --command=flatpak-builder-lint org.flatpak.Builder manifest io.gitlab.forthecommunity.torrentsdigger.yml
 ```
 
-## 8. Repo Lint Check:
+## 9. Repo Lint Check:
 ```
 flatpak run --command=flatpak-builder-lint org.flatpak.Builder repo repo
 ```
