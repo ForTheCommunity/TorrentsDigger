@@ -1,4 +1,4 @@
-id: io.gitlab.forthecommunity.torrentsdigger
+id: io.gitlab.ForTheCommunity.torrentsdigger
 runtime: org.freedesktop.Platform
 runtime-version: "25.08"
 sdk: org.freedesktop.Sdk
@@ -29,14 +29,14 @@ modules:
     build-commands:
       - dart run build_runner build --delete-conflicting-outputs
       - flutter build linux --release --no-pub
-      - mkdir -p /app/lib/io.gitlab.forthecommunity.torrentsdigger
-      - cp -r $BUNDLE_PATH/* /app/lib/io.gitlab.forthecommunity.torrentsdigger/
-      - install -Dm644 linux/io.gitlab.forthecommunity.torrentsdigger.desktop -t /app/share/applications/
-      - install -Dm644 linux/io.gitlab.forthecommunity.torrentsdigger.metainfo.xml -t /app/share/metainfo/
-      - install -Dm644 linux/icons/hicolor/64x64/apps/io.gitlab.forthecommunity.torrentsdigger.png -t /app/share/icons/hicolor/64x64/apps/
-      - install -Dm644 linux/icons/hicolor/128x128/apps/io.gitlab.forthecommunity.torrentsdigger.png -t /app/share/icons/hicolor/128x128/apps/
-      - install -Dm644 linux/icons/hicolor/256x256/apps/io.gitlab.forthecommunity.torrentsdigger.png -t /app/share/icons/hicolor/256x256/apps/
-      - install -Dm644 linux/icons/hicolor/512x512/apps/io.gitlab.forthecommunity.torrentsdigger.png -t /app/share/icons/hicolor/512x512/apps/
+      - mkdir -p /app/lib/io.gitlab.ForTheCommunity.torrentsdigger
+      - cp -r $BUNDLE_PATH/* /app/lib/io.gitlab.ForTheCommunity.torrentsdigger/
+      - install -Dm644 linux/io.gitlab.ForTheCommunity.torrentsdigger.desktop -t /app/share/applications/
+      - install -Dm644 linux/io.gitlab.ForTheCommunity.torrentsdigger.metainfo.xml -t /app/share/metainfo/
+      - install -Dm644 linux/icons/hicolor/64x64/apps/io.gitlab.ForTheCommunity.torrentsdigger.png -t /app/share/icons/hicolor/64x64/apps/
+      - install -Dm644 linux/icons/hicolor/128x128/apps/io.gitlab.ForTheCommunity.torrentsdigger.png -t /app/share/icons/hicolor/128x128/apps/
+      - install -Dm644 linux/icons/hicolor/256x256/apps/io.gitlab.ForTheCommunity.torrentsdigger.png -t /app/share/icons/hicolor/256x256/apps/
+      - install -Dm644 linux/icons/hicolor/512x512/apps/io.gitlab.ForTheCommunity.torrentsdigger.png -t /app/share/icons/hicolor/512x512/apps/
       - install -Dm755 flatpak/torrents_digger.sh /app/bin/torrents_digger
 
     sources:
