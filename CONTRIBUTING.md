@@ -49,12 +49,12 @@ flatpak install flathub org.freedesktop.Sdk//25.08 org.freedesktop.Platform//25.
 ## 3. Compiling App & Preparing Local Repository.
 
 ```
-flatpak-builder --repo=repo --force-clean --sandbox --user build io.gitlab.forthecommunity.torrentsdigger.yml
+flatpak-builder --repo=repo --force-clean --sandbox --user build io.gitlab.ForTheCommunity.torrentsdigger.yml
 ```
 
 ## 4. Building .flatpak package.
 ```
-flatpak build-bundle repo torrents_digger.flatpak io.gitlab.forthecommunity.torrentsdigger
+flatpak build-bundle repo torrents_digger.flatpak io.gitlab.ForTheCommunity.torrentsdigger
 ```
 
 ## 5. Install Generated Flatpak (in Userspace).
@@ -64,7 +64,7 @@ flatpak build-bundle repo torrents_digger.flatpak io.gitlab.forthecommunity.torr
 
 ## 6. Run Installed Flatpak.
 ```
-flatpak run io.gitlab.forthecommunity.torrentsdigger
+flatpak run io.gitlab.ForTheCommunity.torrentsdigger
 ```
 
 ## 7. Installing Flatpak-Builder.
@@ -74,7 +74,7 @@ flatpak install flathub org.flatpak.Builder
 
 ## 8. Manifest Lint Check.
 ```
-flatpak run --command=flatpak-builder-lint org.flatpak.Builder manifest io.gitlab.forthecommunity.torrentsdigger.yml
+flatpak run --command=flatpak-builder-lint org.flatpak.Builder manifest io.gitlab.ForTheCommunity.torrentsdigger.yml
 ```
 
 ## 9. Repo Lint Check:

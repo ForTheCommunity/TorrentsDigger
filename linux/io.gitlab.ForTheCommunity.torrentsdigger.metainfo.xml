@@ -12,6 +12,7 @@
   <project_license>Unlicense</project_license>
 
   <url type="homepage">https://gitlab.com/ForTheCommunity/torrentsdigger</url>
+  <url type="vcs-browser">https://gitlab.com/ForTheCommunity/torrentsdigger</url>
   <url type="bugtracker">https://github.com/ForTheCommunity/TorrentsDigger/issues/1</url>
   <url type="contribute">https://gitlab.com/ForTheCommunity/torrentsdigger/-/blob/main/CONTRIBUTING.md</url>
   <url type="help">https://gitlab.com/ForTheCommunity/torrentsdigger#support</url>
