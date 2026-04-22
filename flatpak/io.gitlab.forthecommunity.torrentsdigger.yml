@@ -47,11 +47,11 @@ modules:
         -t /app/share/icons/hicolor/256x256/apps/
       - install -Dm644 linux/icons/hicolor/512x512/apps/io.gitlab.forthecommunity.torrentsdigger.png
         -t /app/share/icons/hicolor/512x512/apps/
-      - install -Dm755 linux/torrents_digger.sh /app/bin/torrents_digger
+      - install -Dm755 flatpak/torrents_digger.sh /app/bin/torrents_digger
     sources:
       - type: git
         url: https://gitlab.com/ForTheCommunity/torrentsdigger.git
-        commit: 77f264ab70e63a2a28b482d792494044d7d61912
+        commit: 8c7c36515f1b9cd9cce5766fe97ed4672f074567
       - generated/sources/cargo.json
       - generated/sources/pubspec.json
     modules:
