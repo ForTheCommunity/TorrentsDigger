@@ -29,8 +29,8 @@ modules:
     build-commands:
       - dart run build_runner build --delete-conflicting-outputs
       - flutter build linux --release --no-pub
-      - mkdir -p /app/lib/io.gitlab.ForTheCommunity.torrentsdigger
-      - cp -r $BUNDLE_PATH/* /app/lib/io.gitlab.ForTheCommunity.torrentsdigger/
+      - mkdir -p /app/share/io.gitlab.ForTheCommunity.torrentsdigger
+      - cp -r $BUNDLE_PATH/* /app/share/io.gitlab.ForTheCommunity.torrentsdigger/
       - install -Dm644 linux/io.gitlab.ForTheCommunity.torrentsdigger.desktop -t /app/share/applications/
       - install -Dm644 linux/io.gitlab.ForTheCommunity.torrentsdigger.metainfo.xml -t /app/share/metainfo/
       - install -Dm644 linux/icons/hicolor/64x64/apps/io.gitlab.ForTheCommunity.torrentsdigger.png -t /app/share/icons/hicolor/64x64/apps/

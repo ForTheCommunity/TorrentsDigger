@@ -54,6 +54,5 @@ modules:
         commit: 420a64f3b901b37d20ff6df48dac3dc3ec4dd77d
       - generated/sources/cargo.json
       - generated/sources/pubspec.json
-    modules:
-      - generated/modules/rustup-1.94.0.json
+    modules: 
       - generated/modules/flutter-sdk-3.38.9.json
