@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "org.forthecommunity" "\0"
-            VALUE "FileDescription", "torrents_digger" "\0"
+            VALUE "CompanyName", "ForTheCommunity" "\0"
+            VALUE "FileDescription", "Torrents Digger | Torrents Search App" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "torrents_digger" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2025 org.forthecommunity. Unlicensed." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2025 ForTheCommunity. Unlicensed." "\0"
             VALUE "OriginalFilename", "torrents_digger.exe" "\0"
-            VALUE "ProductName", "torrents_digger" "\0"
+            VALUE "ProductName", "Torrents Digger" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

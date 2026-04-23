@@ -8,7 +8,7 @@
 - In Linux : Database should be moved to new path mannually.
 - Command to fix :
 ```
-cp ~/.torrents_digger/torrents_digger.database ~/.local/share/io.gitlab.ForTheCommunity.torrents_digger/
+cp ~/.torrents_digger/torrents_digger.database ~/.local/share/io.gitlab.ForTheCommunity.torrentsdigger/
 ```
 
 ## [1.2.0] - 2026-02-15
