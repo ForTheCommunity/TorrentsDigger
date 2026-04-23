@@ -183,9 +183,9 @@ build_flatpak:
     - flatpak install flathub org.freedesktop.Sdk.Extension.llvm20//25.08 -y
     - cd flatpak
     # Building App
-    - flatpak-builder --repo=repo --force-clean build-dir io.gitlab.forthecommunity.torrents_digger.yml
+    - flatpak-builder --repo=repo --force-clean build-dir io.gitlab.ForTheCommunity.torrentsdigger.yml
     # Packaging .flatpak file
-    - flatpak build-bundle repo $FLATPAK_FILENAME io.gitlab.forthecommunity.torrents_digger
+    - flatpak build-bundle repo $FLATPAK_FILENAME io.gitlab.ForTheCommunity.torrentsdigger
     - mv $FLATPAK_FILENAME ../releases/
     - cd ..
     - sha256sum releases/$FLATPAK_FILENAME >> releases/$FLATPAK_CHECKSUM_FILENAME
