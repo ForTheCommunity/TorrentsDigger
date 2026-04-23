@@ -34,8 +34,8 @@ modules:
       - setup-flutter.sh
       - dart run build_runner build --delete-conflicting-outputs
       - flutter build linux --release --no-pub
-      - mkdir -p /app/lib/io.gitlab.ForTheCommunity.torrentsdigger
-      - cp -r $BUNDLE_PATH/* /app/lib/io.gitlab.ForTheCommunity.torrentsdigger/
+      - mkdir -p /app/share/io.gitlab.ForTheCommunity.torrentsdigger
+      - cp -r $BUNDLE_PATH/* /app/share/io.gitlab.ForTheCommunity.torrentsdigger/
       - install -Dm644 linux/io.gitlab.ForTheCommunity.torrentsdigger.desktop -t /app/share/applications/
       - install -Dm644 linux/io.gitlab.ForTheCommunity.torrentsdigger.metainfo.xml
         -t /app/share/metainfo/
@@ -51,8 +51,9 @@ modules:
     sources:
       - type: git
         url: https://gitlab.com/ForTheCommunity/torrentsdigger.git
-        commit: 420a64f3b901b37d20ff6df48dac3dc3ec4dd77d
+        commit: ba755c8578300755e5205e98cba18a6f515def66
       - generated/sources/cargo.json
       - generated/sources/pubspec.json
-    modules: 
+    modules:
+      - generated/modules/rustup-1.94.0.json
       - generated/modules/flutter-sdk-3.38.9.json

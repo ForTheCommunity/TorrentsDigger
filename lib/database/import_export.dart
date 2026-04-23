@@ -4,24 +4,48 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:torrents_digger/database/get_settings_data.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 
-void exportDatabaseDesktop() {
-  final rootPath = Platform.environment['HOME'] ?? '.';
-  Directory rootDirPath = Directory(rootPath);
-  String databasePath =
-      "${rootDirPath.path}/.torrents_digger/torrents_digger.database";
-  createSnackBar(
-    message:
-        "Database is in Path :\n$databasePath\n Database Path Copied to Clipboard",
-    duration: 5,
-  );
-  Clipboard.setData(ClipboardData(text: databasePath));
+const String databaseFileName = "torrents_digger.database";
+
+void importDatabaseDesktop() async {
+  String? rootPath = await getAppRootDir();
+
+  if (rootPath != null) {
+    createSnackBar(
+      message:
+          "Put Database is in Path :\n$rootPath\n Path Copied to Clipboard",
+      duration: 5,
+    );
+    Clipboard.setData(ClipboardData(text: rootPath));
+  } else if (rootPath == null) {
+    createSnackBar(message: "app_root_dir is null !!!", duration: 10);
+  } else {
+    createSnackBar(message: "Something Went Wrong !!!", duration: 10);
+  }
+}
+
+void exportDatabaseDesktop() async {
+  String? rootPath = await getAppRootDir();
+
+  if (rootPath != null) {
+    String databasePath = "$rootPath/$databaseFileName";
+    createSnackBar(
+      message:
+          "Database is in Path :\n$databasePath\n Path Copied to Clipboard",
+      duration: 5,
+    );
+    Clipboard.setData(ClipboardData(text: databasePath));
+  } else if (rootPath == null) {
+    createSnackBar(message: "app_root_dir is null !!!", duration: 10);
+  } else {
+    createSnackBar(message: "Something Went Wrong !!!", duration: 10);
+  }
 }
 
 void exportDatabaseAndroid() async {
   // database file/folder name
-  String databaseFileName = "torrents_digger.database";
   String internalScopedStoragedatabaseDirName = ".torrents_digger";
 
   // Internal Scoped Storage Dir
@@ -55,7 +79,6 @@ void exportDatabaseAndroid() async {
 
 void importDatabaseAndroid() async {
   // database file/folder name
-  String databaseFileName = "torrents_digger.database";
   String internalScopedStoragedatabaseDirName = ".torrents_digger";
 
   // Internal Scoped Storage Dir
@@ -98,14 +121,4 @@ void importDatabaseAndroid() async {
   } else {
     createSnackBar(message: "Failed to Pick database File", duration: 2);
   }
-}
-
-void importDatabaseDesktop() {
-  final rootPath = Platform.environment['HOME'] ?? '.';
-  Directory rootDirPath = Directory(rootPath);
-  String databasePath = "${rootDirPath.path}/.torrents_digger";
-  createSnackBar(
-    message: "Place your Database file in Path :\n$databasePath",
-    duration: 5,
-  );
 }
