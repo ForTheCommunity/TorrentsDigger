@@ -1,0 +1,6 @@
+- Fixed UIndex & Added Pagination for UIndex.
+- Added Custom Listings for UIndex.
+- Internal Improvements.
+- In Linux : Database should be moved to new path mannually.
+- run this command to fix database in linux :
+- cp ~/.torrents_digger/torrents_digger.database ~/.local/share/io.gitlab.ForTheCommunity.torrents_digger/

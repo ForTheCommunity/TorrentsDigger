@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.2.1] - 2026-04-23
+
+- Fixed UIndex & Added Pagination for UIndex.
+- Added Custom Listings for UIndex.
+- Internal Improvements.
+- In Linux : Database should be moved to new path mannually.
+- Command to fix :
+```
+cp ~/.torrents_digger/torrents_digger.database ~/.local/share/io.gitlab.ForTheCommunity.torrents_digger/
+```
+
 ## [1.2.0] - 2026-02-15
 
 - Added Torrent Description Page Button.
