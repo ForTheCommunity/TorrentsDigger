@@ -5,9 +5,6 @@ import 'package:torrents_digger/src/rust/api/database/initialize.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 
 Future<void> initializeDatabase() async {
-  // new db path fix.
-  await moveDatabase();
-
   Directory platformSpecificDatabaseDirectory;
 
   if (Platform.isLinux) {
@@ -17,6 +14,9 @@ Future<void> initializeDatabase() async {
     );
     platformSpecificDatabaseDirectory = XDGDatadir;
   } else if (Platform.isAndroid) {
+    // fix new db path.
+    // path of database is changed from Version 1.2.1.
+    await fixDatabase();
     platformSpecificDatabaseDirectory = await getApplicationSupportDirectory();
     platformSpecificDatabaseDirectory.create(recursive: true);
   } else if (Platform.isWindows) {
@@ -34,25 +34,23 @@ Future<void> initializeDatabase() async {
   }
 }
 
-// moving database path.
-Future<void> moveDatabase() async {
-  if (Platform.isAndroid) {
-    // Old App Root Path
-    Directory oldAppRootPath = await getApplicationDocumentsDirectory();
-    String oldDBPath =
-        "${oldAppRootPath.path}/.torrents_digger/torrents_digger.database";
+// fixing database for android..
+Future<void> fixDatabase() async {
+  // Old App Root Path
+  Directory oldAppRootPath = await getApplicationDocumentsDirectory();
+  String oldDBPath =
+      "${oldAppRootPath.path}/.torrents_digger/torrents_digger.database";
 
-    // New App Root Path
-    Directory newAppRootPath = await getApplicationSupportDirectory();
-    String newDBPath = "${newAppRootPath.path}/torrents_digger.database";
+  // New App Root Path
+  Directory newAppRootPath = await getApplicationSupportDirectory();
+  String newDBPath = "${newAppRootPath.path}/torrents_digger.database";
 
-    // if db is in old path and if new db path is empty
-    // then moving old db to new path...
-    if (await File(oldDBPath).exists() && !await File(newDBPath).exists()) {
-      // creating new path (Fail Safe)
-      newAppRootPath.create(recursive: true);
-      // copying db to new path
-      await File(oldDBPath).copy(newDBPath);
-    }
+  // if db is in old path and if new db path is empty
+  // then moving old db to new path...
+  if (await File(oldDBPath).exists() && !await File(newDBPath).exists()) {
+    // creating new path (Fail Safe)
+    newAppRootPath.create(recursive: true);
+    // copying db to new path
+    await File(oldDBPath).copy(newDBPath);
   }
 }

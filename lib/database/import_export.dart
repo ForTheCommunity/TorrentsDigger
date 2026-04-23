@@ -45,20 +45,11 @@ void exportDatabaseDesktop() async {
 }
 
 void exportDatabaseAndroid() async {
-  // database file/folder name
-  String internalScopedStoragedatabaseDirName = ".torrents_digger";
-
-  // Internal Scoped Storage Dir
-  Directory androidDocumentsDirectory =
-      await getApplicationDocumentsDirectory();
-  File internalScopedStorageDatabaseFilePath = File(
-    "${androidDocumentsDirectory.path}/$internalScopedStoragedatabaseDirName/$databaseFileName",
-  );
+  Directory databaseDir = await getApplicationSupportDirectory();
+  File databaseFile = File("${databaseDir.path}/$databaseFileName");
 
   try {
-    final params = SaveFileDialogParams(
-      sourceFilePath: internalScopedStorageDatabaseFilePath.path,
-    );
+    final params = SaveFileDialogParams(sourceFilePath: databaseFile.path);
     final filePath = await FlutterFileDialog.saveFile(params: params);
 
     if (filePath != null) {
@@ -78,15 +69,8 @@ void exportDatabaseAndroid() async {
 }
 
 void importDatabaseAndroid() async {
-  // database file/folder name
-  String internalScopedStoragedatabaseDirName = ".torrents_digger";
-
-  // Internal Scoped Storage Dir
-  Directory androidDocumentsDirectory =
-      await getApplicationDocumentsDirectory();
-  File internalScopedStorageDatabaseFilePath = File(
-    "${androidDocumentsDirectory.path}/$internalScopedStoragedatabaseDirName/$databaseFileName",
-  );
+  Directory databaseDir = await getApplicationSupportDirectory();
+  File databaseFile = File("${databaseDir.path}/$databaseFileName");
 
   FilePickerResult? result = await FilePicker.platform.pickFiles();
 
@@ -102,9 +86,7 @@ void importDatabaseAndroid() async {
 
       try {
         // Writing file to internal scoped storage
-        await internalScopedStorageDatabaseFilePath.writeAsBytes(
-          databaseFileData,
-        );
+        await databaseFile.writeAsBytes(databaseFileData);
         createSnackBar(message: "Database imported...", duration: 2);
       } catch (e) {
         createSnackBar(
