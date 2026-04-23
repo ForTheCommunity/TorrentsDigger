@@ -3,7 +3,7 @@ name: Build & Release for Windows Platform.
 on:
   push:
     tags:
-      - "windows_build*"
+      - "v*"
 
 jobs:
   build-release:
