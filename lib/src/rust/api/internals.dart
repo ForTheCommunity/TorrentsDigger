@@ -6,6 +6,24 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+class InternalCustomDNS {
+  final BigInt index;
+  final String name;
+
+  const InternalCustomDNS({required this.index, required this.name});
+
+  @override
+  int get hashCode => index.hashCode ^ name.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is InternalCustomDNS &&
+          runtimeType == other.runtimeType &&
+          index == other.index &&
+          name == other.name;
+}
+
 class InternalCustomSourceDetails {
   final String customSourceName;
   final List<String> customSourceListings;

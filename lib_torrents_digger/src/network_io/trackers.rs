@@ -13,7 +13,7 @@ use crate::{
         default_trackers::get_active_trackers_list,
         settings_kvs::fetch_kv,
     },
-    sync_request::send_request,
+    network_io::sync_request::send_request,
 };
 
 #[derive(Debug)]

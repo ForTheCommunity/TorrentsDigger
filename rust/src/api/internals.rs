@@ -57,3 +57,8 @@ pub struct InternalPagination {
     pub current_page: Option<i32>,
     pub next_page: Option<i32>,
 }
+
+pub struct InternalCustomDNS{
+    pub index :usize,
+    pub name :String
+}

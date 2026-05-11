@@ -7,7 +7,7 @@ use ureq::{Body, http::Response};
 use crate::{
     extract_info_hash_from_magnet,
     sources::{Pagination, QueryOptions},
-    sync_request::send_request,
+    network_io::sync_request::send_request,
     torrent::Torrent,
 };
 

@@ -1,6 +1,7 @@
 use anyhow::{Result, anyhow};
 
 use crate::{
+    network_io::sync_request::fetch_torrents,
     sources::{
         Pagination,
         available_sources::AllAvailableSources,
@@ -15,15 +16,13 @@ use crate::{
         torrents_csv::TorrentsCsvCategories,
         uindex::{UindexCategories, UindexSortingOrders, UindexSortings},
     },
-    sync_request::fetch_torrents,
 };
 
 pub mod database;
+pub mod network_io;
 pub mod sources;
 pub mod static_includes;
-pub mod sync_request;
 pub mod torrent;
-pub mod trackers;
 
 pub fn search_torrent(
     torrent_name: String,

@@ -4,3 +4,4 @@ pub mod default_trackers;
 pub mod initialize;
 pub mod proxy;
 pub mod settings_kvs;
+pub mod custom_resolver;

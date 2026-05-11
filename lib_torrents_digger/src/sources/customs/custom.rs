@@ -7,7 +7,7 @@ use crate::{
         Pagination, available_sources::AllAvailableSources, the_pirate_bay::ThePirateBayCategories,
         uindex::UindexCategories,
     },
-    sync_request::{fetch_torrents, send_request},
+    network_io::sync_request::{fetch_torrents, send_request},
     torrent::Torrent,
 };
 

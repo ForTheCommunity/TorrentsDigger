@@ -5,10 +5,11 @@ use anyhow::{Result, anyhow};
 use regex::Regex;
 use serde::Deserialize;
 use ua_generator::ua::spoof_ua;
-use ureq::{Agent, Body, http::Response};
+use ureq::{Agent, Body, http::Response, unversioned::transport::DefaultConnector};
 
 use crate::{
-    database::proxy::Proxy,
+    database::{custom_resolver::get_active_custom_resolver, proxy::Proxy},
+    network_io::custom_resolver::CustomResolver,
     sources::{
         Pagination, available_sources::AllAvailableSources,
         knaben_database::KnabenDatabaseCategories, lime_torrents::LimeTorrentsCategories,
@@ -44,24 +45,39 @@ pub fn send_request(url: &str) -> Result<Response<Body>> {
     // random User Agent.
     let user_agent = spoof_ua();
 
-    // Proxy
-    match Proxy::fetch_saved_proxy()? {
+    let agent = match Proxy::fetch_saved_proxy()? {
         Some(proxy_data) => {
             let proxy_url = build_proxy_url(&proxy_data);
             let proxy = ureq::Proxy::new(&proxy_url)?;
-            let agent: Agent = Agent::config_builder().proxy(Some(proxy)).build().into();
-            let response = agent.get(url).header("User-Agent", user_agent).call()?;
-            Ok(response)
+            build_agent(Some(proxy))
         }
-        None => {
-            let response = ureq::get(url).header("User-Agent", user_agent).call()?;
+        None => build_agent(None),
+    };
 
-            Ok(response)
-        }
-    }
+    let response = agent.get(url).header("User-Agent", user_agent).call()?;
+    Ok(response)
 }
 
-pub fn build_proxy_url(proxy_data: &Proxy) -> String {
+fn build_agent(proxy: Option<ureq::Proxy>) -> Agent {
+    let config = Agent::config_builder().proxy(proxy).build();
+
+    let custom_resolver = get_active_custom_resolver()
+        .unwrap()
+        .unwrap()
+        .parse::<u8>()
+        .unwrap();
+
+    println!("SYNC REQ -> Custom Resolver -> {}", custom_resolver);
+
+    if custom_resolver == 0 {
+        println!("SYNC REQ -> System Resolver");
+        return Agent::new_with_config(config.clone());
+    }
+
+    Agent::with_parts(config, DefaultConnector::default(), CustomResolver)
+}
+
+fn build_proxy_url(proxy_data: &Proxy) -> String {
     let proxy_type = &proxy_data.proxy_type;
     let proxy_server_ip = &proxy_data.proxy_server_ip;
     let proxy_server_port = &proxy_data.proxy_server_port;

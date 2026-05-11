@@ -11,6 +11,7 @@ pub const HYDRATION_DIR: &str = "hydration";
 // Database Settings_KVS Keys
 pub const ACTIVE_TRACKERS_LIST_KEY: &str = "active_trackers_list";
 pub const PLATFORM_SPECIFIC_DIR: &str = "app_root_dir";
+pub const CUSTOM_DNS_RESOLVER :&str = "custom_dns_resolver";
 
 // DB Pool
 pub type DBPool = Pool<SqliteConnectionManager>;
