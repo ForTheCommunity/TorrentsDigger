@@ -75,7 +75,7 @@ class MyApp extends StatelessWidget {
                 scaffoldMessengerKey, // Assigning the global key
             title: "Torrents Digger",
             theme: ThemeData(
-              pageTransitionsTheme: const PageTransitionsTheme(
+              pageTransitionsTheme: PageTransitionsTheme(
                 builders: <TargetPlatform, PageTransitionsBuilder>{
                   TargetPlatform.android: CupertinoPageTransitionsBuilder(),
                   TargetPlatform.linux: CupertinoPageTransitionsBuilder(),
@@ -97,7 +97,9 @@ class MyApp extends StatelessWidget {
                 thickness: WidgetStateProperty.all(
                   Platform.isAndroid || Platform.isIOS
                       ? 10.0
-                      : Platform.isWindows || Platform.isLinux || Platform.isMacOS
+                      : Platform.isWindows ||
+                            Platform.isLinux ||
+                            Platform.isMacOS
                       ? 8.0
                       : 9.0,
                 ),
