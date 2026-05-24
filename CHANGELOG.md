@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.2.2] - 2026-05-24
+- Improved Torrents Bookmarking [Internal].
+
 ## [1.2.1] - 2026-04-23
 
 - Fixed UIndex & Added Pagination for UIndex.
