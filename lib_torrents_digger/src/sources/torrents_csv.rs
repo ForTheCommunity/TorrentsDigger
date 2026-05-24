@@ -1,4 +1,5 @@
 use crate::{
+    prepare_info_hash,
     sources::{Pagination, QueryOptions},
     torrent::Torrent,
 };
@@ -115,8 +116,10 @@ impl JsonTorrentData {
 
         let magnet = format!("magnet:?xt=urn:btih:{}&dn={}", self.infohash, self.name);
 
+        let info_hash = prepare_info_hash(self.infohash.as_str())?;
+
         Ok(Torrent {
-            info_hash: self.infohash.clone().to_lowercase(),
+            info_hash,
             name: self.name.clone(),
             magnet,
             size: size_str,

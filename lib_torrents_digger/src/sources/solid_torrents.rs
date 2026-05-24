@@ -8,9 +8,7 @@ use scraper::{Html, Selector};
 use ureq::{Body, http::Response};
 
 use crate::{
-    extract_info_hash_from_magnet,
-    sources::{Pagination, QueryOptions},
-    torrent::Torrent,
+    prepare_info_hash, sources::{Pagination, QueryOptions}, torrent::Torrent
 };
 
 #[derive(Debug)]
@@ -327,7 +325,7 @@ impl SolidTorrentsCategories {
                 });
 
             // extracting info hash from magnet
-            let info_hash = extract_info_hash_from_magnet(&magnet).to_lowercase();
+            let info_hash = prepare_info_hash(&magnet)?;
 
             all_torrents.push(Torrent {
                 info_hash,

@@ -4,7 +4,7 @@ use scraper::{ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
 
 use crate::{
-    extract_info_hash_from_magnet,
+    prepare_info_hash,
     sources::{Pagination, QueryOptions},
     torrent::Torrent,
 };
@@ -199,7 +199,7 @@ impl UindexCategories {
                 .to_string();
 
             // extracting info hash from magnet
-            let info_hash = extract_info_hash_from_magnet(&magnet).to_lowercase();
+            let info_hash = prepare_info_hash(&magnet)?;
 
             // extracting torrent name
             let name = magnet_and_torrent_name_elem_vec
@@ -323,7 +323,7 @@ impl UindexCategories {
                 .to_string();
 
             // extracting info hash from magnet
-            let info_hash = extract_info_hash_from_magnet(&magnet).to_lowercase();
+            let info_hash = prepare_info_hash(&magnet)?;
 
             // extracting torrent name
             let name = magnet_and_torrent_name_elem_vec

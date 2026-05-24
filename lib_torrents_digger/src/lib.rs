@@ -1,4 +1,4 @@
-use anyhow::{Result, anyhow};
+use anyhow::{Error, Result, anyhow};
 
 use crate::{
     sources::{
@@ -168,14 +168,34 @@ pub fn search_torrent(
     }
 }
 
-pub fn extract_info_hash_from_magnet(magnet: &str) -> String {
-    // removing magnet link prefix to get info hash start
-    let info_hash_start = magnet.trim_start_matches("magnet:?xt=urn:btih:");
+pub fn prepare_info_hash(input: &str) -> Result<String, Error> {
+    let magnet_prefix = "magnet:?xt=urn:btih:";
+    // check if input is a magnet link or a info_hash.
+    if input.starts_with(magnet_prefix) {
+        // removing magnet link prefix to get info hash start
+        let info_hash_start = input.trim_start_matches("magnet:?xt=urn:btih:");
 
-    // finding index for first '&' separator i.e for torrent display name and for trackers.
-    match info_hash_start.find("&") {
-        Some(info_hash_length) => info_hash_start[..info_hash_length].to_string(),
-        // if magnet link have no display name & trackers
-        None => info_hash_start[..info_hash_start.len()].to_string(),
+        // finding index for first '&' separator i.e for torrent display name and for trackers.
+        match info_hash_start.find("&") {
+            Some(info_hash_length) => Ok(info_hash_start[..info_hash_length].to_lowercase()),
+            // if magnet link have no display name & trackers
+            None => {
+                if info_hash_start.len() == 40 {
+                    Ok(info_hash_start[..info_hash_start.len()].to_lowercase())
+                } else {
+                    Err(anyhow!(
+                        "prepare_info_hash: unable to extract info_hash from magnet link which has no display name & trackers..."
+                    ))
+                }
+            }
+        }
+    }
+    // if input is a info_hash
+    else if input.len() == 40 {
+        Ok(input.to_lowercase())
+    } else {
+        Err(anyhow!(
+            "prepare_info_hash: Input is neither magnet_link nor info_hash !!!"
+        ))
     }
 }

@@ -4,7 +4,7 @@ use scraper::{self, ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
 
 use crate::{
-    extract_info_hash_from_magnet,
+    prepare_info_hash,
     sources::{
         Pagination, QueryOptions,
         nyaa::{NyaaFilter, NyaaSortingOrders, NyaaSortings},
@@ -193,7 +193,7 @@ impl SukebeiNyaaCategories {
             };
 
             // extracting info hash from magnet
-            let info_hash = extract_info_hash_from_magnet(&magnet).to_lowercase();
+            let info_hash = prepare_info_hash(&magnet)?;
 
             let size = table_data_vec[3].inner_html().to_string();
             let date = table_data_vec[4].inner_html().to_string();

@@ -7,6 +7,7 @@ use scraper::{ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
 
 use crate::{
+    prepare_info_hash,
     sources::{Pagination, QueryOptions},
     torrent::Torrent,
 };
@@ -404,7 +405,7 @@ impl KnabenDatabaseCategories {
                         if !i_h.chars().all(|c| c.is_ascii_hexdigit()) {
                             continue;
                         }
-                        i_h.to_lowercase()
+                        prepare_info_hash(i_h)?
                     }
                     None => {
                         //  Skipping row: Missing data-id (info_hash)
@@ -473,7 +474,6 @@ impl KnabenDatabaseCategories {
                 } else {
                     source_url = None;
                 }
-               
 
                 // Downloads
                 let total_downloads = "N/A".to_string();

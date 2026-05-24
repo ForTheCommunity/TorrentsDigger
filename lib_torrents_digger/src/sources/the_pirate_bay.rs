@@ -5,7 +5,7 @@ use scraper::{ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
 
 use crate::{
-    extract_info_hash_from_magnet,
+    prepare_info_hash,
     sources::{Pagination, QueryOptions},
     sync_request::send_request,
     torrent::Torrent,
@@ -379,7 +379,7 @@ impl ThePirateBayCategories {
 
                 let total_downloads = "N/A".to_string();
 
-                let info_hash = extract_info_hash_from_magnet(&magnet);
+                let info_hash = prepare_info_hash(&magnet)?;
 
                 torrents_vec.push(Torrent {
                     info_hash,
