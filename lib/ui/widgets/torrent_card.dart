@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:torrents_digger/blocs/bookmark_bloc/bookmark_bloc.dart';
 import 'package:torrents_digger/blocs/default_trackers_bloc/default_trackers_bloc.dart';
-import 'package:torrents_digger/configs/build_context_extension.dart';
+import 'package:torrents_digger/configs/extensions.dart';
 import 'package:torrents_digger/src/rust/api/internals.dart';
 import 'package:torrents_digger/ui/widgets/launch_url.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';

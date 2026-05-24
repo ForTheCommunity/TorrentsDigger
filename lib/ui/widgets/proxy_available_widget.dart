@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/proxy_settings_bloc/proxy_settings_bloc.dart';
-import 'package:torrents_digger/configs/build_context_extension.dart';
+import 'package:torrents_digger/configs/extensions.dart';
 import 'package:torrents_digger/src/rust/api/internals.dart';
 
 class ProxyAvailableWidget extends StatelessWidget {

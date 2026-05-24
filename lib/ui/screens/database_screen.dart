@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:torrents_digger/configs/build_context_extension.dart';
+import 'package:torrents_digger/configs/extensions.dart';
 import 'package:torrents_digger/database/import_export.dart';
 
 class DatabaseScreen extends StatelessWidget {

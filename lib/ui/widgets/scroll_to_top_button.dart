@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:torrents_digger/configs/build_context_extension.dart';
+import 'package:torrents_digger/configs/extensions.dart';
 
 class ScrollToTopButton extends StatefulWidget {
   final ScrollController scrollController;
@@ -51,7 +51,7 @@ class _ScrollToTopButtonState extends State<ScrollToTopButton> {
       onPressed: () => widget.scrollController.animateTo(
         0,
         duration: const Duration(milliseconds: 500),
-        curve: Curves.slowMiddle,
+        curve: Curves.ease,
       ),
       child: Icon(
         Icons.keyboard_double_arrow_up,

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/customs_bloc/customs_dropdown_bloc/customs_bloc.dart';
 import 'package:torrents_digger/blocs/customs_bloc/customs_torrents/customs_torrents_bloc.dart';
-import 'package:torrents_digger/configs/build_context_extension.dart';
+import 'package:torrents_digger/configs/extensions.dart';
 import 'package:torrents_digger/src/rust/api/internals.dart';
 import 'package:torrents_digger/ui/widgets/circular_progress_bar_widget.dart';
 import 'package:torrents_digger/ui/widgets/dropdown_widget.dart';

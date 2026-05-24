@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/bookmark_bloc/bookmark_bloc.dart';
-import 'package:torrents_digger/configs/build_context_extension.dart';
+import 'package:torrents_digger/configs/extensions.dart';
 import 'package:torrents_digger/ui/widgets/circular_progress_bar_widget.dart';
 import 'package:torrents_digger/ui/widgets/scroll_to_top_button.dart';
 import 'package:torrents_digger/ui/widgets/settings_button.dart';

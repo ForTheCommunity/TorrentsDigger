@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:torrents_digger/configs/build_context_extension.dart';
+import 'package:torrents_digger/configs/extensions.dart';
 import 'package:torrents_digger/ui/widgets/popup_menu_button_widget.dart';
 
 class SearchBarWidget extends StatelessWidget {

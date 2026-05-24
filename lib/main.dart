@@ -10,7 +10,7 @@ import 'package:torrents_digger/blocs/pagination_bloc/pagination_bloc.dart';
 import 'package:torrents_digger/blocs/sources_bloc/source_bloc.dart';
 import 'package:torrents_digger/blocs/themes_bloc/themes_bloc.dart';
 import 'package:torrents_digger/blocs/torrent_bloc/torrent_bloc.dart';
-import 'package:torrents_digger/configs/build_context_extension.dart';
+import 'package:torrents_digger/configs/extensions.dart';
 import 'package:torrents_digger/configs/hydration.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 import 'package:torrents_digger/database/initialize.dart';

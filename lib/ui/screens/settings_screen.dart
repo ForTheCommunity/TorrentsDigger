@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/settings_bloc/settings_bloc.dart';
-import 'package:torrents_digger/configs/build_context_extension.dart';
+import 'package:torrents_digger/configs/extensions.dart';
 import 'package:torrents_digger/routes/routes_name.dart';
 import 'package:torrents_digger/ui/widgets/about_widget.dart';
 import 'package:torrents_digger/ui/widgets/circular_progress_bar_widget.dart';
