@@ -4,12 +4,7 @@ use crate::database::{
 };
 
 pub fn get_active_custom_resolver() -> Result<Option<String>, rusqlite::Error> {
-    if check_key(CUSTOM_DNS_RESOLVER_KEY)? {
-        return Ok(fetch_kv(CUSTOM_DNS_RESOLVER_KEY)?);
-    } else {
-        insert_update_kv(CUSTOM_DNS_RESOLVER_KEY, "0")?;
-        return Ok(fetch_kv(CUSTOM_DNS_RESOLVER_KEY)?);
-    }
+    return Ok(fetch_kv(CUSTOM_DNS_RESOLVER_KEY)?);
 }
 
 pub fn set_active_custom_resolver(index: &str) -> Result<usize, rusqlite::Error> {
