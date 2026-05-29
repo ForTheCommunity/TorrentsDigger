@@ -114,10 +114,9 @@ void _dnsInfo(BuildContext context) {
                 const TextSpan(
                   text:
                       'Select a DNS Provider.\n'
-                      'This can unblock sources which may be blocked by default DNS '
-                      'setted by Router, ISP or Network Admin.\n'
-                      '[NOTE: For Now DNS Resolving is done in Plain Text Not In Any End-2-End Encrypted Way.]\n'
-                      'DNS Settings will be completely ignored when a Proxy is used to route traffic.',
+                      'This can unblock sources that may be blocked by your router, ISP, or network administrator\'s default DNS settings. \n'
+                      '[NOTE: DNS resolving is currently done in plain text and is not end-2-end encrypted.]\n'
+                      'DNS settings will be ignored when a proxy is used to route traffic.',
                 ),
               ],
             ),
