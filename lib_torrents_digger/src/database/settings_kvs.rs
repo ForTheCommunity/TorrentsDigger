@@ -45,3 +45,16 @@ pub fn fetch_all_kv() -> Result<HashMap<String, String>, rusqlite::Error> {
     }
     Ok(hashmap)
 }
+
+pub fn check_key(key: &str) -> Result<bool, rusqlite::Error> {
+    let db_conn = get_a_database_connection();
+    let mut sql_statement = db_conn.prepare(
+        "
+        SELECT 1 FROM settings_kvs WHERE key = ?1 LIMIT 1
+    ",
+    )?;
+
+    let mut rows = sql_statement.query(params![key])?;
+
+    Ok(rows.next()?.is_some())
+}

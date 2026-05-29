@@ -1,5 +1,10 @@
+use lib_torrents_digger::{
+    database::custom_resolver::get_active_custom_resolver,
+    network_io::custom_resolver::CustomDNSResolver,
+};
+
 use crate::api::{
-    internals::{InternalCustomSourceDetails, InternalPagination},
+    internals::{InternalCustomDNS, InternalCustomSourceDetails, InternalPagination},
     preludes::*,
 };
 
@@ -177,4 +182,16 @@ pub fn dig_custom_torrents(
         }
         Err(error) => Err(error.to_string()),
     }
+}
+
+pub fn get_custom_dns_lists() -> Vec<InternalCustomDNS> {
+    let c_dns_r_l_v = CustomDNSResolver::get_custom_dns_resolvers_list();
+    let mut i_c_dns_r_l: Vec<InternalCustomDNS> = Vec::new();
+    for a_c_dns in c_dns_r_l_v {
+        i_c_dns_r_l.push(InternalCustomDNS {
+            index: a_c_dns.0,
+            name: a_c_dns.1,
+        });
+    }
+    i_c_dns_r_l
 }

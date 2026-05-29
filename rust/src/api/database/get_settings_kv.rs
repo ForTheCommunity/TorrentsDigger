@@ -1,4 +1,7 @@
-use lib_torrents_digger::database::settings_kvs::{fetch_kv, insert_update_kv};
+use lib_torrents_digger::database::{
+    custom_resolver::{get_active_custom_resolver, set_active_custom_resolver},
+    settings_kvs::{fetch_kv, insert_update_kv},
+};
 
 use crate::api::preludes::*;
 
@@ -32,6 +35,20 @@ pub fn set_default_trackers_list(index: i8) -> Result<usize, String> {
 
 pub fn get_active_default_trackers_list() -> Result<String, String> {
     match get_active_trackers_list() {
+        Ok(a) => Ok(a),
+        Err(e) => Err(e.to_string()),
+    }
+}
+
+pub fn get_active_custom_dns_resolver() -> Result<Option<String>, String> {
+    match get_active_custom_resolver() {
+        Ok(a) => Ok(a),
+        Err(e) => Err(e.to_string()),
+    }
+}
+
+pub fn set_active_custom_dns_resolver(index: i8) -> Result<usize, String> {
+    match set_active_custom_resolver(&index.to_string()) {
         Ok(a) => Ok(a),
         Err(e) => Err(e.to_string()),
     }

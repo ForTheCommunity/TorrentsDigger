@@ -1,9 +1,9 @@
 pub use lib_torrents_digger::{
+    network_io::sync_request::{check_for_update, extract_ip_details},
+    network_io::trackers::{load_trackers_string, DefaultTrackers},
     search_torrent,
     sources::get_source_details,
     static_includes::get_current_version,
-    sync_request::{check_for_update, extract_ip_details},
-    trackers::{load_trackers_string, DefaultTrackers},
 };
 
 pub use lib_torrents_digger::sources::Source as ExternalSource;

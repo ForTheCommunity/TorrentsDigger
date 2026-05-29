@@ -68,6 +68,26 @@ class SettingsScreen extends StatelessWidget {
                         );
                       },
                     ),
+
+                    ListTile(
+                      leading: Icon(
+                        color: context.appColors.settingsIconsColor,
+                        Icons.network_ping,
+                      ),
+                      title: Text(
+                        'DNS [ Experimental ]',
+                        style: TextStyle(
+                          color: context.appColors.settingsTextColor,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          RoutesName.customDNSScreen,
+                        );
+                      },
+                    ),
+
                     ListTile(
                       leading: Icon(
                         color: context.appColors.settingsIconsColor,

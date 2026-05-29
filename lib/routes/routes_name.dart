@@ -9,4 +9,6 @@ class RoutesName {
   static const String themesScreen = "themes_screen";
   static const String contributeScreen = "contribute_screen";
   static const String additionalSettingsScreen = "additional_settings_screen";
+  static const String customDNSScreen = "custom_dns_screen";
+
 }

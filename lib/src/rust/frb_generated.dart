@@ -69,7 +69,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.11.1';
 
   @override
-  int get rustContentHash => -1131822192;
+  int get rustContentHash => -1193154335;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -114,6 +114,8 @@ abstract class RustLibApi extends BaseApi {
     required String key,
   });
 
+  Future<String?> crateApiDatabaseGetSettingsKvGetActiveCustomDnsResolver();
+
   Future<String> crateApiDatabaseGetSettingsKvGetActiveDefaultTrackersList();
 
   Future<List<InternalTorrent>> crateApiDatabaseBookmarkGetAllBookmarks();
@@ -121,6 +123,8 @@ abstract class RustLibApi extends BaseApi {
   Future<List<(BigInt, String)>> crateApiAppGetAllDefaultTrackersList();
 
   Future<String> crateApiAppGetAppCurrentVersion();
+
+  Future<List<InternalCustomDNS>> crateApiAppGetCustomDnsLists();
 
   Future<List<InternalCustomSourceDetails>> crateApiAppGetCustomsDetails();
 
@@ -153,6 +157,10 @@ abstract class RustLibApi extends BaseApi {
 
   Future<BigInt> crateApiDatabaseProxySaveProxyApi({
     required InternalProxy proxyData,
+  });
+
+  Future<BigInt> crateApiDatabaseGetSettingsKvSetActiveCustomDnsResolver({
+    required int index,
   });
 
   Future<BigInt> crateApiDatabaseGetSettingsKvSetDefaultTrackersList({
@@ -445,7 +453,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "get_a_settings_kv", argNames: ["key"]);
 
   @override
-  Future<String> crateApiDatabaseGetSettingsKvGetActiveDefaultTrackersList() {
+  Future<String?> crateApiDatabaseGetSettingsKvGetActiveCustomDnsResolver() {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
@@ -454,6 +462,38 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             generalizedFrbRustBinding,
             serializer,
             funcId: 9,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_opt_String,
+          decodeErrorData: sse_decode_String,
+        ),
+        constMeta:
+            kCrateApiDatabaseGetSettingsKvGetActiveCustomDnsResolverConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta
+  get kCrateApiDatabaseGetSettingsKvGetActiveCustomDnsResolverConstMeta =>
+      const TaskConstMeta(
+        debugName: "get_active_custom_dns_resolver",
+        argNames: [],
+      );
+
+  @override
+  Future<String> crateApiDatabaseGetSettingsKvGetActiveDefaultTrackersList() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 10,
             port: port_,
           );
         },
@@ -485,7 +525,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 10,
+            funcId: 11,
             port: port_,
           );
         },
@@ -512,7 +552,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 11,
+            funcId: 12,
             port: port_,
           );
         },
@@ -542,7 +582,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 12,
+            funcId: 13,
             port: port_,
           );
         },
@@ -561,6 +601,33 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "get_app_current_version", argNames: []);
 
   @override
+  Future<List<InternalCustomDNS>> crateApiAppGetCustomDnsLists() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 14,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_list_internal_custom_dns,
+          decodeErrorData: null,
+        ),
+        constMeta: kCrateApiAppGetCustomDnsListsConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiAppGetCustomDnsListsConstMeta =>
+      const TaskConstMeta(debugName: "get_custom_dns_lists", argNames: []);
+
+  @override
   Future<List<InternalCustomSourceDetails>> crateApiAppGetCustomsDetails() {
     return handler.executeNormal(
       NormalTask(
@@ -569,7 +636,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 13,
+            funcId: 15,
             port: port_,
           );
         },
@@ -596,7 +663,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 14,
+            funcId: 16,
             port: port_,
           );
         },
@@ -626,7 +693,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 15,
+            funcId: 17,
             port: port_,
           );
         },
@@ -656,7 +723,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 16,
+            funcId: 18,
             port: port_,
           );
         },
@@ -683,7 +750,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 17,
+            funcId: 19,
             port: port_,
           );
         },
@@ -710,7 +777,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 18,
+            funcId: 20,
             port: port_,
           );
         },
@@ -743,7 +810,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 19,
+            funcId: 21,
             port: port_,
           );
         },
@@ -780,7 +847,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 20,
+            funcId: 22,
             port: port_,
           );
         },
@@ -810,7 +877,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 21,
+            funcId: 23,
             port: port_,
           );
         },
@@ -843,7 +910,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 22,
+            funcId: 24,
             port: port_,
           );
         },
@@ -873,7 +940,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 23,
+            funcId: 25,
             port: port_,
           );
         },
@@ -892,6 +959,41 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "save_proxy_api", argNames: ["proxyData"]);
 
   @override
+  Future<BigInt> crateApiDatabaseGetSettingsKvSetActiveCustomDnsResolver({
+    required int index,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_i_8(index, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 26,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_usize,
+          decodeErrorData: sse_decode_String,
+        ),
+        constMeta:
+            kCrateApiDatabaseGetSettingsKvSetActiveCustomDnsResolverConstMeta,
+        argValues: [index],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta
+  get kCrateApiDatabaseGetSettingsKvSetActiveCustomDnsResolverConstMeta =>
+      const TaskConstMeta(
+        debugName: "set_active_custom_dns_resolver",
+        argNames: ["index"],
+      );
+
+  @override
   Future<BigInt> crateApiDatabaseGetSettingsKvSetDefaultTrackersList({
     required int index,
   }) {
@@ -903,7 +1005,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 24,
+            funcId: 27,
             port: port_,
           );
         },
@@ -988,6 +1090,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   int dco_decode_i_8(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as int;
+  }
+
+  @protected
+  InternalCustomDNS dco_decode_internal_custom_dns(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return InternalCustomDNS(
+      index: dco_decode_usize(arr[0]),
+      name: dco_decode_String(arr[1]),
+    );
   }
 
   @protected
@@ -1099,6 +1213,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   List<String> dco_decode_list_String(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>).map(dco_decode_String).toList();
+  }
+
+  @protected
+  List<InternalCustomDNS> dco_decode_list_internal_custom_dns(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_internal_custom_dns).toList();
   }
 
   @protected
@@ -1301,6 +1421,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  InternalCustomDNS sse_decode_internal_custom_dns(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_index = sse_decode_usize(deserializer);
+    var var_name = sse_decode_String(deserializer);
+    return InternalCustomDNS(index: var_index, name: var_name);
+  }
+
+  @protected
   InternalCustomSourceDetails sse_decode_internal_custom_source_details(
     SseDeserializer deserializer,
   ) {
@@ -1431,6 +1561,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var ans_ = <String>[];
     for (var idx_ = 0; idx_ < len_; ++idx_) {
       ans_.add(sse_decode_String(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<InternalCustomDNS> sse_decode_list_internal_custom_dns(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <InternalCustomDNS>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_internal_custom_dns(deserializer));
     }
     return ans_;
   }
@@ -1703,6 +1847,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_internal_custom_dns(
+    InternalCustomDNS self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(self.index, serializer);
+    sse_encode_String(self.name, serializer);
+  }
+
+  @protected
   void sse_encode_internal_custom_source_details(
     InternalCustomSourceDetails self,
     SseSerializer serializer,
@@ -1794,6 +1948,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_i_32(self.length, serializer);
     for (final item in self) {
       sse_encode_String(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_internal_custom_dns(
+    List<InternalCustomDNS> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_internal_custom_dns(item, serializer);
     }
   }
 

@@ -7,7 +7,7 @@ use ureq::{Body, http::Response};
 use crate::{
     prepare_info_hash,
     sources::{Pagination, QueryOptions},
-    sync_request::send_request,
+    network_io::sync_request::send_request,
     torrent::Torrent,
 };
 

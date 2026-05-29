@@ -9,11 +9,11 @@ use std::{
 
 use crate::{
     database::{
-        database_config::{PLATFORM_SPECIFIC_DIR, TRACKERS_DIR_PATH, TRACKERS_LISTS_DIR},
+        database_config::{PLATFORM_SPECIFIC_DIR_KEY, TRACKERS_DIR_PATH, TRACKERS_LISTS_DIR},
         default_trackers::get_active_trackers_list,
         settings_kvs::fetch_kv,
     },
-    sync_request::send_request,
+    network_io::sync_request::send_request,
 };
 
 #[derive(Debug)]
@@ -165,7 +165,7 @@ pub fn load_trackers_string() -> Result<bool> {
     let file_name = trackers_list_type.get_filename();
 
     // platform specific root dir
-    let platform_specific_dir = fetch_kv(PLATFORM_SPECIFIC_DIR)?
+    let platform_specific_dir = fetch_kv(PLATFORM_SPECIFIC_DIR_KEY)?
         .ok_or_else(|| anyhow!("Platform Specific Root Dir Path not found in database."))?;
 
     let file_path = Path::new(&platform_specific_dir)

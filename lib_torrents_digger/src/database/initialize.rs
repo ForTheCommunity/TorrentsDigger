@@ -7,12 +7,12 @@ use std::{fs::create_dir_all, path::PathBuf, sync::LazyLock};
 use crate::{
     database::{
         database_config::{
-            DATABASE_NAME, HYDRATION_DIR, PLATFORM_SPECIFIC_DIR, TRACKERS_DIR_PATH,
+            DATABASE_NAME, HYDRATION_DIR, PLATFORM_SPECIFIC_DIR_KEY, TRACKERS_DIR_PATH,
             TRACKERS_LISTS_DIR, get_a_database_connection, init_database_pool,
         },
         settings_kvs::insert_update_kv,
     },
-    trackers::DefaultTrackers,
+    network_io::trackers::DefaultTrackers,
 };
 
 static MIGRATIONS_DIR: Dir = include_dir!("$CARGO_MANIFEST_DIR/src/database/migrations");
@@ -43,7 +43,7 @@ pub fn initialize_database(platform_specific_home_dir: String) -> Result<()> {
 
     // saving app root dir..
     insert_update_kv(
-        PLATFORM_SPECIFIC_DIR,
+        PLATFORM_SPECIFIC_DIR_KEY,
         platform_specific_data_dir
             .to_str()
             .ok_or_else(|| anyhow!("Unable to Insert/Update Platform Specific Home Dir"))?,

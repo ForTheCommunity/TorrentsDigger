@@ -57,3 +57,6 @@ Future<(List<InternalTorrent>, InternalPagination)> digCustomTorrents({
   selectedSourceIndex: selectedSourceIndex,
   selectedListingIndex: selectedListingIndex,
 );
+
+Future<List<InternalCustomDNS>> getCustomDnsLists() =>
+    RustLib.instance.api.crateApiAppGetCustomDnsLists();

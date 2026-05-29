@@ -113,3 +113,7 @@ build_flatpak:
     mv {{ env('FLATPAK_FILENAME') }} ../releases/
     cd ..
     sha256sum releases/{{ env('FLATPAK_FILENAME') }} >> releases/{{ env('CHECKSUM_FILENAME') }}
+
+
+dns_test:
+    sudo tcpdump -i any port 53 -n

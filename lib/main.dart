@@ -1,9 +1,11 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 // ignore: unnecessary_import
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/bookmark_bloc/bookmark_bloc.dart';
+import 'package:torrents_digger/blocs/custom_dns_bloc/custom_dns_bloc.dart';
 import 'package:torrents_digger/blocs/customs_bloc/customs_dropdown_bloc/customs_bloc.dart';
 import 'package:torrents_digger/blocs/customs_bloc/customs_torrents/customs_torrents_bloc.dart';
 import 'package:torrents_digger/blocs/default_trackers_bloc/default_trackers_bloc.dart';
@@ -67,6 +69,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           lazy: false,
           create: (_) => ThemesBloc()..add(ThemesEvent.loadTheme()),
+        ),
+        BlocProvider(
+          create: (_) => CustomDnsBloc()..add(CustomDnsEvent.loadCustomDNS()),
         ),
       ],
       child: BlocBuilder<ThemesBloc, ThemesState>(

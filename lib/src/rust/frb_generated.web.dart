@@ -56,6 +56,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int dco_decode_i_8(dynamic raw);
 
   @protected
+  InternalCustomDNS dco_decode_internal_custom_dns(dynamic raw);
+
+  @protected
   InternalCustomSourceDetails dco_decode_internal_custom_source_details(
     dynamic raw,
   );
@@ -80,6 +83,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<String> dco_decode_list_String(dynamic raw);
+
+  @protected
+  List<InternalCustomDNS> dco_decode_list_internal_custom_dns(dynamic raw);
 
   @protected
   List<InternalCustomSourceDetails>
@@ -174,6 +180,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int sse_decode_i_8(SseDeserializer deserializer);
 
   @protected
+  InternalCustomDNS sse_decode_internal_custom_dns(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   InternalCustomSourceDetails sse_decode_internal_custom_source_details(
     SseDeserializer deserializer,
   );
@@ -204,6 +215,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<String> sse_decode_list_String(SseDeserializer deserializer);
+
+  @protected
+  List<InternalCustomDNS> sse_decode_list_internal_custom_dns(
+    SseDeserializer deserializer,
+  );
 
   @protected
   List<InternalCustomSourceDetails>
@@ -320,6 +336,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_i_8(int self, SseSerializer serializer);
 
   @protected
+  void sse_encode_internal_custom_dns(
+    InternalCustomDNS self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_internal_custom_source_details(
     InternalCustomSourceDetails self,
     SseSerializer serializer,
@@ -360,6 +382,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_list_String(List<String> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_internal_custom_dns(
+    List<InternalCustomDNS> self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_list_internal_custom_source_details(
