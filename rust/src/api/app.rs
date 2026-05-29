@@ -1,7 +1,4 @@
-use lib_torrents_digger::{
-    database::custom_resolver::get_active_custom_resolver,
-    network_io::custom_resolver::CustomDNSResolver,
-};
+use lib_torrents_digger::network_io::custom_resolver::CustomDNSResolver;
 
 use crate::api::{
     internals::{InternalCustomDNS, InternalCustomSourceDetails, InternalPagination},

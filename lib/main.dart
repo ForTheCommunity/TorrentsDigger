@@ -1,8 +1,6 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// ignore: unnecessary_import
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/bookmark_bloc/bookmark_bloc.dart';
 import 'package:torrents_digger/blocs/custom_dns_bloc/custom_dns_bloc.dart';

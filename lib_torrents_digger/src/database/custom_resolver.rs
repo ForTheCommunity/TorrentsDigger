@@ -1,6 +1,6 @@
 use crate::database::{
     database_config::CUSTOM_DNS_RESOLVER_KEY,
-    settings_kvs::{check_key, fetch_kv, insert_update_kv},
+    settings_kvs::{fetch_kv, insert_update_kv},
 };
 
 pub fn get_active_custom_resolver() -> Result<Option<String>, rusqlite::Error> {
