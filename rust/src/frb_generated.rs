@@ -37,7 +37,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.11.1";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1835924808;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1193154335;
 
 // Section: executor
 
@@ -329,7 +329,7 @@ fn wire__crate__api__database__get_settings_kv__get_a_settings_kv_impl(
         },
     )
 }
-fn wire__crate__api__app__get_active_custom_dns_resolver_impl(
+fn wire__crate__api__database__get_settings_kv__get_active_custom_dns_resolver_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -354,7 +354,8 @@ fn wire__crate__api__app__get_active_custom_dns_resolver_impl(
             deserializer.end();
             move |context| {
                 transform_result_sse::<_, String>((move || {
-                    let output_ok = crate::api::app::get_active_custom_dns_resolver()?;
+                    let output_ok =
+                        crate::api::database::get_settings_kv::get_active_custom_dns_resolver()?;
                     Ok(output_ok)
                 })())
             }
@@ -891,6 +892,42 @@ fn wire__crate__api__database__proxy__save_proxy_api_impl(
         },
     )
 }
+fn wire__crate__api__database__get_settings_kv__set_active_custom_dns_resolver_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "set_active_custom_dns_resolver",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_index = <i8>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| {
+                transform_result_sse::<_, String>((move || {
+                    let output_ok =
+                        crate::api::database::get_settings_kv::set_active_custom_dns_resolver(
+                            api_index,
+                        )?;
+                    Ok(output_ok)
+                })())
+            }
+        },
+    )
+}
 fn wire__crate__api__database__get_settings_kv__set_default_trackers_list_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -1367,7 +1404,7 @@ fn pde_ffi_dispatcher_primary_impl(
             rust_vec_len,
             data_len,
         ),
-        9 => wire__crate__api__app__get_active_custom_dns_resolver_impl(
+        9 => wire__crate__api__database__get_settings_kv__get_active_custom_dns_resolver_impl(
             port,
             ptr,
             rust_vec_len,
@@ -1448,7 +1485,13 @@ fn pde_ffi_dispatcher_primary_impl(
             rust_vec_len,
             data_len,
         ),
-        26 => wire__crate__api__database__get_settings_kv__set_default_trackers_list_impl(
+        26 => wire__crate__api__database__get_settings_kv__set_active_custom_dns_resolver_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        27 => wire__crate__api__database__get_settings_kv__set_default_trackers_list_impl(
             port,
             ptr,
             rust_vec_len,

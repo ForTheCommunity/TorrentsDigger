@@ -75,7 +75,7 @@ class SettingsScreen extends StatelessWidget {
                         Icons.network_ping,
                       ),
                       title: Text(
-                        'DNS',
+                        'DNS [ Experimental ]',
                         style: TextStyle(
                           color: context.appColors.settingsTextColor,
                         ),

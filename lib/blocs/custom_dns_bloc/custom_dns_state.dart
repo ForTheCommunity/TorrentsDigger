@@ -6,6 +6,6 @@ class CustomDnsState with _$CustomDnsState {
   const factory CustomDnsState.loading() = _Loading;
   const factory CustomDnsState.loaded({
     required List<InternalCustomDNS> customDNSList,
-    required BigInt activatedDNSResolver,
+    required int activatedDNSResolver,
   }) = _Loaded;
 }

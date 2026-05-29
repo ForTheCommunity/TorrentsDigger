@@ -59,7 +59,10 @@ pub fn send_request(url: &str) -> Result<Response<Body>> {
 }
 
 fn build_agent(proxy: Option<ureq::Proxy>) -> Agent {
-    let config = Agent::config_builder().proxy(proxy).build();
+    let config = Agent::config_builder()
+        .proxy(proxy)
+        .ip_family(ureq::config::IpFamily::Ipv4Only)
+        .build();
 
     let custom_resolver = get_active_custom_resolver()
         .unwrap()

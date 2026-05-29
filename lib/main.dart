@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/bookmark_bloc/bookmark_bloc.dart';
@@ -79,7 +80,7 @@ class MyApp extends StatelessWidget {
                 scaffoldMessengerKey, // Assigning the global key
             title: "Torrents Digger",
             theme: ThemeData(
-              pageTransitionsTheme: const PageTransitionsTheme(
+              pageTransitionsTheme:  PageTransitionsTheme(
                 builders: <TargetPlatform, PageTransitionsBuilder>{
                   TargetPlatform.android: CupertinoPageTransitionsBuilder(),
                   TargetPlatform.linux: CupertinoPageTransitionsBuilder(),

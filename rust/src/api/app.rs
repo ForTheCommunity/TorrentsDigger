@@ -195,10 +195,3 @@ pub fn get_custom_dns_lists() -> Vec<InternalCustomDNS> {
     }
     i_c_dns_r_l
 }
-
-pub fn get_active_custom_dns_resolver() -> Result<Option<String>, String> {
-    match get_active_custom_resolver() {
-        Ok(a) => Ok(a),
-        Err(e) => Err(e.to_string()),
-    }
-}

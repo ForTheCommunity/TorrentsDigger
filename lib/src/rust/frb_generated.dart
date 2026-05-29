@@ -69,7 +69,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.11.1';
 
   @override
-  int get rustContentHash => -1835924808;
+  int get rustContentHash => -1193154335;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -114,7 +114,7 @@ abstract class RustLibApi extends BaseApi {
     required String key,
   });
 
-  Future<String?> crateApiAppGetActiveCustomDnsResolver();
+  Future<String?> crateApiDatabaseGetSettingsKvGetActiveCustomDnsResolver();
 
   Future<String> crateApiDatabaseGetSettingsKvGetActiveDefaultTrackersList();
 
@@ -157,6 +157,10 @@ abstract class RustLibApi extends BaseApi {
 
   Future<BigInt> crateApiDatabaseProxySaveProxyApi({
     required InternalProxy proxyData,
+  });
+
+  Future<BigInt> crateApiDatabaseGetSettingsKvSetActiveCustomDnsResolver({
+    required int index,
   });
 
   Future<BigInt> crateApiDatabaseGetSettingsKvSetDefaultTrackersList({
@@ -449,7 +453,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "get_a_settings_kv", argNames: ["key"]);
 
   @override
-  Future<String?> crateApiAppGetActiveCustomDnsResolver() {
+  Future<String?> crateApiDatabaseGetSettingsKvGetActiveCustomDnsResolver() {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
@@ -465,14 +469,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_opt_String,
           decodeErrorData: sse_decode_String,
         ),
-        constMeta: kCrateApiAppGetActiveCustomDnsResolverConstMeta,
+        constMeta:
+            kCrateApiDatabaseGetSettingsKvGetActiveCustomDnsResolverConstMeta,
         argValues: [],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiAppGetActiveCustomDnsResolverConstMeta =>
+  TaskConstMeta
+  get kCrateApiDatabaseGetSettingsKvGetActiveCustomDnsResolverConstMeta =>
       const TaskConstMeta(
         debugName: "get_active_custom_dns_resolver",
         argNames: [],
@@ -953,7 +959,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "save_proxy_api", argNames: ["proxyData"]);
 
   @override
-  Future<BigInt> crateApiDatabaseGetSettingsKvSetDefaultTrackersList({
+  Future<BigInt> crateApiDatabaseGetSettingsKvSetActiveCustomDnsResolver({
     required int index,
   }) {
     return handler.executeNormal(
@@ -965,6 +971,41 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             generalizedFrbRustBinding,
             serializer,
             funcId: 26,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_usize,
+          decodeErrorData: sse_decode_String,
+        ),
+        constMeta:
+            kCrateApiDatabaseGetSettingsKvSetActiveCustomDnsResolverConstMeta,
+        argValues: [index],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta
+  get kCrateApiDatabaseGetSettingsKvSetActiveCustomDnsResolverConstMeta =>
+      const TaskConstMeta(
+        debugName: "set_active_custom_dns_resolver",
+        argNames: ["index"],
+      );
+
+  @override
+  Future<BigInt> crateApiDatabaseGetSettingsKvSetDefaultTrackersList({
+    required int index,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_i_8(index, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 27,
             port: port_,
           );
         },

@@ -6,20 +6,14 @@ use std::{
 use anyhow::Result;
 use rsdns::{
     clients::{ClientConfig, std::Client},
-    records::{
-        Class,
-        data::{A, Aaaa},
-    },
+    records::{Class, data::A},
 };
 use ureq::unversioned::{
     resolver::{ResolvedSocketAddrs, Resolver},
     transport::NextTimeout,
 };
 
-use crate::database::{
-    custom_resolver::get_active_custom_resolver, database_config::CUSTOM_DNS_RESOLVER,
-    settings_kvs::fetch_kv,
-};
+use crate::database::custom_resolver::get_active_custom_resolver;
 
 #[derive(Debug)]
 pub struct CustomResolver;
@@ -53,17 +47,28 @@ impl Resolver for CustomResolver {
 
         let host = uri.host().unwrap();
 
+        println!("Resolving host: {}", host);
+
+        let target_port = uri.port_u16().unwrap_or_else(|| match uri.scheme_str() {
+            Some("https") => 443,
+            _ => 80,
+        });
+
+        // If host is already an IP, skip DNS lookup entirely
+        // this happens when a Proxy is used...
+        if let Ok(ip) = host.parse::<IpAddr>() {
+            println!("A Proxy is used so skipping dns lookup...");
+            let mut result = self.empty();
+            result.push(SocketAddr::new(ip, target_port));
+            return Ok(result);
+        }
+
         // Queryying IPv4 records.
         let ipv4_recordset = client.query_rrset::<A>(host, Class::IN).unwrap();
 
         // Queryying IPv6 records.
         // Optional IPv6 Query... [ Optional for now. ]
-        let ipv6_recordset = client.query_rrset::<Aaaa>(host, Class::IN).ok();
-
-        let target_port = uri.port_u16().unwrap_or_else(|| match uri.scheme_str() {
-            Some("https") => 443,
-            _ => 50,
-        });
+        // let ipv6_recordset = client.query_rrset::<Aaaa>(host, Class::IN).ok();
 
         // ureq compatible result
         let mut result = self.empty();
@@ -73,12 +78,13 @@ impl Resolver for CustomResolver {
             result.push(SocketAddr::new(IpAddr::V4(record.address), target_port));
         }
 
+        // disabling IPV6 Support for now....
         // Adding IPv6 addresses.
-        if let Some(ipv6_records) = ipv6_recordset {
-            for record in ipv6_records.rdata {
-                result.push(SocketAddr::new(IpAddr::V6(record.address), target_port))
-            }
-        };
+        // if let Some(ipv6_records) = ipv6_recordset {
+        //     for record in ipv6_records.rdata {
+        //         result.push(SocketAddr::new(IpAddr::V6(record.address), target_port))
+        //     }
+        // };
 
         if result.is_empty() {
             return Err(ureq::Error::HostNotFound);
@@ -96,8 +102,8 @@ struct DNStruct {
 }
 
 #[derive(Debug, PartialEq)]
+#[allow(unused)]
 enum DNSType {
-    #[allow(unused)]
     Normal,
     Https,
 }
@@ -145,23 +151,23 @@ impl CustomDNSResolver {
             Self::Cloudflare => DNStruct {
                 name: "Cloudflare".to_string(),
                 ip: IpAddr::from([1, 1, 1, 1]),
-                dns_type: DNSType::Https,
+                dns_type: DNSType::Normal,
             },
             Self::Google => DNStruct {
                 name: "Google".to_string(),
                 ip: IpAddr::from([8, 8, 8, 8]),
-                dns_type: DNSType::Https,
+                dns_type: DNSType::Normal,
             },
 
             Self::Quad9 => DNStruct {
                 name: "Quad9".to_string(),
                 ip: IpAddr::from([9, 9, 9, 9]),
-                dns_type: DNSType::Https,
+                dns_type: DNSType::Normal,
             },
             Self::Yandex => DNStruct {
                 name: "Yandex".to_string(),
                 ip: IpAddr::from([77, 88, 8, 8]),
-                dns_type: DNSType::Https,
+                dns_type: DNSType::Normal,
             },
         }
     }

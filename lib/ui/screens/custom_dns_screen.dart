@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/custom_dns_bloc/custom_dns_bloc.dart';
 import 'package:torrents_digger/configs/build_context_extension.dart';
 import 'package:torrents_digger/ui/widgets/circular_progress_bar_widget.dart';
-import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 
 class CustomDnsScreen extends StatelessWidget {
   const CustomDnsScreen({super.key});
@@ -45,7 +44,7 @@ class CustomDnsScreen extends StatelessWidget {
                     itemCount: customDNSResolvers.length,
                     itemBuilder: (context, index) {
                       final dnsResolver = customDNSResolvers[index];
-                      final dnsResolverID = dnsResolver.index;
+                      final dnsResolverID = dnsResolver.index.toInt();
                       final dnsResolverName = dnsResolver.name;
                       return ListTile(
                         title: Row(
@@ -77,7 +76,11 @@ class CustomDnsScreen extends StatelessWidget {
                           ],
                         ),
                         onTap: () {
-                          createSnackBar(message: "TODO", duration: 2);
+                          context.read<CustomDnsBloc>().add(
+                            CustomDnsEvent.setCustomDNS(
+                              selectedCustomDNS: dnsResolverID,
+                            ),
+                          );
                         },
                       );
                     },
@@ -111,8 +114,10 @@ void _dnsInfo(BuildContext context) {
                 const TextSpan(
                   text:
                       'Select a DNS Provider.\n'
-                      'This can unblock some sources which may be blocked by default DNS '
-                      'setted by Router, ISP or Network Admin.',
+                      'This can unblock sources which may be blocked by default DNS '
+                      'setted by Router, ISP or Network Admin.\n'
+                      '[NOTE: For Now DNS Resolving is done in Plain Text Not In Any End-2-End Encrypted Way.]\n'
+                      'DNS Settings will be completely ignored when a Proxy is used to route traffic.',
                 ),
               ],
             ),

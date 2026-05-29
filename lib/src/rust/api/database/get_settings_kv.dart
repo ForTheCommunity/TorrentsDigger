@@ -25,3 +25,11 @@ Future<BigInt> setDefaultTrackersList({required int index}) => RustLib
 
 Future<String> getActiveDefaultTrackersList() => RustLib.instance.api
     .crateApiDatabaseGetSettingsKvGetActiveDefaultTrackersList();
+
+Future<String?> getActiveCustomDnsResolver() => RustLib.instance.api
+    .crateApiDatabaseGetSettingsKvGetActiveCustomDnsResolver();
+
+Future<BigInt> setActiveCustomDnsResolver({required int index}) => RustLib
+    .instance
+    .api
+    .crateApiDatabaseGetSettingsKvSetActiveCustomDnsResolver(index: index);
