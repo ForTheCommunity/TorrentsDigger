@@ -1,0 +1,2 @@
+- Added Feature Custom DNS Resolver. [ Experimental ]
+- Updated Dependencies.

@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.3] - 2026-05-29
+- Added Feature Custom DNS Resolver. [ Experimental ]
+- Updated Dependencies.
+
 ## [1.2.2] - 2026-05-24
 - Improved Torrents Bookmarking [Internal].
 

@@ -18,7 +18,7 @@ fn main() {
     // extracting current of the app version......
     // Reading the pubspec.yaml file
     match fs::read_to_string("../pubspec.yaml") {
-        Ok(yaml_file) => match serde_yml::from_str::<Pubspec>(&yaml_file) {
+        Ok(yaml_file) => match noyalib::from_str::<Pubspec>(&yaml_file) {
             Ok(deserialized_pubspec) => {
                 if let Some(version) = deserialized_pubspec.version {
                     println!("App version: {}", version);

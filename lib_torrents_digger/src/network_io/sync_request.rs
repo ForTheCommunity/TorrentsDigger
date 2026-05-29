@@ -54,30 +54,31 @@ pub fn send_request(url: &str) -> Result<Response<Body>> {
         None => build_agent(None),
     };
 
-    let response = agent.get(url).header("User-Agent", user_agent).call()?;
+    let response = agent?.get(url).header("User-Agent", user_agent).call()?;
     Ok(response)
 }
 
-fn build_agent(proxy: Option<ureq::Proxy>) -> Agent {
+fn build_agent(proxy: Option<ureq::Proxy>) -> Result<Agent, anyhow::Error> {
     let config = Agent::config_builder()
         .proxy(proxy)
         .ip_family(ureq::config::IpFamily::Ipv4Only)
         .build();
 
     let custom_resolver = get_active_custom_resolver()
-        .unwrap()
-        .unwrap()
+        .map_err(|e| anyhow!("Failed to fetch active resolver: {}", e))?
+        .ok_or_else(|| anyhow!("No active resolver found"))?
         .parse::<u8>()
-        .unwrap();
-
-    println!("SYNC REQ -> Custom Resolver -> {}", custom_resolver);
+        .map_err(|e| anyhow!("Failed to parse resolver value: {}", e))?;
 
     if custom_resolver == 0 {
-        println!("SYNC REQ -> System Resolver");
-        return Agent::new_with_config(config.clone());
+        return Ok(Agent::new_with_config(config.clone()));
     }
 
-    Agent::with_parts(config, DefaultConnector::default(), CustomResolver)
+    Ok(Agent::with_parts(
+        config,
+        DefaultConnector::default(),
+        CustomResolver,
+    ))
 }
 
 fn build_proxy_url(proxy_data: &Proxy) -> String {

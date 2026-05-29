@@ -29,25 +29,21 @@ impl Resolver for CustomResolver {
         // fetch active dns resolver.
 
         let active_dns_resolver = get_active_custom_resolver()
-            .unwrap()
-            .unwrap()
+            .map_err(|_| ureq::Error::HostNotFound)?
+            .ok_or(ureq::Error::HostNotFound)?
             .parse::<usize>()
-            .unwrap();
-
-        println!("ACTIVE CUSDNSRES -> {:?}", active_dns_resolver);
+            .map_err(|_| ureq::Error::HostNotFound)?;
 
         let custom_dns = CustomDNSResolver::from_value(active_dns_resolver as u8)
-            .unwrap()
+            .ok_or(ureq::Error::HostNotFound)?
             .get_custom_dns_resolver();
 
         let socket_addr = SocketAddr::new(custom_dns.ip, custom_dns.dns_type.port());
         let client_config = ClientConfig::with_nameserver(socket_addr);
 
-        let mut client = Client::new(client_config).unwrap();
+        let mut client = Client::new(client_config).map_err(|_| ureq::Error::HostNotFound)?;
 
-        let host = uri.host().unwrap();
-
-        println!("Resolving host: {}", host);
+        let host = uri.host().ok_or(ureq::Error::HostNotFound)?;
 
         let target_port = uri.port_u16().unwrap_or_else(|| match uri.scheme_str() {
             Some("https") => 443,
@@ -57,14 +53,15 @@ impl Resolver for CustomResolver {
         // If host is already an IP, skip DNS lookup entirely
         // this happens when a Proxy is used...
         if let Ok(ip) = host.parse::<IpAddr>() {
-            println!("A Proxy is used so skipping dns lookup...");
             let mut result = self.empty();
             result.push(SocketAddr::new(ip, target_port));
             return Ok(result);
         }
 
         // Queryying IPv4 records.
-        let ipv4_recordset = client.query_rrset::<A>(host, Class::IN).unwrap();
+        let ipv4_recordset = client
+            .query_rrset::<A>(host, Class::IN)
+            .map_err(|_| ureq::Error::HostNotFound)?;
 
         // Queryying IPv6 records.
         // Optional IPv6 Query... [ Optional for now. ]

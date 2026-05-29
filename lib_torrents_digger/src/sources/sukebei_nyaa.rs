@@ -189,7 +189,7 @@ impl SukebeiNyaaCategories {
             let magnet = if torrent_data.len() > 1 {
                 torrent_data[1].attr("href").unwrap_or_default().to_string()
             } else {
-                String::from("Magnet link not available")
+                continue;
             };
 
             // extracting info hash from magnet
