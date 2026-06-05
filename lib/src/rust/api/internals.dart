@@ -6,6 +6,24 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+class InternalBookmarkCategory {
+  final int id;
+  final String name;
+
+  const InternalBookmarkCategory({required this.id, required this.name});
+
+  @override
+  int get hashCode => id.hashCode ^ name.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is InternalBookmarkCategory &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          name == other.name;
+}
+
 class InternalCustomDNS {
   final BigInt index;
   final String name;

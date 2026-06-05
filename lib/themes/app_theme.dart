@@ -51,7 +51,6 @@ abstract class AppTheme {
   Color get sourceUrlAvailableColor;
   Color get sourceUrlUnAvailableColor;
 
-
   Color get addTrackersListUrlTextFieldBackgroundColor;
   Color get addTrackersListUrlTextButtonTextColor;
   Color get addTrackersListUrlTextButtonBorderColor;
@@ -114,4 +113,26 @@ abstract class AppTheme {
   Color get scaffoldMessengerMessageColor;
   Color get scaffoldMessengerBorderColor;
   Color get scaffoldMessengerBackgroundColor;
+
+  Color get categoryChipBackgroundColor;
+  Color get categoryChipTextColor;
+  Color get categoryChipActiveTextColor;
+  Color get categoryChipBorderColor;
+  Color get categoryChipActiveBorderColor;
+
+  Color get newCategoryTextColor;
+  Color get newCategoryBackgroundColor;
+  Color get newCategoryBorderColor;
+  Color get createCategoryDialogBackgroundColor;
+  Color get bookmarkCategoryOptionPopupMenuBackgroundColor;
+  Color get bookmarkCategoryOptionPopupMenuIconColor;
+
+  Color get bookmarkCategoryDialogBackgroundColor;
+  Color get bookmarkCategoryDialogTextColor;
+  Color get bookmarkCategoryIconColor;
+  Color get bookmarkCategoryDialogCategoryTextColor;
+  // Color get bookmarkCategoryDialogCloseButtonBackgroundColor;
+  Color get bookmarkCategoryDialogCloseButtonTextColor;
+  Color get bookmarkCategoryDialogRemoveIconColor;
+  Color get bookmarkCategoryDialogRemoveTextColor;
 }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:torrents_digger/blocs/bookmark_bloc/bookmark_bloc.dart';
+import 'package:torrents_digger/blocs/bookmark_blocs/bookmark_bloc/bookmark_bloc.dart';
+import 'package:torrents_digger/blocs/bookmark_blocs/category_bloc/category_bloc.dart';
 import 'package:torrents_digger/blocs/default_trackers_bloc/default_trackers_bloc.dart';
 import 'package:torrents_digger/configs/extensions.dart';
 import 'package:torrents_digger/src/rust/api/internals.dart';
@@ -123,11 +124,12 @@ class TorrentCard extends StatelessWidget {
                 BlocBuilder<BookmarkBloc, BookmarkState>(
                   builder: (context, state) {
                     bool isBookmarked = false;
-                    if (state is BookmarksLoadedState) {
-                      isBookmarked = state.bookmarkedInfoHashes.contains(
-                        torrent.infoHash,
-                      );
-                    }
+
+                    state.whenOrNull(
+                      loaded: (bookmarkedTorrents, infoHashes, _) {
+                        isBookmarked = infoHashes.contains(torrent.infoHash);
+                      },
+                    );
 
                     return IconButton(
                       icon: Icon(
@@ -138,19 +140,19 @@ class TorrentCard extends StatelessWidget {
                         size: 24,
                       ),
                       onPressed: () {
-                        context.read<BookmarkBloc>().add(
-                          ToggleBookmarkEvent(torrent: torrent),
-                        );
-                        createSnackBar(
-                          message: isBookmarked
-                              ? "Bookmark Removed"
-                              : "Torrent Bookmarked",
-                          duration: 1,
-                        );
+                        if (isBookmarked) {
+                          _bookmarkOptionsDialog(context);
+                        } else {
+                          _categoryPickerDialog(
+                            context,
+                            isBookmarked: isBookmarked,
+                          );
+                        }
                       },
                     );
                   },
                 ),
+
                 const SizedBox(width: 10),
                 IconButton(
                   icon: const MagnetSVG(),
@@ -220,6 +222,195 @@ class TorrentCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  // Category Picker Dialog
+  void _categoryPickerDialog(
+    BuildContext context, {
+    required bool isBookmarked,
+  }) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return BlocBuilder<CategoryBloc, CategoryState>(
+          builder: (context, state) {
+            final categories = state.whenOrNull(
+              loaded: (categoriesList) => categoriesList,
+            );
+
+            return AlertDialog(
+              backgroundColor:
+                  context.appColors.bookmarkCategoryDialogBackgroundColor,
+              title: Text(
+                'Select Category',
+                style: TextStyle(
+                  color: context.appColors.bookmarkCategoryDialogTextColor,
+                ),
+              ),
+              content: categories!.isEmpty
+                  ? const Text('No Categories Found')
+                  : SizedBox(
+                      width: double.minPositive,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: categories.length,
+                        itemBuilder: (context, index) {
+                          final category = categories[index];
+                          return ListTile(
+                            leading: Icon(
+                              Icons.folder_open,
+                              color:
+                                  context.appColors.bookmarkCategoryIconColor,
+                            ),
+                            title: Text(category.name),
+                            onTap: () {
+                              // change category / Update
+                              if (isBookmarked) {
+                                int currentlyViewingCategoryID = context
+                                    .read<BookmarkBloc>()
+                                    .currentCategoryId;
+
+                                context.read<BookmarkBloc>().add(
+                                  BookmarkEvent.updateBookmark(
+                                    infoHash: torrent.infoHash,
+                                    categoryId: category.id,
+                                    currenltyViewingCategoryID:
+                                        currentlyViewingCategoryID,
+                                  ),
+                                );
+
+                                createSnackBar(
+                                  message: 'Moved to "${category.name}"',
+                                  duration: 1,
+                                );
+                              }
+                              // add 2 category / Insert
+                              else {
+                                context.read<BookmarkBloc>().add(
+                                  BookmarkEvent.bookmark(
+                                    torrent: torrent,
+                                    categoryID: category.id,
+                                  ),
+                                );
+                                createSnackBar(
+                                  message:
+                                      'Bookmarked under "${category.name}"',
+                                  duration: 1,
+                                );
+                              }
+
+                              Navigator.pop(dialogContext);
+                            },
+                          );
+                        },
+                      ),
+                    ),
+              actions: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(dialogContext);
+                      },
+                      child: Text(
+                        "Cancel",
+                        style: TextStyle(
+                          color: context
+                              .appColors
+                              .bookmarkCategoryDialogCloseButtonTextColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  // Bookmark Options Dialog
+  void _bookmarkOptionsDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          backgroundColor:
+              context.appColors.bookmarkCategoryDialogBackgroundColor,
+          title: Text(
+            'Bookmark Options',
+            style: TextStyle(
+              color: context.appColors.bookmarkCategoryDialogTextColor,
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: Icon(
+                  Icons.folder_open,
+                  color: context.appColors.bookmarkCategoryIconColor,
+                ),
+                title: Text(
+                  'Change Category',
+                  style: TextStyle(
+                    color: context.appColors.bookmarkCategoryDialogTextColor,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pop(dialogContext);
+                  _categoryPickerDialog(context, isBookmarked: true);
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.delete,
+                  color:
+                      context.appColors.bookmarkCategoryDialogRemoveIconColor,
+                ),
+                title: Text(
+                  'Remove Bookmark',
+                  style: TextStyle(
+                    color:
+                        context.appColors.bookmarkCategoryDialogTextColor,
+                  ),
+                ),
+                onTap: () {
+                  context.read<BookmarkBloc>().add(
+                    BookmarkEvent.removeBookmark(infoHash: torrent.infoHash),
+                  );
+                  createSnackBar(message: 'Bookmark Removed', duration: 1);
+                  Navigator.pop(dialogContext);
+                },
+              ),
+            ],
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(dialogContext);
+                  },
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: context
+                          .appColors
+                          .bookmarkCategoryDialogCloseButtonTextColor,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
     );
   }
 }

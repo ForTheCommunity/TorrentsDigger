@@ -7,20 +7,52 @@ import '../../frb_generated.dart';
 import '../internals.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These functions are ignored because they are not marked as `pub`: `create_bookmark`, `get_bookmarks`
-
-Future<BigInt> bookmarkATorrent({required InternalTorrent torrent}) => RustLib
-    .instance
-    .api
-    .crateApiDatabaseBookmarkBookmarkATorrent(torrent: torrent);
+Future<BigInt> bookmarkATorrent({
+  required InternalTorrent torrent,
+  required int categoryId,
+}) => RustLib.instance.api.crateApiDatabaseBookmarkBookmarkATorrent(
+  torrent: torrent,
+  categoryId: categoryId,
+);
 
 Future<bool> removeBookmark({required String infoHash}) => RustLib.instance.api
     .crateApiDatabaseBookmarkRemoveBookmark(infoHash: infoHash);
 
-Future<List<InternalTorrent>> getAllBookmarks() =>
-    RustLib.instance.api.crateApiDatabaseBookmarkGetAllBookmarks();
-
-Future<bool> checkBookmarkExistence({required String infoHash}) => RustLib
+Future<List<InternalTorrent>> getBookmarks({required int categoryId}) => RustLib
     .instance
     .api
-    .crateApiDatabaseBookmarkCheckBookmarkExistence(infoHash: infoHash);
+    .crateApiDatabaseBookmarkGetBookmarks(categoryId: categoryId);
+
+Future<Set<String>> getAllInfoHashes() =>
+    RustLib.instance.api.crateApiDatabaseBookmarkGetAllInfoHashes();
+
+Future<List<InternalBookmarkCategory>> getCategories() =>
+    RustLib.instance.api.crateApiDatabaseBookmarkGetCategories();
+
+Future<void> createBookmarkCategory({required String categoryName}) => RustLib
+    .instance
+    .api
+    .crateApiDatabaseBookmarkCreateBookmarkCategory(categoryName: categoryName);
+
+Future<void> renameBookmarkCategory({
+  required int categoryId,
+  required String oldCategoryName,
+  required String newCategoryName,
+}) => RustLib.instance.api.crateApiDatabaseBookmarkRenameBookmarkCategory(
+  categoryId: categoryId,
+  oldCategoryName: oldCategoryName,
+  newCategoryName: newCategoryName,
+);
+
+Future<void> deleteBookmarkCategory({required int categoryId}) => RustLib
+    .instance
+    .api
+    .crateApiDatabaseBookmarkDeleteBookmarkCategory(categoryId: categoryId);
+
+Future<void> changeBookmarkCategory({
+  required String infoHash,
+  required int categoryId,
+}) => RustLib.instance.api.crateApiDatabaseBookmarkChangeBookmarkCategory(
+  infoHash: infoHash,
+  categoryId: categoryId,
+);

@@ -27,6 +27,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Map<String, String> dco_decode_Map_String_String_None(dynamic raw);
 
   @protected
+  Set<String> dco_decode_Set_String_None(dynamic raw);
+
+  @protected
   String dco_decode_String(dynamic raw);
 
   @protected
@@ -52,6 +55,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   int dco_decode_i_8(dynamic raw);
+
+  @protected
+  InternalBookmarkCategory dco_decode_internal_bookmark_category(dynamic raw);
 
   @protected
   InternalCustomDNS dco_decode_internal_custom_dns(dynamic raw);
@@ -81,6 +87,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<String> dco_decode_list_String(dynamic raw);
+
+  @protected
+  List<InternalBookmarkCategory> dco_decode_list_internal_bookmark_category(
+    dynamic raw,
+  );
 
   @protected
   List<InternalCustomDNS> dco_decode_list_internal_custom_dns(dynamic raw);
@@ -147,6 +158,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  Set<String> sse_decode_Set_String_None(SseDeserializer deserializer);
+
+  @protected
   String sse_decode_String(SseDeserializer deserializer);
 
   @protected
@@ -176,6 +190,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   int sse_decode_i_8(SseDeserializer deserializer);
+
+  @protected
+  InternalBookmarkCategory sse_decode_internal_bookmark_category(
+    SseDeserializer deserializer,
+  );
 
   @protected
   InternalCustomDNS sse_decode_internal_custom_dns(
@@ -213,6 +232,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<String> sse_decode_list_String(SseDeserializer deserializer);
+
+  @protected
+  List<InternalBookmarkCategory> sse_decode_list_internal_bookmark_category(
+    SseDeserializer deserializer,
+  );
 
   @protected
   List<InternalCustomDNS> sse_decode_list_internal_custom_dns(
@@ -298,6 +322,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_Set_String_None(Set<String> self, SseSerializer serializer);
+
+  @protected
   void sse_encode_String(String self, SseSerializer serializer);
 
   @protected
@@ -332,6 +359,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_i_8(int self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_internal_bookmark_category(
+    InternalBookmarkCategory self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_internal_custom_dns(
@@ -380,6 +413,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_list_String(List<String> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_internal_bookmark_category(
+    List<InternalBookmarkCategory> self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_list_internal_custom_dns(

@@ -62,3 +62,8 @@ pub struct InternalCustomDNS{
     pub index :usize,
     pub name :String
 }
+
+pub struct InternalBookmarkCategory{
+    pub id:u8,
+    pub name:String
+}

@@ -15,7 +15,7 @@ pub use crate::api::internals::{
 
 pub use flutter_rust_bridge::frb;
 pub use lib_torrents_digger::database::bookmark::{
-    check_bookmark, create_a_bookmark, delete_a_bookmark, fetch_all_bookmarks,
+    create_a_bookmark, delete_a_bookmark, fetch_bookmarks,
 };
 
 pub use lib_torrents_digger::database::{

@@ -2,10 +2,11 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:torrents_digger/blocs/bookmark_bloc/bookmark_bloc.dart';
+import 'package:torrents_digger/blocs/bookmark_blocs/bookmark_bloc/bookmark_bloc.dart';
+import 'package:torrents_digger/blocs/bookmark_blocs/category_bloc/category_bloc.dart';
 import 'package:torrents_digger/blocs/custom_dns_bloc/custom_dns_bloc.dart';
-import 'package:torrents_digger/blocs/customs_bloc/customs_dropdown_bloc/customs_bloc.dart';
-import 'package:torrents_digger/blocs/customs_bloc/customs_torrents/customs_torrents_bloc.dart';
+import 'package:torrents_digger/blocs/customs_blocs/customs_dropdown_bloc/customs_bloc.dart';
+import 'package:torrents_digger/blocs/customs_blocs/customs_torrents/customs_torrents_bloc.dart';
 import 'package:torrents_digger/blocs/default_trackers_bloc/default_trackers_bloc.dart';
 import 'package:torrents_digger/blocs/proxy_settings_bloc/proxy_settings_bloc.dart';
 import 'package:torrents_digger/blocs/pagination_bloc/pagination_bloc.dart';
@@ -49,9 +50,7 @@ class MyApp extends StatelessWidget {
           create: (context) =>
               TorrentBloc(paginationBloc: context.read<PaginationBloc>()),
         ),
-        BlocProvider(
-          create: (_) => BookmarkBloc()..add(LoadBookmarkedTorrentsEvent()),
-        ),
+        BlocProvider(create: (_) => BookmarkBloc()),
         BlocProvider(
           create: (_) => ProxySettingsBloc()..add(LoadProxyDetailsEvent()),
         ),
@@ -71,6 +70,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (_) => CustomDnsBloc()..add(CustomDnsEvent.loadCustomDNS()),
         ),
+        BlocProvider(create: (_) => CategoryBloc()),
       ],
       child: BlocBuilder<ThemesBloc, ThemesState>(
         builder: (context, state) {
