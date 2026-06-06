@@ -44,5 +44,5 @@ modules:
         url: https://gitlab.com/ForTheCommunity/torrentsdigger.git
       - type: git
         url: https://github.com/flutter/flutter.git
-        tag: 3.38.9
+        tag: 3.44.1
         dest: flutter

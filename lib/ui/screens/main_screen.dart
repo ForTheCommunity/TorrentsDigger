@@ -6,10 +6,9 @@ import 'package:torrents_digger/blocs/sources_bloc/source_bloc.dart';
 import 'package:torrents_digger/blocs/torrent_bloc/torrent_bloc.dart';
 import 'package:torrents_digger/configs/extensions.dart';
 import 'package:torrents_digger/ui/widgets/dropdowns_ui.dart';
+import 'package:torrents_digger/ui/widgets/floating_action_buttons.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 import 'package:torrents_digger/ui/widgets/search_bar_widget.dart';
-import 'package:torrents_digger/ui/widgets/settings_button.dart';
-import 'package:torrents_digger/ui/widgets/scroll_to_top_button.dart';
 import 'package:torrents_digger/ui/widgets/torrents_list_ui.dart';
 
 class MainScreen extends StatelessWidget {
@@ -19,16 +18,13 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextEditingController searchController = TextEditingController();
     return Scaffold(
-      floatingActionButton: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ScrollToTopButton(
-            scrollController: PrimaryScrollController.of(context),
-          ),
-          const SizedBox(height: 10),
-          SettingButton(),
-        ],
+      floatingActionButton: FloatingActionsButtons(
+        scrollToTop: true,
+        enableBookmarks: true,
+        enableCustoms: true,
+        enableSettings: true,
       ),
+
       backgroundColor: context.appColors.scaffoldColor,
       body: SafeArea(
         child: Scrollbar(

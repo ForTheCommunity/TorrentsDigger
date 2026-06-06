@@ -60,3 +60,10 @@ fn set_trackers_dir_path(trackers_dir_path: PathBuf) {
         .set(trackers_dir_path)
         .expect("Trackers dir path can only be set once");
 }
+
+// migrate db when a Database is imported...
+pub fn migrate_to_latest() -> Result<()> {
+    let mut db_conn = get_a_database_connection();
+    MIGRATIONS.to_latest(&mut db_conn)?;
+    Ok(())
+}

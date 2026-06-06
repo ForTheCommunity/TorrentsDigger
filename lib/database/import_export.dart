@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:torrents_digger/database/get_settings_data.dart';
+import 'package:torrents_digger/database/initialize.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 
 const String databaseFileName = "torrents_digger.database";
@@ -88,6 +89,8 @@ void importDatabaseAndroid() async {
         // Writing file to internal scoped storage
         await databaseFile.writeAsBytes(databaseFileData);
         createSnackBar(message: "Database imported...", duration: 2);
+        // try migration if db is old.
+        await tryMigrateDatabase2Latest();
       } catch (e) {
         createSnackBar(
           message: "Unable to Import Database.\nError: ${e.toString}",

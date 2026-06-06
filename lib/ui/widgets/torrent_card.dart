@@ -230,6 +230,7 @@ class TorrentCard extends StatelessWidget {
     BuildContext context, {
     required bool isBookmarked,
   }) {
+    context.read<CategoryBloc>().add(const CategoryEvent.load());
     showDialog(
       context: context,
       builder: (dialogContext) {
@@ -248,7 +249,7 @@ class TorrentCard extends StatelessWidget {
                   color: context.appColors.bookmarkCategoryDialogTextColor,
                 ),
               ),
-              content: categories!.isEmpty
+              content: categories == null || categories.isEmpty
                   ? const Text('No Categories Found')
                   : SizedBox(
                       width: double.minPositive,
@@ -375,8 +376,7 @@ class TorrentCard extends StatelessWidget {
                 title: Text(
                   'Remove Bookmark',
                   style: TextStyle(
-                    color:
-                        context.appColors.bookmarkCategoryDialogTextColor,
+                    color: context.appColors.bookmarkCategoryDialogTextColor,
                   ),
                 ),
                 onTap: () {

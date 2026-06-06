@@ -252,20 +252,43 @@ class LightTheme extends AppTheme {
   @override
   Color get newCategoryBorderColor => Color.fromRGBO(0, 0, 0, 1);
   @override
-  Color get createCategoryDialogBackgroundColor => Color.fromRGBO(42, 18, 18, 0.675);
+  Color get createCategoryDialogBackgroundColor =>
+      Color.fromRGBO(15, 15, 15, 0.867);
   @override
   Color get bookmarkCategoryOptionPopupMenuBackgroundColor =>
       Color.fromRGBO(0, 28, 49, 1);
   @override
   Color get bookmarkCategoryOptionPopupMenuIconColor =>
       Color.fromRGBO(0, 0, 0, 1);
+  @override
+  Color get createNewCategoryDialogTextFieldHintColor =>
+      Color.fromRGBO(227, 221, 38, 1);
+  @override
+  Color get createNewCategoryDialogTextFieldInputTextColor =>
+      Color.fromRGBO(0, 255, 234, 1);
+  @override
+  Color get createNewCategoryDialogTextFieldInputActiveBorderColor =>
+      Color.fromRGBO(154, 144, 144, 1);
+  @override
+  Color get createNewCategoryDialogTextFieldInputInactiveBorderColor =>
+      Color.fromRGBO(11, 225, 225, 1);
+  @override
+  Color get createNewCategoryDialogCreateButtonTextColor =>
+      Color.fromRGBO(14, 246, 45, 1);
+  @override
+  Color get createNewCategoryDialogCancelButtonTextColor =>
+      Color.fromRGBO(11, 225, 225, 1);
+  @override
+  Color get createNewCategoryDialogTitleTextColor =>
+      Color.fromRGBO(255, 255, 255, 1);
 
   @override
-  Color get bookmarkCategoryDialogBackgroundColor => Color.fromRGBO(1, 1, 1, 1);
+  Color get bookmarkCategoryDialogBackgroundColor =>
+      Color.fromRGBO(39, 39, 39, 1);
   @override
-  Color get bookmarkCategoryDialogTextColor => Color.fromRGBO(1, 1, 1, 1);
+  Color get bookmarkCategoryDialogTextColor => Color.fromRGBO(251, 251, 251, 1);
   @override
-  Color get bookmarkCategoryIconColor => Color.fromRGBO(1, 1, 1, 1);
+  Color get bookmarkCategoryIconColor => Color.fromRGBO(0, 217, 255, 1);
   @override
   Color get bookmarkCategoryDialogCategoryTextColor =>
       Color.fromRGBO(1, 1, 1, 1);
@@ -274,9 +297,13 @@ class LightTheme extends AppTheme {
   // Color.fromRGBO(1, 1, 1, 1);
   @override
   Color get bookmarkCategoryDialogCloseButtonTextColor =>
-      Color.fromRGBO(1, 1, 1, 1);
+      Color.fromRGBO(241, 234, 234, 1);
   @override
-  Color get bookmarkCategoryDialogRemoveIconColor => Color.fromRGBO(1, 1, 1, 1);
+  Color get bookmarkCategoryDialogRemoveIconColor =>
+      Color.fromRGBO(247, 11, 11, 1);
+
   @override
-  Color get bookmarkCategoryDialogRemoveTextColor => Color.fromRGBO(1, 1, 1, 1);
+  Brightness get statusBarIconBrightness => Brightness.dark;
+  @override
+  Brightness get statusBarBrightness => Brightness.light;
 }

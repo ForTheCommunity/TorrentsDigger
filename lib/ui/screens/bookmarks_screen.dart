@@ -8,8 +8,7 @@ import 'package:torrents_digger/configs/extensions.dart';
 import 'package:torrents_digger/src/rust/api/internals.dart';
 import 'package:torrents_digger/ui/widgets/circular_progress_bar_widget.dart';
 import 'package:torrents_digger/ui/widgets/category_chip.dart';
-import 'package:torrents_digger/ui/widgets/scroll_to_top_button.dart';
-import 'package:torrents_digger/ui/widgets/settings_button.dart';
+import 'package:torrents_digger/ui/widgets/floating_action_buttons.dart';
 import 'package:torrents_digger/ui/widgets/torrent_list_widget.dart';
 
 class BookmarksScreen extends StatefulWidget {
@@ -51,16 +50,13 @@ class _BookmarkScreenState extends State<BookmarksScreen> {
         ),
       ),
 
-      floatingActionButton: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ScrollToTopButton(
-            scrollController: PrimaryScrollController.of(context),
-          ),
-          const SizedBox(height: 10),
-          SettingButton(),
-        ],
+      floatingActionButton: FloatingActionsButtons(
+        scrollToTop: true,
+        enableBookmarks: false,
+        enableCustoms: true,
+        enableSettings: true,
       ),
+
       body: SafeArea(
         child: Scrollbar(
           child: SingleChildScrollView(
@@ -264,11 +260,45 @@ class _BookmarkScreenState extends State<BookmarksScreen> {
         return AlertDialog(
           backgroundColor:
               context.appColors.createCategoryDialogBackgroundColor,
-          title: const Text('New Category'),
+          title: Text(
+            'New Category',
+            style: TextStyle(
+              color: context.appColors.createNewCategoryDialogTitleTextColor,
+            ),
+          ),
+
           content: TextField(
             controller: controller,
             autofocus: true,
-            decoration: const InputDecoration(hintText: 'Category Name'),
+            style: TextStyle(
+              color: context
+                  .appColors
+                  .createNewCategoryDialogTextFieldInputTextColor,
+            ),
+
+            decoration: InputDecoration(
+              hintText: 'Category Name',
+              hintStyle: TextStyle(
+                color:
+                    context.appColors.createNewCategoryDialogTextFieldHintColor,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: context
+                      .appColors
+                      .createNewCategoryDialogTextFieldInputInactiveBorderColor,
+                ),
+              ),
+
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: context
+                      .appColors
+                      .createNewCategoryDialogTextFieldInputActiveBorderColor,
+                  width: 2,
+                ),
+              ),
+            ),
           ),
           actions: [
             Row(
@@ -277,13 +307,27 @@ class _BookmarkScreenState extends State<BookmarksScreen> {
                   onPressed: () {
                     Navigator.pop(dialogContext);
                   },
-                  child: const Text('Cancel'),
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: context
+                          .appColors
+                          .createNewCategoryDialogCancelButtonTextColor,
+                    ),
+                  ),
                 ),
 
                 const Spacer(),
 
-                ElevatedButton(
-                  child: const Text('Create'),
+                TextButton(
+                  child: Text(
+                    'Create',
+                    style: TextStyle(
+                      color: context
+                          .appColors
+                          .createNewCategoryDialogCreateButtonTextColor,
+                    ),
+                  ),
                   onPressed: () {
                     final newCatName = controller.text.trim();
 
@@ -315,11 +359,46 @@ class _BookmarkScreenState extends State<BookmarksScreen> {
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          title: const Text('Rename Category'),
+          backgroundColor:
+              context.appColors.createCategoryDialogBackgroundColor,
+          title: Text(
+            'Rename Category',
+            style: TextStyle(
+              color: context.appColors.createNewCategoryDialogTitleTextColor,
+            ),
+          ),
           content: TextField(
+            style: TextStyle(
+              color: context
+                  .appColors
+                  .createNewCategoryDialogTextFieldInputTextColor,
+            ),
+
+            decoration: InputDecoration(
+              hintText: 'Category Name',
+              hintStyle: TextStyle(
+                color:
+                    context.appColors.createNewCategoryDialogTextFieldHintColor,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: context
+                      .appColors
+                      .createNewCategoryDialogTextFieldInputInactiveBorderColor,
+                ),
+              ),
+
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: context
+                      .appColors
+                      .createNewCategoryDialogTextFieldInputActiveBorderColor,
+                  width: 2,
+                ),
+              ),
+            ),
             controller: textController,
             autofocus: true,
-            decoration: const InputDecoration(hintText: 'Category Name'),
           ),
           actions: [
             Row(
@@ -328,13 +407,27 @@ class _BookmarkScreenState extends State<BookmarksScreen> {
                   onPressed: () {
                     Navigator.pop(dialogContext);
                   },
-                  child: const Text("Cancel"),
+                  child: Text(
+                    "Cancel",
+                    style: TextStyle(
+                      color: context
+                          .appColors
+                          .createNewCategoryDialogCancelButtonTextColor,
+                    ),
+                  ),
                 ),
 
                 const Spacer(),
 
-                ElevatedButton(
-                  child: const Text("Rename"),
+                TextButton(
+                  child: Text(
+                    "Rename",
+                    style: TextStyle(
+                      color: context
+                          .appColors
+                          .createNewCategoryDialogCreateButtonTextColor,
+                    ),
+                  ),
                   onPressed: () {
                     final newCategoryName = textController.text.trim();
                     if (newCategoryName.isEmpty) {

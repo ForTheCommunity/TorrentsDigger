@@ -251,13 +251,35 @@ class MatrixTheme extends AppTheme {
   @override
   Color get newCategoryBorderColor => Color.fromRGBO(2, 98, 19, 1);
   @override
-  Color get createCategoryDialogBackgroundColor => Color.fromRGBO(0, 0, 0, 1);
+  Color get createCategoryDialogBackgroundColor =>
+      Color.fromRGBO(12, 12, 12, 1);
   @override
   Color get bookmarkCategoryOptionPopupMenuBackgroundColor =>
       Color.fromRGBO(1, 1, 1, 1);
- @override
+  @override
   Color get bookmarkCategoryOptionPopupMenuIconColor =>
       Color.fromRGBO(255, 255, 255, 1);
+  @override
+  Color get createNewCategoryDialogTextFieldHintColor =>
+      Color.fromRGBO(199, 188, 188, 1);
+  @override
+  Color get createNewCategoryDialogTextFieldInputTextColor =>
+      Color.fromRGBO(30, 213, 55, 1);
+  @override
+  Color get createNewCategoryDialogTextFieldInputActiveBorderColor =>
+      Color.fromRGBO(5, 114, 120, 1);
+  @override
+  Color get createNewCategoryDialogTextFieldInputInactiveBorderColor =>
+      Color.fromRGBO(133, 10, 131, 1);
+  @override
+  Color get createNewCategoryDialogCreateButtonTextColor =>
+      Color.fromRGBO(0, 255, 34, 1);
+  @override
+  Color get createNewCategoryDialogCancelButtonTextColor =>
+      Color.fromRGBO(127, 223, 233, 1);
+  @override
+  Color get createNewCategoryDialogTitleTextColor =>
+      Color.fromRGBO(0, 255, 30, 1);
 
   @override
   Color get bookmarkCategoryDialogBackgroundColor =>
@@ -278,7 +300,9 @@ class MatrixTheme extends AppTheme {
   @override
   Color get bookmarkCategoryDialogRemoveIconColor =>
       Color.fromRGBO(255, 0, 0, 1);
+
   @override
-  Color get bookmarkCategoryDialogRemoveTextColor =>
-      Color.fromRGBO(221, 216, 216, 1);
+  Brightness get statusBarIconBrightness => Brightness.light;
+  @override
+  Brightness get statusBarBrightness => Brightness.dark;
 }

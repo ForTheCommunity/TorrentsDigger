@@ -12,3 +12,6 @@ Future<void> initializeTorrentsDiggerDatabase({
     .crateApiDatabaseInitializeInitializeTorrentsDiggerDatabase(
       torrentsDiggerDatabaseDirectory: torrentsDiggerDatabaseDirectory,
     );
+
+Future<void> migrateDatabaseToLatest() =>
+    RustLib.instance.api.crateApiDatabaseInitializeMigrateDatabaseToLatest();

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/bookmark_blocs/bookmark_bloc/bookmark_bloc.dart';
 import 'package:torrents_digger/blocs/bookmark_blocs/category_bloc/category_bloc.dart';
@@ -93,6 +94,12 @@ class MyApp extends StatelessWidget {
                 titleTextStyle: TextStyle(
                   color: context.appColors.appBarTextColor,
                   fontSize: 25,
+                ),
+                systemOverlayStyle: SystemUiOverlayStyle(
+                  statusBarColor: Colors.transparent,
+                  statusBarIconBrightness:
+                      context.appColors.statusBarIconBrightness,
+                  statusBarBrightness: context.appColors.statusBarBrightness,
                 ),
               ),
               scrollbarTheme: ScrollbarThemeData(

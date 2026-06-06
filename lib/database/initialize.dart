@@ -54,3 +54,11 @@ Future<void> fixDatabase() async {
     await File(oldDBPath).copy(newDBPath);
   }
 }
+
+Future<void> tryMigrateDatabase2Latest() async {
+  try {
+    await migrateDatabaseToLatest();
+  } catch (e) {
+    createSnackBar(message: "Error : ${e.toString()}", duration: 10);
+  }
+}

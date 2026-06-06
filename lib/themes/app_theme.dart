@@ -126,6 +126,13 @@ abstract class AppTheme {
   Color get createCategoryDialogBackgroundColor;
   Color get bookmarkCategoryOptionPopupMenuBackgroundColor;
   Color get bookmarkCategoryOptionPopupMenuIconColor;
+  Color get createNewCategoryDialogTextFieldHintColor;
+  Color get createNewCategoryDialogTextFieldInputTextColor;
+  Color get createNewCategoryDialogTextFieldInputActiveBorderColor;
+  Color get createNewCategoryDialogTextFieldInputInactiveBorderColor;
+  Color get createNewCategoryDialogCreateButtonTextColor;
+  Color get createNewCategoryDialogCancelButtonTextColor;
+  Color get createNewCategoryDialogTitleTextColor;
 
   Color get bookmarkCategoryDialogBackgroundColor;
   Color get bookmarkCategoryDialogTextColor;
@@ -134,5 +141,7 @@ abstract class AppTheme {
   // Color get bookmarkCategoryDialogCloseButtonBackgroundColor;
   Color get bookmarkCategoryDialogCloseButtonTextColor;
   Color get bookmarkCategoryDialogRemoveIconColor;
-  Color get bookmarkCategoryDialogRemoveTextColor;
+
+  Brightness get statusBarIconBrightness;
+  Brightness get statusBarBrightness;
 }

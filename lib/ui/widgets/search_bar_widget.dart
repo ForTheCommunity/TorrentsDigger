@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:torrents_digger/configs/extensions.dart';
-import 'package:torrents_digger/ui/widgets/popup_menu_button_widget.dart';
 
 class SearchBarWidget extends StatelessWidget {
   const SearchBarWidget({
@@ -57,8 +56,6 @@ class SearchBarWidget extends StatelessWidget {
               size: 25,
             ),
           ),
-          SizedBox(width: 10),
-          PopupMenuButtonWidget(),
         ],
       ),
     );

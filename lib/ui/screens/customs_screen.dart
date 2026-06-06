@@ -7,9 +7,8 @@ import 'package:torrents_digger/configs/extensions.dart';
 import 'package:torrents_digger/src/rust/api/internals.dart';
 import 'package:torrents_digger/ui/widgets/circular_progress_bar_widget.dart';
 import 'package:torrents_digger/ui/widgets/dropdown_widget.dart';
+import 'package:torrents_digger/ui/widgets/floating_action_buttons.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
-import 'package:torrents_digger/ui/widgets/scroll_to_top_button.dart';
-import 'package:torrents_digger/ui/widgets/settings_button.dart';
 import 'package:torrents_digger/ui/widgets/torrent_list_widget.dart';
 
 class CustomsScreen extends StatefulWidget {
@@ -58,16 +57,13 @@ class _CustomsScreenState extends State<CustomsScreen> {
           iconSize: 30,
         ),
       ),
-      floatingActionButton: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ScrollToTopButton(
-            scrollController: PrimaryScrollController.of(context),
-          ),
-          const SizedBox(height: 10),
-          SettingButton(),
-        ],
+      floatingActionButton: FloatingActionsButtons(
+        scrollToTop: true,
+        enableBookmarks: true,
+        enableCustoms: false,
+        enableSettings: true,
       ),
+
       body: SafeArea(
         child: Scrollbar(
           child: SingleChildScrollView(
