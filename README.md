@@ -5,29 +5,47 @@
 
 ## Features
 
-- Multi Source/Sites Support.
+* **Multi-Source Support** – Search torrents across multiple supported torrent sources/sites.
 
-- Shows Torrent Creation Date, Seeders, Leechers, Total Downloads, Torrent Size.
+* **Detailed Torrent Information** – View torrent creation date, size, seeders, leechers, and total download counts.
 
-- User can choose Category, Filters, Sortings, Sortings Order.
+* **Advanced Filtering & Sorting** – Filter results by category and customize sorting options and sort order.
 
-- Bookmark : User can Bookmark torrents.
+* **Bookmarks & Custom Categories** – Bookmark torrents and group them into user-defined categories for better organization and quick access.
 
-- Copy magnet link to Clipboard.
+* **Magnet Link Copying** – Copy magnet links directly to your clipboard with a single click.
 
-- Opens Torrent Downloader Apps for Downloading Torrents.
+* **External Torrent Client Integration** – Open magnet links directly in your preferred torrent downloader application.
 
-- Default Trackers Lists : User can Select a Default Trackers List & that trackers List will be added to magnet links.
+* **Default Tracker Lists** – Select a default tracker list that is automatically appended to magnet links.
 
-- Custom Listings : There are numbers of Custom Listings that shows certain types of torrents. (Like Trending , Latests, etc.)
+* **Custom Listings** – Browse curated torrent listings such as **Trending**, **Latest**, and other source-specific collections.
 
-- Multiple Themes.
+* **Multiple Themes** – Personalize the application's appearance with a variety of built-in themes.
 
-- Proxy Support : User can use Proxy to route Traffic. Supported Proxy Protocols -> ( HTTP, HTTPS, SOCKS4 & SOCKS5. )
+* **Proxy Support** – Route traffic through proxies for enhanced privacy and accessibility.
 
-- Database Import/Export : User can Export and Import App Database.
+  Supported protocols:
 
-- Cross Platform ( Available for Android, Windows & Linux ).
+  * HTTP
+  * HTTPS
+  * SOCKS4
+  * SOCKS5
+
+* **Database Import & Export** – Back up and restore application data, including bookmarks and settings.
+
+* **Cross-Platform Support** – Available on:
+
+  * Android
+  * Windows
+  * Linux
+
+### Additional Highlights
+
+* Fast and lightweight interface.
+* Built with Flutter for a consistent experience across platforms.
+* Open-source and privacy-focused.
+* No account or registration required.
 
 
 ## --> Screenshots

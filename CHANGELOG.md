@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.4] - 2026-06-06
+- Added Feature : Bookmark Categories
+- Improved UI.
+
 ## [1.2.3] - 2026-05-29
 - Added Feature Custom DNS Resolver. [ Experimental ]
 - Updated Dependencies.
