@@ -32,3 +32,12 @@ pub use crate::api::internals::InternalProxy;
 pub use lib_torrents_digger::sources::customs::{
     get_custom_source_details, search_custom, CustomSourceDetails,
 };
+
+pub use crate::api::internals::{
+    InternalBookmarkCategory, InternalBookmarksStats, InternalCategoryStats, InternalCustomDNS,
+    InternalCustomSourceDetails, InternalGlobalStats, InternalPagination,
+};
+pub use lib_torrents_digger::{
+    database::bookmark::{BookmarksStats, CategoryStats, GlobalStats},
+    network_io::custom_resolver::CustomDNSResolver,
+};

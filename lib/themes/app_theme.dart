@@ -144,4 +144,10 @@ abstract class AppTheme {
 
   Brightness get statusBarIconBrightness;
   Brightness get statusBarBrightness;
+
+  Color get bookmarksStatsIconColor;
+  Color get bookmarksStatsBorderColor;
+  Color get bookmarksStatsColumnHeaderTextColor;
+  Color get bookmarksStatsTotalTextColor;
+  Color get bookmarksStatsCategoryDataTextColor;
 }

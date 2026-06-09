@@ -38,7 +38,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.12.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -196475177;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1540046324;
 
 // Section: executor
 
@@ -596,6 +596,38 @@ fn wire__crate__api__database__bookmark__get_bookmarks_impl(
             move |context| {
                 transform_result_sse::<_, String>((move || {
                     let output_ok = crate::api::database::bookmark::get_bookmarks(api_category_id)?;
+                    Ok(output_ok)
+                })())
+            }
+        },
+    )
+}
+fn wire__crate__api__app__get_bookmarks_stats_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "get_bookmarks_stats",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            move |context| {
+                transform_result_sse::<_, String>((move || {
+                    let output_ok = crate::api::app::get_bookmarks_stats()?;
                     Ok(output_ok)
                 })())
             }
@@ -1234,11 +1266,40 @@ impl SseDecode for i8 {
 impl SseDecode for crate::api::internals::InternalBookmarkCategory {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut var_id = <u8>::sse_decode(deserializer);
+        let mut var_id = <u16>::sse_decode(deserializer);
         let mut var_name = <String>::sse_decode(deserializer);
         return crate::api::internals::InternalBookmarkCategory {
             id: var_id,
             name: var_name,
+        };
+    }
+}
+
+impl SseDecode for crate::api::internals::InternalBookmarksStats {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_categoriesStats =
+            <Vec<crate::api::internals::InternalCategoryStats>>::sse_decode(deserializer);
+        let mut var_globalStats =
+            <crate::api::internals::InternalGlobalStats>::sse_decode(deserializer);
+        return crate::api::internals::InternalBookmarksStats {
+            categories_stats: var_categoriesStats,
+            global_stats: var_globalStats,
+        };
+    }
+}
+
+impl SseDecode for crate::api::internals::InternalCategoryStats {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_category =
+            <crate::api::internals::InternalBookmarkCategory>::sse_decode(deserializer);
+        let mut var_categoryTotalCount = <u16>::sse_decode(deserializer);
+        let mut var_categoryTotalSize = <String>::sse_decode(deserializer);
+        return crate::api::internals::InternalCategoryStats {
+            category: var_category,
+            category_total_count: var_categoryTotalCount,
+            category_total_size: var_categoryTotalSize,
         };
     }
 }
@@ -1263,6 +1324,18 @@ impl SseDecode for crate::api::internals::InternalCustomSourceDetails {
         return crate::api::internals::InternalCustomSourceDetails {
             custom_source_name: var_customSourceName,
             custom_source_listings: var_customSourceListings,
+        };
+    }
+}
+
+impl SseDecode for crate::api::internals::InternalGlobalStats {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_totalTorrentsCount = <u32>::sse_decode(deserializer);
+        let mut var_totalTorrentsSize = <String>::sse_decode(deserializer);
+        return crate::api::internals::InternalGlobalStats {
+            total_torrents_count: var_totalTorrentsCount,
+            total_torrents_size: var_totalTorrentsSize,
         };
     }
 }
@@ -1398,6 +1471,20 @@ impl SseDecode for Vec<crate::api::internals::InternalBookmarkCategory> {
         let mut ans_ = Vec::with_capacity(len_ as usize);
         for idx_ in 0..len_ {
             ans_.push(<crate::api::internals::InternalBookmarkCategory>::sse_decode(deserializer));
+        }
+        return ans_;
+    }
+}
+
+impl SseDecode for Vec<crate::api::internals::InternalCategoryStats> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = Vec::with_capacity(len_ as usize);
+        for idx_ in 0..len_ {
+            ans_.push(<crate::api::internals::InternalCategoryStats>::sse_decode(
+                deserializer,
+            ));
         }
         return ans_;
     }
@@ -1595,6 +1682,20 @@ impl SseDecode for (usize, String) {
     }
 }
 
+impl SseDecode for u16 {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        deserializer.cursor.read_u16::<NativeEndian>().unwrap()
+    }
+}
+
+impl SseDecode for u32 {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        deserializer.cursor.read_u32::<NativeEndian>().unwrap()
+    }
+}
+
 impl SseDecode for u8 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -1693,85 +1794,86 @@ fn pde_ffi_dispatcher_primary_impl(
             rust_vec_len,
             data_len,
         ),
-        17 => wire__crate__api__database__bookmark__get_categories_impl(
+        17 => wire__crate__api__app__get_bookmarks_stats_impl(port, ptr, rust_vec_len, data_len),
+        18 => wire__crate__api__database__bookmark__get_categories_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        18 => wire__crate__api__app__get_custom_dns_lists_impl(port, ptr, rust_vec_len, data_len),
-        19 => wire__crate__api__app__get_customs_details_impl(port, ptr, rust_vec_len, data_len),
-        20 => wire__crate__api__app__get_ip_details_impl(port, ptr, rust_vec_len, data_len),
-        21 => {
+        19 => wire__crate__api__app__get_custom_dns_lists_impl(port, ptr, rust_vec_len, data_len),
+        20 => wire__crate__api__app__get_customs_details_impl(port, ptr, rust_vec_len, data_len),
+        21 => wire__crate__api__app__get_ip_details_impl(port, ptr, rust_vec_len, data_len),
+        22 => {
             wire__crate__api__app__get_processed_magnet_link_impl(port, ptr, rust_vec_len, data_len)
         }
-        22 => wire__crate__api__database__proxy__get_saved_proxy_impl(
+        23 => wire__crate__api__database__proxy__get_saved_proxy_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        23 => wire__crate__api__database__get_settings_kv__get_settings_kv_impl(
+        24 => wire__crate__api__database__get_settings_kv__get_settings_kv_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        24 => wire__crate__api__database__proxy__get_supported_proxy_details_impl(
+        25 => wire__crate__api__database__proxy__get_supported_proxy_details_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        25 => wire__crate__api__database__initialize__initialize_torrents_digger_database_impl(
+        26 => wire__crate__api__database__initialize__initialize_torrents_digger_database_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        26 => wire__crate__api__database__get_settings_kv__insert_or_update_kv_impl(
+        27 => wire__crate__api__database__get_settings_kv__insert_or_update_kv_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        27 => wire__crate__api__app__load_default_trackers_string_impl(
+        28 => wire__crate__api__app__load_default_trackers_string_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        28 => wire__crate__api__database__initialize__migrate_database_to_latest_impl(
+        29 => wire__crate__api__database__initialize__migrate_database_to_latest_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        29 => wire__crate__api__database__bookmark__remove_bookmark_impl(
+        30 => wire__crate__api__database__bookmark__remove_bookmark_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        30 => wire__crate__api__database__bookmark__rename_bookmark_category_impl(
+        31 => wire__crate__api__database__bookmark__rename_bookmark_category_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        31 => wire__crate__api__database__proxy__save_proxy_api_impl(
+        32 => wire__crate__api__database__proxy__save_proxy_api_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        32 => wire__crate__api__database__get_settings_kv__set_active_custom_dns_resolver_impl(
+        33 => wire__crate__api__database__get_settings_kv__set_active_custom_dns_resolver_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        33 => wire__crate__api__database__get_settings_kv__set_default_trackers_list_impl(
+        34 => wire__crate__api__database__get_settings_kv__set_default_trackers_list_impl(
             port,
             ptr,
             rust_vec_len,
@@ -1817,6 +1919,49 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::internals::InternalBookmarkCa
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::internals::InternalBookmarksStats {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.categories_stats.into_into_dart().into_dart(),
+            self.global_stats.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::internals::InternalBookmarksStats
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::internals::InternalBookmarksStats>
+    for crate::api::internals::InternalBookmarksStats
+{
+    fn into_into_dart(self) -> crate::api::internals::InternalBookmarksStats {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::internals::InternalCategoryStats {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.category.into_into_dart().into_dart(),
+            self.category_total_count.into_into_dart().into_dart(),
+            self.category_total_size.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::internals::InternalCategoryStats
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::internals::InternalCategoryStats>
+    for crate::api::internals::InternalCategoryStats
+{
+    fn into_into_dart(self) -> crate::api::internals::InternalCategoryStats {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::api::internals::InternalCustomDNS {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
@@ -1855,6 +2000,27 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::internals::InternalCustomSour
     for crate::api::internals::InternalCustomSourceDetails
 {
     fn into_into_dart(self) -> crate::api::internals::InternalCustomSourceDetails {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::internals::InternalGlobalStats {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.total_torrents_count.into_into_dart().into_dart(),
+            self.total_torrents_size.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::internals::InternalGlobalStats
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::internals::InternalGlobalStats>
+    for crate::api::internals::InternalGlobalStats
+{
+    fn into_into_dart(self) -> crate::api::internals::InternalGlobalStats {
         self
     }
 }
@@ -2056,8 +2222,28 @@ impl SseEncode for i8 {
 impl SseEncode for crate::api::internals::InternalBookmarkCategory {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <u8>::sse_encode(self.id, serializer);
+        <u16>::sse_encode(self.id, serializer);
         <String>::sse_encode(self.name, serializer);
+    }
+}
+
+impl SseEncode for crate::api::internals::InternalBookmarksStats {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <Vec<crate::api::internals::InternalCategoryStats>>::sse_encode(
+            self.categories_stats,
+            serializer,
+        );
+        <crate::api::internals::InternalGlobalStats>::sse_encode(self.global_stats, serializer);
+    }
+}
+
+impl SseEncode for crate::api::internals::InternalCategoryStats {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <crate::api::internals::InternalBookmarkCategory>::sse_encode(self.category, serializer);
+        <u16>::sse_encode(self.category_total_count, serializer);
+        <String>::sse_encode(self.category_total_size, serializer);
     }
 }
 
@@ -2074,6 +2260,14 @@ impl SseEncode for crate::api::internals::InternalCustomSourceDetails {
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <String>::sse_encode(self.custom_source_name, serializer);
         <Vec<String>>::sse_encode(self.custom_source_listings, serializer);
+    }
+}
+
+impl SseEncode for crate::api::internals::InternalGlobalStats {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <u32>::sse_encode(self.total_torrents_count, serializer);
+        <String>::sse_encode(self.total_torrents_size, serializer);
     }
 }
 
@@ -2160,6 +2354,16 @@ impl SseEncode for Vec<crate::api::internals::InternalBookmarkCategory> {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
             <crate::api::internals::InternalBookmarkCategory>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for Vec<crate::api::internals::InternalCategoryStats> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::api::internals::InternalCategoryStats>::sse_encode(item, serializer);
         }
     }
 }
@@ -2318,6 +2522,20 @@ impl SseEncode for (usize, String) {
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <usize>::sse_encode(self.0, serializer);
         <String>::sse_encode(self.1, serializer);
+    }
+}
+
+impl SseEncode for u16 {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        serializer.cursor.write_u16::<NativeEndian>(self).unwrap();
+    }
+}
+
+impl SseEncode for u32 {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        serializer.cursor.write_u32::<NativeEndian>(self).unwrap();
     }
 }
 

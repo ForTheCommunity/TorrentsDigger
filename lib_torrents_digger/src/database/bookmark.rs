@@ -93,8 +93,9 @@ pub fn delete_a_bookmark(info_hash: String) -> Result<bool, rusqlite::Error> {
     if result == 1 { Ok(true) } else { Ok(false) }
 }
 
+#[derive(Clone)]
 pub struct BookmarkCategory {
-    pub id: u8,
+    pub id: u16,
     pub name: String,
 }
 
@@ -198,5 +199,148 @@ impl BookmarkCategory {
         )?;
 
         Ok(())
+    }
+}
+
+pub struct BookmarksStats {
+    pub categories_stats: Vec<CategoryStats>,
+    pub global_stats: GlobalStats,
+}
+
+pub struct CategoryStats {
+    // Category
+    pub category: BookmarkCategory,
+    // Category total torrents count.
+    pub category_total_count: u16, // Max -> 65,535
+    // Category torrents total size.
+    pub category_total_size: String,
+}
+
+pub struct GlobalStats {
+    // Total global torrents Count.
+    pub total_torrents_count: u32, // Max -> 4,29,49,67,295
+    // Total global torrents size.
+    pub total_torrents_size: String,
+}
+
+impl BookmarksStats {
+    pub fn get_stats() -> Result<Self, rusqlite::Error> {
+        let categories = BookmarkCategory::get()?;
+
+        let mut categories_stats: Vec<CategoryStats> = Vec::new();
+        for a_category in categories {
+            categories_stats.push(CategoryStats {
+                category: a_category.clone(),
+                category_total_count: Self::get_category_torrents_count(&a_category.id)?,
+                category_total_size: Self::get_category_total_size(&a_category.id)?,
+            });
+        }
+
+        let global_stats = GlobalStats {
+            total_torrents_count: Self::get_total_torrents_count()?,
+            total_torrents_size: Self::get_total_size()?,
+        };
+
+        Ok(Self {
+            categories_stats,
+            global_stats,
+        })
+    }
+
+    fn get_category_torrents_count(category_id: &u16) -> Result<u16, rusqlite::Error> {
+        let db_conn = get_a_database_connection();
+
+        let count: u16 = db_conn.query_row(
+            "
+        SELECT COUNT(*) FROM bookmarked_torrents WHERE category_id = ?1
+        ",
+            params![category_id],
+            |row| row.get(0),
+        )?;
+
+        Ok(count)
+    }
+
+    fn get_category_total_size(category_id: &u16) -> Result<String, rusqlite::Error> {
+        let db_conn = get_a_database_connection();
+        let sizes_vec: Vec<String> = {
+            let mut sql_statement =
+                db_conn.prepare("SELECT size FROM bookmarked_torrents WHERE category_id = ?1")?;
+
+            let rows = sql_statement.query_map(params![category_id], |row| row.get(0))?;
+
+            rows.filter_map(|r| r.ok()).collect()
+        };
+
+        let total_bytes = sizes_vec
+            .iter()
+            .filter_map(|s| Self::parse_size(s))
+            .sum::<u64>();
+        Ok(Self::format_size(total_bytes))
+    }
+
+    fn parse_size(size_str: &str) -> Option<u64> {
+        let parts: Vec<&str> = size_str.trim().split_ascii_whitespace().collect();
+
+        if parts.len() != 2 {
+            return None;
+        }
+
+        let value: f64 = parts[0].parse().ok()?;
+        let unit = parts[1].trim().to_uppercase();
+
+        let multiplier: u64 = match unit.as_str() {
+            "B" => 1,
+            "KB" | "KIB" => 1_024,
+            "MB" | "MIB" => 1_024 * 1_024,
+            "GB" | "GIB" => 1_024 * 1_024 * 1_024,
+            "TB" | "TIB" => 1_024 * 1_024 * 1_024 * 1_024,
+            _ => return None,
+        };
+        Some((value * multiplier as f64) as u64)
+    }
+
+    fn format_size(bytes: u64) -> String {
+        const KB: u64 = 1_024;
+        const MB: u64 = 1_024 * KB;
+        const GB: u64 = 1_024 * MB;
+        const TB: u64 = 1_024 * GB;
+
+        if bytes >= TB {
+            format!("{:.2} TiB", bytes as f64 / TB as f64)
+        } else if bytes >= GB {
+            format!("{:.2} GiB", bytes as f64 / GB as f64)
+        } else if bytes >= MB {
+            format!("{:.2} MiB", bytes as f64 / MB as f64)
+        } else if bytes >= KB {
+            format!("{:.2} KiB", bytes as f64 / KB as f64)
+        } else {
+            format!("{} B", bytes)
+        }
+    }
+
+    fn get_total_torrents_count() -> Result<u32, rusqlite::Error> {
+        let db_conn = get_a_database_connection();
+
+        let count: i64 =
+            db_conn.query_row("SELECT COUNT(*) FROM bookmarked_torrents", [], |row| {
+                row.get(0)
+            })?;
+        Ok(count as u32)
+    }
+
+    fn get_total_size() -> Result<String, rusqlite::Error> {
+        let db_conn = get_a_database_connection();
+
+        let sizes: Vec<String> = {
+            let mut sql_statement = db_conn.prepare("SELECT size FROM bookmarked_torrents")?;
+            let rows = sql_statement.query_map([], |row| row.get(0))?;
+            rows.filter_map(|r| r.ok()).collect()
+        };
+        let total_bytes = sizes
+            .iter()
+            .filter_map(|s| Self::parse_size(s))
+            .sum::<u64>();
+        Ok(Self::format_size(total_bytes))
     }
 }

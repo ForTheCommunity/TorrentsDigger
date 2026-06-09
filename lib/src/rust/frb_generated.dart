@@ -69,7 +69,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.12.0';
 
   @override
-  int get rustContentHash => -196475177;
+  int get rustContentHash => 1540046324;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -138,6 +138,8 @@ abstract class RustLibApi extends BaseApi {
   Future<List<InternalTorrent>> crateApiDatabaseBookmarkGetBookmarks({
     required int categoryId,
   });
+
+  Future<InternalBookmarksStats> crateApiAppGetBookmarksStats();
 
   Future<List<InternalBookmarkCategory>>
   crateApiDatabaseBookmarkGetCategories();
@@ -727,6 +729,33 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "get_bookmarks", argNames: ["categoryId"]);
 
   @override
+  Future<InternalBookmarksStats> crateApiAppGetBookmarksStats() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 17,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_internal_bookmarks_stats,
+          decodeErrorData: sse_decode_String,
+        ),
+        constMeta: kCrateApiAppGetBookmarksStatsConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiAppGetBookmarksStatsConstMeta =>
+      const TaskConstMeta(debugName: "get_bookmarks_stats", argNames: []);
+
+  @override
   Future<List<InternalBookmarkCategory>>
   crateApiDatabaseBookmarkGetCategories() {
     return handler.executeNormal(
@@ -736,7 +765,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 17,
+            funcId: 18,
             port: port_,
           );
         },
@@ -763,7 +792,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 18,
+            funcId: 19,
             port: port_,
           );
         },
@@ -790,7 +819,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 19,
+            funcId: 20,
             port: port_,
           );
         },
@@ -817,7 +846,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 20,
+            funcId: 21,
             port: port_,
           );
         },
@@ -847,7 +876,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 21,
+            funcId: 22,
             port: port_,
           );
         },
@@ -877,7 +906,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 22,
+            funcId: 23,
             port: port_,
           );
         },
@@ -904,7 +933,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 23,
+            funcId: 24,
             port: port_,
           );
         },
@@ -931,7 +960,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 24,
+            funcId: 25,
             port: port_,
           );
         },
@@ -964,7 +993,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 25,
+            funcId: 26,
             port: port_,
           );
         },
@@ -1001,7 +1030,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 26,
+            funcId: 27,
             port: port_,
           );
         },
@@ -1031,7 +1060,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 27,
+            funcId: 28,
             port: port_,
           );
         },
@@ -1061,7 +1090,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 28,
+            funcId: 29,
             port: port_,
           );
         },
@@ -1095,7 +1124,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 29,
+            funcId: 30,
             port: port_,
           );
         },
@@ -1129,7 +1158,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 30,
+            funcId: 31,
             port: port_,
           );
         },
@@ -1162,7 +1191,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 31,
+            funcId: 32,
             port: port_,
           );
         },
@@ -1192,7 +1221,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 32,
+            funcId: 33,
             port: port_,
           );
         },
@@ -1227,7 +1256,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 33,
+            funcId: 34,
             port: port_,
           );
         },
@@ -1327,8 +1356,33 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     if (arr.length != 2)
       throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
     return InternalBookmarkCategory(
-      id: dco_decode_u_8(arr[0]),
+      id: dco_decode_u_16(arr[0]),
       name: dco_decode_String(arr[1]),
+    );
+  }
+
+  @protected
+  InternalBookmarksStats dco_decode_internal_bookmarks_stats(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return InternalBookmarksStats(
+      categoriesStats: dco_decode_list_internal_category_stats(arr[0]),
+      globalStats: dco_decode_internal_global_stats(arr[1]),
+    );
+  }
+
+  @protected
+  InternalCategoryStats dco_decode_internal_category_stats(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return InternalCategoryStats(
+      category: dco_decode_internal_bookmark_category(arr[0]),
+      categoryTotalCount: dco_decode_u_16(arr[1]),
+      categoryTotalSize: dco_decode_String(arr[2]),
     );
   }
 
@@ -1355,6 +1409,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return InternalCustomSourceDetails(
       customSourceName: dco_decode_String(arr[0]),
       customSourceListings: dco_decode_list_String(arr[1]),
+    );
+  }
+
+  @protected
+  InternalGlobalStats dco_decode_internal_global_stats(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return InternalGlobalStats(
+      totalTorrentsCount: dco_decode_u_32(arr[0]),
+      totalTorrentsSize: dco_decode_String(arr[1]),
     );
   }
 
@@ -1462,6 +1528,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>)
         .map(dco_decode_internal_bookmark_category)
+        .toList();
+  }
+
+  @protected
+  List<InternalCategoryStats> dco_decode_list_internal_category_stats(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>)
+        .map(dco_decode_internal_category_stats)
         .toList();
   }
 
@@ -1585,6 +1661,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  int dco_decode_u_16(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as int;
+  }
+
+  @protected
+  int dco_decode_u_32(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as int;
+  }
+
+  @protected
   int dco_decode_u_8(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as int;
@@ -1682,9 +1770,39 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     SseDeserializer deserializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    var var_id = sse_decode_u_8(deserializer);
+    var var_id = sse_decode_u_16(deserializer);
     var var_name = sse_decode_String(deserializer);
     return InternalBookmarkCategory(id: var_id, name: var_name);
+  }
+
+  @protected
+  InternalBookmarksStats sse_decode_internal_bookmarks_stats(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_categoriesStats = sse_decode_list_internal_category_stats(
+      deserializer,
+    );
+    var var_globalStats = sse_decode_internal_global_stats(deserializer);
+    return InternalBookmarksStats(
+      categoriesStats: var_categoriesStats,
+      globalStats: var_globalStats,
+    );
+  }
+
+  @protected
+  InternalCategoryStats sse_decode_internal_category_stats(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_category = sse_decode_internal_bookmark_category(deserializer);
+    var var_categoryTotalCount = sse_decode_u_16(deserializer);
+    var var_categoryTotalSize = sse_decode_String(deserializer);
+    return InternalCategoryStats(
+      category: var_category,
+      categoryTotalCount: var_categoryTotalCount,
+      categoryTotalSize: var_categoryTotalSize,
+    );
   }
 
   @protected
@@ -1707,6 +1825,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return InternalCustomSourceDetails(
       customSourceName: var_customSourceName,
       customSourceListings: var_customSourceListings,
+    );
+  }
+
+  @protected
+  InternalGlobalStats sse_decode_internal_global_stats(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_totalTorrentsCount = sse_decode_u_32(deserializer);
+    var var_totalTorrentsSize = sse_decode_String(deserializer);
+    return InternalGlobalStats(
+      totalTorrentsCount: var_totalTorrentsCount,
+      totalTorrentsSize: var_totalTorrentsSize,
     );
   }
 
@@ -1842,6 +1973,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var ans_ = <InternalBookmarkCategory>[];
     for (var idx_ = 0; idx_ < len_; ++idx_) {
       ans_.add(sse_decode_internal_bookmark_category(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<InternalCategoryStats> sse_decode_list_internal_category_stats(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <InternalCategoryStats>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_internal_category_stats(deserializer));
     }
     return ans_;
   }
@@ -2036,6 +2181,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  int sse_decode_u_16(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return deserializer.buffer.getUint16();
+  }
+
+  @protected
+  int sse_decode_u_32(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return deserializer.buffer.getUint32();
+  }
+
+  @protected
   int sse_decode_u_8(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return deserializer.buffer.getUint8();
@@ -2139,8 +2296,29 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     SseSerializer serializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_u_8(self.id, serializer);
+    sse_encode_u_16(self.id, serializer);
     sse_encode_String(self.name, serializer);
+  }
+
+  @protected
+  void sse_encode_internal_bookmarks_stats(
+    InternalBookmarksStats self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_list_internal_category_stats(self.categoriesStats, serializer);
+    sse_encode_internal_global_stats(self.globalStats, serializer);
+  }
+
+  @protected
+  void sse_encode_internal_category_stats(
+    InternalCategoryStats self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_internal_bookmark_category(self.category, serializer);
+    sse_encode_u_16(self.categoryTotalCount, serializer);
+    sse_encode_String(self.categoryTotalSize, serializer);
   }
 
   @protected
@@ -2161,6 +2339,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_String(self.customSourceName, serializer);
     sse_encode_list_String(self.customSourceListings, serializer);
+  }
+
+  @protected
+  void sse_encode_internal_global_stats(
+    InternalGlobalStats self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_u_32(self.totalTorrentsCount, serializer);
+    sse_encode_String(self.totalTorrentsSize, serializer);
   }
 
   @protected
@@ -2257,6 +2445,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_i_32(self.length, serializer);
     for (final item in self) {
       sse_encode_internal_bookmark_category(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_internal_category_stats(
+    List<InternalCategoryStats> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_internal_category_stats(item, serializer);
     }
   }
 
@@ -2438,6 +2638,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_usize(self.$1, serializer);
     sse_encode_String(self.$2, serializer);
+  }
+
+  @protected
+  void sse_encode_u_16(int self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    serializer.buffer.putUint16(self);
+  }
+
+  @protected
+  void sse_encode_u_32(int self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    serializer.buffer.putUint32(self);
   }
 
   @protected

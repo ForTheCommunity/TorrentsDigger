@@ -10,5 +10,5 @@ class RoutesName {
   static const String contributeScreen = "contribute_screen";
   static const String additionalSettingsScreen = "additional_settings_screen";
   static const String customDNSScreen = "custom_dns_screen";
-
+  static const String bookmarkStatsScreen = "bookmark_stats_screen";
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/bookmark_blocs/bookmark_bloc/bookmark_bloc.dart';
+import 'package:torrents_digger/blocs/bookmark_blocs/bookmarks_stats_bloc/bookmarks_stats_bloc.dart';
 import 'package:torrents_digger/blocs/bookmark_blocs/category_bloc/category_bloc.dart';
 import 'package:torrents_digger/blocs/custom_dns_bloc/custom_dns_bloc.dart';
 import 'package:torrents_digger/blocs/customs_blocs/customs_dropdown_bloc/customs_bloc.dart';
@@ -72,6 +73,7 @@ class MyApp extends StatelessWidget {
           create: (_) => CustomDnsBloc()..add(CustomDnsEvent.loadCustomDNS()),
         ),
         BlocProvider(create: (_) => CategoryBloc()),
+        BlocProvider(create: (_) => BookmarksStatsBloc()),
       ],
       child: BlocBuilder<ThemesBloc, ThemesState>(
         builder: (context, state) {

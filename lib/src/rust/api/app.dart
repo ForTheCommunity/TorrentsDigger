@@ -60,3 +60,6 @@ Future<(List<InternalTorrent>, InternalPagination)> digCustomTorrents({
 
 Future<List<InternalCustomDNS>> getCustomDnsLists() =>
     RustLib.instance.api.crateApiAppGetCustomDnsLists();
+
+Future<InternalBookmarksStats> getBookmarksStats() =>
+    RustLib.instance.api.crateApiAppGetBookmarksStats();

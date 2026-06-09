@@ -58,12 +58,33 @@ pub struct InternalPagination {
     pub next_page: Option<i32>,
 }
 
-pub struct InternalCustomDNS{
-    pub index :usize,
-    pub name :String
+pub struct InternalCustomDNS {
+    pub index: usize,
+    pub name: String,
 }
 
-pub struct InternalBookmarkCategory{
-    pub id:u8,
-    pub name:String
+pub struct InternalBookmarkCategory {
+    pub id: u16,
+    pub name: String,
+}
+
+pub struct InternalCategoryStats {
+    // Category
+    pub category: InternalBookmarkCategory,
+    // Category total torrents count.
+    pub category_total_count: u16, // Max -> 65,535
+    // Category torrents total size.
+    pub category_total_size: String,
+}
+
+pub struct InternalGlobalStats {
+    // Total global torrents Count.
+    pub total_torrents_count: u32, // Max -> 4,29,49,67,295
+    // Total global torrents size.
+    pub total_torrents_size: String,
+}
+
+pub struct InternalBookmarksStats {
+    pub categories_stats: Vec<InternalCategoryStats>,
+    pub global_stats: InternalGlobalStats,
 }

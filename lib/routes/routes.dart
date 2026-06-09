@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:torrents_digger/ui/screens/additional_settings.dart';
 import 'package:torrents_digger/ui/screens/bookmarks_screen.dart';
+import 'package:torrents_digger/ui/screens/bookmarks_stats_screen.dart';
 import 'package:torrents_digger/ui/screens/contribute_screen.dart';
 import 'package:torrents_digger/ui/screens/custom_dns_screen.dart';
 import 'package:torrents_digger/ui/screens/customs_screen.dart';
@@ -55,6 +56,11 @@ class Routes {
 
       case RoutesName.customDNSScreen:
         return MaterialPageRoute(builder: (context) => const CustomDnsScreen());
+
+      case RoutesName.bookmarkStatsScreen:
+        return MaterialPageRoute(
+          builder: (context) => const BookmarksStatsScreen(),
+        );
 
       default:
         return MaterialPageRoute(

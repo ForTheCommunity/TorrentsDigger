@@ -1,10 +1,10 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/bookmark_blocs/bookmark_bloc/bookmark_bloc.dart';
 import 'package:torrents_digger/blocs/bookmark_blocs/category_bloc/category_bloc.dart';
 import 'package:torrents_digger/configs/extensions.dart';
+import 'package:torrents_digger/routes/routes_name.dart';
 import 'package:torrents_digger/src/rust/api/internals.dart';
 import 'package:torrents_digger/ui/widgets/circular_progress_bar_widget.dart';
 import 'package:torrents_digger/ui/widgets/category_chip.dart';
@@ -48,6 +48,18 @@ class _BookmarkScreenState extends State<BookmarksScreen> {
           icon: Icon(Icons.arrow_back),
           iconSize: 30,
         ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.query_stats,
+              size: 28,
+              color: context.appColors.bookmarksStatsIconColor,
+            ),
+            onPressed: () {
+              Navigator.pushNamed(context, RoutesName.bookmarkStatsScreen);
+            },
+          ),
+        ],
       ),
 
       floatingActionButton: FloatingActionsButtons(

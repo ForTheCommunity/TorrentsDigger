@@ -24,6 +24,54 @@ class InternalBookmarkCategory {
           name == other.name;
 }
 
+class InternalBookmarksStats {
+  final List<InternalCategoryStats> categoriesStats;
+  final InternalGlobalStats globalStats;
+
+  const InternalBookmarksStats({
+    required this.categoriesStats,
+    required this.globalStats,
+  });
+
+  @override
+  int get hashCode => categoriesStats.hashCode ^ globalStats.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is InternalBookmarksStats &&
+          runtimeType == other.runtimeType &&
+          categoriesStats == other.categoriesStats &&
+          globalStats == other.globalStats;
+}
+
+class InternalCategoryStats {
+  final InternalBookmarkCategory category;
+  final int categoryTotalCount;
+  final String categoryTotalSize;
+
+  const InternalCategoryStats({
+    required this.category,
+    required this.categoryTotalCount,
+    required this.categoryTotalSize,
+  });
+
+  @override
+  int get hashCode =>
+      category.hashCode ^
+      categoryTotalCount.hashCode ^
+      categoryTotalSize.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is InternalCategoryStats &&
+          runtimeType == other.runtimeType &&
+          category == other.category &&
+          categoryTotalCount == other.categoryTotalCount &&
+          categoryTotalSize == other.categoryTotalSize;
+}
+
 class InternalCustomDNS {
   final BigInt index;
   final String name;
@@ -61,6 +109,27 @@ class InternalCustomSourceDetails {
           runtimeType == other.runtimeType &&
           customSourceName == other.customSourceName &&
           customSourceListings == other.customSourceListings;
+}
+
+class InternalGlobalStats {
+  final int totalTorrentsCount;
+  final String totalTorrentsSize;
+
+  const InternalGlobalStats({
+    required this.totalTorrentsCount,
+    required this.totalTorrentsSize,
+  });
+
+  @override
+  int get hashCode => totalTorrentsCount.hashCode ^ totalTorrentsSize.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is InternalGlobalStats &&
+          runtimeType == other.runtimeType &&
+          totalTorrentsCount == other.totalTorrentsCount &&
+          totalTorrentsSize == other.totalTorrentsSize;
 }
 
 class InternalPagination {

@@ -1,9 +1,4 @@
-use lib_torrents_digger::network_io::custom_resolver::CustomDNSResolver;
-
-use crate::api::{
-    internals::{InternalCustomDNS, InternalCustomSourceDetails, InternalPagination},
-    preludes::*,
-};
+use crate::api::preludes::*;
 
 pub fn fetch_source_details() -> Vec<InternalSource> {
     let external_sources_vec: Vec<ExternalSource> = get_source_details();
@@ -191,4 +186,32 @@ pub fn get_custom_dns_lists() -> Vec<InternalCustomDNS> {
         });
     }
     i_c_dns_r_l
+}
+
+pub fn get_bookmarks_stats() -> Result<InternalBookmarksStats, String> {
+    match BookmarksStats::get_stats() {
+        Ok(a) => {
+            let mut internal_category_stats: Vec<InternalCategoryStats> = vec![];
+
+            for a_cat_stats in a.categories_stats {
+                internal_category_stats.push(InternalCategoryStats {
+                    category: InternalBookmarkCategory {
+                        id: a_cat_stats.category.id,
+                        name: a_cat_stats.category.name,
+                    },
+                    category_total_count: a_cat_stats.category_total_count,
+                    category_total_size: a_cat_stats.category_total_size,
+                });
+            }
+
+            Ok(InternalBookmarksStats {
+                categories_stats: internal_category_stats,
+                global_stats: InternalGlobalStats {
+                    total_torrents_count: a.global_stats.total_torrents_count,
+                    total_torrents_size: a.global_stats.total_torrents_size,
+                },
+            })
+        }
+        Err(e) => Err(e.to_string()),
+    }
 }

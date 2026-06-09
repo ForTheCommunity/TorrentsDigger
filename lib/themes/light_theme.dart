@@ -306,4 +306,17 @@ class LightTheme extends AppTheme {
   Brightness get statusBarIconBrightness => Brightness.dark;
   @override
   Brightness get statusBarBrightness => Brightness.light;
+
+  @override
+  Color get bookmarksStatsIconColor => Color.fromRGBO(255, 255, 255, 1);
+  @override
+  Color get bookmarksStatsBorderColor => Color.fromRGBO(0, 0, 0, 0.245);
+  @override
+  Color get bookmarksStatsColumnHeaderTextColor =>
+      Color.fromRGBO(0, 17, 126, 1);
+  @override
+  Color get bookmarksStatsTotalTextColor => Color.fromRGBO(255, 0, 102, 1);
+  @override
+  Color get bookmarksStatsCategoryDataTextColor =>
+      Color.fromRGBO(0, 0, 0, 1);
 }

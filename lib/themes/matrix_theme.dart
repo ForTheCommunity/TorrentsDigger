@@ -305,4 +305,17 @@ class MatrixTheme extends AppTheme {
   Brightness get statusBarIconBrightness => Brightness.light;
   @override
   Brightness get statusBarBrightness => Brightness.dark;
+
+  @override
+  Color get bookmarksStatsIconColor => Color.fromRGBO(0, 255, 4, 1);
+  @override
+  Color get bookmarksStatsBorderColor => Color.fromRGBO(76, 76, 77, 1);
+  @override
+  Color get bookmarksStatsColumnHeaderTextColor =>
+      Color.fromRGBO(38, 255, 0, 1);
+  @override
+  Color get bookmarksStatsTotalTextColor => Color.fromRGBO(38, 255, 0, 1);
+  @override
+  Color get bookmarksStatsCategoryDataTextColor =>
+      Color.fromRGBO(255, 255, 255, 0.94);
 }
