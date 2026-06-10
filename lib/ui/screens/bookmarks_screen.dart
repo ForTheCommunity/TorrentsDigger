@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/bookmark_blocs/bookmark_bloc/bookmark_bloc.dart';
@@ -115,7 +116,10 @@ class _BookmarkScreenState extends State<BookmarksScreen> {
                     builder: (context, state) {
                       return state.when(
                         initial: () => const Text("Initial State"),
-                        loading: () => const CircularProgressBarWidget(),
+                        loading: () => const SizedBox(
+                          height: 400,
+                          child: Center(child: CircularProgressBarWidget()),
+                        ),
                         loaded: (torrents, _, _) => torrents.isEmpty
                             ? Center(
                                 child: Column(
@@ -218,8 +222,9 @@ class _BookmarkScreenState extends State<BookmarksScreen> {
                                 value: 'delete',
                                 child: const Text('Delete'),
                                 onTap: () {
-                                  context.read<CategoryBloc>().add(
-                                    CategoryEvent.delete(categoryID: currentId),
+                                  _deleteCategoryVerificationDialog(
+                                    context,
+                                    currentId,
                                   );
                                 },
                               ),
@@ -356,8 +361,6 @@ class _BookmarkScreenState extends State<BookmarksScreen> {
         );
       },
     );
-
-    controller.dispose();
   }
 
   Future<void> _renameCategoryDialog(
@@ -466,6 +469,194 @@ class _BookmarkScreenState extends State<BookmarksScreen> {
         );
       },
     );
-    textController.dispose();
+  }
+
+  Future<void> _deleteCategoryVerificationDialog(
+    BuildContext context,
+    int categoryID,
+  ) async {
+    // generating random verification code
+    const chars = 'ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz123456789';
+    final random = Random();
+    final verificationCode = String.fromCharCodes(
+      List.generate(6, (_) => chars.codeUnitAt(random.nextInt(chars.length))),
+    );
+
+    final controller = TextEditingController();
+    bool showError = false;
+
+    await showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              backgroundColor:
+                  context.appColors.createCategoryDialogBackgroundColor,
+              title: Text(
+                'Delete Category',
+                style: TextStyle(
+                  color: context
+                      .appColors
+                      .deleteCategoryConfirmationDialogTitleColor,
+                ),
+              ),
+              content: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'This will delete category and all torrents inside that category !!!',
+                        style: TextStyle(
+                          color: context
+                              .appColors
+                              .deleteCategoryConfirmationDialogTextColor,
+                          fontSize: 13,
+                        ),
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      Text(
+                        'Type the code below to confirm:',
+                        style: TextStyle(
+                          color: context
+                              .appColors
+                              .deleteCategoryConfirmationDialogTextColor,
+                          fontSize: 13,
+                        ),
+                      ),
+
+                      const SizedBox(height: 8),
+
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: context
+                                .appColors
+                                .deleteCategoryConfirmationDialogCodeBorderColor,
+                          ),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          verificationCode,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: context
+                                .appColors
+                                .deleteCategoryConfirmationDialogCodeColor,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 6,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+
+                      TextField(
+                        controller: controller,
+                        autofocus: false,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: context
+                              .appColors
+                              .deleteCategoryConfirmationDialogInputTextColor,
+                          letterSpacing: 4,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: 'Enter code',
+                          hintStyle: TextStyle(
+                            color: context
+                                .appColors
+                                .createNewCategoryDialogTextFieldHintColor,
+                            letterSpacing: 1,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: context
+                                  .appColors
+                                  .deleteCategoryConfirmationDialogInputTextfieldInactiveBorderColor,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: context
+                                  .appColors
+                                  .deleteCategoryConfirmationDialogInputTextfieldActiveBorderColor,
+                              width: 2,
+                            ),
+                          ),
+                          // show error if code doesn't match
+                          errorText: showError ? 'Code did not matched' : null,
+                          errorStyle: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: context
+                                .appColors
+                                .deleteCategoryConfirmationDialogCodeDoesnotMatchErrorTextColor,
+                          ),
+                        ),
+                        onChanged: (_) {
+                          if (showError) {
+                            setDialogState(() => showError = false);
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              actions: [
+                Row(
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(dialogContext),
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(
+                          color: context
+                              .appColors
+                              .deleteCategoryConfirmationDialogCancelButtonTextColor,
+                        ),
+                      ),
+                    ),
+                    const Spacer(),
+
+                    TextButton(
+                      onPressed: () {
+                        if (controller.text.trim() == verificationCode) {
+                          context.read<CategoryBloc>().add(
+                            CategoryEvent.delete(categoryID: categoryID),
+                          );
+                          Navigator.pop(dialogContext);
+                        } else {
+                          // show error inside dialog
+                          setDialogState(() => showError = true);
+                        }
+                      },
+                      child: Text(
+                        'Delete',
+                        style: TextStyle(
+                          color: context
+                              .appColors
+                              .deleteCategoryConfirmationDialogDeleteButtonTextColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
   }
 }

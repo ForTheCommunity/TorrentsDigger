@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/bookmark_blocs/bookmarks_stats_bloc/bookmarks_stats_bloc.dart';
@@ -47,224 +49,201 @@ class _BookmarksStatsScreenState extends State<BookmarksStatsScreen> {
             loading: () => const CircularProgressBarWidget(),
 
             loaded: (bookmarksStatsData) {
-              final screenWidth = MediaQuery.of(context).size.width;
-              final categoryColWidth = screenWidth * 0.35;
-              final torrentsColWidth = screenWidth * 0.22;
-              final sizeColWidth = screenWidth * 0.28;
+              final isMobile = Platform.isAndroid || Platform.isIOS;
+              final isDesktop =
+                  Platform.isWindows || Platform.isMacOS || Platform.isLinux;
+
+              double headerFontSize;
+              double dataFontSize;
+              double totalFontSize;
+
+              if (isMobile) {
+                headerFontSize = 16.0;
+                dataFontSize = 14.0;
+                totalFontSize = 16.0;
+              } else if (isDesktop) {
+                headerFontSize = 20.0;
+                dataFontSize = 18.0;
+                totalFontSize = 21.5;
+              } else {
+                // Fallback (web, unknown platform, etc.)
+                headerFontSize = 18.0;
+                dataFontSize = 16.0;
+                totalFontSize = 20.0;
+              }
 
               return ListView(
                 padding: const EdgeInsets.all(15.0),
                 children: [
-                  Center(
-                    child: DataTable(
-                      columnSpacing: 0,
-                      dataRowMinHeight: 48,
-                      dataRowMaxHeight: 60,
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      // subtract horizontalMargin (12) × 2 sides × 3 columns = 72
+                      final availableWidth = constraints.maxWidth - 72;
+                      final categoryColWidth = availableWidth * 0.38;
+                      final torrentsColWidth = availableWidth * 0.22;
+                      final sizeColWidth = availableWidth * 0.40;
 
-                      border: TableBorder(
-                        // Outside border of the entire table
-                        top: BorderSide(
-                          color: context.appColors.bookmarksStatsBorderColor,
-                          width: 1,
+                      // helper to build header label
+                      Widget headerLabel(String text, double width) => SizedBox(
+                        width: width,
+                        child: Text(
+                          text,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1,
+                            color: context
+                                .appColors
+                                .bookmarksStatsColumnHeaderTextColor,
+                            fontSize: headerFontSize,
+                          ),
                         ),
-                        bottom: BorderSide(
-                          color: context.appColors.bookmarksStatsBorderColor,
-                          width: 1,
-                        ),
-                        left: BorderSide(
-                          color: context.appColors.bookmarksStatsBorderColor,
-                          width: 1,
-                        ),
-                        right: BorderSide(
-                          color: context.appColors.bookmarksStatsBorderColor,
-                          width: 1,
-                        ),
-                        // Horizontal cell divider lines inside the table
-                        horizontalInside: BorderSide(
-                          color: context.appColors.bookmarksStatsBorderColor,
-                          width: 1.0,
-                        ),
-                        verticalInside: BorderSide(
-                          color: context.appColors.bookmarksStatsBorderColor,
-                        ),
-                      ),
+                      );
 
-                      columns: [
-                        DataColumn(
-                          label: SizedBox(
-                            width: categoryColWidth,
-                            child: Center(
-                              child: Text(
-                                "Category",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1,
-                                  color: context
-                                      .appColors
-                                      .bookmarksStatsColumnHeaderTextColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
+                      // helper to build data cell text
+                      Widget dataCell(
+                        String text,
+                        double width, {
+                        bool bold = false,
+                        bool ellipsis = false,
+                        required Color color,
+                      }) => SizedBox(
+                        width: width,
+                        child: Text(
+                          text,
+                          textAlign: TextAlign.center,
+                          overflow: ellipsis
+                              ? TextOverflow.ellipsis
+                              : TextOverflow.visible,
+                          style: TextStyle(
+                            fontWeight: bold
+                                ? FontWeight.bold
+                                : FontWeight.w500,
+                            color: color,
+                            fontSize: bold ? totalFontSize : dataFontSize,
+                            letterSpacing: 1,
                           ),
                         ),
-                        DataColumn(
-                          label: SizedBox(
-                            width: torrentsColWidth,
-                            child: Center(
-                              child: Text(
-                                "Torrents",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1,
-                                  color: context
-                                      .appColors
-                                      .bookmarksStatsColumnHeaderTextColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
+                      );
+
+                      return DataTable(
+                        columnSpacing: 0,
+                        horizontalMargin: 12,
+                        dataRowMinHeight: 48,
+                        dataRowMaxHeight: 60,
+                        border: TableBorder(
+                          top: BorderSide(
+                            color: context.appColors.bookmarksStatsBorderColor,
+                            width: 1,
+                          ),
+                          bottom: BorderSide(
+                            color: context.appColors.bookmarksStatsBorderColor,
+                            width: 1,
+                          ),
+                          left: BorderSide(
+                            color: context.appColors.bookmarksStatsBorderColor,
+                            width: 1,
+                          ),
+                          right: BorderSide(
+                            color: context.appColors.bookmarksStatsBorderColor,
+                            width: 1,
+                          ),
+                          horizontalInside: BorderSide(
+                            color: context.appColors.bookmarksStatsBorderColor,
+                            width: 1,
+                          ),
+                          verticalInside: BorderSide(
+                            color: context.appColors.bookmarksStatsBorderColor,
                           ),
                         ),
-                        DataColumn(
-                          label: SizedBox(
-                            width: sizeColWidth,
-                            child: Center(
-                              child: Text(
-                                "Size",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1,
-                                  color: context
-                                      .appColors
-                                      .bookmarksStatsColumnHeaderTextColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
+                        columns: [
+                          DataColumn(
+                            label: headerLabel("Category", categoryColWidth),
                           ),
-                        ),
-                      ],
-                      rows: [
-                        ...bookmarksStatsData.categoriesStats.map((
-                          categoryStats,
-                        ) {
-                          return DataRow(
+                          DataColumn(
+                            label: headerLabel("Count", torrentsColWidth),
+                          ),
+                          DataColumn(label: headerLabel("Size", sizeColWidth)),
+                        ],
+                        rows: [
+                          // category rows
+                          ...bookmarksStatsData.categoriesStats.map((
+                            categoryStats,
+                          ) {
+                            return DataRow(
+                              cells: [
+                                DataCell(
+                                  dataCell(
+                                    categoryStats.category.name,
+                                    ellipsis: true,
+                                    categoryColWidth,
+                                    color: context
+                                        .appColors
+                                        .bookmarksStatsCategoryDataTextColor,
+                                  ),
+                                ),
+                                DataCell(
+                                  dataCell(
+                                    "${categoryStats.categoryTotalCount}",
+                                    torrentsColWidth,
+                                    color: context
+                                        .appColors
+                                        .bookmarksStatsCategoryDataTextColor,
+                                  ),
+                                ),
+                                DataCell(
+                                  dataCell(
+                                    categoryStats.categoryTotalSize,
+                                    sizeColWidth,
+                                    color: context
+                                        .appColors
+                                        .bookmarksStatsCategoryDataTextColor,
+                                  ),
+                                ),
+                              ],
+                            );
+                          }),
+
+                          // total row
+                          DataRow(
                             cells: [
                               DataCell(
-                                SizedBox(
-                                  width: categoryColWidth,
-                                  child: Center(
-                                    child: Text(
-                                      categoryStats.category.name,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        letterSpacing: 1,
-                                        color: context
-                                            .appColors
-                                            .bookmarksStatsCategoryDataTextColor,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  ),
+                                dataCell(
+                                  "Total",
+                                  categoryColWidth,
+                                  bold: true,
+                                  color: context
+                                      .appColors
+                                      .bookmarksStatsTotalTextColor,
                                 ),
                               ),
                               DataCell(
-                                SizedBox(
-                                  width: torrentsColWidth,
-                                  child: Center(
-                                    child: Text(
-                                      "${categoryStats.categoryTotalCount}",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        color: context
-                                            .appColors
-                                            .bookmarksStatsCategoryDataTextColor,
-                                      ),
-                                    ),
-                                  ),
+                                dataCell(
+                                  '${bookmarksStatsData.globalStats.totalTorrentsCount}',
+                                  torrentsColWidth,
+                                  bold: true,
+                                  color: context
+                                      .appColors
+                                      .bookmarksStatsTotalTextColor,
                                 ),
                               ),
                               DataCell(
-                                SizedBox(
-                                  width: sizeColWidth,
-                                  child: Center(
-                                    child: Text(
-                                      categoryStats.categoryTotalSize,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        color: context
-                                            .appColors
-                                            .bookmarksStatsCategoryDataTextColor,
-                                      ),
-                                    ),
-                                  ),
+                                dataCell(
+                                  bookmarksStatsData
+                                      .globalStats
+                                      .totalTorrentsSize,
+                                  sizeColWidth,
+                                  bold: true,
+                                  color: context
+                                      .appColors
+                                      .bookmarksStatsTotalTextColor,
                                 ),
                               ),
                             ],
-                          );
-                        }),
-                        // Total row
-                        DataRow(
-                          cells: [
-                            DataCell(
-                              SizedBox(
-                                width: categoryColWidth,
-                                child: Center(
-                                  child: Text(
-                                    "Total",
-                                    style: TextStyle(
-                                      letterSpacing: 1,
-                                      fontWeight: FontWeight.bold,
-                                      color: context
-                                          .appColors
-                                          .bookmarksStatsTotalTextColor,
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            DataCell(
-                              SizedBox(
-                                width: torrentsColWidth,
-                                child: Center(
-                                  child: Text(
-                                    '${bookmarksStatsData.globalStats.totalTorrentsCount}',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: context
-                                          .appColors
-                                          .bookmarksStatsTotalTextColor,
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            DataCell(
-                              SizedBox(
-                                width: sizeColWidth,
-                                child: Center(
-                                  child: Text(
-                                    bookmarksStatsData
-                                        .globalStats
-                                        .totalTorrentsSize,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: context
-                                          .appColors
-                                          .bookmarksStatsTotalTextColor,
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 ],
               );

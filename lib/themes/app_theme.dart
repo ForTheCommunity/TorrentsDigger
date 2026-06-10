@@ -150,4 +150,15 @@ abstract class AppTheme {
   Color get bookmarksStatsColumnHeaderTextColor;
   Color get bookmarksStatsTotalTextColor;
   Color get bookmarksStatsCategoryDataTextColor;
+
+  Color get deleteCategoryConfirmationDialogTitleColor;
+  Color get deleteCategoryConfirmationDialogTextColor;
+  Color get deleteCategoryConfirmationDialogCodeColor;
+  Color get deleteCategoryConfirmationDialogCodeBorderColor;
+  Color get deleteCategoryConfirmationDialogInputTextfieldInactiveBorderColor;
+  Color get deleteCategoryConfirmationDialogInputTextfieldActiveBorderColor;
+  Color get deleteCategoryConfirmationDialogInputTextColor;
+  Color get deleteCategoryConfirmationDialogCancelButtonTextColor;
+  Color get deleteCategoryConfirmationDialogDeleteButtonTextColor;
+  Color get deleteCategoryConfirmationDialogCodeDoesnotMatchErrorTextColor;
 }

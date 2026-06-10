@@ -318,4 +318,35 @@ class MatrixTheme extends AppTheme {
   @override
   Color get bookmarksStatsCategoryDataTextColor =>
       Color.fromRGBO(255, 255, 255, 0.94);
+
+  @override
+  Color get deleteCategoryConfirmationDialogTitleColor =>
+      Color.fromRGBO(38, 255, 0, 1);
+  @override
+  Color get deleteCategoryConfirmationDialogTextColor =>
+      Color.fromRGBO(255, 255, 255, 1);
+  @override
+  Color get deleteCategoryConfirmationDialogCodeColor =>
+      Color.fromRGBO(255, 0, 0, 1);
+  @override
+  Color get deleteCategoryConfirmationDialogCodeBorderColor =>
+      Color.fromRGBO(145, 143, 143, 1);
+  @override
+  Color get deleteCategoryConfirmationDialogInputTextfieldInactiveBorderColor =>
+      Color.fromRGBO(117, 115, 115, 1);
+  @override
+  Color get deleteCategoryConfirmationDialogInputTextfieldActiveBorderColor =>
+      Color.fromRGBO(135, 255, 102, 1);
+  @override
+  Color get deleteCategoryConfirmationDialogInputTextColor =>
+      Color.fromRGBO(255, 0, 0, 1);
+  @override
+  Color get deleteCategoryConfirmationDialogCancelButtonTextColor =>
+      Color.fromRGBO(0, 255, 225, 1);
+  @override
+  Color get deleteCategoryConfirmationDialogDeleteButtonTextColor =>
+      Color.fromRGBO(255, 0, 0, 1);
+  @override
+  Color get deleteCategoryConfirmationDialogCodeDoesnotMatchErrorTextColor =>
+      Color.fromRGBO(255, 0, 0, 1);
 }

@@ -45,7 +45,7 @@ class CategoryChip extends StatelessWidget {
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             ),
-
+            SizedBox(width: 20),
             if (trailing != null) ...[const SizedBox(width: 6), trailing!],
           ],
         ),

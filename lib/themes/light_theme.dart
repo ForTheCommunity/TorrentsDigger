@@ -317,6 +317,36 @@ class LightTheme extends AppTheme {
   @override
   Color get bookmarksStatsTotalTextColor => Color.fromRGBO(255, 0, 102, 1);
   @override
-  Color get bookmarksStatsCategoryDataTextColor =>
-      Color.fromRGBO(0, 0, 0, 1);
+  Color get bookmarksStatsCategoryDataTextColor => Color.fromRGBO(0, 0, 0, 1);
+
+  @override
+  Color get deleteCategoryConfirmationDialogTitleColor =>
+      Color.fromRGBO(255, 255, 255, 1);
+  @override
+  Color get deleteCategoryConfirmationDialogTextColor =>
+      Color.fromRGBO(255, 255, 255, 1);
+  @override
+  Color get deleteCategoryConfirmationDialogCodeColor =>
+      Color.fromRGBO(255, 0, 0, 1);
+  @override
+  Color get deleteCategoryConfirmationDialogCodeBorderColor =>
+      Color.fromRGBO(255, 0, 0, 1);
+  @override
+  Color get deleteCategoryConfirmationDialogInputTextfieldInactiveBorderColor =>
+      Color.fromRGBO(193, 176, 176, 1);
+  @override
+  Color get deleteCategoryConfirmationDialogInputTextfieldActiveBorderColor =>
+      Color.fromRGBO(116, 193, 183, 1);
+  @override
+  Color get deleteCategoryConfirmationDialogInputTextColor =>
+      Color.fromRGBO(255, 0, 0, 1);
+  @override
+  Color get deleteCategoryConfirmationDialogCancelButtonTextColor =>
+      Color.fromRGBO(0, 255, 217, 1);
+  @override
+  Color get deleteCategoryConfirmationDialogDeleteButtonTextColor =>
+      Color.fromRGBO(255, 0, 0, 1);
+  @override
+  Color get deleteCategoryConfirmationDialogCodeDoesnotMatchErrorTextColor =>
+      Color.fromRGBO(0, 221, 255, 1);
 }

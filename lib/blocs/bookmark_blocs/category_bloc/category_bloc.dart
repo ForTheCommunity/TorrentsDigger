@@ -36,7 +36,10 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   ) async {
     try {
       await createBookmarkCategory(categoryName: event.newCategoryName);
-
+      createSnackBar(
+        message: "Created Category '${event.newCategoryName}'",
+        duration: 1,
+      );
       final categories = await getCategories();
       emit(CategoryState.loaded(categories: categories));
     } catch (e) {
@@ -54,7 +57,11 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
         oldCategoryName: event.oldCategoryName,
         newCategoryName: event.newCategoryName,
       );
-
+      createSnackBar(
+        message:
+            "Category Renamed from '${event.oldCategoryName}' to '${event.newCategoryName}'",
+        duration: 2,
+      );
       final categories = await getCategories();
       emit(CategoryState.loaded(categories: categories));
     } catch (e) {
@@ -68,6 +75,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   ) async {
     try {
       await deleteBookmarkCategory(categoryId: event.categoryID);
+      createSnackBar(message: "Category Deleted...", duration: 1);
       final categories = await getCategories();
       emit(CategoryState.loaded(categories: categories));
     } catch (e) {
