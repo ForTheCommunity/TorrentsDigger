@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.5] - 2026-06-11
+- Added Feature : Bookmarks Statistics
+- Improved UI.
+
 ## [1.2.4] - 2026-06-06
 - Added Feature : Bookmark Categories
 - Improved UI.

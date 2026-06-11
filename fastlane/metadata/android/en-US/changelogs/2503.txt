@@ -1,0 +1,2 @@
+- Added Feature : Bookmarks Statistics
+- Improved UI.
