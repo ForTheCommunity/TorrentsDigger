@@ -20,6 +20,7 @@ class DropdownWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     // final effectiveValue = selectedValue ?? defaultValue;
     return Container(
+      height: 50,
       padding: const EdgeInsets.symmetric(horizontal: 15),
       decoration: BoxDecoration(
         color: context.appColors.sourcesDropdownBackgroundColor,
@@ -34,6 +35,8 @@ class DropdownWidget extends StatelessWidget {
               color: context.appColors.generalTextColor,
               wordSpacing: 3,
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
           value: selectedValue,
           isExpanded: true,
@@ -45,6 +48,15 @@ class DropdownWidget extends StatelessWidget {
           ),
           dropdownColor: context.appColors.sourcesDropdownOpenedBackgroundColor,
           iconEnabledColor: context.appColors.dropdownArrowDownColor,
+
+          selectedItemBuilder: (BuildContext context) {
+            return items.map((String item) {
+              return Align(
+                alignment: Alignment.centerLeft,
+                child: Text(item, maxLines: 1, overflow: TextOverflow.ellipsis),
+              );
+            }).toList();
+          },
 
           items: items.map((item) {
             return DropdownMenuItem(value: item, child: Text(item));

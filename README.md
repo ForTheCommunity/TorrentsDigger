@@ -40,35 +40,47 @@
   * Windows
   * Linux
 
-### Additional Highlights
-
-* Fast and lightweight interface.
-* Built with Flutter for a consistent experience across platforms.
-* Open-source and privacy-focused.
-* No account or registration required.
-
 
 ## --> Screenshots
 
-<div style="display: flex; justify-content: center; gap: 20px;">
-    <a href="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_1.jpg">
-        <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_1.jpg" width="160">
-    </a>
-    <a href="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_2.jpg">
-        <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_2.jpg" width="160">
-    </a>
-</div>
-<br>
+<details>
+<summary><b>Android Screenshots</b></summary>
+
 <br>
 
-<div style="display: flex; justify-content: center; gap: 20px;">
-    <a href="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_3.jpg">
-        <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_3.jpg" width="160">
-    </a>
-    <a href="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_4.jpg">
-        <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_4.jpg" width="160">
-    </a>
-</div>
+<p align="center">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_1.jpg" width="180">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_2.jpg" width="180">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_3.jpg" width="180">
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_4.jpg" width="180">
+</p>
+
+</details>
+
+<details>
+<summary><b>Linux Screenshots</b></summary>
+
+<br>
+
+<p align="center">
+  <a href="flatpak/screenshots/1.png">
+    <img src="flatpak/screenshots/1.png" width="350">
+  </a>
+
+  <a href="flatpak/screenshots/2.png">
+    <img src="flatpak/screenshots/2.png" width="350">
+  </a>
+
+  <a href="flatpak/screenshots/3.png">
+    <img src="flatpak/screenshots/3.png" width="350">
+  </a>
+
+  <a href="flatpak/screenshots/4.png">
+    <img src="flatpak/screenshots/4.png" width="350">
+  </a>
+</p>
+
+</details>
 
 ## --> Download | Install :
 [<img src="https://f-droid.org/badge/get-it-on.png"

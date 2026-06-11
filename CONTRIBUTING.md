@@ -34,7 +34,7 @@ just --list
 
 
 
-# Guides for building Torrents Digger for Flatpak.
+# Guides for building Torrents Digger for Flatpak. (Local Tooling)
 
 ## 1. We use [Flatpak-Flutter](https://github.com/TheAppgineer/flatpak-flutter) for generating essential files, that is necessary for building our project for Flatpak.
 ```
@@ -80,4 +80,31 @@ flatpak run --command=flatpak-builder-lint org.flatpak.Builder manifest io.gitla
 ## 9. Repo Lint Check:
 ```
 flatpak run --command=flatpak-builder-lint org.flatpak.Builder repo repo
+```
+
+
+# Guides for building Torrents Digger for Flatpak. (Isolated Container)
+
+## 1. We use [Flatpak-Flutter](https://github.com/TheAppgineer/flatpak-flutter) for generating essential files, that is necessary for building our project for Flatpak.
+```
+{..<PATH>..}/flatpak-flutter.py flatpak-flutter.yml
+```
+
+```
+flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+```
+
+## 2. Install Required Platform Extensions:
+```
+flatpak install flathub org.freedesktop.Sdk//25.08 org.freedesktop.Platform//25.08 org.freedesktop.Sdk.Extension.llvm20/x86_64/25.08
+```
+
+## 3. Install Flathub Builder Tool
+```
+flatpak install -y flathub org.flatpak.Builder
+```
+
+## 4. Build and Install Flatpak Package
+```
+flatpak run --command=flathub-build org.flatpak.Builder --install io.gitlab.ForTheCommunity.torrentsdigger.yml
 ```

@@ -1,0 +1,14 @@
+# Clean Directory.
+c:
+    clear
+    rm -rf build
+    rm -rf repo
+    rm -rf builddir
+    rm -rf build-dir
+    rm -rf .flatpak-builder
+    rm -rfv torrents_digger.flatpak
+
+# Build in Sandboxed Container.
+sb:
+    clear
+    flatpak run --command=flathub-build org.flatpak.Builder --install io.gitlab.ForTheCommunity.torrentsdigger.yml

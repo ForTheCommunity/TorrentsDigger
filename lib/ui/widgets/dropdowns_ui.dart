@@ -53,7 +53,7 @@ class DropdownsUi extends StatelessWidget {
                             )
                         ? state.selectedCategory
                         : null,
-                    hintText: "Select Category",
+                    hintText: "Category",
                     onChanged: (value) {
                       if (value != null) {
                         context.read<SourceBloc>().add(SelectCategory(value));
@@ -73,7 +73,7 @@ class DropdownsUi extends StatelessWidget {
                             )
                         ? state.selectedFilter
                         : null,
-                    hintText: "Select Filter",
+                    hintText: "Filter",
                     onChanged: (value) {
                       if (value != null) {
                         context.read<SourceBloc>().add(SelectFilter(value));
@@ -93,7 +93,7 @@ class DropdownsUi extends StatelessWidget {
                             )
                         ? state.selectedSorting
                         : null,
-                    hintText: "Select Sorting",
+                    hintText: "Sorting",
                     onChanged: (value) {
                       if (value != null) {
                         context.read<SourceBloc>().add(SelectSorting(value));
@@ -113,7 +113,7 @@ class DropdownsUi extends StatelessWidget {
                             )
                         ? state.selectedSortingOrder
                         : null,
-                    hintText: "Select Sorting Order",
+                    hintText: "Sorting Order",
                     onChanged: (value) {
                       if (value != null) {
                         context.read<SourceBloc>().add(
