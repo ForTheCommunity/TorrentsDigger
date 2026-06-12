@@ -1,6 +1,5 @@
 # Clean Directory.
-c:
-    clear
+c: 
     rm -rf build
     rm -rf repo
     rm -rf builddir

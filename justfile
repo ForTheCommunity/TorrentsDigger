@@ -31,6 +31,7 @@ clean:
     cd rust && cargo clean && cd ..
     cd lib_torrents_digger && cargo clean && cd ..
     cd tui && cargo clean && cd ..
+    cd flatpak && just c && cd ..
 
 # For Building Android Apk.
 build_android_apk:
