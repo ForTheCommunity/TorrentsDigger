@@ -4,6 +4,7 @@ runtime-version: "25.08"
 sdk: org.freedesktop.Sdk
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.llvm20
+  - org.freedesktop.Sdk.Extension.rust-stable
 command: torrents_digger
 finish-args:
   - --share=ipc
@@ -22,13 +23,16 @@ modules:
         aarch64:
           env:
             BUNDLE_PATH: build/linux/arm64/release/bundle
-      append-path: /usr/lib/sdk/llvm20/bin:/run/build/torrentsdigger/flutter/bin
+      append-path: /usr/lib/sdk/llvm20/bin:/usr/lib/sdk/rust-stable/bin:/run/build/torrentsdigger/flutter/bin
       prepend-ld-library-path: /usr/lib/sdk/llvm20/lib
       env:
         PUB_CACHE: /run/build/torrentsdigger/.pub-cache
+        CARGO_HOME: /run/build/torrentsdigger/cargo
     build-commands:
+      - install -Dm755 flatpak/fake_rustup.sh /usr/bin/rustup
+      - ln -sf /usr/lib/sdk/rust-stable/bin/cargo /usr/bin/cargo
       - dart run build_runner build --delete-conflicting-outputs
-      - flutter build linux --release --no-pub
+      - flutter build linux --release --no-pub -v
       - mkdir -p /app/share/io.gitlab.ForTheCommunity.torrentsdigger
       - cp -r $BUNDLE_PATH/* /app/share/io.gitlab.ForTheCommunity.torrentsdigger/
       - install -Dm644 linux/io.gitlab.ForTheCommunity.torrentsdigger.desktop -t /app/share/applications/
@@ -44,5 +48,5 @@ modules:
         url: https://gitlab.com/ForTheCommunity/torrentsdigger.git
       - type: git
         url: https://github.com/flutter/flutter.git
-        tag: 3.44.1
+        tag: 3.44.2
         dest: flutter
