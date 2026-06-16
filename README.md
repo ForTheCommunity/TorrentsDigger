@@ -87,6 +87,11 @@
     alt="Get it on F-Droid"
     height="80">](https://f-droid.org/packages/org.forthecommunity.torrentsdigger)
 
+<a href='https://flathub.org/apps/io.gitlab.ForTheCommunity.torrentsdigger'>
+    <img width='240' alt='Get it on Flathub' src='https://flathub.org/api/badge?locale=en'/>
+  </a>
+
+
 ## --> Install using [AppMan](https://github.com/ivan-hc/AppMan)/[AM](https://github.com/ivan-hc/AM).
 ```
 appman install torrents_digger
