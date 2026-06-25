@@ -126,7 +126,7 @@ class TorrentCard extends StatelessWidget {
                     bool isBookmarked = false;
 
                     state.whenOrNull(
-                      loaded: (bookmarkedTorrents, infoHashes, _) {
+                      loaded: (bookmarkedTorrents, infoHashes, _, _, _) {
                         isBookmarked = infoHashes.contains(torrent.infoHash);
                       },
                     );

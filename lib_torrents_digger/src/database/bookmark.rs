@@ -35,16 +35,21 @@ pub fn create_a_bookmark(torrent: Torrent, category_id: u8) -> Result<usize, rus
     )
 }
 
-pub fn fetch_bookmarks(category_id: u8) -> Result<Vec<Torrent>, rusqlite::Error> {
+pub fn fetch_bookmarks(
+    category_id: u8,
+    limit: u32,
+    offset: u32,
+) -> Result<Vec<Torrent>, rusqlite::Error> {
     let db_conn = get_a_database_connection();
 
     let mut sql_statement = db_conn.prepare(
         "
         SELECT * FROM bookmarked_torrents WHERE category_id = ?1
+        LIMIT ?2 OFFSET ?3
     ",
     )?;
 
-    let torrents_iter = sql_statement.query_map([category_id], |a_row| {
+    let torrents_iter = sql_statement.query_map([category_id as u32, limit, offset], |a_row| {
         Ok(Torrent {
             info_hash: a_row.get(0)?,
             name: a_row.get(1)?,

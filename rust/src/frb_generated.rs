@@ -592,10 +592,16 @@ fn wire__crate__api__database__bookmark__get_bookmarks_impl(
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_category_id = <u8>::sse_decode(&mut deserializer);
+            let api_limit = <u32>::sse_decode(&mut deserializer);
+            let api_offset = <u32>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
                 transform_result_sse::<_, String>((move || {
-                    let output_ok = crate::api::database::bookmark::get_bookmarks(api_category_id)?;
+                    let output_ok = crate::api::database::bookmark::get_bookmarks(
+                        api_category_id,
+                        api_limit,
+                        api_offset,
+                    )?;
                     Ok(output_ok)
                 })())
             }

@@ -11,12 +11,14 @@ part 'bookmark_bloc.freezed.dart';
 
 class BookmarkBloc extends Bloc<BookmarkEvent, BookmarkState> {
   int currentCategoryId = 0;
+  static const int _defaultLimit = 10;
 
   BookmarkBloc() : super(_Initial()) {
     on<_LoadBookmarks>(_loadBookmarks);
     on<_Bookmark>(_bookmark);
     on<_RemoveBookmark>(_removeBookmark);
     on<_UpdateBookmark>(_updateBookmark);
+    on<_LoadMoreBookmarks>(_loadMoreBookmarks);
   }
 
   Future<void> _loadBookmarks(
@@ -29,12 +31,16 @@ class BookmarkBloc extends Bloc<BookmarkEvent, BookmarkState> {
       emit(BookmarkState.loading());
       List<InternalTorrent> torrents = await getBookmarks(
         categoryId: event.categoryID,
+        limit: _defaultLimit,
+        offset: 0,
       );
-      Set<String> allInfoHashes = await getAllInfoHashes();
+      final Set<String> allInfoHashes = await getAllInfoHashes();
       emit(
         BookmarkState.loaded(
           bookmarkedTorrents: torrents,
           infoHashes: allInfoHashes,
+          currentOffset: torrents.length,
+          hasMore: torrents.length == _defaultLimit,
         ),
       );
     } catch (e) {
@@ -83,6 +89,37 @@ class BookmarkBloc extends Bloc<BookmarkEvent, BookmarkState> {
       );
     } catch (e) {
       createSnackBar(message: "Error : ${e.toString()}", duration: 5);
+    }
+  }
+
+  Future<void> _loadMoreBookmarks(
+    _LoadMoreBookmarks event,
+    Emitter<BookmarkState> emit,
+  ) async {
+    final currentState = state;
+    if (currentState is! _Loaded || !currentState.hasMore) return;
+
+    try {
+      final newTorrents = await getBookmarks(
+        categoryId: currentCategoryId,
+        limit: _defaultLimit,
+        offset: currentState.currentOffset,
+      );
+      final allInfoHashes = await getAllInfoHashes();
+
+      emit(
+        BookmarkState.loaded(
+          bookmarkedTorrents: [
+            ...currentState.bookmarkedTorrents,
+            ...newTorrents,
+          ],
+          infoHashes: allInfoHashes,
+          currentOffset: currentState.currentOffset + newTorrents.length,
+          hasMore: newTorrents.length == _defaultLimit,
+        ),
+      );
+    } catch (e) {
+      createSnackBar(message: "Error : ${e.toString()}", duration: 10);
     }
   }
 }

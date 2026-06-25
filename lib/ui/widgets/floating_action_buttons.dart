@@ -8,12 +8,15 @@ class FloatingActionsButtons extends StatelessWidget {
   final bool enableCustoms;
   final bool enableBookmarks;
   final bool enableSettings;
+  final ScrollController? scrollController;
+
   const FloatingActionsButtons({
     super.key,
     required this.scrollToTop,
     required this.enableCustoms,
     required this.enableBookmarks,
     required this.enableSettings,
+    this.scrollController,
   });
 
   @override
@@ -23,7 +26,8 @@ class FloatingActionsButtons extends StatelessWidget {
       children: [
         if (scrollToTop) ...[
           ScrollToTopButton(
-            scrollController: PrimaryScrollController.of(context),
+            scrollController:
+                scrollController ?? PrimaryScrollController.of(context),
           ),
           const SizedBox(height: 10),
         ],

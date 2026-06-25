@@ -21,12 +21,28 @@ class BookmarksScreen extends StatefulWidget {
 
 class _BookmarkScreenState extends State<BookmarksScreen> {
   int? selectedCategoryId = 0;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     // Dispatching the load event immediately when the screen initializes
     context.read<CategoryBloc>().add(const CategoryEvent.load());
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    // Fire when within 200px of the bottom
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      context.read<BookmarkBloc>().add(const BookmarkEvent.loadMoreBookmarks());
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -68,12 +84,15 @@ class _BookmarkScreenState extends State<BookmarksScreen> {
         enableBookmarks: false,
         enableCustoms: true,
         enableSettings: true,
+        scrollController: _scrollController,
       ),
 
       body: SafeArea(
         child: Scrollbar(
+          controller: _scrollController,
           child: SingleChildScrollView(
-            primary: true,
+            primary: false,
+            controller: _scrollController,
 
             child: Padding(
               padding: EdgeInsets.symmetric(
@@ -120,24 +139,39 @@ class _BookmarkScreenState extends State<BookmarksScreen> {
                           height: 400,
                           child: Center(child: CircularProgressBarWidget()),
                         ),
-                        loaded: (torrents, _, _) => torrents.isEmpty
-                            ? Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SizedBox(height: 10),
-                                    Text(
-                                      "This Category has 0 Torrents.",
-                                      style: TextStyle(
-                                        color:
-                                            context.appColors.generalTextColor,
-                                        fontSize: 15,
-                                      ),
+                        loaded: (torrents, _, _, _, hasMore) {
+                          if (torrents.isEmpty) {
+                            return Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(height: 10),
+                                  Text(
+                                    "This Category has 0 Torrents.",
+                                    style: TextStyle(
+                                      color: context.appColors.generalTextColor,
+                                      fontSize: 15,
                                     ),
-                                  ],
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+
+                          return Column(
+                            children: [
+                              TorrentListWidget(torrents: torrents),
+                              if (hasMore)
+                                const Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 16),
+                                  child: Center(
+                                    child: CircularProgressBarWidget(),
+                                  ),
                                 ),
-                              )
-                            : TorrentListWidget(torrents: torrents),
+                            ],
+                          );
+                        },
+
                         error: (e) =>
                             Center(child: Text("Error : ${e.toString()}")),
                       );

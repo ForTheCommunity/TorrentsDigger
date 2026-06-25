@@ -137,6 +137,8 @@ abstract class RustLibApi extends BaseApi {
 
   Future<List<InternalTorrent>> crateApiDatabaseBookmarkGetBookmarks({
     required int categoryId,
+    required int limit,
+    required int offset,
   });
 
   Future<InternalBookmarksStats> crateApiAppGetBookmarksStats();
@@ -701,12 +703,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @override
   Future<List<InternalTorrent>> crateApiDatabaseBookmarkGetBookmarks({
     required int categoryId,
+    required int limit,
+    required int offset,
   }) {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_u_8(categoryId, serializer);
+          sse_encode_u_32(limit, serializer);
+          sse_encode_u_32(offset, serializer);
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
@@ -719,14 +725,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeErrorData: sse_decode_String,
         ),
         constMeta: kCrateApiDatabaseBookmarkGetBookmarksConstMeta,
-        argValues: [categoryId],
+        argValues: [categoryId, limit, offset],
         apiImpl: this,
       ),
     );
   }
 
   TaskConstMeta get kCrateApiDatabaseBookmarkGetBookmarksConstMeta =>
-      const TaskConstMeta(debugName: "get_bookmarks", argNames: ["categoryId"]);
+      const TaskConstMeta(
+        debugName: "get_bookmarks",
+        argNames: ["categoryId", "limit", "offset"],
+      );
 
   @override
   Future<InternalBookmarksStats> crateApiAppGetBookmarksStats() {

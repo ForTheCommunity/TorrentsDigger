@@ -31,8 +31,12 @@ pub fn remove_bookmark(info_hash: String) -> Result<bool, String> {
     }
 }
 
-pub fn get_bookmarks(category_id: u8) -> Result<Vec<InternalTorrent>, String> {
-    match fetch_bookmarks(category_id) {
+pub fn get_bookmarks(
+    category_id: u8,
+    limit: u32,
+    offset: u32,
+) -> Result<Vec<InternalTorrent>, String> {
+    match fetch_bookmarks(category_id, limit, offset) {
         Ok(vec_of_torrent) => Ok(vec_of_torrent
             .into_iter()
             .map(|t: lib_torrents_digger::torrent::Torrent| InternalTorrent {

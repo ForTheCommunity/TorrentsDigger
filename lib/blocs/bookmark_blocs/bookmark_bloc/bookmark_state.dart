@@ -12,6 +12,10 @@ class BookmarkState with _$BookmarkState {
     // Storing Currently Viewing Category ID..
     // usefull when moving torrent from one category to another.
     @Default(0) int currentlyViewingCategoryID,
+    // storing current offset
+    required int currentOffset,
+    // false : when fewer than limit comes back.
+    required bool hasMore,
   }) = _Loaded;
   const factory BookmarkState.error({required String errorMessage}) = _Error;
 }

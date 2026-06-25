@@ -3,8 +3,11 @@ part of 'bookmark_bloc.dart';
 @freezed
 class BookmarkEvent with _$BookmarkEvent {
   const factory BookmarkEvent.started() = _Started;
-  const factory BookmarkEvent.loadBookmarks({required int categoryID}) =
-      _LoadBookmarks;
+  const factory BookmarkEvent.loadBookmarks({
+    required int categoryID,
+    @Default(10) int limit,
+    @Default(0)  int offset,
+  }) = _LoadBookmarks;
   const factory BookmarkEvent.bookmark({
     required InternalTorrent torrent,
     required int categoryID,
@@ -16,4 +19,5 @@ class BookmarkEvent with _$BookmarkEvent {
     required int categoryId,
     required int currenltyViewingCategoryID,
   }) = _UpdateBookmark;
+  const factory BookmarkEvent.loadMoreBookmarks() = _LoadMoreBookmarks;
 }

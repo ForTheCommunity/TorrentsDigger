@@ -18,10 +18,15 @@ Future<BigInt> bookmarkATorrent({
 Future<bool> removeBookmark({required String infoHash}) => RustLib.instance.api
     .crateApiDatabaseBookmarkRemoveBookmark(infoHash: infoHash);
 
-Future<List<InternalTorrent>> getBookmarks({required int categoryId}) => RustLib
-    .instance
-    .api
-    .crateApiDatabaseBookmarkGetBookmarks(categoryId: categoryId);
+Future<List<InternalTorrent>> getBookmarks({
+  required int categoryId,
+  required int limit,
+  required int offset,
+}) => RustLib.instance.api.crateApiDatabaseBookmarkGetBookmarks(
+  categoryId: categoryId,
+  limit: limit,
+  offset: offset,
+);
 
 Future<Set<String>> getAllInfoHashes() =>
     RustLib.instance.api.crateApiDatabaseBookmarkGetAllInfoHashes();
