@@ -98,6 +98,37 @@ pub fn delete_a_bookmark(info_hash: String) -> Result<bool, rusqlite::Error> {
     if result == 1 { Ok(true) } else { Ok(false) }
 }
 
+pub fn search_bookmark(text: String) -> Result<Vec<Torrent>, rusqlite::Error> {
+    let db_conn = get_a_database_connection();
+
+    let mut sql_statement = db_conn.prepare(
+        "
+    SELECT * FROM bookmarked_torrents
+    WHERE (name LIKE ?1 OR info_hash LIKE ?1) 
+    ",
+    )?;
+
+    let search_pattern = format!("%{}%", text);
+
+    let torrents_iter = sql_statement.query_map(params![search_pattern], |a_row| {
+        Ok(Torrent {
+            info_hash: a_row.get(0)?,
+            name: a_row.get(1)?,
+            magnet: a_row.get(2)?,
+            size: a_row.get(3)?,
+            date: a_row.get(4)?,
+            seeders: a_row.get(5)?,
+            leechers: a_row.get(6)?,
+            total_downloads: a_row.get(7)?,
+            source_url: a_row.get(8)?,
+        })
+    })?;
+
+    let matched_torrents: Vec<Torrent> = torrents_iter.collect::<Result<Vec<Torrent>, _>>()?;
+
+    Ok(matched_torrents)
+}
+
 #[derive(Clone)]
 pub struct BookmarkCategory {
     pub id: u16,

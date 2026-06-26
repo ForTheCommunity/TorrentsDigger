@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -23,6 +24,11 @@ class _BookmarkScreenState extends State<BookmarksScreen> {
   int? selectedCategoryId = 0;
   final ScrollController _scrollController = ScrollController();
 
+  // search state
+  bool _isSearching = false;
+  final TextEditingController _searchController = TextEditingController();
+  Timer? _debounceTimer;
+
   @override
   void initState() {
     super.initState();
@@ -42,6 +48,8 @@ class _BookmarkScreenState extends State<BookmarksScreen> {
   @override
   void dispose() {
     _scrollController.dispose();
+    _searchController.dispose();
+    _debounceTimer?.cancel();
     super.dispose();
   }
 
@@ -49,33 +57,113 @@ class _BookmarkScreenState extends State<BookmarksScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Bookmarks',
-          style: TextStyle(
-            color: context.appColors.appBarTextColor,
-            letterSpacing: 2,
-            fontSize: 25,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
         leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(_isSearching ? Icons.close : Icons.arrow_back),
           iconSize: 30,
+          onPressed: () {
+            if (_isSearching) {
+              setState(() {
+                _isSearching = false;
+                _searchController.clear();
+              });
+              // Reset search results by reloading bookmarks normally
+              context.read<BookmarkBloc>().add(
+                BookmarkEvent.loadBookmarks(
+                  categoryID: selectedCategoryId ?? 0,
+                ),
+              );
+            } else {
+              Navigator.pop(context);
+            }
+          },
         ),
+        title: _isSearching
+            ? TextField(
+                controller: _searchController,
+                autofocus: true,
+                style: TextStyle(color: Colors.amber, fontSize: 18),
+                decoration: InputDecoration(
+                  hint: Text(
+                    'Search Bookmarks...',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: const Color.fromARGB(213, 255, 255, 255),
+                    ),
+                  ),
+
+                  border: InputBorder.none,
+                ),
+                onChanged: (searchQueryText) {
+                  String searchQuery = searchQueryText.trim();
+                  _debounceTimer?.cancel();
+                  _debounceTimer = Timer(const Duration(milliseconds: 350), () {
+                    if (searchQuery.isEmpty) {
+                      // go back to normal paginated view
+                      //
+                      context.read<BookmarkBloc>().add(
+                        BookmarkEvent.loadBookmarks(
+                          categoryID: selectedCategoryId ?? 0,
+                        ),
+                      );
+                      //
+                    } else {
+                      context.read<BookmarkBloc>().add(
+                        BookmarkEvent.searchBookmarkedTorrents(
+                          text: searchQuery,
+                        ),
+                      );
+                    }
+                  });
+                },
+              )
+            : Text(
+                'Bookmarks',
+                style: TextStyle(
+                  color: context.appColors.appBarTextColor,
+                  letterSpacing: 2,
+                  fontSize: 25,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+
         actions: [
-          IconButton(
-            icon: Icon(
-              Icons.query_stats,
-              size: 28,
-              color: context.appColors.bookmarksStatsIconColor,
+          if (!_isSearching) ...[
+            IconButton(
+              icon: const Icon(Icons.search, size: 28),
+              onPressed: () {
+                setState(() {
+                  _isSearching = true;
+                });
+              },
             ),
-            onPressed: () {
-              Navigator.pushNamed(context, RoutesName.bookmarkStatsScreen);
-            },
-          ),
+
+            IconButton(
+              icon: Icon(
+                Icons.query_stats,
+                size: 28,
+                color: context.appColors.bookmarksStatsIconColor,
+              ),
+              onPressed: () {
+                Navigator.pushNamed(context, RoutesName.bookmarkStatsScreen);
+              },
+            ),
+          ] else ...[
+            IconButton(
+              icon: const Icon(Icons.backspace_outlined),
+              onPressed: () {
+                _searchController.clear();
+                setState(() {
+                  _isSearching = false;
+                  _debounceTimer?.cancel();
+                  context.read<BookmarkBloc>().add(
+                    BookmarkEvent.loadBookmarks(
+                      categoryID: selectedCategoryId ?? 0,
+                    ),
+                  );
+                });
+              },
+            ),
+          ],
         ],
       ),
 
@@ -147,7 +235,9 @@ class _BookmarkScreenState extends State<BookmarksScreen> {
                                 children: [
                                   SizedBox(height: 10),
                                   Text(
-                                    "This Category has 0 Torrents.",
+                                    _isSearching
+                                        ? "No Result Found..."
+                                        : "This Category has 0 Torrents.",
                                     style: TextStyle(
                                       color: context.appColors.generalTextColor,
                                       fontSize: 15,

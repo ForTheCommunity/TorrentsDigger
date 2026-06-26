@@ -69,7 +69,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.12.0';
 
   @override
-  int get rustContentHash => 1540046324;
+  int get rustContentHash => 541169233;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -187,6 +187,10 @@ abstract class RustLibApi extends BaseApi {
 
   Future<BigInt> crateApiDatabaseProxySaveProxyApi({
     required InternalProxy proxyData,
+  });
+
+  Future<List<InternalTorrent>> crateApiDatabaseBookmarkSearchBookmarks({
+    required String text,
   });
 
   Future<BigInt> crateApiDatabaseGetSettingsKvSetActiveCustomDnsResolver({
@@ -1219,6 +1223,36 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "save_proxy_api", argNames: ["proxyData"]);
 
   @override
+  Future<List<InternalTorrent>> crateApiDatabaseBookmarkSearchBookmarks({
+    required String text,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(text, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 33,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_list_internal_torrent,
+          decodeErrorData: sse_decode_String,
+        ),
+        constMeta: kCrateApiDatabaseBookmarkSearchBookmarksConstMeta,
+        argValues: [text],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiDatabaseBookmarkSearchBookmarksConstMeta =>
+      const TaskConstMeta(debugName: "search_bookmarks", argNames: ["text"]);
+
+  @override
   Future<BigInt> crateApiDatabaseGetSettingsKvSetActiveCustomDnsResolver({
     required int index,
   }) {
@@ -1230,7 +1264,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 33,
+            funcId: 34,
             port: port_,
           );
         },
@@ -1265,7 +1299,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 34,
+            funcId: 35,
             port: port_,
           );
         },

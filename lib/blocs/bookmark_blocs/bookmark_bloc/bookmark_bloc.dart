@@ -19,6 +19,7 @@ class BookmarkBloc extends Bloc<BookmarkEvent, BookmarkState> {
     on<_RemoveBookmark>(_removeBookmark);
     on<_UpdateBookmark>(_updateBookmark);
     on<_LoadMoreBookmarks>(_loadMoreBookmarks);
+    on<_SearchBookmarkedTorrents>(_searchBookmarkedTorrents);
   }
 
   Future<void> _loadBookmarks(
@@ -116,6 +117,27 @@ class BookmarkBloc extends Bloc<BookmarkEvent, BookmarkState> {
           infoHashes: allInfoHashes,
           currentOffset: currentState.currentOffset + newTorrents.length,
           hasMore: newTorrents.length == _defaultLimit,
+        ),
+      );
+    } catch (e) {
+      createSnackBar(message: "Error : ${e.toString()}", duration: 10);
+    }
+  }
+
+  Future<void> _searchBookmarkedTorrents(
+    _SearchBookmarkedTorrents event,
+    Emitter<BookmarkState> emit,
+  ) async {
+    try {
+      final List<InternalTorrent> torrents = await searchBookmarks(
+        text: event.text,
+      );
+      emit(
+        BookmarkState.loaded(
+          bookmarkedTorrents: torrents,
+          infoHashes: torrents.map((torrent) => torrent.infoHash).toSet(),
+          currentOffset: 0,
+          hasMore: false,
         ),
       );
     } catch (e) {

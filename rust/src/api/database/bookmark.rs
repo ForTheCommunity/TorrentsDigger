@@ -1,6 +1,8 @@
 use std::collections::HashSet;
 
-use lib_torrents_digger::database::bookmark::{fetch_all_info_hashes, BookmarkCategory};
+use lib_torrents_digger::database::bookmark::{
+    fetch_all_info_hashes, search_bookmark, BookmarkCategory,
+};
 
 use crate::api::{internals::InternalBookmarkCategory, preludes::*};
 
@@ -110,6 +112,26 @@ pub fn delete_bookmark_category(category_id: u8) -> Result<(), String> {
 pub fn change_bookmark_category(info_hash: String, category_id: u8) -> Result<(), String> {
     match BookmarkCategory::move_category(info_hash, category_id) {
         Ok(_) => Ok(()),
+        Err(e) => Err(e.to_string()),
+    }
+}
+
+pub fn search_bookmarks(text: String) -> Result<Vec<InternalTorrent>, String> {
+    match search_bookmark(text) {
+        Ok(vec_of_torrent) => Ok(vec_of_torrent
+            .into_iter()
+            .map(|t: lib_torrents_digger::torrent::Torrent| InternalTorrent {
+                info_hash: t.info_hash,
+                name: t.name,
+                magnet: t.magnet,
+                size: t.size,
+                date: t.date,
+                seeders: t.seeders,
+                leechers: t.leechers,
+                total_downloads: t.total_downloads,
+                source_url: t.source_url,
+            })
+            .collect()),
         Err(e) => Err(e.to_string()),
     }
 }
