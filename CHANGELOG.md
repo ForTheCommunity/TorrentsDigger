@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.6] - 2026-06-26
+- Added Bookmarks Search Feature.
+- Improved Bookmarks Loading.
+- Improved Bookmarks Categories.
+- Improved UI.
+
 ## [1.2.5] - 2026-06-11
 - Added Feature : Bookmarks Statistics
 - Improved UI.

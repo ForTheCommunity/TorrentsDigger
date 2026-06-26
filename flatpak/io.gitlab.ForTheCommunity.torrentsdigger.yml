@@ -25,11 +25,12 @@ modules:
         aarch64:
           env:
             BUNDLE_PATH: build/linux/arm64/release/bundle
-      append-path: /run/build/torrentsdigger/bin:/usr/lib/sdk/llvm20/bin:/usr/lib/sdk/rust-stable/bin:/var/lib/flutter/bin
+      append-path: /run/build/torrentsdigger/bin:/usr/lib/sdk/llvm20/bin:/usr/lib/sdk/rust-stable/bin:/var/lib/flutter/bin:/var/lib/rustup/bin
       prepend-ld-library-path: /usr/lib/sdk/llvm20/lib
       env:
         PUB_CACHE: /run/build/torrentsdigger/.pub-cache
         CARGO_HOME: /run/build/torrentsdigger/cargo
+        RUSTUP_HOME: /var/lib/rustup
     build-commands:
       - mkdir -p /run/build/torrentsdigger/bin
       - install -Dm755 flatpak/fake_rustup.sh /run/build/torrentsdigger/bin/rustup
@@ -54,8 +55,9 @@ modules:
     sources:
       - type: git
         url: https://gitlab.com/ForTheCommunity/torrentsdigger.git
-        commit: 989c9102fb36b6bfb43520e6d10b481448c54351
+        commit: 1a3c73096124ccb1873d884b9a897fd45b4e2b54
       - generated/sources/cargo.json
       - generated/sources/pubspec.json
     modules:
-      - generated/modules/flutter-sdk-3.44.2.json
+      - generated/modules/rustup-1.94.0.json
+      - generated/modules/flutter-sdk-3.44.4.json

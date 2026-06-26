@@ -1,0 +1,4 @@
+- Added Bookmarks Search Feature.
+- Improved Bookmarks Loading.
+- Improved Bookmarks Categories.
+- Improved UI.

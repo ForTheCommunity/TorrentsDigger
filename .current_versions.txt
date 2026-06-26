@@ -1,2 +1,2 @@
-flutter-version: '3.44.1'
+flutter-version: '3.44.4'
 rust-version: '1.96.0'

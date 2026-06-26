@@ -4,7 +4,7 @@ stages:
 
 build_android_binaries:
   stage: build
-  image: forthecommunity/flutter
+  image: forthecommunity/flutter:3.44.4
   rules:
     - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+\+\d+$/
   script:
@@ -93,7 +93,7 @@ build_android_binaries:
 
 build_appimage:
   stage: build
-  image: forthecommunity/flutter
+  image: forthecommunity/flutter:3.44.4
   rules:
     - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+\+\d+$/
   script:
@@ -149,7 +149,7 @@ build_appimage:
 
 build_flatpak:
   stage: build
-  image: forthecommunity/flutter
+  image: forthecommunity/flutter:3.44.4
   rules:
     - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+\+\d+$/
   script:
