@@ -236,6 +236,23 @@ impl BookmarkCategory {
 
         Ok(())
     }
+
+    pub fn get_bookmark_category_id(info_hash: String) -> Result<Option<u16>, rusqlite::Error> {
+        let db_conn = get_a_database_connection();
+
+        let mut sql_statement = db_conn.prepare(
+            "
+        SELECT category_id FROM bookmarked_torrents WHERE info_hash = ?1
+        ",
+        )?;
+
+        let mut rows = sql_statement.query([info_hash])?;
+
+        match rows.next()? {
+            Some(row) => Ok(Some(row.get(0)?)),
+            None => Ok(None),
+        }
+    }
 }
 
 pub struct BookmarksStats {

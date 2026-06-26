@@ -9,3 +9,7 @@ Future<BigInt> torrentBookmark(InternalTorrent torrent, int categoryId) async {
 Future<bool> removeABookmark(String infoHash) async {
   return await removeBookmark(infoHash: infoHash);
 }
+
+Future<int?> getCategoryID(String infoHash) async {
+  return await getCategoryIdFromIH(infoHash: infoHash);
+}

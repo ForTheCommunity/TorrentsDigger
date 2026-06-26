@@ -7,5 +7,4 @@ class CategoryState with _$CategoryState {
   const factory CategoryState.loaded({
     required List<InternalBookmarkCategory> categories,
   }) = _CategoriesLoaded;
- 
 }

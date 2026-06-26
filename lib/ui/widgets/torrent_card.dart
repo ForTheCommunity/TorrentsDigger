@@ -5,6 +5,7 @@ import 'package:torrents_digger/blocs/bookmark_blocs/bookmark_bloc/bookmark_bloc
 import 'package:torrents_digger/blocs/bookmark_blocs/category_bloc/category_bloc.dart';
 import 'package:torrents_digger/blocs/default_trackers_bloc/default_trackers_bloc.dart';
 import 'package:torrents_digger/configs/extensions.dart';
+import 'package:torrents_digger/database/bookmarks.dart';
 import 'package:torrents_digger/src/rust/api/internals.dart';
 import 'package:torrents_digger/ui/widgets/launch_url.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
@@ -146,6 +147,7 @@ class TorrentCard extends StatelessWidget {
                           _categoryPickerDialog(
                             context,
                             isBookmarked: isBookmarked,
+                            categoryID: null,
                           );
                         }
                       },
@@ -229,6 +231,7 @@ class TorrentCard extends StatelessWidget {
   void _categoryPickerDialog(
     BuildContext context, {
     required bool isBookmarked,
+    int? categoryID,
   }) {
     context.read<CategoryBloc>().add(const CategoryEvent.load());
     showDialog(
@@ -258,9 +261,14 @@ class TorrentCard extends StatelessWidget {
                         itemCount: categories.length,
                         itemBuilder: (context, index) {
                           final category = categories[index];
+                          final bool isCurrentCategory =
+                              categoryID == category.id;
+
                           return ListTile(
                             leading: Icon(
-                              Icons.folder_open,
+                              isCurrentCategory
+                                  ? Icons.folder
+                                  : Icons.folder_open,
                               color:
                                   context.appColors.bookmarkCategoryIconColor,
                             ),
@@ -374,9 +382,17 @@ class TorrentCard extends StatelessWidget {
                     color: context.appColors.bookmarkCategoryDialogTextColor,
                   ),
                 ),
-                onTap: () {
+                onTap: () async {
+                  var catID = await getCategoryID(torrent.infoHash);
+
+                  if (!dialogContext.mounted) return;
+
                   Navigator.pop(dialogContext);
-                  _categoryPickerDialog(context, isBookmarked: true);
+                  _categoryPickerDialog(
+                    dialogContext,
+                    isBookmarked: true,
+                    categoryID: catID,
+                  );
                 },
               ),
               ListTile(

@@ -135,3 +135,10 @@ pub fn search_bookmarks(text: String) -> Result<Vec<InternalTorrent>, String> {
         Err(e) => Err(e.to_string()),
     }
 }
+
+pub fn get_category_id_from_i_h(info_hash: String) -> Result<Option<u16>, String> {
+    match BookmarkCategory::get_bookmark_category_id(info_hash) {
+        Ok(a) => Ok(a),
+        Err(e) => Err(e.to_string()),
+    }
+}

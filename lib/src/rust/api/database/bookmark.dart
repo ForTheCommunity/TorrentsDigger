@@ -64,3 +64,8 @@ Future<void> changeBookmarkCategory({
 
 Future<List<InternalTorrent>> searchBookmarks({required String text}) =>
     RustLib.instance.api.crateApiDatabaseBookmarkSearchBookmarks(text: text);
+
+Future<int?> getCategoryIdFromIH({required String infoHash}) => RustLib
+    .instance
+    .api
+    .crateApiDatabaseBookmarkGetCategoryIdFromIH(infoHash: infoHash);
