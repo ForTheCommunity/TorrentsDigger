@@ -312,6 +312,18 @@ class TorrentCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: context
+                            .appColors
+                            .bookmarkCategoryDialogCloseButtonBackgroundColor,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 10,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
                       onPressed: () {
                         Navigator.pop(dialogContext);
                       },
@@ -394,6 +406,18 @@ class TorrentCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: context
+                        .appColors
+                        .bookmarkCategoryDialogCloseButtonBackgroundColor,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 10,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
                   onPressed: () {
                     Navigator.pop(dialogContext);
                   },

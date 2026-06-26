@@ -7,6 +7,7 @@ abstract class AppTheme {
   Color get scaffoldColor;
   Color get appBarBackgroundColor;
   Color get appBarTextColor;
+  Color get appBarBackButtonIconColor;
   Color get scrollbarColor;
 
   Color get generalTextColor;
@@ -138,7 +139,7 @@ abstract class AppTheme {
   Color get bookmarkCategoryDialogTextColor;
   Color get bookmarkCategoryIconColor;
   Color get bookmarkCategoryDialogCategoryTextColor;
-  // Color get bookmarkCategoryDialogCloseButtonBackgroundColor;
+  Color get bookmarkCategoryDialogCloseButtonBackgroundColor;
   Color get bookmarkCategoryDialogCloseButtonTextColor;
   Color get bookmarkCategoryDialogRemoveIconColor;
 
@@ -159,6 +160,11 @@ abstract class AppTheme {
   Color get deleteCategoryConfirmationDialogInputTextfieldActiveBorderColor;
   Color get deleteCategoryConfirmationDialogInputTextColor;
   Color get deleteCategoryConfirmationDialogCancelButtonTextColor;
+  Color get deleteCategoryConfirmationDialogCancelButtonBackgroundColor;
   Color get deleteCategoryConfirmationDialogDeleteButtonTextColor;
   Color get deleteCategoryConfirmationDialogCodeDoesnotMatchErrorTextColor;
+
+  Color get searchBookmarksPlaceholderTextColor;
+  Color get searchBookmarksIconColor;
+  Color get searchBookmarksClearIconColor;
 }

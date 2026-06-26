@@ -16,6 +16,8 @@ class LightTheme extends AppTheme {
   @override
   Color get appBarTextColor => Colors.white;
   @override
+  Color get appBarBackButtonIconColor => Colors.white;
+  @override
   Color get scrollbarColor => const Color.fromARGB(255, 1, 173, 170);
 
   @override
@@ -292,9 +294,9 @@ class LightTheme extends AppTheme {
   @override
   Color get bookmarkCategoryDialogCategoryTextColor =>
       Color.fromRGBO(1, 1, 1, 1);
-  // @override
-  // Color get bookmarkCategoryDialogCloseButtonBackgroundColor =>
-  // Color.fromRGBO(1, 1, 1, 1);
+  @override
+  Color get bookmarkCategoryDialogCloseButtonBackgroundColor =>
+      Color.fromRGBO(75, 71, 71, 1);
   @override
   Color get bookmarkCategoryDialogCloseButtonTextColor =>
       Color.fromRGBO(241, 234, 234, 1);
@@ -344,9 +346,21 @@ class LightTheme extends AppTheme {
   Color get deleteCategoryConfirmationDialogCancelButtonTextColor =>
       Color.fromRGBO(0, 255, 217, 1);
   @override
+  Color get deleteCategoryConfirmationDialogCancelButtonBackgroundColor =>
+      Colors.black;
+  @override
   Color get deleteCategoryConfirmationDialogDeleteButtonTextColor =>
-      Color.fromRGBO(255, 0, 0, 1);
+      Color.fromARGB(223, 0, 255, 221);
   @override
   Color get deleteCategoryConfirmationDialogCodeDoesnotMatchErrorTextColor =>
       Color.fromRGBO(0, 221, 255, 1);
+
+  @override
+  Color get searchBookmarksPlaceholderTextColor =>
+      const Color.fromARGB(255, 255, 255, 255);
+  @override
+  Color get searchBookmarksIconColor => const Color.fromARGB(255, 249, 224, 255);
+  @override
+  Color get searchBookmarksClearIconColor =>
+      const Color.fromARGB(255, 126, 246, 255);
 }

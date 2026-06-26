@@ -11,6 +11,7 @@ import 'package:torrents_digger/src/rust/api/internals.dart';
 import 'package:torrents_digger/ui/widgets/circular_progress_bar_widget.dart';
 import 'package:torrents_digger/ui/widgets/category_chip.dart';
 import 'package:torrents_digger/ui/widgets/floating_action_buttons.dart';
+import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 import 'package:torrents_digger/ui/widgets/torrent_list_widget.dart';
 
 class BookmarksScreen extends StatefulWidget {
@@ -58,7 +59,10 @@ class _BookmarkScreenState extends State<BookmarksScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(_isSearching ? Icons.close : Icons.arrow_back),
+          icon: Icon(
+            _isSearching ? Icons.close : Icons.arrow_back,
+            color: context.appColors.appBarBackButtonIconColor,
+          ),
           iconSize: 30,
           onPressed: () {
             if (_isSearching) {
@@ -87,7 +91,8 @@ class _BookmarkScreenState extends State<BookmarksScreen> {
                     'Search Bookmarks...',
                     style: TextStyle(
                       fontSize: 20,
-                      color: const Color.fromARGB(213, 255, 255, 255),
+                      color:
+                          context.appColors.searchBookmarksPlaceholderTextColor,
                     ),
                   ),
 
@@ -129,7 +134,11 @@ class _BookmarkScreenState extends State<BookmarksScreen> {
         actions: [
           if (!_isSearching) ...[
             IconButton(
-              icon: const Icon(Icons.search, size: 28),
+              icon: Icon(
+                Icons.search,
+                size: 28,
+                color: context.appColors.searchBookmarksIconColor,
+              ),
               onPressed: () {
                 setState(() {
                   _isSearching = true;
@@ -149,18 +158,12 @@ class _BookmarkScreenState extends State<BookmarksScreen> {
             ),
           ] else ...[
             IconButton(
-              icon: const Icon(Icons.backspace_outlined),
+              icon: Icon(
+                Icons.backspace_outlined,
+                color: context.appColors.searchBookmarksClearIconColor,
+              ),
               onPressed: () {
                 _searchController.clear();
-                setState(() {
-                  _isSearching = false;
-                  _debounceTimer?.cancel();
-                  context.read<BookmarkBloc>().add(
-                    BookmarkEvent.loadBookmarks(
-                      categoryID: selectedCategoryId ?? 0,
-                    ),
-                  );
-                });
               },
             ),
           ],
@@ -445,6 +448,18 @@ class _BookmarkScreenState extends State<BookmarksScreen> {
             Row(
               children: [
                 TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: context
+                        .appColors
+                        .deleteCategoryConfirmationDialogCancelButtonBackgroundColor,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 10,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
                   onPressed: () {
                     Navigator.pop(dialogContext);
                   },
@@ -461,6 +476,18 @@ class _BookmarkScreenState extends State<BookmarksScreen> {
                 const Spacer(),
 
                 TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: context
+                        .appColors
+                        .deleteCategoryConfirmationDialogCancelButtonBackgroundColor,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 10,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
                   child: Text(
                     'Create',
                     style: TextStyle(
@@ -471,6 +498,15 @@ class _BookmarkScreenState extends State<BookmarksScreen> {
                   ),
                   onPressed: () {
                     final newCatName = controller.text.trim();
+
+                    if (newCatName.isEmpty) {
+                      Navigator.pop(dialogContext);
+                      createSnackBar(
+                        message: "Category Name can't be empty...",
+                        duration: 5,
+                      );
+                      return;
+                    }
 
                     context.read<CategoryBloc>().add(
                       CategoryEvent.create(newCategoryName: newCatName),
@@ -543,6 +579,18 @@ class _BookmarkScreenState extends State<BookmarksScreen> {
             Row(
               children: [
                 TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: context
+                        .appColors
+                        .deleteCategoryConfirmationDialogCancelButtonBackgroundColor,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 10,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
                   onPressed: () {
                     Navigator.pop(dialogContext);
                   },
@@ -559,6 +607,18 @@ class _BookmarkScreenState extends State<BookmarksScreen> {
                 const Spacer(),
 
                 TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: context
+                        .appColors
+                        .deleteCategoryConfirmationDialogCancelButtonBackgroundColor,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 10,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
                   child: Text(
                     "Rename",
                     style: TextStyle(
@@ -570,10 +630,21 @@ class _BookmarkScreenState extends State<BookmarksScreen> {
                   onPressed: () {
                     final newCategoryName = textController.text.trim();
                     if (newCategoryName.isEmpty) {
+                      Navigator.pop(dialogContext);
+                      createSnackBar(
+                        message: "New category name can't be empty...",
+                        duration: 5,
+                      );
                       return;
                     }
 
                     if (currentCategoryName == newCategoryName) {
+                      Navigator.pop(dialogContext);
+                      createSnackBar(
+                        message:
+                            "Old category name and new category name is same...",
+                        duration: 5,
+                      );
                       return;
                     }
 
@@ -740,6 +811,18 @@ class _BookmarkScreenState extends State<BookmarksScreen> {
                 Row(
                   children: [
                     TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: context
+                            .appColors
+                            .deleteCategoryConfirmationDialogCancelButtonBackgroundColor,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 10,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
                       onPressed: () => Navigator.pop(dialogContext),
                       child: Text(
                         'Cancel',
@@ -753,6 +836,18 @@ class _BookmarkScreenState extends State<BookmarksScreen> {
                     const Spacer(),
 
                     TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: context
+                            .appColors
+                            .deleteCategoryConfirmationDialogCancelButtonBackgroundColor,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 10,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
                       onPressed: () {
                         if (controller.text.trim() == verificationCode) {
                           context.read<CategoryBloc>().add(
