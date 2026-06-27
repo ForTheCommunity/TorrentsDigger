@@ -1,13 +1,49 @@
-# Clean Directory.
-c: 
+# Clean
+clean: 
     rm -rf build
     rm -rf repo
     rm -rf builddir
     rm -rf build-dir
     rm -rf .flatpak-builder
     rm -rfv torrents_digger.flatpak
+    -flatpak uninstall io.gitlab.ForTheCommunity.torrentsdigger -y
 
-# Build in Sandboxed Container.
-sb:
+# 1. Flatpak Build [with local tooling]
+build:
     clear
+    just clean
+    flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+    flatpak install flathub org.freedesktop.Sdk//25.08 org.freedesktop.Platform//25.08 org.freedesktop.Sdk.Extension.llvm20/x86_64/25.08 --user -y
+    flatpak-builder --repo=repo --force-clean --sandbox --user build io.gitlab.ForTheCommunity.torrentsdigger.yml
+    flatpak build-bundle repo torrents_digger.flatpak io.gitlab.ForTheCommunity.torrentsdigger
+
+
+
+# 2. Flatpak Install. [Installs built flatpak package]
+install:
+    flatpak install --user ./torrents_digger.flatpak -y
+    
+# Flatpak Run. [Runs Installed Flatpak Package]
+run:
+    flatpak run io.gitlab.ForTheCommunity.torrentsdigger
+
+
+
+
+# 3. Menifest Lint Check...
+lint_check: 
+    flatpak install flathub org.flatpak.Builder
+    flatpak run --command=flatpak-builder-lint org.flatpak.Builder manifest io.gitlab.ForTheCommunity.torrentsdigger.yml
+    flatpak run --command=flatpak-builder-lint org.flatpak.Builder repo repo
+
+
+
+# Build in Sandboxed/Isolated Container and installs it.
+s_build:
+    clear
+    just clean
+    flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+    flatpak install flathub org.freedesktop.Sdk//25.08 org.freedesktop.Platform//25.08 org.freedesktop.Sdk.Extension.llvm20/x86_64/25.08 --user -y
+    flatpak install flathub org.flatpak.Builder --user -y
     flatpak run --command=flathub-build org.flatpak.Builder --install io.gitlab.ForTheCommunity.torrentsdigger.yml
+

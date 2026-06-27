@@ -171,7 +171,7 @@ build_flatpak:
     # Checksum File
     - export FLATPAK_CHECKSUM_FILENAME="Flatpak_sha256_Checksum.txt"
 
-      # Installing flatpak & flatpak-builder.
+    # Installing flatpak & flatpak-builder.
     - apt install flatpak flatpak-builder -y
     # Adding Flathub Repo.
     - flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
@@ -179,6 +179,8 @@ build_flatpak:
     - flatpak install flathub org.freedesktop.Platform//25.08 -y
     # Installing Free Desktop SDK
     - flatpak install flathub org.freedesktop.Sdk//25.08 -y
+    # Installing Rust Stable Latest
+    - flatpak install org.freedesktop.Sdk.Extension.rust-stable//25.08 -y
     # Installing Free Desktop LLVM.
     - flatpak install flathub org.freedesktop.Sdk.Extension.llvm20//25.08 -y
     - cd flatpak
