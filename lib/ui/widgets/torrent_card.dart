@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:torrents_digger/blocs/bookmark_blocs/bookmark_bloc/bookmark_bloc.dart';
 import 'package:torrents_digger/blocs/bookmark_blocs/category_bloc/category_bloc.dart';
+import 'package:torrents_digger/blocs/bookmark_blocs/tags_bloc/tags_bloc.dart';
 import 'package:torrents_digger/blocs/default_trackers_bloc/default_trackers_bloc.dart';
 import 'package:torrents_digger/configs/extensions.dart';
 import 'package:torrents_digger/database/bookmarks.dart';
@@ -132,25 +133,45 @@ class TorrentCard extends StatelessWidget {
                       },
                     );
 
-                    return IconButton(
-                      icon: Icon(
-                        isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-                        color: isBookmarked
-                            ? context.appColors.bookmarkedIconColor
-                            : context.appColors.bookmarkIconColor,
-                        size: 24,
-                      ),
-                      onPressed: () {
-                        if (isBookmarked) {
-                          _bookmarkOptionsDialog(context);
-                        } else {
-                          _categoryPickerDialog(
-                            context,
-                            isBookmarked: isBookmarked,
-                            categoryID: null,
-                          );
-                        }
-                      },
+                    return Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            isBookmarked
+                                ? Icons.bookmark
+                                : Icons.bookmark_border,
+                            color: isBookmarked
+                                ? context.appColors.bookmarkedIconColor
+                                : context.appColors.bookmarkIconColor,
+                            size: 24,
+                          ),
+                          onPressed: () {
+                            if (isBookmarked) {
+                              _bookmarkOptionsDialog(context);
+                            } else {
+                              _categoryPickerDialog(
+                                context,
+                                isBookmarked: isBookmarked,
+                                categoryID: null,
+                              );
+                            }
+                          },
+                        ),
+
+                        if (isBookmarked)
+                          IconButton(
+                            icon: Icon(
+                              Icons.new_label_outlined,
+                              color: context.appColors.addTagIconColor,
+                            ),
+                            onPressed: () {
+                              _tagPickerDialog(
+                                context,
+                                infoHash: torrent.infoHash,
+                              );
+                            },
+                          ),
+                      ],
                     );
                   },
                 ),
@@ -240,7 +261,10 @@ class TorrentCard extends StatelessWidget {
         return BlocBuilder<CategoryBloc, CategoryState>(
           builder: (context, state) {
             final categories = state.whenOrNull(
-              loaded: (categoriesList) => categoriesList,
+              loaded: (categoriesList) => categoriesList
+                  // removing All Category
+                  .where((c) => c.id != 65535)
+                  .toList(),
             );
 
             return AlertDialog(
@@ -354,6 +378,143 @@ class TorrentCard extends StatelessWidget {
     );
   }
 
+  // tag picker dialog
+  void _tagPickerDialog(
+    BuildContext context, {
+    required String infoHash,
+  }) async {
+    final List<InternalBookmarkTag> allTags = await getAllTags();
+    final List<int> assignedTagIds = await getAllTagsOfaTorrent(
+      infoHash: infoHash,
+    );
+
+    if (!context.mounted) return;
+
+    final Set<int> selectedTagIds = assignedTagIds.toSet();
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              backgroundColor: context.appColors.tagPickerDialogBackgroundColor,
+              title: Text(
+                'Manage Tags',
+                style: TextStyle(
+                  color: context.appColors.tagPickerDialogTitleColor,
+                ),
+              ),
+              content: allTags.isEmpty
+                  ? Text(
+                      'No tags found. Create tags from the Bookmarks screen.',
+                      style: TextStyle(
+                        color: context.appColors.tagPickerDialogTextColor,
+                      ),
+                    )
+                  : SizedBox(
+                      width: double.minPositive,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: allTags.length,
+                        itemBuilder: (context, index) {
+                          final tag = allTags[index];
+                          final bool isSelected = selectedTagIds.contains(
+                            tag.id,
+                          );
+                          return CheckboxListTile(
+                            title: Text(
+                              tag.name,
+                              style: TextStyle(
+                                color:
+                                    context.appColors.tagPickerDialogTextColor,
+                              ),
+                            ),
+                            value: isSelected,
+                            onChanged: (checked) {
+                              setDialogState(() {
+                                if (checked == true) {
+                                  selectedTagIds.add(tag.id);
+                                } else {
+                                  selectedTagIds.remove(tag.id);
+                                }
+                              });
+                            },
+                          );
+                        },
+                      ),
+                    ),
+              actions: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: context
+                            .appColors
+                            .tagPickerDialogCloseButtonBackgroundColor,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 10,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      onPressed: () => Navigator.pop(dialogContext),
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(
+                          color: context
+                              .appColors
+                              .tagPickerDialogCloseButtonTextColor,
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(width: 12),
+
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: context
+                            .appColors
+                            .tagPickerDialogDoneButtonBackgroundColor,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 10,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      onPressed: () {
+                        context.read<TagsBloc>().add(
+                          TagsEvent.updateTags(
+                            infoHash: infoHash,
+                            selectedTagIds: selectedTagIds.toList(),
+                          ),
+                        );
+                        Navigator.pop(dialogContext);
+                      },
+                      child: Text(
+                        'Done',
+                        style: TextStyle(
+                          color: context
+                              .appColors
+                              .tagPickerDialogDoneButtonTextColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   // Bookmark Options Dialog
   void _bookmarkOptionsDialog(BuildContext context) {
     showDialog(
@@ -383,7 +544,7 @@ class TorrentCard extends StatelessWidget {
                   ),
                 ),
                 onTap: () async {
-                  var catID = await getCategoryID(torrent.infoHash);
+                  var catID = await getCategoryID(infoHash: torrent.infoHash);
 
                   if (!dialogContext.mounted) return;
 

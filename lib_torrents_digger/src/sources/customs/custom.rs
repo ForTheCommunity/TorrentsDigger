@@ -3,11 +3,11 @@ use core::fmt;
 use anyhow::Result;
 
 use crate::{
+    network_io::sync_request::{fetch_torrents, send_request},
     sources::{
         Pagination, available_sources::AllAvailableSources, the_pirate_bay::ThePirateBayCategories,
         uindex::UindexCategories,
     },
-    network_io::sync_request::{fetch_torrents, send_request},
     torrent::Torrent,
 };
 

@@ -2,14 +2,18 @@
 f_w:
     # clear; dart run build_runner watch -d
     clear; \
+    RED='\033[0;31m'; \
+    YELLOW='\033[1;33m'; \
+    ROSE='\033[1;35m'; \
+    NC='\033[0m'; \
+    printf "${ROSE}_____Executing Build Runner_____\\n${NC}"; \
     while true; do \
     dart run build_runner watch -d; \
     if [ $? -ne 0 ]; then \
-    echo "_____Dart Build Runner Failed_____"; \
-    echo "_____ReExecuting Build Runner_____"; \
+    printf "${RED}_____Dart Build Runner Failed_____\\n${NC}"; \
+    printf "${ROSE}_____ReExecuting Build Runner_____\\n${NC}"; \
     else \
-    echo "_____Dart Build Runner is Running_____"; \
-    break; \
+    printf "${YELLOW}_____Dart Build Runner is Running_____\\n${NC}"; \    break; \
     fi; \
     done
 

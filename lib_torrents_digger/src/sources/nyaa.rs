@@ -225,7 +225,7 @@ impl NyaaCategories {
             let magnet = if torrent_data.len() > 1 {
                 torrent_data[1].attr("href").unwrap_or_default().to_string()
             } else {
-             continue;
+                continue;
             };
 
             // extracting info hash from magnet

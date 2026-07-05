@@ -4,7 +4,7 @@ use rusqlite::{ErrorCode, params};
 
 use crate::{database::database_config::get_a_database_connection, torrent::Torrent};
 
-pub fn create_a_bookmark(torrent: Torrent, category_id: u8) -> Result<usize, rusqlite::Error> {
+pub fn create_a_bookmark(torrent: Torrent, category_id: u16) -> Result<usize, rusqlite::Error> {
     let db_conn = get_a_database_connection();
 
     db_conn.execute(
@@ -36,37 +36,80 @@ pub fn create_a_bookmark(torrent: Torrent, category_id: u8) -> Result<usize, rus
 }
 
 pub fn fetch_bookmarks(
-    category_id: u8,
+    category_id: u16,
+    tag_id: u16,
     limit: u32,
     offset: u32,
 ) -> Result<Vec<Torrent>, rusqlite::Error> {
     let db_conn = get_a_database_connection();
 
-    let mut sql_statement = db_conn.prepare(
-        "
-        SELECT * FROM bookmarked_torrents WHERE category_id = ?1
+    let query = match (category_id, tag_id) {
+        // all categories, all tags — only limit(?1) offset(?2)
+        (65535, 65535) => "
+        SELECT * FROM bookmarked_torrents
+        LIMIT ?1 OFFSET ?2
+    "
+        .to_string(),
+        // all categories, specific tag — tag_id(?1), limit(?2), offset(?3)
+        (65535, _) => "
+        SELECT b.* FROM bookmarked_torrents b
+        INNER JOIN torrent_tags tt ON b.info_hash = tt.info_hash
+        WHERE tt.tag_id = ?1
         LIMIT ?2 OFFSET ?3
-    ",
-    )?;
+    "
+        .to_string(),
+        // specific category, all tags — category_id(?1), limit(?2), offset(?3)
+        (_, 65535) => "
+        SELECT * FROM bookmarked_torrents
+        WHERE category_id = ?1
+        LIMIT ?2 OFFSET ?3
+    "
+        .to_string(),
+        // specific category, specific tag — category_id(?1), tag_id(?2), limit(?3), offset(?4)
+        (_, _) => "
+        SELECT b.* FROM bookmarked_torrents b
+        INNER JOIN torrent_tags tt ON b.info_hash = tt.info_hash
+        WHERE b.category_id = ?1 AND tt.tag_id = ?2
+        LIMIT ?3 OFFSET ?4
+    "
+        .to_string(),
+    };
 
-    let torrents_iter = sql_statement.query_map([category_id as u32, limit, offset], |a_row| {
+    let mut stmt = db_conn.prepare(&query)?;
+
+    let map_row = |row: &rusqlite::Row| {
         Ok(Torrent {
-            info_hash: a_row.get(0)?,
-            name: a_row.get(1)?,
-            magnet: a_row.get(2)?,
-            size: a_row.get(3)?,
-            date: a_row.get(4)?,
-            seeders: a_row.get(5)?,
-            leechers: a_row.get(6)?,
-            total_downloads: a_row.get(7)?,
-            source_url: a_row.get(8)?,
+            info_hash: row.get(0)?,
+            name: row.get(1)?,
+            magnet: row.get(2)?,
+            size: row.get(3)?,
+            date: row.get(4)?,
+            seeders: row.get(5)?,
+            leechers: row.get(6)?,
+            total_downloads: row.get(7)?,
+            source_url: row.get(8)?,
         })
-    })?;
+    };
 
-    let all_bookmarked_torrents: Vec<Torrent> =
-        torrents_iter.collect::<Result<Vec<Torrent>, _>>()?;
+    let torrents = match (category_id, tag_id) {
+        (65535, 65535) => stmt
+            .query_map((limit, offset), map_row)?
+            .collect::<Result<Vec<Torrent>, _>>()?,
 
-    Ok(all_bookmarked_torrents)
+        (65535, _) => stmt
+            .query_map((tag_id, limit, offset), map_row)?
+            .collect::<Result<Vec<Torrent>, _>>()?,
+
+        (_, 65535) => stmt
+            .query_map((category_id, limit, offset), map_row)?
+            .collect::<Result<Vec<Torrent>, _>>()?,
+
+        (_, _) => stmt
+            .query_map((category_id, tag_id, limit, offset), map_row)?
+            .collect::<Result<Vec<Torrent>, _>>()?,
+    };
+
+    Ok(torrents)
 }
 
 pub fn fetch_all_info_hashes() -> Result<HashSet<String>, rusqlite::Error> {
@@ -163,7 +206,7 @@ impl BookmarkCategory {
     }
 
     pub fn rename(
-        category_id: u8,
+        category_id: u16,
         old_category_name: String,
         new_category_name: String,
     ) -> Result<(), rusqlite::Error> {
@@ -179,7 +222,7 @@ impl BookmarkCategory {
         Ok(())
     }
 
-    pub fn delete(category_id: u8) -> Result<(), rusqlite::Error> {
+    pub fn delete(category_id: u16) -> Result<(), rusqlite::Error> {
         let mut db_conn = get_a_database_connection();
 
         // starting a db transaction for safe deletion of
@@ -224,7 +267,7 @@ impl BookmarkCategory {
         Ok(categories)
     }
 
-    pub fn move_category(info_hash: String, category_id: u8) -> Result<(), rusqlite::Error> {
+    pub fn move_category(info_hash: String, category_id: u16) -> Result<(), rusqlite::Error> {
         let db_conn = get_a_database_connection();
 
         db_conn.execute(
@@ -252,6 +295,152 @@ impl BookmarkCategory {
             Some(row) => Ok(Some(row.get(0)?)),
             None => Ok(None),
         }
+    }
+}
+
+pub struct BookmarkTag {
+    pub id: u16,
+    pub name: String,
+}
+
+impl BookmarkTag {
+    pub fn create(name: &str) -> Result<(), String> {
+        let db_conn = get_a_database_connection();
+
+        let result = db_conn.execute(
+            "
+            INSERT INTO bookmark_tags (name) VALUES (?1) 
+            ",
+            [name],
+        );
+
+        // errors handling
+        if let Err(err) = result {
+            return match err {
+                rusqlite::Error::SqliteFailure(sqlite_err, _) => {
+                    if sqlite_err.code == ErrorCode::ConstraintViolation {
+                        Err(format!("Looks Like Tag '{}' Already Exists", name))
+                    } else {
+                        Err(format!("Database error: {}", sqlite_err))
+                    }
+                }
+                _ => Err(format!("An unexpected database error occurred: {}", err)),
+            };
+        };
+
+        Ok(())
+    }
+
+    pub fn rename(
+        tag_id: u16,
+        old_tag_name: &str,
+        new_tag_name: &str,
+    ) -> Result<(), rusqlite::Error> {
+        let db_conn = get_a_database_connection();
+
+        db_conn.execute(
+            "
+            UPDATE bookmark_tags SET name = ?1 WHERE id = ?2 AND name = ?3
+            ",
+            (new_tag_name, tag_id, old_tag_name),
+        )?;
+
+        Ok(())
+    }
+
+    pub fn delete(tag_id: u16) -> Result<(), rusqlite::Error> {
+        let db_conn = get_a_database_connection();
+
+        db_conn.execute("DELETE FROM bookmark_tags WHERE id = ?1", [tag_id])?;
+        Ok(())
+    }
+
+    pub fn add_tag(info_hash: &str, tag_id: u16) -> Result<(), rusqlite::Error> {
+        let db_conn = get_a_database_connection();
+
+        db_conn.execute(
+            "
+        INSERT OR IGNORE INTO torrent_tags (info_hash, tag_id) VALUES (?1, ?2)",
+            (info_hash, tag_id),
+        )?;
+
+        Ok(())
+    }
+
+    pub fn remove_tag(info_hash: &str, tag_id: u16) -> Result<(), rusqlite::Error> {
+        let db_conn = get_a_database_connection();
+
+        db_conn.execute(
+            "
+            DELETE FROM torrent_tags WHERE info_hash = ?1 AND tag_id = ?2
+            ",
+            (info_hash, tag_id),
+        )?;
+
+        Ok(())
+    }
+
+    pub fn get_tags_of_torrent(info_hash: &str) -> Result<Vec<u16>, rusqlite::Error> {
+        let db_conn = get_a_database_connection();
+
+        let mut sql_statement = db_conn.prepare(
+            "
+        SELECT tag_id FROM torrent_tags WHERE info_hash = ?1 
+        ",
+        )?;
+
+        let tag_ids = sql_statement
+            .query_map([info_hash], |row| row.get(0))?
+            .collect::<Result<Vec<u16>, _>>()?;
+
+        Ok(tag_ids)
+    }
+
+    pub fn update_torrent_tags(info_hash: &str, tag_ids: Vec<u16>) -> Result<(), rusqlite::Error> {
+        let db_conn = get_a_database_connection();
+
+        // deleting all existing tags assignments for this torrent
+        db_conn.execute(
+            "
+    DELETE FROM torrent_tags WHERE info_hash = ?1
+    ",
+            [info_hash],
+        )?;
+
+        // inserting new tag sets..
+        for tag_id in tag_ids {
+            db_conn.execute(
+                "
+        INSERT INTO torrent_tags (info_hash, tag_id) VALUES (?1, ?2)
+        ",
+                (info_hash, tag_id),
+            )?;
+        }
+
+        Ok(())
+    }
+
+    pub fn get() -> Result<Vec<Self>, rusqlite::Error> {
+        let db_conn = get_a_database_connection();
+
+        let mut sql_statement = db_conn.prepare(
+            "
+        SELECT id, name FROM bookmark_tags
+            ",
+        )?;
+
+        let tags_iter = sql_statement.query_map([], |row| {
+            Ok(BookmarkTag {
+                id: row.get(0)?,
+                name: row.get(1)?,
+            })
+        })?;
+
+        let mut tags: Vec<Self> = Vec::new();
+        for tag in tags_iter {
+            tags.push(tag?);
+        }
+        Ok(tags)
     }
 }
 

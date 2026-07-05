@@ -8,7 +8,9 @@ use scraper::{Html, Selector};
 use ureq::{Body, http::Response};
 
 use crate::{
-    prepare_info_hash, sources::{Pagination, QueryOptions}, torrent::Torrent
+    prepare_info_hash,
+    sources::{Pagination, QueryOptions},
+    torrent::Torrent,
 };
 
 #[derive(Debug)]

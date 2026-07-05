@@ -5,6 +5,7 @@ class BookmarkEvent with _$BookmarkEvent {
   const factory BookmarkEvent.started() = _Started;
   const factory BookmarkEvent.loadBookmarks({
     required int categoryID,
+    @Default(0) int tagID,
     @Default(10) int limit,
     @Default(0) int offset,
   }) = _LoadBookmarks;

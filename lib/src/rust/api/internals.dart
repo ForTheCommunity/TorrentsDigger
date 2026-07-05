@@ -24,6 +24,24 @@ class InternalBookmarkCategory {
           name == other.name;
 }
 
+class InternalBookmarkTag {
+  final int id;
+  final String name;
+
+  const InternalBookmarkTag({required this.id, required this.name});
+
+  @override
+  int get hashCode => id.hashCode ^ name.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is InternalBookmarkTag &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          name == other.name;
+}
+
 class InternalBookmarksStats {
   final List<InternalCategoryStats> categoriesStats;
   final InternalGlobalStats globalStats;

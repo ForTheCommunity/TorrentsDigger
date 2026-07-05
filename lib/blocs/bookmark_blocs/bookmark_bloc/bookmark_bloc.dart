@@ -11,6 +11,7 @@ part 'bookmark_bloc.freezed.dart';
 
 class BookmarkBloc extends Bloc<BookmarkEvent, BookmarkState> {
   int currentCategoryId = 0;
+  int currentTagId = 0;
   static const int _defaultLimit = 10;
 
   BookmarkBloc() : super(_Initial()) {
@@ -28,10 +29,12 @@ class BookmarkBloc extends Bloc<BookmarkEvent, BookmarkState> {
   ) async {
     try {
       currentCategoryId = event.categoryID;
+      currentTagId = event.tagID;
 
       emit(BookmarkState.loading());
       List<InternalTorrent> torrents = await getBookmarks(
         categoryId: event.categoryID,
+        tagId: event.tagID,
         limit: _defaultLimit,
         offset: 0,
       );
@@ -54,7 +57,12 @@ class BookmarkBloc extends Bloc<BookmarkEvent, BookmarkState> {
     try {
       await torrentBookmark(event.torrent, event.categoryID);
       // Reloading bookmarks to reflect the change
-      add(BookmarkEvent.loadBookmarks(categoryID: 0));
+      add(
+        BookmarkEvent.loadBookmarks(
+          categoryID: currentCategoryId,
+          tagID: currentTagId,
+        ),
+      );
     } catch (e) {
       createSnackBar(message: "Error : ${e.toString()}", duration: 5);
     }
@@ -65,9 +73,14 @@ class BookmarkBloc extends Bloc<BookmarkEvent, BookmarkState> {
     Emitter<BookmarkState> emit,
   ) async {
     try {
-      await removeABookmark(event.infoHash);
+      await removeABookmark(infoHash: event.infoHash);
       // Reloading bookmarks to reflect the change
-      add(BookmarkEvent.loadBookmarks(categoryID: 0));
+      add(
+        BookmarkEvent.loadBookmarks(
+          categoryID: currentCategoryId,
+          tagID: currentTagId,
+        ),
+      );
     } catch (e) {
       createSnackBar(message: "Error : ${e.toString()}", duration: 5);
     }
@@ -86,6 +99,7 @@ class BookmarkBloc extends Bloc<BookmarkEvent, BookmarkState> {
       add(
         BookmarkEvent.loadBookmarks(
           categoryID: event.currenltyViewingCategoryID,
+          tagID: currentTagId,
         ),
       );
     } catch (e) {
@@ -103,6 +117,7 @@ class BookmarkBloc extends Bloc<BookmarkEvent, BookmarkState> {
     try {
       final newTorrents = await getBookmarks(
         categoryId: currentCategoryId,
+        tagId: currentTagId,
         limit: _defaultLimit,
         offset: currentState.currentOffset,
       );

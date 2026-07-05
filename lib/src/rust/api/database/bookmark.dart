@@ -20,10 +20,12 @@ Future<bool> removeBookmark({required String infoHash}) => RustLib.instance.api
 
 Future<List<InternalTorrent>> getBookmarks({
   required int categoryId,
+  required int tagId,
   required int limit,
   required int offset,
 }) => RustLib.instance.api.crateApiDatabaseBookmarkGetBookmarks(
   categoryId: categoryId,
+  tagId: tagId,
   limit: limit,
   offset: offset,
 );
@@ -69,3 +71,43 @@ Future<int?> getCategoryIdFromIH({required String infoHash}) => RustLib
     .instance
     .api
     .crateApiDatabaseBookmarkGetCategoryIdFromIH(infoHash: infoHash);
+
+Future<List<InternalBookmarkTag>> getBookmarksTags() =>
+    RustLib.instance.api.crateApiDatabaseBookmarkGetBookmarksTags();
+
+Future<void> createBookmarksTag({required String tagName}) => RustLib
+    .instance
+    .api
+    .crateApiDatabaseBookmarkCreateBookmarksTag(tagName: tagName);
+
+Future<void> renameBookmarksTag({
+  required int tagId,
+  required String oldTagName,
+  required String newTagName,
+}) => RustLib.instance.api.crateApiDatabaseBookmarkRenameBookmarksTag(
+  tagId: tagId,
+  oldTagName: oldTagName,
+  newTagName: newTagName,
+);
+
+Future<void> deleteBookmarksTag({required int tagId}) => RustLib.instance.api
+    .crateApiDatabaseBookmarkDeleteBookmarksTag(tagId: tagId);
+
+Future<void> removeTag({required String infoHash, required int tagId}) =>
+    RustLib.instance.api.crateApiDatabaseBookmarkRemoveTag(
+      infoHash: infoHash,
+      tagId: tagId,
+    );
+
+Future<Uint16List> getTagsOfTorrent({required String infoHash}) => RustLib
+    .instance
+    .api
+    .crateApiDatabaseBookmarkGetTagsOfTorrent(infoHash: infoHash);
+
+Future<void> updateTorrentTags({
+  required String infoHash,
+  required List<int> tagIds,
+}) => RustLib.instance.api.crateApiDatabaseBookmarkUpdateTorrentTags(
+  infoHash: infoHash,
+  tagIds: tagIds,
+);

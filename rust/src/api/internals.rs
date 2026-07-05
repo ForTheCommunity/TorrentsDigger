@@ -88,3 +88,8 @@ pub struct InternalBookmarksStats {
     pub categories_stats: Vec<InternalCategoryStats>,
     pub global_stats: InternalGlobalStats,
 }
+
+pub struct InternalBookmarkTag {
+    pub id: u16,
+    pub name: String,
+}

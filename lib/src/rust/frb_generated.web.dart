@@ -65,6 +65,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   InternalBookmarkCategory dco_decode_internal_bookmark_category(dynamic raw);
 
   @protected
+  InternalBookmarkTag dco_decode_internal_bookmark_tag(dynamic raw);
+
+  @protected
   InternalBookmarksStats dco_decode_internal_bookmarks_stats(dynamic raw);
 
   @protected
@@ -108,6 +111,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  List<InternalBookmarkTag> dco_decode_list_internal_bookmark_tag(dynamic raw);
+
+  @protected
   List<InternalCategoryStats> dco_decode_list_internal_category_stats(
     dynamic raw,
   );
@@ -124,6 +130,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<InternalTorrent> dco_decode_list_internal_torrent(dynamic raw);
+
+  @protected
+  List<int> dco_decode_list_prim_u_16_loose(dynamic raw);
+
+  @protected
+  Uint16List dco_decode_list_prim_u_16_strict(dynamic raw);
 
   @protected
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
@@ -228,6 +240,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  InternalBookmarkTag sse_decode_internal_bookmark_tag(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   InternalBookmarksStats sse_decode_internal_bookmarks_stats(
     SseDeserializer deserializer,
   );
@@ -285,6 +302,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  List<InternalBookmarkTag> sse_decode_list_internal_bookmark_tag(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   List<InternalCategoryStats> sse_decode_list_internal_category_stats(
     SseDeserializer deserializer,
   );
@@ -307,6 +329,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<InternalTorrent> sse_decode_list_internal_torrent(
     SseDeserializer deserializer,
   );
+
+  @protected
+  List<int> sse_decode_list_prim_u_16_loose(SseDeserializer deserializer);
+
+  @protected
+  Uint16List sse_decode_list_prim_u_16_strict(SseDeserializer deserializer);
 
   @protected
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
@@ -430,6 +458,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_internal_bookmark_tag(
+    InternalBookmarkTag self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_internal_bookmarks_stats(
     InternalBookmarksStats self,
     SseSerializer serializer,
@@ -502,6 +536,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_list_internal_bookmark_tag(
+    List<InternalBookmarkTag> self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_list_internal_category_stats(
     List<InternalCategoryStats> self,
     SseSerializer serializer,
@@ -528,6 +568,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_list_internal_torrent(
     List<InternalTorrent> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_list_prim_u_16_loose(
+    List<int> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_list_prim_u_16_strict(
+    Uint16List self,
     SseSerializer serializer,
   );
 

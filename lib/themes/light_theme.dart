@@ -359,8 +359,32 @@ class LightTheme extends AppTheme {
   Color get searchBookmarksPlaceholderTextColor =>
       const Color.fromARGB(255, 255, 255, 255);
   @override
-  Color get searchBookmarksIconColor => const Color.fromARGB(255, 249, 224, 255);
+  Color get searchBookmarksIconColor =>
+      const Color.fromARGB(255, 249, 224, 255);
   @override
   Color get searchBookmarksClearIconColor =>
       const Color.fromARGB(255, 126, 246, 255);
+
+  @override
+  Color get addTagIconColor => const Color.fromARGB(255, 0, 47, 255);
+  @override
+  Color get tagPickerDialogBackgroundColor => Color.fromRGBO(15, 15, 15, 0.941);
+  @override
+  Color get tagPickerDialogTitleColor =>
+      const Color.fromARGB(255, 255, 255, 255);
+  @override
+  Color get tagPickerDialogTextColor =>
+      const Color.fromARGB(255, 255, 255, 255);
+  @override
+  Color get tagPickerDialogCloseButtonBackgroundColor =>
+      const Color.fromARGB(255, 0, 0, 0);
+  @override
+  Color get tagPickerDialogCloseButtonTextColor =>
+      const Color.fromARGB(255, 79, 167, 255);
+  @override
+  Color get tagPickerDialogDoneButtonBackgroundColor =>
+      const Color.fromARGB(255, 0, 0, 0);
+  @override
+  Color get tagPickerDialogDoneButtonTextColor =>
+      const Color.fromARGB(255, 0, 229, 255);
 }

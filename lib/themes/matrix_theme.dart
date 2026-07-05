@@ -16,7 +16,8 @@ class MatrixTheme extends AppTheme {
   @override
   Color get appBarTextColor => Color.fromRGBO(0, 255, 0, 1);
   @override
-  Color get appBarBackButtonIconColor => const Color.fromARGB(255, 218, 208, 208);
+  Color get appBarBackButtonIconColor =>
+      const Color.fromARGB(255, 218, 208, 208);
   @override
   Color get scrollbarColor => const Color.fromARGB(255, 17, 255, 0);
 
@@ -363,4 +364,26 @@ class MatrixTheme extends AppTheme {
   @override
   Color get searchBookmarksClearIconColor =>
       const Color.fromARGB(255, 117, 255, 133);
+
+
+@override
+  Color get addTagIconColor => const Color.fromARGB(255, 0, 255, 47) ;
+  @override
+  Color get tagPickerDialogBackgroundColor => const Color.fromARGB(255, 0, 0, 0);
+  @override
+  Color get tagPickerDialogTitleColor => const Color.fromARGB(255, 17, 255, 0);
+  @override
+  Color get tagPickerDialogTextColor => const Color.fromARGB(255, 0, 255, 4);
+  @override
+  Color get tagPickerDialogCloseButtonBackgroundColor =>
+      const Color.fromARGB(255, 0, 0, 0);
+  @override
+  Color get tagPickerDialogCloseButtonTextColor =>
+      const Color.fromARGB(255, 189, 181, 181);
+  @override
+  Color get tagPickerDialogDoneButtonBackgroundColor =>
+      const Color.fromARGB(255, 0, 0, 0);
+  @override
+  Color get tagPickerDialogDoneButtonTextColor =>
+      const Color.fromARGB(255, 85, 255, 0);
 }

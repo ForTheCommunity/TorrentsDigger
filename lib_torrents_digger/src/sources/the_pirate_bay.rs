@@ -5,9 +5,9 @@ use scraper::{ElementRef, Html, Selector};
 use ureq::{Body, http::Response};
 
 use crate::{
+    network_io::sync_request::send_request,
     prepare_info_hash,
     sources::{Pagination, QueryOptions},
-    network_io::sync_request::send_request,
     torrent::Torrent,
 };
 

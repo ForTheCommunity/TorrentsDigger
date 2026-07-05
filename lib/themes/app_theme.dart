@@ -167,4 +167,13 @@ abstract class AppTheme {
   Color get searchBookmarksPlaceholderTextColor;
   Color get searchBookmarksIconColor;
   Color get searchBookmarksClearIconColor;
+
+  Color get addTagIconColor;
+  Color get tagPickerDialogBackgroundColor;
+  Color get tagPickerDialogTitleColor;
+  Color get tagPickerDialogTextColor;
+  Color get tagPickerDialogCloseButtonBackgroundColor;
+  Color get tagPickerDialogCloseButtonTextColor;
+  Color get tagPickerDialogDoneButtonBackgroundColor;
+  Color get tagPickerDialogDoneButtonTextColor;
 }

@@ -9,6 +9,8 @@ part 'category_state.dart';
 part 'category_bloc.freezed.dart';
 
 class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
+  static const int _allCategoriesId = 65535;
+
   CategoryBloc() : super(_Initial()) {
     on<_LoadCategories>(_loadCategories);
     on<_CreateCategory>(_createCategory);
@@ -24,6 +26,11 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
 
     try {
       List<InternalBookmarkCategory> categories = await getCategories();
+      // appending 'All' Category
+      categories.insert(
+        0,
+        InternalBookmarkCategory(id: _allCategoriesId, name: "All"),
+      );
       emit(CategoryState.loaded(categories: categories));
     } catch (e) {
       createSnackBar(message: "Error : ${e.toString()}", duration: 10);
@@ -41,6 +48,11 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
         duration: 1,
       );
       final categories = await getCategories();
+      // appending 'All' Category
+      categories.insert(
+        0,
+        InternalBookmarkCategory(id: _allCategoriesId, name: "All"),
+      );
       emit(CategoryState.loaded(categories: categories));
     } catch (e) {
       createSnackBar(message: "Error : ${e.toString()}", duration: 5);
@@ -63,6 +75,11 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
         duration: 2,
       );
       final categories = await getCategories();
+      // appending 'All' Category
+      categories.insert(
+        0,
+        InternalBookmarkCategory(id: _allCategoriesId, name: "All"),
+      );
       emit(CategoryState.loaded(categories: categories));
     } catch (e) {
       createSnackBar(message: "Error : ${e.toString()}", duration: 5);
@@ -77,6 +94,11 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       await deleteBookmarkCategory(categoryId: event.categoryID);
       createSnackBar(message: "Category Deleted...", duration: 1);
       final categories = await getCategories();
+      // appending 'All' Category
+      categories.insert(
+        0,
+        InternalBookmarkCategory(id: _allCategoriesId, name: "All"),
+      );
       emit(CategoryState.loaded(categories: categories));
     } catch (e) {
       createSnackBar(message: "Error : ${e.toString()}", duration: 5);
