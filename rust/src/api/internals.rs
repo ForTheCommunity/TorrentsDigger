@@ -86,7 +86,14 @@ pub struct InternalGlobalStats {
 
 pub struct InternalBookmarksStats {
     pub categories_stats: Vec<InternalCategoryStats>,
+        pub tags_stats: Vec<InternalTagStats>,
     pub global_stats: InternalGlobalStats,
+}
+
+pub struct InternalTagStats {
+    pub tag: InternalBookmarkTag,
+    pub tag_total_count: u16,
+    pub tag_total_size: String,
 }
 
 pub struct InternalBookmarkTag {

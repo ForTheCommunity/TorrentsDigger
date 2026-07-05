@@ -1727,11 +1727,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   InternalBookmarksStats dco_decode_internal_bookmarks_stats(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 2)
-      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
     return InternalBookmarksStats(
       categoriesStats: dco_decode_list_internal_category_stats(arr[0]),
-      globalStats: dco_decode_internal_global_stats(arr[1]),
+      tagsStats: dco_decode_list_internal_tag_stats(arr[1]),
+      globalStats: dco_decode_internal_global_stats(arr[2]),
     );
   }
 
@@ -1859,6 +1860,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  InternalTagStats dco_decode_internal_tag_stats(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return InternalTagStats(
+      tag: dco_decode_internal_bookmark_tag(arr[0]),
+      tagTotalCount: dco_decode_u_16(arr[1]),
+      tagTotalSize: dco_decode_String(arr[2]),
+    );
+  }
+
+  @protected
   InternalTorrent dco_decode_internal_torrent(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -1930,6 +1944,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   List<InternalSource> dco_decode_list_internal_source(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>).map(dco_decode_internal_source).toList();
+  }
+
+  @protected
+  List<InternalTagStats> dco_decode_list_internal_tag_stats(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_internal_tag_stats).toList();
   }
 
   @protected
@@ -2187,9 +2207,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_categoriesStats = sse_decode_list_internal_category_stats(
       deserializer,
     );
+    var var_tagsStats = sse_decode_list_internal_tag_stats(deserializer);
     var var_globalStats = sse_decode_internal_global_stats(deserializer);
     return InternalBookmarksStats(
       categoriesStats: var_categoriesStats,
+      tagsStats: var_tagsStats,
       globalStats: var_globalStats,
     );
   }
@@ -2331,6 +2353,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  InternalTagStats sse_decode_internal_tag_stats(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_tag = sse_decode_internal_bookmark_tag(deserializer);
+    var var_tagTotalCount = sse_decode_u_16(deserializer);
+    var var_tagTotalSize = sse_decode_String(deserializer);
+    return InternalTagStats(
+      tag: var_tag,
+      tagTotalCount: var_tagTotalCount,
+      tagTotalSize: var_tagTotalSize,
+    );
+  }
+
+  @protected
   InternalTorrent sse_decode_internal_torrent(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_infoHash = sse_decode_String(deserializer);
@@ -2446,6 +2481,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var ans_ = <InternalSource>[];
     for (var idx_ = 0; idx_ < len_; ++idx_) {
       ans_.add(sse_decode_internal_source(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<InternalTagStats> sse_decode_list_internal_tag_stats(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <InternalTagStats>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_internal_tag_stats(deserializer));
     }
     return ans_;
   }
@@ -2766,6 +2815,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_list_internal_category_stats(self.categoriesStats, serializer);
+    sse_encode_list_internal_tag_stats(self.tagsStats, serializer);
     sse_encode_internal_global_stats(self.globalStats, serializer);
   }
 
@@ -2870,6 +2920,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_internal_tag_stats(
+    InternalTagStats self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_internal_bookmark_tag(self.tag, serializer);
+    sse_encode_u_16(self.tagTotalCount, serializer);
+    sse_encode_String(self.tagTotalSize, serializer);
+  }
+
+  @protected
   void sse_encode_internal_torrent(
     InternalTorrent self,
     SseSerializer serializer,
@@ -2964,6 +3025,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_i_32(self.length, serializer);
     for (final item in self) {
       sse_encode_internal_source(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_internal_tag_stats(
+    List<InternalTagStats> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_internal_tag_stats(item, serializer);
     }
   }
 

@@ -1,4 +1,7 @@
-use crate::api::preludes::*;
+use crate::api::{
+    internals::{InternalBookmarkTag, InternalTagStats},
+    preludes::*,
+};
 
 pub fn fetch_source_details() -> Vec<InternalSource> {
     let external_sources_vec: Vec<ExternalSource> = get_source_details();
@@ -204,8 +207,22 @@ pub fn get_bookmarks_stats() -> Result<InternalBookmarksStats, String> {
                 });
             }
 
+            let mut internal_tag_stats: Vec<InternalTagStats> = vec![];
+
+            for a_tag_stats in a.tags_stats {
+                internal_tag_stats.push(InternalTagStats {
+                    tag: InternalBookmarkTag {
+                        id: a_tag_stats.tag.id,
+                        name: a_tag_stats.tag.name,
+                    },
+                    tag_total_count: a_tag_stats.tag_total_count,
+                    tag_total_size: a_tag_stats.tag_total_size,
+                });
+            }
+
             Ok(InternalBookmarksStats {
                 categories_stats: internal_category_stats,
+                tags_stats: internal_tag_stats,
                 global_stats: InternalGlobalStats {
                     total_torrents_count: a.global_stats.total_torrents_count,
                     total_torrents_size: a.global_stats.total_torrents_size,

@@ -365,11 +365,11 @@ class MatrixTheme extends AppTheme {
   Color get searchBookmarksClearIconColor =>
       const Color.fromARGB(255, 117, 255, 133);
 
-
-@override
-  Color get addTagIconColor => const Color.fromARGB(255, 0, 255, 47) ;
   @override
-  Color get tagPickerDialogBackgroundColor => const Color.fromARGB(255, 0, 0, 0);
+  Color get addTagIconColor => const Color.fromARGB(255, 0, 255, 47);
+  @override
+  Color get tagPickerDialogBackgroundColor =>
+      const Color.fromARGB(255, 0, 0, 0);
   @override
   Color get tagPickerDialogTitleColor => const Color.fromARGB(255, 17, 255, 0);
   @override
@@ -386,4 +386,8 @@ class MatrixTheme extends AppTheme {
   @override
   Color get tagPickerDialogDoneButtonTextColor =>
       const Color.fromARGB(255, 85, 255, 0);
+  @override
+  Color get tagCheckboxActiveColor => const Color.fromARGB(255, 0, 0, 0);
+  @override
+  Color get tagCheckboxTickColor => const Color.fromARGB(255, 26, 255, 0);
 }

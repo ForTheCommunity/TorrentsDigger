@@ -390,6 +390,9 @@ class TorrentCard extends StatelessWidget {
 
     if (!context.mounted) return;
 
+    final tagsBloc = context.read<TagsBloc>();
+    final bookmarkBloc = context.read<BookmarkBloc>();
+
     final Set<int> selectedTagIds = assignedTagIds.toSet();
 
     showDialog(
@@ -431,6 +434,9 @@ class TorrentCard extends StatelessWidget {
                               ),
                             ),
                             value: isSelected,
+                            activeColor:
+                                context.appColors.tagCheckboxActiveColor,
+                            checkColor: context.appColors.tagCheckboxTickColor,
                             onChanged: (checked) {
                               setDialogState(() {
                                 if (checked == true) {
@@ -488,12 +494,20 @@ class TorrentCard extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
-                        context.read<TagsBloc>().add(
+                        tagsBloc.add(
                           TagsEvent.updateTags(
                             infoHash: infoHash,
                             selectedTagIds: selectedTagIds.toList(),
                           ),
                         );
+
+                        bookmarkBloc.add(
+                          BookmarkEvent.loadBookmarks(
+                            categoryID: bookmarkBloc.currentCategoryId,
+                            tagID: bookmarkBloc.currentTagId,
+                          ),
+                        );
+
                         Navigator.pop(dialogContext);
                       },
                       child: Text(

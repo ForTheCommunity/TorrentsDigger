@@ -44,15 +44,18 @@ class InternalBookmarkTag {
 
 class InternalBookmarksStats {
   final List<InternalCategoryStats> categoriesStats;
+  final List<InternalTagStats> tagsStats;
   final InternalGlobalStats globalStats;
 
   const InternalBookmarksStats({
     required this.categoriesStats,
+    required this.tagsStats,
     required this.globalStats,
   });
 
   @override
-  int get hashCode => categoriesStats.hashCode ^ globalStats.hashCode;
+  int get hashCode =>
+      categoriesStats.hashCode ^ tagsStats.hashCode ^ globalStats.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -60,6 +63,7 @@ class InternalBookmarksStats {
       other is InternalBookmarksStats &&
           runtimeType == other.runtimeType &&
           categoriesStats == other.categoriesStats &&
+          tagsStats == other.tagsStats &&
           globalStats == other.globalStats;
 }
 
@@ -304,6 +308,31 @@ class InternalSourceDetails {
           sourceFilters == other.sourceFilters &&
           sourceSortings == other.sourceSortings &&
           sourceSortingOrders == other.sourceSortingOrders;
+}
+
+class InternalTagStats {
+  final InternalBookmarkTag tag;
+  final int tagTotalCount;
+  final String tagTotalSize;
+
+  const InternalTagStats({
+    required this.tag,
+    required this.tagTotalCount,
+    required this.tagTotalSize,
+  });
+
+  @override
+  int get hashCode =>
+      tag.hashCode ^ tagTotalCount.hashCode ^ tagTotalSize.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is InternalTagStats &&
+          runtimeType == other.runtimeType &&
+          tag == other.tag &&
+          tagTotalCount == other.tagTotalCount &&
+          tagTotalSize == other.tagTotalSize;
 }
 
 class InternalTorrent {

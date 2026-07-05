@@ -298,6 +298,7 @@ impl BookmarkCategory {
     }
 }
 
+#[derive(Clone)]
 pub struct BookmarkTag {
     pub id: u16,
     pub name: String,
@@ -446,7 +447,14 @@ impl BookmarkTag {
 
 pub struct BookmarksStats {
     pub categories_stats: Vec<CategoryStats>,
+    pub tags_stats: Vec<TagStats>,
     pub global_stats: GlobalStats,
+}
+
+pub struct TagStats {
+    pub tag: BookmarkTag,
+    pub tag_total_count: u16,
+    pub tag_total_size: String,
 }
 
 pub struct CategoryStats {
@@ -467,6 +475,7 @@ pub struct GlobalStats {
 
 impl BookmarksStats {
     pub fn get_stats() -> Result<Self, rusqlite::Error> {
+        // category stats
         let categories = BookmarkCategory::get()?;
 
         let mut categories_stats: Vec<CategoryStats> = Vec::new();
@@ -478,6 +487,19 @@ impl BookmarksStats {
             });
         }
 
+        // tag stats
+        let tags = BookmarkTag::get()?;
+
+        let mut tags_stats: Vec<TagStats> = Vec::new();
+
+        for a_tag in tags {
+            tags_stats.push(TagStats {
+                tag: a_tag.clone(),
+                tag_total_count: Self::get_tag_torrents_count(&a_tag.id)?,
+                tag_total_size: Self::get_tag_total_size(&a_tag.id)?,
+            });
+        }
+
         let global_stats = GlobalStats {
             total_torrents_count: Self::get_total_torrents_count()?,
             total_torrents_size: Self::get_total_size()?,
@@ -485,8 +507,46 @@ impl BookmarksStats {
 
         Ok(Self {
             categories_stats,
+            tags_stats,
             global_stats,
         })
+    }
+
+    fn get_tag_torrents_count(tag_id: &u16) -> Result<u16, rusqlite::Error> {
+        let db_conn = get_a_database_connection();
+
+        let count: u16 = db_conn.query_row(
+            "
+        SELECT COUNT(*) FROM torrent_tags WHERE tag_id = ?1 
+        ",
+            params![tag_id],
+            |row| row.get(0),
+        )?;
+
+        Ok(count)
+    }
+
+    fn get_tag_total_size(tag_id: &u16) -> Result<String, rusqlite::Error> {
+        let db_conn = get_a_database_connection();
+        let sizes_vec: Vec<String> = {
+            let mut stmt = db_conn.prepare(
+                "
+            SELECT b.size FROM bookmarked_torrents b
+            INNER JOIN torrent_tags tt ON b.info_hash = tt.info_hash
+            WHERE tt.tag_id = ?1
+            ",
+            )?;
+
+            let rows = stmt.query_map(params![tag_id], |row| row.get(0))?;
+            rows.filter_map(|r| r.ok()).collect()
+        };
+
+        let total_bytes = sizes_vec
+            .iter()
+            .filter_map(|s| Self::parse_size(s))
+            .sum::<u64>();
+
+        Ok(Self::format_size(total_bytes))
     }
 
     fn get_category_torrents_count(category_id: &u16) -> Result<u16, rusqlite::Error> {

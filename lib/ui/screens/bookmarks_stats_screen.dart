@@ -245,6 +245,144 @@ class _BookmarksStatsScreenState extends State<BookmarksStatsScreen> {
                       );
                     },
                   ),
+
+                  const SizedBox(height: 60),
+
+                  // tags table — only show if there are tags
+                  if (bookmarksStatsData.tagsStats.isNotEmpty)
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final availableWidth = constraints.maxWidth - 72;
+                        final tagColWidth = availableWidth * 0.38;
+                        final torrentsColWidth = availableWidth * 0.22;
+                        final sizeColWidth = availableWidth * 0.40;
+
+                        Widget headerLabel(String text, double width) =>
+                            SizedBox(
+                              width: width,
+                              child: Text(
+                                text,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1,
+                                  color: context
+                                      .appColors
+                                      .bookmarksStatsColumnHeaderTextColor,
+                                  fontSize: headerFontSize,
+                                ),
+                              ),
+                            );
+
+                        Widget dataCell(
+                          String text,
+                          double width, {
+                          bool bold = false,
+                          bool ellipsis = false,
+                          required Color color,
+                        }) => SizedBox(
+                          width: width,
+                          child: Text(
+                            text,
+                            textAlign: TextAlign.center,
+                            overflow: ellipsis
+                                ? TextOverflow.ellipsis
+                                : TextOverflow.visible,
+                            style: TextStyle(
+                              fontWeight: bold
+                                  ? FontWeight.bold
+                                  : FontWeight.w500,
+                              color: color,
+                              fontSize: bold ? totalFontSize : dataFontSize,
+                              letterSpacing: 1,
+                            ),
+                          ),
+                        );
+
+                        return DataTable(
+                          columnSpacing: 0,
+                          horizontalMargin: 12,
+                          dataRowMinHeight: 48,
+                          dataRowMaxHeight: 60,
+                          border: TableBorder(
+                            top: BorderSide(
+                              color:
+                                  context.appColors.bookmarksStatsBorderColor,
+                              width: 1,
+                            ),
+                            bottom: BorderSide(
+                              color:
+                                  context.appColors.bookmarksStatsBorderColor,
+                              width: 1,
+                            ),
+                            left: BorderSide(
+                              color:
+                                  context.appColors.bookmarksStatsBorderColor,
+                              width: 1,
+                            ),
+                            right: BorderSide(
+                              color:
+                                  context.appColors.bookmarksStatsBorderColor,
+                              width: 1,
+                            ),
+                            horizontalInside: BorderSide(
+                              color:
+                                  context.appColors.bookmarksStatsBorderColor,
+                              width: 1,
+                            ),
+                            verticalInside: BorderSide(
+                              color:
+                                  context.appColors.bookmarksStatsBorderColor,
+                            ),
+                          ),
+                          columns: [
+                            DataColumn(label: headerLabel("Tag", tagColWidth)),
+                            DataColumn(
+                              label: headerLabel("Count", torrentsColWidth),
+                            ),
+                            DataColumn(
+                              label: headerLabel("Size", sizeColWidth),
+                            ),
+                          ],
+                          rows: [
+                            ...bookmarksStatsData.tagsStats.map((tagStats) {
+                              return DataRow(
+                                cells: [
+                                  DataCell(
+                                    dataCell(
+                                      tagStats.tag.name,
+                                      tagColWidth,
+                                      ellipsis: true,
+                                      color: context
+                                          .appColors
+                                          .bookmarksStatsCategoryDataTextColor,
+                                    ),
+                                  ),
+                                  DataCell(
+                                    dataCell(
+                                      "${tagStats.tagTotalCount}",
+                                      torrentsColWidth,
+                                      color: context
+                                          .appColors
+                                          .bookmarksStatsCategoryDataTextColor,
+                                    ),
+                                  ),
+                                  DataCell(
+                                    dataCell(
+                                      tagStats.tagTotalSize,
+                                      sizeColWidth,
+                                      color: context
+                                          .appColors
+                                          .bookmarksStatsCategoryDataTextColor,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }),
+                          ],
+                        );
+                      },
+                    ),
                 ],
               );
             },

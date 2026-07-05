@@ -176,4 +176,6 @@ abstract class AppTheme {
   Color get tagPickerDialogCloseButtonTextColor;
   Color get tagPickerDialogDoneButtonBackgroundColor;
   Color get tagPickerDialogDoneButtonTextColor;
+  Color get tagCheckboxActiveColor;
+  Color get tagCheckboxTickColor;
 }

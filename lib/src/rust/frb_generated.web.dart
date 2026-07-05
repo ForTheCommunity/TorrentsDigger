@@ -100,6 +100,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   InternalSourceDetails dco_decode_internal_source_details(dynamic raw);
 
   @protected
+  InternalTagStats dco_decode_internal_tag_stats(dynamic raw);
+
+  @protected
   InternalTorrent dco_decode_internal_torrent(dynamic raw);
 
   @protected
@@ -127,6 +130,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<InternalSource> dco_decode_list_internal_source(dynamic raw);
+
+  @protected
+  List<InternalTagStats> dco_decode_list_internal_tag_stats(dynamic raw);
 
   @protected
   List<InternalTorrent> dco_decode_list_internal_torrent(dynamic raw);
@@ -291,6 +297,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  InternalTagStats sse_decode_internal_tag_stats(SseDeserializer deserializer);
+
+  @protected
   InternalTorrent sse_decode_internal_torrent(SseDeserializer deserializer);
 
   @protected
@@ -322,6 +331,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<InternalSource> sse_decode_list_internal_source(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  List<InternalTagStats> sse_decode_list_internal_tag_stats(
     SseDeserializer deserializer,
   );
 
@@ -521,6 +535,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_internal_tag_stats(
+    InternalTagStats self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_internal_torrent(
     InternalTorrent self,
     SseSerializer serializer,
@@ -562,6 +582,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_list_internal_source(
     List<InternalSource> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_list_internal_tag_stats(
+    List<InternalTagStats> self,
     SseSerializer serializer,
   );
 

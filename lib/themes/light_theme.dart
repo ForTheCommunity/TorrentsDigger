@@ -387,4 +387,8 @@ class LightTheme extends AppTheme {
   @override
   Color get tagPickerDialogDoneButtonTextColor =>
       const Color.fromARGB(255, 0, 229, 255);
+  @override
+  Color get tagCheckboxActiveColor => Color.fromRGBO(15, 15, 15, 1);
+  @override
+  Color get tagCheckboxTickColor => const Color.fromARGB(255, 0, 255, 221);
 }

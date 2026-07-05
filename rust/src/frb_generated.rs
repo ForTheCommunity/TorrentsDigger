@@ -1612,10 +1612,13 @@ impl SseDecode for crate::api::internals::InternalBookmarksStats {
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut var_categoriesStats =
             <Vec<crate::api::internals::InternalCategoryStats>>::sse_decode(deserializer);
+        let mut var_tagsStats =
+            <Vec<crate::api::internals::InternalTagStats>>::sse_decode(deserializer);
         let mut var_globalStats =
             <crate::api::internals::InternalGlobalStats>::sse_decode(deserializer);
         return crate::api::internals::InternalBookmarksStats {
             categories_stats: var_categoriesStats,
+            tags_stats: var_tagsStats,
             global_stats: var_globalStats,
         };
     }
@@ -1758,6 +1761,20 @@ impl SseDecode for crate::api::internals::InternalSourceDetails {
     }
 }
 
+impl SseDecode for crate::api::internals::InternalTagStats {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_tag = <crate::api::internals::InternalBookmarkTag>::sse_decode(deserializer);
+        let mut var_tagTotalCount = <u16>::sse_decode(deserializer);
+        let mut var_tagTotalSize = <String>::sse_decode(deserializer);
+        return crate::api::internals::InternalTagStats {
+            tag: var_tag,
+            tag_total_count: var_tagTotalCount,
+            tag_total_size: var_tagTotalSize,
+        };
+    }
+}
+
 impl SseDecode for crate::api::internals::InternalTorrent {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -1871,6 +1888,20 @@ impl SseDecode for Vec<crate::api::internals::InternalSource> {
         let mut ans_ = Vec::with_capacity(len_ as usize);
         for idx_ in 0..len_ {
             ans_.push(<crate::api::internals::InternalSource>::sse_decode(
+                deserializer,
+            ));
+        }
+        return ans_;
+    }
+}
+
+impl SseDecode for Vec<crate::api::internals::InternalTagStats> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = Vec::with_capacity(len_ as usize);
+        for idx_ in 0..len_ {
+            ans_.push(<crate::api::internals::InternalTagStats>::sse_decode(
                 deserializer,
             ));
         }
@@ -2364,6 +2395,7 @@ impl flutter_rust_bridge::IntoDart for crate::api::internals::InternalBookmarksS
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
             self.categories_stats.into_into_dart().into_dart(),
+            self.tags_stats.into_into_dart().into_dart(),
             self.global_stats.into_into_dart().into_dart(),
         ]
         .into_dart()
@@ -2583,6 +2615,28 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::internals::InternalSourceDeta
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::internals::InternalTagStats {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.tag.into_into_dart().into_dart(),
+            self.tag_total_count.into_into_dart().into_dart(),
+            self.tag_total_size.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::internals::InternalTagStats
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::internals::InternalTagStats>
+    for crate::api::internals::InternalTagStats
+{
+    fn into_into_dart(self) -> crate::api::internals::InternalTagStats {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::api::internals::InternalTorrent {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
@@ -2683,6 +2737,7 @@ impl SseEncode for crate::api::internals::InternalBookmarksStats {
             self.categories_stats,
             serializer,
         );
+        <Vec<crate::api::internals::InternalTagStats>>::sse_encode(self.tags_stats, serializer);
         <crate::api::internals::InternalGlobalStats>::sse_encode(self.global_stats, serializer);
     }
 }
@@ -2772,6 +2827,15 @@ impl SseEncode for crate::api::internals::InternalSourceDetails {
     }
 }
 
+impl SseEncode for crate::api::internals::InternalTagStats {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <crate::api::internals::InternalBookmarkTag>::sse_encode(self.tag, serializer);
+        <u16>::sse_encode(self.tag_total_count, serializer);
+        <String>::sse_encode(self.tag_total_size, serializer);
+    }
+}
+
 impl SseEncode for crate::api::internals::InternalTorrent {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -2853,6 +2917,16 @@ impl SseEncode for Vec<crate::api::internals::InternalSource> {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
             <crate::api::internals::InternalSource>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for Vec<crate::api::internals::InternalTagStats> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::api::internals::InternalTagStats>::sse_encode(item, serializer);
         }
     }
 }
