@@ -406,22 +406,58 @@ class TorrentCard extends StatelessWidget {
       builder: (dialogContext) {
         return StatefulBuilder(
           builder: (context, setDialogState) {
-            return AlertDialog(
-              backgroundColor: context.appColors.tagPickerDialogBackgroundColor,
-              title: Text(
-                'Manage Tags',
-                style: TextStyle(
-                  color: context.appColors.tagPickerDialogTitleColor,
-                ),
-              ),
-              content: allTags.isEmpty
-                  ? Text(
-                      'No tags found. Create tags from the Bookmarks screen.',
-                      style: TextStyle(
-                        color: context.appColors.tagPickerDialogTextColor,
+            return allTags.isEmpty
+                ? AlertDialog(
+                    backgroundColor:
+                        context.appColors.tagPickerDialogBackgroundColor,
+                    content: SizedBox(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text(
+                            "No tags found. Create tags from the Bookmarks screen.",
+                          ),
+                          const SizedBox(height: 20),
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              backgroundColor: context
+                                  .appColors
+                                  .tagPickerDialogDoneButtonBackgroundColor,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 10,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.pop(dialogContext);
+                            },
+                            child: Text(
+                              'Close',
+                              style: TextStyle(
+                                color: context
+                                    .appColors
+                                    .tagPickerDialogDoneButtonTextColor,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    )
-                  : SizedBox(
+                    ),
+                  )
+                // 'No tags found. Create tags from the Bookmarks screen.',
+                : AlertDialog(
+                    backgroundColor:
+                        context.appColors.tagPickerDialogBackgroundColor,
+                    title: Text(
+                      'Manage Tags',
+                      style: TextStyle(
+                        color: context.appColors.tagPickerDialogTitleColor,
+                      ),
+                    ),
+                    content: SizedBox(
                       width: double.minPositive,
                       child: ListView.builder(
                         shrinkWrap: true,
@@ -456,79 +492,79 @@ class TorrentCard extends StatelessWidget {
                         },
                       ),
                     ),
-              actions: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        backgroundColor: context
-                            .appColors
-                            .tagPickerDialogCloseButtonBackgroundColor,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 10,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      onPressed: () => Navigator.pop(dialogContext),
-                      child: Text(
-                        'Cancel',
-                        style: TextStyle(
-                          color: context
-                              .appColors
-                              .tagPickerDialogCloseButtonTextColor,
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(width: 12),
-
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        backgroundColor: context
-                            .appColors
-                            .tagPickerDialogDoneButtonBackgroundColor,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 10,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      onPressed: () {
-                        tagsBloc.add(
-                          TagsEvent.updateTags(
-                            infoHash: infoHash,
-                            selectedTagIds: selectedTagIds.toList(),
+                    actions: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              backgroundColor: context
+                                  .appColors
+                                  .tagPickerDialogCloseButtonBackgroundColor,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 10,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            onPressed: () => Navigator.pop(dialogContext),
+                            child: Text(
+                              'Cancel',
+                              style: TextStyle(
+                                color: context
+                                    .appColors
+                                    .tagPickerDialogCloseButtonTextColor,
+                              ),
+                            ),
                           ),
-                        );
 
-                        bookmarkBloc.add(
-                          BookmarkEvent.loadBookmarks(
-                            categoryID: bookmarkBloc.currentCategoryId,
-                            tagID: bookmarkBloc.currentTagId,
+                          const SizedBox(width: 12),
+
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              backgroundColor: context
+                                  .appColors
+                                  .tagPickerDialogDoneButtonBackgroundColor,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 10,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            onPressed: () {
+                              tagsBloc.add(
+                                TagsEvent.updateTags(
+                                  infoHash: infoHash,
+                                  selectedTagIds: selectedTagIds.toList(),
+                                ),
+                              );
+
+                              bookmarkBloc.add(
+                                BookmarkEvent.loadBookmarks(
+                                  categoryID: bookmarkBloc.currentCategoryId,
+                                  tagID: bookmarkBloc.currentTagId,
+                                ),
+                              );
+
+                              Navigator.pop(dialogContext);
+                            },
+                            child: Text(
+                              'Done',
+                              style: TextStyle(
+                                color: context
+                                    .appColors
+                                    .tagPickerDialogDoneButtonTextColor,
+                              ),
+                            ),
                           ),
-                        );
-
-                        Navigator.pop(dialogContext);
-                      },
-                      child: Text(
-                        'Done',
-                        style: TextStyle(
-                          color: context
-                              .appColors
-                              .tagPickerDialogDoneButtonTextColor,
-                        ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-              ],
-            );
+                    ],
+                  );
           },
         );
       },
