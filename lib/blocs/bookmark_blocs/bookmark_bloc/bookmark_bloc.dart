@@ -38,11 +38,10 @@ class BookmarkBloc extends Bloc<BookmarkEvent, BookmarkState> {
         limit: _defaultLimit,
         offset: 0,
       );
-      final Set<String> allInfoHashes = await getAllInfoHashes();
+
       emit(
         BookmarkState.loaded(
           bookmarkedTorrents: torrents,
-          infoHashes: allInfoHashes,
           currentOffset: torrents.length,
           hasMore: torrents.length == _defaultLimit,
         ),
@@ -121,7 +120,6 @@ class BookmarkBloc extends Bloc<BookmarkEvent, BookmarkState> {
         limit: _defaultLimit,
         offset: currentState.currentOffset,
       );
-      final allInfoHashes = await getAllInfoHashes();
 
       emit(
         BookmarkState.loaded(
@@ -129,7 +127,6 @@ class BookmarkBloc extends Bloc<BookmarkEvent, BookmarkState> {
             ...currentState.bookmarkedTorrents,
             ...newTorrents,
           ],
-          infoHashes: allInfoHashes,
           currentOffset: currentState.currentOffset + newTorrents.length,
           hasMore: newTorrents.length == _defaultLimit,
         ),
@@ -150,7 +147,6 @@ class BookmarkBloc extends Bloc<BookmarkEvent, BookmarkState> {
       emit(
         BookmarkState.loaded(
           bookmarkedTorrents: torrents,
-          infoHashes: torrents.map((torrent) => torrent.infoHash).toSet(),
           currentOffset: 0,
           hasMore: false,
         ),
@@ -158,5 +154,43 @@ class BookmarkBloc extends Bloc<BookmarkEvent, BookmarkState> {
     } catch (e) {
       createSnackBar(message: "Error : ${e.toString()}", duration: 10);
     }
+  }
+}
+
+class BookmarkedIhBloc extends Bloc<BookmarkedIhEvent, BookmarkedIhState> {
+  BookmarkedIhBloc() : super(_InitialIhState()) {
+    on<_LoadInfoHashes>(_loadInfoHashes);
+    on<_AddInfoHash>(_addInfoHash);
+    on<_RemoveInfoHash>(_removeInfoHash);
+  }
+
+  Future<void> _loadInfoHashes(
+    _LoadInfoHashes event,
+    Emitter<BookmarkedIhState> emit,
+  ) async {
+    try {
+      Set<String> allInfoHashes = await getAllInfoHashes();
+      emit(BookmarkedIhState.loaded(infoHashes: allInfoHashes));
+    } catch (e) {
+      createSnackBar(message: "Error : ${e.toString()}", duration: 10);
+    }
+  }
+
+  void _addInfoHash(_AddInfoHash event, Emitter<BookmarkedIhState> emit) {
+    state.whenOrNull(
+      loaded: (infoHashes) {
+        final newHashes = Set<String>.from(infoHashes)..add(event.infoHash);
+        emit(BookmarkedIhState.loaded(infoHashes: newHashes));
+      },
+    );
+  }
+
+  void _removeInfoHash(_RemoveInfoHash event, Emitter<BookmarkedIhState> emit) {
+    state.whenOrNull(
+      loaded: (infoHashes) {
+        final newHashes = Set<String>.from(infoHashes)..remove(event.infoHash);
+        emit(BookmarkedIhState.loaded(infoHashes: newHashes));
+      },
+    );
   }
 }

@@ -24,3 +24,10 @@ class BookmarkEvent with _$BookmarkEvent {
   const factory BookmarkEvent.searchBookmarkedTorrents({required String text}) =
       _SearchBookmarkedTorrents;
 }
+
+@freezed
+class BookmarkedIhEvent with _$BookmarkedIhEvent {
+  const factory BookmarkedIhEvent.loadInfoHashes() = _LoadInfoHashes;
+  const factory BookmarkedIhEvent.addInfoHash({required String infoHash}) = _AddInfoHash;
+  const factory BookmarkedIhEvent.removeInfoHash({required String infoHash}) = _RemoveInfoHash;
+}

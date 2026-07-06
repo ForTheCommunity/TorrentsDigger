@@ -252,7 +252,7 @@ class _BookmarkScreenState extends State<BookmarksScreen> {
                           height: 400,
                           child: Center(child: CircularProgressBarWidget()),
                         ),
-                        loaded: (torrents, _, _, _, hasMore) {
+                        loaded: (torrents, _, _, hasMore) {
                           if (torrents.isEmpty) {
                             return Center(
                               child: Column(

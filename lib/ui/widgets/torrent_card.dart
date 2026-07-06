@@ -123,12 +123,12 @@ class TorrentCard extends StatelessWidget {
             const SizedBox(height: 10),
             Row(
               children: [
-                BlocBuilder<BookmarkBloc, BookmarkState>(
+                BlocBuilder<BookmarkedIhBloc, BookmarkedIhState>(
                   builder: (context, state) {
                     bool isBookmarked = false;
 
                     state.whenOrNull(
-                      loaded: (bookmarkedTorrents, infoHashes, _, _, _) {
+                      loaded: (infoHashes) {
                         isBookmarked = infoHashes.contains(torrent.infoHash);
                       },
                     );
@@ -324,6 +324,12 @@ class TorrentCard extends StatelessWidget {
                                   BookmarkEvent.bookmark(
                                     torrent: torrent,
                                     categoryID: category.id,
+                                  ),
+                                );
+                                // add info hash
+                                context.read<BookmarkedIhBloc>().add(
+                                  BookmarkedIhEvent.addInfoHash(
+                                    infoHash: torrent.infoHash,
                                   ),
                                 );
                                 createSnackBar(
@@ -585,6 +591,12 @@ class TorrentCard extends StatelessWidget {
                 onTap: () {
                   context.read<BookmarkBloc>().add(
                     BookmarkEvent.removeBookmark(infoHash: torrent.infoHash),
+                  );
+                  // remove info hash
+                  context.read<BookmarkedIhBloc>().add(
+                    BookmarkedIhEvent.removeInfoHash(
+                      infoHash: torrent.infoHash,
+                    ),
                   );
                   createSnackBar(message: 'Bookmark Removed', duration: 1);
                   Navigator.pop(dialogContext);

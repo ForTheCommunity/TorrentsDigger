@@ -55,6 +55,10 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(create: (_) => BookmarkBloc()),
         BlocProvider(
+          create: (_) =>
+              BookmarkedIhBloc()..add(BookmarkedIhEvent.loadInfoHashes()),
+        ),
+        BlocProvider(
           create: (_) => ProxySettingsBloc()..add(LoadProxyDetailsEvent()),
         ),
         BlocProvider(
