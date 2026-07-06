@@ -5,7 +5,11 @@ use anyhow::{Result, anyhow};
 use regex::Regex;
 use serde::Deserialize;
 use ua_generator::ua::spoof_ua;
-use ureq::{Agent, Body, http::Response, unversioned::transport::DefaultConnector};
+use ureq::{
+    Agent, Body,
+    http::{Response, request},
+    unversioned::transport::DefaultConnector,
+};
 
 use crate::{
     database::{custom_resolver::get_active_custom_resolver, proxy::Proxy},
@@ -127,54 +131,55 @@ pub fn extract_ip_details() -> Result<String> {
         "https://checkip.dyndns.org",
     ];
 
-    // Regex for extracting IPV4 / IPV6 address from response body.
-    let ip_regex =
-        Regex::new(r"(\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b|[0-9a-fA-F:]{1,}/[0-9]{1,3})")?;
-
-    // Vec of Tuple of String to store error for specific endpoint.
-    let mut error_messages: Vec<(String, String)> = Vec::new();
+    let (tx, rx) = std::sync::mpsc::channel::<Result<String>>();
+    let mut handles = Vec::new();
 
     for endpoint in ip_check_endpoints {
-        match send_request(endpoint) {
-            Ok(mut response) => {
-                match response.body_mut().read_to_string() {
-                    Ok(response_body) => {
-                        // Check for IP addresses in the response body
-                        if let Some(captures) = ip_regex.captures(&response_body) {
-                            if let Some(ip_str) = captures.get(0) {
-                                // parsing to IPV4/6 Address
-                                if let Ok(parsed_valid_ip_addr) = ip_str.as_str().parse::<IpAddr>()
-                                {
-                                    return Ok(parsed_valid_ip_addr.to_string());
-                                } else {
-                                    let msg = "Invalid IP captured from response".to_string();
-                                    error_messages.push((endpoint.into(), msg));
-                                    continue;
-                                }
-                            }
-                        } else {
-                            let msg = "No IP captured from response".to_string();
-                            error_messages.push((endpoint.into(), msg));
-                        }
-                    }
-                    Err(e) => {
-                        error_messages.push((endpoint.into(), e.to_string()));
-                    }
+        let tx = tx.clone();
+        let endpoint = endpoint.to_string();
+
+        let handle = std::thread::spawn(move || {
+            let result = (|| -> Result<String> {
+                let mut response = send_request(&endpoint)?;
+                let body = response.body_mut().read_to_string()?;
+
+                let ip = body
+                    .split_whitespace()
+                    .find_map(|token| token.trim().parse::<IpAddr>().ok());
+
+                match ip {
+                    Some(ip) => Ok(ip.to_string()),
+                    None => Err(anyhow!("No valid IP from {}", endpoint)),
                 }
+            })();
+
+            let _ = tx.send(result);
+        });
+
+        handles.push(handle);
+    }
+
+    drop(tx);
+
+    let total = handles.len();
+    let mut errors = Vec::new();
+
+    for _ in 0..total {
+        match rx.recv() {
+            Ok(Ok(ip)) => {
+                std::thread::spawn(move || {
+                    for handle in handles {
+                        let _ = handle.join();
+                    }
+                });
+                return Ok(ip);
             }
-            Err(e) => {
-                error_messages.push((endpoint.into(), e.to_string()));
-            }
+            Ok(Err(e)) => errors.push(e.to_string()),
+            Err(_) => break,
         }
     }
 
-    let error_message_str = error_messages
-        .into_iter()
-        .map(|(endpoint, error)| format!("{} -> {}", endpoint, error))
-        .collect::<Vec<String>>()
-        .join(", ");
-
-    Err(anyhow!(error_message_str))
+    Err(anyhow!("All endpoints failed: {}", errors.join(", ")))
 }
 
 pub fn check_for_update() -> Result<u8> {
