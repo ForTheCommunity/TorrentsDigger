@@ -1,0 +1,3 @@
+- Added Bookmarks Tagging Feature.
+- Added Bookmark Tags Stats.
+- Improved other internal things.

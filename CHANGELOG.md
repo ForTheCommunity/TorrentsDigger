@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.7] - 2026-07-06
+- Added Bookmarks Tagging Feature.
+- Added Bookmark Tags Stats.
+- Improved other internal things.
+
 ## [1.2.6] - 2026-06-26
 - Added Bookmarks Search Feature.
 - Improved Bookmarks Loading.

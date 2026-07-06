@@ -138,12 +138,14 @@ See [Contribution Guide](./CONTRIBUTING.md).
 
 
 ## Contributors :
-1. ShaswotNepal [Role ⮞ Maintainer] ([Gitlab](https://gitlab.com/ShaswotNepal)).
+1. [ ⧼ Shaswot Nepal ⧽ ](https://ShaswotDhungana.com.np) $~~~$ ｢ Maintainer ｣
 
-2. Wind Xebec [Role ⮚ Contributor] ([Gitlab](https://gitlab.com/sameerchettri707) / [Github](https://github.com/ybsa)) :
-- Wind Xebec : [Added Support For Windows 0S.](https://gitlab.com/ForTheCommunity/torrentsdigger/-/merge_requests/3)
-- Wind Xebec : [Fixed URL Launch Issue & Fixed Icon not showing issue on Taskbar in Windows OS.](https://gitlab.com/ForTheCommunity/torrentsdigger/-/merge_requests/5)
-- Wind Xebec : [Fixed Scaffold Messenger / SnackBar Theme Issue.](https://gitlab.com/ForTheCommunity/torrentsdigger/-/merge_requests/6)
 
-3. Nia Ward [Role ⮚ Contributor] ([Gitlab](https://gitlab.com/Nia_Ward)) :
-- Nia Ward : [Added Russian Metadata Translation for F-droid.](https://gitlab.com/ForTheCommunity/torrentsdigger/-/merge_requests/1)
+2. [ ⧼ Wind Xebec ⧽ ](https://github.com/ybsa) $~~~$ ｢ Contributor ｣ :
+- [Added Support For Windows OS.](https://gitlab.com/ForTheCommunity/torrentsdigger/-/merge_requests/3)
+- [Fixed URL Launch Issue & Fixed Icon not showing issue on Taskbar in Windows OS.](https://gitlab.com/ForTheCommunity/torrentsdigger/-/merge_requests/5)
+- [Fixed Scaffold Messenger / SnackBar Theme Issue.](https://gitlab.com/ForTheCommunity/torrentsdigger/-/merge_requests/6)
+
+
+3. [ ⧼ Nia Ward ⧽ ](https://gitlab.com/Nia_Ward) $~~~$ ｢ Contributor ｣ :
+- [Added Russian Metadata Translation for F-droid.](https://gitlab.com/ForTheCommunity/torrentsdigger/-/merge_requests/1)
