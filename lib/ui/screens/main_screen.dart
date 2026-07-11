@@ -20,6 +20,7 @@ class MainScreen extends StatelessWidget {
     return Scaffold(
       floatingActionButton: FloatingActionsButtons(
         scrollToTop: true,
+        enableAddTorrent: false,
         enableBookmarks: true,
         enableCustoms: true,
         enableSettings: true,

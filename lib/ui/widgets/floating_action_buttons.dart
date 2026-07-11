@@ -5,6 +5,7 @@ import 'package:torrents_digger/ui/widgets/scroll_to_top_button.dart';
 
 class FloatingActionsButtons extends StatelessWidget {
   final bool scrollToTop;
+  final bool enableAddTorrent;
   final bool enableCustoms;
   final bool enableBookmarks;
   final bool enableSettings;
@@ -13,6 +14,7 @@ class FloatingActionsButtons extends StatelessWidget {
   const FloatingActionsButtons({
     super.key,
     required this.scrollToTop,
+    required this.enableAddTorrent,
     required this.enableCustoms,
     required this.enableBookmarks,
     required this.enableSettings,
@@ -30,6 +32,26 @@ class FloatingActionsButtons extends StatelessWidget {
                 scrollController ?? PrimaryScrollController.of(context),
           ),
           const SizedBox(height: 10),
+        ],
+
+        if (enableAddTorrent) ...[
+          FloatingActionButton(
+            heroTag: "Add Torrent",
+            mini: true,
+            tooltip: "Add Torrent",
+            foregroundColor:
+                context.appColors.settingsFloatingActionButtonForegroundColor,
+            backgroundColor:
+                context.appColors.settingsFloatingActionButtonBackgroundColor,
+            hoverColor: context
+                .appColors
+                .settingsFloatingActionButtonHoverBackgroundColor,
+            child: Icon(Icons.add_outlined),
+            onPressed: () {
+              Navigator.pushNamed(context, RoutesName.addTorrentScreen);
+            },
+          ),
+          const SizedBox(height: 8),
         ],
 
         if (enableCustoms) ...[

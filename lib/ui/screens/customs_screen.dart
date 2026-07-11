@@ -59,6 +59,7 @@ class _CustomsScreenState extends State<CustomsScreen> {
       ),
       floatingActionButton: FloatingActionsButtons(
         scrollToTop: true,
+        enableAddTorrent: false,
         enableBookmarks: true,
         enableCustoms: false,
         enableSettings: true,

@@ -178,4 +178,23 @@ abstract class AppTheme {
   Color get tagPickerDialogDoneButtonTextColor;
   Color get tagCheckboxActiveColor;
   Color get tagCheckboxTickColor;
+
+  Color get addTorrentManuallyFormTextFieldInActiveBorderColor;
+  Color get addTorrentManuallyFormTextFieldActiveBorderColor;
+  Color get addTorrentManuallyFormTextFieldLabelTextColor;
+  Color get addTorrentManuallyFormTextFieldErrorMessageColor;
+  Color get addTorrentManuallyFormSelectedCategoryBGColor;
+  Color get addTorrentManuallyFormCheckmarkColor;
+  Color get addTorrentManuallyFormSelectedCategoryNameTextColor;
+  Color get addTorrentManuallyFormUnSelectedCategoryNameTextColor;
+  Color get addTorrentManuallyFormTagsNotCreatedYetMessageTextColor;
+  Color get addTorrentManuallyFormSelectedTagBGColor;
+  Color get addTorrentManuallyFormSelectedTagNameTextColor;
+  Color get addTorrentManuallyFormUnSelectedTagNameTextColor;
+  Color get addTorrentManuallyFormAddTorrentButtonBackgroundColor;
+  Color get addTorrentManuallyFormAddTorrentButtonBorderColor;
+  Color get addTorrentManuallyFormAddTorrentButtonTextColor;
+  Color get addTorrentManuallyFormExpandIconColor;
+  Color get addTorrentManuallyFormCollapseIconColor;
+  Color get addTorrentManuallyFormInputTextColor;
 }

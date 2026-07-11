@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:torrents_digger/ui/screens/add_torrent_screen.dart';
 import 'package:torrents_digger/ui/screens/additional_settings.dart';
 import 'package:torrents_digger/ui/screens/bookmarks_screen.dart';
 import 'package:torrents_digger/ui/screens/bookmarks_stats_screen.dart';
@@ -60,6 +61,11 @@ class Routes {
       case RoutesName.bookmarkStatsScreen:
         return MaterialPageRoute(
           builder: (context) => const BookmarksStatsScreen(),
+        );
+
+      case RoutesName.addTorrentScreen:
+        return MaterialPageRoute(
+          builder: (context) => const AddTorrentScreen(),
         );
 
       default:

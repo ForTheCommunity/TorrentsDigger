@@ -4,9 +4,9 @@
 2. install [Rust](https://www.rust-lang.org/tools/install)
 3. install [Flutter Rust Bridge](https://cjycode.com/flutter_rust_bridge/quickstart)
 4. install [Just](https://just.systems)
-5. clone this Repo.
+5. Fork [this Repo]( https://gitlab.com/ForTheCommunity/torrentsdigger.git) & clone your fork.
 ```
-git clone https://gitlab.com/ForTheCommunity/torrentsdigger.git
+git clone https://gitlab.com/<Your Username>/torrentsdigger.git
 ```
 
 6. Run these commands inside the project root directory. These two commands should always be run in the background while doing development.

@@ -8,6 +8,36 @@ Future<BigInt> torrentBookmark(InternalTorrent torrent, int categoryId) async {
   return result;
 }
 
+Future<void> bookmarkTorrentManually({
+  required String torrentName,
+  required String infoHash,
+  required String magnetLink,
+  required String torrentSize,
+  required String creationDate,
+  required String seeders,
+  required String leechers,
+  required String totalDownloads,
+  required String? sourceUrl,
+  required int categoryId,
+  required List<int> tagIds,
+}) async {
+  return await insertBookmarkManually(
+    torrent: InternalTorrent(
+      infoHash: infoHash,
+      name: torrentName,
+      magnet: magnetLink,
+      size: torrentSize,
+      date: creationDate,
+      seeders: seeders,
+      leechers: leechers,
+      totalDownloads: totalDownloads,
+      sourceUrl: sourceUrl,
+    ),
+    categoryId: categoryId,
+    tagIds: tagIds,
+  );
+}
+
 Future<bool> removeABookmark({required String infoHash}) async {
   return await removeBookmark(infoHash: infoHash);
 }

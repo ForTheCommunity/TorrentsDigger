@@ -35,6 +35,79 @@ pub fn create_a_bookmark(torrent: Torrent, category_id: u16) -> Result<usize, ru
     )
 }
 
+pub fn create_bookmark_manually(
+    torrent: Torrent,
+    category_id: u16,
+    tag_ids: Vec<u16>,
+) -> Result<(), String> {
+    let mut db_conn = get_a_database_connection();
+
+    let transaction = db_conn.transaction().map_err(|e| e.to_string())?;
+
+    let result = transaction.execute(
+        "
+    INSERT INTO bookmarked_torrents (
+            info_hash,
+            name,
+            magnet,
+            size,
+            date,
+            seeders,
+            leechers,
+            total_downloads,
+            source_url,
+            category_id
+        ) VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10)
+    ",
+        params![
+            torrent.info_hash,
+            torrent.name,
+            torrent.magnet,
+            torrent.size,
+            torrent.date,
+            torrent.seeders,
+            torrent.leechers,
+            torrent.total_downloads,
+            torrent.source_url,
+            category_id
+        ],
+    );
+
+    // errors handling
+    if let Err(err) = result {
+        return match err {
+            rusqlite::Error::SqliteFailure(sqlite_err, _) => {
+                if sqlite_err.code == ErrorCode::ConstraintViolation {
+                    Err(format!(
+                        "Torrent with Info Hash : '{}' Already Exists",
+                        torrent.info_hash
+                    ))
+                } else {
+                    Err(format!("Database error: {}", sqlite_err))
+                }
+            }
+            _ => Err(format!("An unexpected database error occurred: {}", err)),
+        };
+    };
+
+    for tag_id in tag_ids {
+        if let Err(err) = transaction.execute(
+            "
+        INSERT OR IGNORE INTO torrent_tags (info_hash, tag_id) VALUES (?1, ?2)
+        ",
+            params![torrent.info_hash, tag_id],
+        ) {
+            // Explicitly rollback on error
+            let _ = transaction.rollback();
+            return Err(format!("Failed to bind tag ID {}: {}", tag_id, err));
+        }
+    }
+
+    transaction.commit().map_err(|e| e.to_string())?;
+
+    Ok(())
+}
+
 pub fn fetch_bookmarks(
     category_id: u16,
     tag_id: u16,
@@ -193,7 +266,7 @@ impl BookmarkCategory {
             return match err {
                 rusqlite::Error::SqliteFailure(sqlite_err, _) => {
                     if sqlite_err.code == ErrorCode::ConstraintViolation {
-                        Err(format!("Looks Like Category '{}' Already Exists", name))
+                        Err(format!("Category '{}' Already Exists", name))
                     } else {
                         Err(format!("Database error: {}", sqlite_err))
                     }
@@ -209,15 +282,29 @@ impl BookmarkCategory {
         category_id: u16,
         old_category_name: String,
         new_category_name: String,
-    ) -> Result<(), rusqlite::Error> {
+    ) -> Result<(), String> {
         let db_conn = get_a_database_connection();
 
-        db_conn.execute(
+        let result = db_conn.execute(
             "
         UPDATE bookmark_categories SET name = ?1 WHERE id = ?2 AND name = ?3
         ",
-            (new_category_name, category_id, old_category_name),
-        )?;
+            (&new_category_name, category_id, old_category_name),
+        );
+
+        // errors handling
+        if let Err(err) = result {
+            return match err {
+                rusqlite::Error::SqliteFailure(sqlite_err, _) => {
+                    if sqlite_err.code == ErrorCode::ConstraintViolation {
+                        Err(format!("Category '{}' Already Exists", new_category_name))
+                    } else {
+                        Err(format!("Database error: {}", sqlite_err))
+                    }
+                }
+                _ => Err(format!("An unexpected database error occurred: {}", err)),
+            };
+        };
 
         Ok(())
     }
@@ -320,7 +407,7 @@ impl BookmarkTag {
             return match err {
                 rusqlite::Error::SqliteFailure(sqlite_err, _) => {
                     if sqlite_err.code == ErrorCode::ConstraintViolation {
-                        Err(format!("Looks Like Tag '{}' Already Exists", name))
+                        Err(format!("Tag '{}' Already Exists", name))
                     } else {
                         Err(format!("Database error: {}", sqlite_err))
                     }
@@ -332,19 +419,29 @@ impl BookmarkTag {
         Ok(())
     }
 
-    pub fn rename(
-        tag_id: u16,
-        old_tag_name: &str,
-        new_tag_name: &str,
-    ) -> Result<(), rusqlite::Error> {
+    pub fn rename(tag_id: u16, old_tag_name: &str, new_tag_name: &str) -> Result<(), String> {
         let db_conn = get_a_database_connection();
 
-        db_conn.execute(
+        let result = db_conn.execute(
             "
             UPDATE bookmark_tags SET name = ?1 WHERE id = ?2 AND name = ?3
             ",
             (new_tag_name, tag_id, old_tag_name),
-        )?;
+        );
+
+        // errors handling
+        if let Err(err) = result {
+            return match err {
+                rusqlite::Error::SqliteFailure(sqlite_err, _) => {
+                    if sqlite_err.code == ErrorCode::ConstraintViolation {
+                        Err(format!("Tag '{}' Already Exists", new_tag_name))
+                    } else {
+                        Err(format!("Database error: {}", sqlite_err))
+                    }
+                }
+                _ => Err(format!("An unexpected database error occurred: {}", err)),
+            };
+        };
 
         Ok(())
     }
@@ -582,14 +679,19 @@ impl BookmarksStats {
     }
 
     fn parse_size(size_str: &str) -> Option<u64> {
-        let parts: Vec<&str> = size_str.trim().split_ascii_whitespace().collect();
-
-        if parts.len() != 2 {
+        let size_str = size_str.trim();
+        if size_str.is_empty() {
             return None;
         }
 
-        let value: f64 = parts[0].parse().ok()?;
-        let unit = parts[1].trim().to_uppercase();
+        let unit_start = size_str
+            .find(|c: char| !c.is_digit(10) && c != '.')
+            .unwrap_or(size_str.len());
+
+        let (value_part, unit_part) = size_str.split_at(unit_start);
+
+        let value: f64 = value_part.trim().parse().ok()?;
+        let unit = unit_part.trim().to_uppercase();
 
         let multiplier: u64 = match unit.as_str() {
             "B" => 1,

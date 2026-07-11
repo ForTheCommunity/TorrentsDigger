@@ -111,3 +111,13 @@ Future<void> updateTorrentTags({
   infoHash: infoHash,
   tagIds: tagIds,
 );
+
+Future<void> insertBookmarkManually({
+  required InternalTorrent torrent,
+  required int categoryId,
+  required List<int> tagIds,
+}) => RustLib.instance.api.crateApiDatabaseBookmarkInsertBookmarkManually(
+  torrent: torrent,
+  categoryId: categoryId,
+  tagIds: tagIds,
+);

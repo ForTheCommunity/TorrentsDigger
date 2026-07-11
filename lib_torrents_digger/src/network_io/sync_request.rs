@@ -5,11 +5,7 @@ use anyhow::{Result, anyhow};
 use regex::Regex;
 use serde::Deserialize;
 use ua_generator::ua::spoof_ua;
-use ureq::{
-    Agent, Body,
-    http::{Response, request},
-    unversioned::transport::DefaultConnector,
-};
+use ureq::{Agent, Body, http::Response, unversioned::transport::DefaultConnector};
 
 use crate::{
     database::{custom_resolver::get_active_custom_resolver, proxy::Proxy},

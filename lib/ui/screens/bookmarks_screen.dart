@@ -176,6 +176,7 @@ class _BookmarkScreenState extends State<BookmarksScreen> {
 
       floatingActionButton: FloatingActionsButtons(
         scrollToTop: true,
+        enableAddTorrent: true,
         enableBookmarks: false,
         enableCustoms: true,
         enableSettings: true,

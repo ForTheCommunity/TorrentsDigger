@@ -391,4 +391,53 @@ class LightTheme extends AppTheme {
   Color get tagCheckboxActiveColor => Color.fromRGBO(15, 15, 15, 1);
   @override
   Color get tagCheckboxTickColor => const Color.fromARGB(255, 0, 255, 221);
+
+  @override
+  Color get addTorrentManuallyFormTextFieldInActiveBorderColor =>
+      const Color.fromARGB(255, 51, 106, 100);
+  @override
+  Color get addTorrentManuallyFormTextFieldActiveBorderColor =>
+      const Color.fromARGB(255, 51, 106, 100);
+  @override
+  Color get addTorrentManuallyFormTextFieldLabelTextColor => Colors.black;
+  @override
+  Color get addTorrentManuallyFormTextFieldErrorMessageColor => Colors.red;
+  @override
+  Color get addTorrentManuallyFormSelectedCategoryBGColor => Colors.yellow;
+  @override
+  Color get addTorrentManuallyFormCheckmarkColor =>
+      const Color.fromARGB(255, 0, 0, 0);
+  @override
+  Color get addTorrentManuallyFormSelectedCategoryNameTextColor =>
+      const Color.fromARGB(255, 0, 0, 0);
+  @override
+  Color get addTorrentManuallyFormUnSelectedCategoryNameTextColor =>
+      const Color.fromARGB(255, 255, 255, 255);
+  @override
+  Color get addTorrentManuallyFormTagsNotCreatedYetMessageTextColor =>
+      const Color.fromARGB(255, 22, 0, 121);
+  @override
+  Color get addTorrentManuallyFormSelectedTagBGColor => Colors.yellow;
+  @override
+  Color get addTorrentManuallyFormSelectedTagNameTextColor =>
+      const Color.fromARGB(255, 0, 0, 0);
+  @override
+  Color get addTorrentManuallyFormUnSelectedTagNameTextColor =>
+      const Color.fromARGB(255, 255, 255, 255);
+  @override
+  Color get addTorrentManuallyFormAddTorrentButtonBackgroundColor =>
+      const Color.fromARGB(255, 217, 216, 216);
+  @override
+  Color get addTorrentManuallyFormAddTorrentButtonBorderColor =>
+      const Color.fromARGB(255, 129, 128, 128);
+  @override
+  Color get addTorrentManuallyFormAddTorrentButtonTextColor =>
+      const Color.fromARGB(255, 0, 0, 0);
+  @override
+  Color get addTorrentManuallyFormExpandIconColor => Colors.black;
+  @override
+  Color get addTorrentManuallyFormCollapseIconColor =>
+      const Color.fromARGB(255, 4, 0, 255);
+  @override
+  Color get addTorrentManuallyFormInputTextColor => const Color.fromARGB(255, 0, 0, 0);
 }

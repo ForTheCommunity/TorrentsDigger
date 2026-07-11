@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 
 use lib_torrents_digger::database::bookmark::{
-    fetch_all_info_hashes, search_bookmark, BookmarkCategory, BookmarkTag,
+    create_bookmark_manually, fetch_all_info_hashes, search_bookmark, BookmarkCategory, BookmarkTag,
 };
 
 use crate::api::{
@@ -200,6 +200,31 @@ pub fn get_tags_of_torrent(info_hash: &str) -> Result<Vec<u16>, String> {
 
 pub fn update_torrent_tags(info_hash: &str, tag_ids: Vec<u16>) -> Result<(), String> {
     match BookmarkTag::update_torrent_tags(info_hash, tag_ids) {
+        Ok(_) => Ok(()),
+        Err(e) => Err(e.to_string()),
+    }
+}
+
+pub fn insert_bookmark_manually(
+    torrent: InternalTorrent,
+    category_id: u16,
+    tag_ids: Vec<u16>,
+) -> Result<(), String> {
+    match create_bookmark_manually(
+        ExternalTorrent {
+            info_hash: torrent.info_hash,
+            name: torrent.name,
+            magnet: torrent.magnet,
+            size: torrent.size,
+            date: torrent.date,
+            seeders: torrent.seeders,
+            leechers: torrent.leechers,
+            total_downloads: torrent.total_downloads,
+            source_url: torrent.source_url,
+        },
+        category_id,
+        tag_ids,
+    ) {
         Ok(_) => Ok(()),
         Err(e) => Err(e.to_string()),
     }
