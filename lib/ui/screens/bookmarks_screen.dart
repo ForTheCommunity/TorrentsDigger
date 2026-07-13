@@ -229,13 +229,30 @@ class _BookmarkScreenState extends State<BookmarksScreen> {
                   const Divider(height: 1, thickness: 1),
 
                   // Tags Section..
-                  BlocBuilder<TagsBloc, TagsState>(
+                  BlocConsumer<TagsBloc, TagsState>(
+                    listener: (context, state) {
+                      state.whenOrNull(
+                        loaded: (tagsList) {
+                          if (selectedTagId != null &&
+                              !tagsList.any((t) => t.id == selectedTagId)) {
+                            setState(() {
+                              selectedTagId = null;
+                            });
+                          }
+                          // Reload bookmarks with current filters
+                          context.read<BookmarkBloc>().add(
+                            BookmarkEvent.loadBookmarks(
+                              categoryID:
+                                  selectedCategoryId ?? _allCategoriesId,
+                              tagID: selectedTagId ?? _allTagsId,
+                            ),
+                          );
+                        },
+                      );
+                    },
                     builder: (context, state) {
                       return state.when(
-                        initial: () =>
-                            const
-                            // SizedBox.shrink()
-                            Text("data"),
+                        initial: () => const Text("data"),
                         loading: () => const CircularProgressBarWidget(),
                         loaded: (tagsList) => _buildTagGrid(context, tagsList),
                       );
