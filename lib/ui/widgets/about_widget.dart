@@ -138,7 +138,7 @@ class AboutAlertDialog extends StatelessWidget {
                 openUrl(
                   urlType: UrlType.normalLink,
                   clipboardCopy: false,
-                  url: "https://matrix.to/#/#forthecommunity_space:matrix.org"
+                  url: "https://matrix.to/#/#forthecommunity_space:matrix.org",
                 );
               },
               child: Row(
@@ -213,11 +213,16 @@ class AboutAlertDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: Text(
-            "Close",
-            style: TextStyle(
-              color: context.appColors.aboutDialogHyperlinkTextColor,
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Close",
+                style: TextStyle(
+                  color: context.appColors.aboutDialogHyperlinkTextColor,
+                ),
+              ),
+            ],
           ),
         ),
       ],
