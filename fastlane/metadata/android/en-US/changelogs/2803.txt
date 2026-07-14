@@ -1,0 +1,2 @@
+- Added Feature : Add Torrent Manually.
+- Fixed Previous issues.

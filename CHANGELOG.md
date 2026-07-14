@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.8] - 2026-07-14
+- Added Feature : Add Torrent Manually.
+- Fixed Previous issues.
+
 ## [1.2.7] - 2026-07-06
 - Added Bookmarks Tagging Feature.
 - Added Bookmark Tags Stats.
