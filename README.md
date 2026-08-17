@@ -83,13 +83,11 @@
 </details>
 
 ## --> Download | Install :
-[<img src="https://f-droid.org/badge/get-it-on.png"
-    alt="Get it on F-Droid"
-    height="80">](https://f-droid.org/packages/org.forthecommunity.torrentsdigger)
 
-<a href='https://flathub.org/apps/io.gitlab.ForTheCommunity.torrentsdigger'>
-    <img width='240' alt='Get it on Flathub' src='https://flathub.org/api/badge?locale=en'/>
-  </a>
+[![F-Droid Version](https://img.shields.io/f-droid/v/org.forthecommunity.torrentsdigger?style=flat&logo=fdroid&logoColor=white&label=Install%20from%20F-Droid&labelColor=black&color=green)](https://f-droid.org/packages/org.forthecommunity.torrentsdigger)
+
+
+[![Flathub Version](https://img.shields.io/flathub/v/io.gitlab.ForTheCommunity.torrentsdigger?style=flat&logo=flathub&label=Install%20from%20Flathub&labelColor=black&color=green)](https://flathub.org/apps/io.gitlab.ForTheCommunity.torrentsdigger)
 
 
 ## --> Install using [AppMan](https://github.com/ivan-hc/AppMan)/[AM](https://github.com/ivan-hc/AM).
