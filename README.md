@@ -84,10 +84,25 @@
 
 ## --> Download | Install :
 
-[![F-Droid Version](https://img.shields.io/f-droid/v/org.forthecommunity.torrentsdigger?style=flat&logo=fdroid&logoColor=white&label=Install%20from%20F-Droid&labelColor=black&color=green)](https://f-droid.org/packages/org.forthecommunity.torrentsdigger)
+<a href="https://f-droid.org/packages/org.forthecommunity.torrentsdigger">
+  <img
+    src="https://img.shields.io/f-droid/v/org.forthecommunity.torrentsdigger?style=flat&logo=fdroid&logoColor=white&label=Install%20from%20F-Droid&labelColor=black&color=green
+    "
+    alt="F-droid"
+    width="320" height="30"
+  />
+</a>
 
+<br>
 
-[![Flathub Version](https://img.shields.io/flathub/v/io.gitlab.ForTheCommunity.torrentsdigger?style=flat&logo=flathub&label=Install%20from%20Flathub&labelColor=black&color=green)](https://flathub.org/apps/io.gitlab.ForTheCommunity.torrentsdigger)
+<a href="https://flathub.org/apps/io.gitlab.ForTheCommunity.torrentsdigger">
+  <img
+    src="https://img.shields.io/flathub/v/io.gitlab.ForTheCommunity.torrentsdigger?style=flat&logo=flathub&label=Install%20from%20Flathub&labelColor=black&color=green"
+    alt="Flathub"
+    width="320"
+  />
+</a>
+
 
 
 ## --> Install using [AppMan](https://github.com/ivan-hc/AppMan)/[AM](https://github.com/ivan-hc/AM).
