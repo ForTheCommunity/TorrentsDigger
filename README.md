@@ -86,10 +86,9 @@
 
 <a href="https://f-droid.org/packages/org.forthecommunity.torrentsdigger">
   <img
-    src="https://img.shields.io/f-droid/v/org.forthecommunity.torrentsdigger?style=flat&logo=fdroid&logoColor=white&label=Install%20from%20F-Droid&labelColor=black&color=green
-    "
+    src="https://img.shields.io/f-droid/v/org.forthecommunity.torrentsdigger?style=flat&logo=fdroid&logoColor=white&label=Install%20from%20F-Droid&labelColor=black&color=green"
     alt="F-droid"
-    width="320" height="30"
+    width="320"
   />
 </a>
 
@@ -151,14 +150,14 @@ See [Contribution Guide](./CONTRIBUTING.md).
 
 
 ## Contributors :
-1. [ ⧼ Shaswot Nepal ⧽ ](https://ShaswotDhungana.com.np) $~~~$ ｢ Maintainer ｣
+1. [ ⧼ Shaswot Nepal ⧽ ](https://ShaswotDhungana.com.np) &nbsp;&nbsp;&nbsp; ｢ Maintainer ｣
 
 
-2. [ ⧼ Wind Xebec ⧽ ](https://github.com/ybsa) $~~~$ ｢ Contributor ｣ :
+2. [ ⧼ Wind Xebec ⧽ ](https://github.com/ybsa) &nbsp;&nbsp;&nbsp; ｢ Contributor ｣ :
 - [Added Support For Windows OS.](https://gitlab.com/ForTheCommunity/torrentsdigger/-/merge_requests/3)
 - [Fixed URL Launch Issue & Fixed Icon not showing issue on Taskbar in Windows OS.](https://gitlab.com/ForTheCommunity/torrentsdigger/-/merge_requests/5)
 - [Fixed Scaffold Messenger / SnackBar Theme Issue.](https://gitlab.com/ForTheCommunity/torrentsdigger/-/merge_requests/6)
 
 
-3. [ ⧼ Nia Ward ⧽ ](https://gitlab.com/Nia_Ward) $~~~$ ｢ Contributor ｣ :
+3. [ ⧼ Nia Ward ⧽ ](https://gitlab.com/Nia_Ward) &nbsp;&nbsp;&nbsp; ｢ Contributor ｣ :
 - [Added Russian Metadata Translation for F-droid.](https://gitlab.com/ForTheCommunity/torrentsdigger/-/merge_requests/1)
