@@ -2,106 +2,82 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:torrents_digger/database/get_settings_data.dart';
 import 'package:torrents_digger/database/initialize.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 
 const String databaseFileName = "torrents_digger.database";
 
-void importDatabaseDesktop() async {
-  String? rootPath = await getAppRootDir();
-
-  if (rootPath != null) {
-    createSnackBar(
-      message:
-          "Put Database is in Path :\n$rootPath\n Path Copied to Clipboard",
-      duration: 5,
-    );
-    Clipboard.setData(ClipboardData(text: rootPath));
-  } else if (rootPath == null) {
-    createSnackBar(message: "app_root_dir is null !!!", duration: 10);
-  } else {
-    createSnackBar(message: "Something Went Wrong !!!", duration: 10);
-  }
-}
-
-void exportDatabaseDesktop() async {
-  String? rootPath = await getAppRootDir();
-
-  if (rootPath != null) {
-    String databasePath = "$rootPath/$databaseFileName";
-    createSnackBar(
-      message:
-          "Database is in Path :\n$databasePath\n Path Copied to Clipboard",
-      duration: 5,
-    );
-    Clipboard.setData(ClipboardData(text: databasePath));
-  } else if (rootPath == null) {
-    createSnackBar(message: "app_root_dir is null !!!", duration: 10);
-  } else {
-    createSnackBar(message: "Something Went Wrong !!!", duration: 10);
-  }
-}
-
-void exportDatabaseAndroid() async {
-  Directory databaseDir = await getApplicationSupportDirectory();
-  File databaseFile = File("${databaseDir.path}/$databaseFileName");
-
+Future<void> importDatabase() async {
   try {
-    final params = SaveFileDialogParams(sourceFilePath: databaseFile.path);
-    final filePath = await FlutterFileDialog.saveFile(params: params);
-
-    if (filePath != null) {
-      createSnackBar(
-        message: "Database File Exported.\nPath -> $filePath",
-        duration: 5,
-      );
-    } else {
-      createSnackBar(message: "Failed to export Database.", duration: 5);
-    }
-  } catch (e) {
-    createSnackBar(
-      message: "Failed To Export Database File !!!\nError : ${e.toString()}",
-      duration: 5,
+    PlatformFile? file = await FilePicker.pickFile(
+      dialogTitle: "Import Database",
     );
-  }
-}
 
-void importDatabaseAndroid() async {
-  Directory databaseDir = await getApplicationSupportDirectory();
-  File databaseFile = File("${databaseDir.path}/$databaseFileName");
+    if (file == null) {
+      return; // User canceled
+    }
 
-  PlatformFile? file = await FilePicker.pickFile();
-
-  if (file != null) {
     String importedFileName = file.name;
 
     // Database file name should contain databaseFileName
     if (importedFileName.contains(databaseFileName)) {
-      try {
-        //  Reading database file
-        Uint8List databaseFileData = await file.readAsBytes();
+      Directory databaseDir = await getApplicationSupportDirectory();
+      File databaseFile = File("${databaseDir.path}/$databaseFileName");
 
-        // Writing file to internal scoped storage
-        await databaseFile.writeAsBytes(databaseFileData);
-        createSnackBar(message: "Database imported...", duration: 2);
-        // try migration if db is old.
-        await tryMigrateDatabase2Latest();
-      } catch (e) {
-        createSnackBar(
-          message: "Unable to Import Database.\nError: ${e.toString()}",
-          duration: 5,
-        );
-      }
+      // Reading database file
+      Uint8List databaseFileData = await file.readAsBytes();
+
+      // Writing file to internal scoped storage
+      await databaseFile.writeAsBytes(databaseFileData);
+      createSnackBar(message: "Database imported...", duration: 2);
+      // try migration if db is old.
+      await tryMigrateDatabase2Latest();
     } else {
       createSnackBar(
         message: "Invalid File Picked.\nPick a Valid Database File.",
         duration: 5,
       );
     }
-  } else {
-    createSnackBar(message: "Failed to Pick database File", duration: 2);
+  } catch (e) {
+    createSnackBar(
+      message: "Unable to Import Database.\nError: ${e.toString()}",
+      duration: 5,
+    );
+  }
+}
+
+Future<void> exportDatabase() async {
+  try {
+    Directory databaseDir = await getApplicationSupportDirectory();
+    File databaseFile = File("${databaseDir.path}/$databaseFileName");
+
+    if (!await databaseFile.exists()) {
+      createSnackBar(
+        message: "Database file does not exist to export.",
+        duration: 4,
+      );
+      return;
+    }
+
+    Uint8List bytes = await databaseFile.readAsBytes();
+
+    Uri? result = await FilePicker.saveFile(
+      dialogTitle: "Export Database",
+      fileName: databaseFileName,
+      bytes: bytes,
+    );
+
+    if (result != null) {
+      createSnackBar(
+        message: "Database File Exported.",
+        duration: 3,
+      );
+    }
+  } catch (e) {
+    createSnackBar(
+      message: "Failed To Export Database File !!!\nError : ${e.toString()}",
+      duration: 5,
+    );
   }
 }
