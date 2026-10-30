@@ -73,19 +73,17 @@ void importDatabaseAndroid() async {
   Directory databaseDir = await getApplicationSupportDirectory();
   File databaseFile = File("${databaseDir.path}/$databaseFileName");
 
-  FilePickerResult? result = await FilePicker.pickFiles();
+  PlatformFile? file = await FilePicker.pickFile();
 
-  if (result != null) {
-    File file = File(result.files.single.path!);
-
-    String importedFileName = file.path.split('/').last;
+  if (file != null) {
+    String importedFileName = file.name;
 
     // Database file name should contain databaseFileName
     if (importedFileName.contains(databaseFileName)) {
-      //  Reading database file
-      List<int> databaseFileData = await file.readAsBytes();
-
       try {
+        //  Reading database file
+        Uint8List databaseFileData = await file.readAsBytes();
+
         // Writing file to internal scoped storage
         await databaseFile.writeAsBytes(databaseFileData);
         createSnackBar(message: "Database imported...", duration: 2);
@@ -93,7 +91,7 @@ void importDatabaseAndroid() async {
         await tryMigrateDatabase2Latest();
       } catch (e) {
         createSnackBar(
-          message: "Unable to Import Database.\nError: ${e.toString}",
+          message: "Unable to Import Database.\nError: ${e.toString()}",
           duration: 5,
         );
       }
