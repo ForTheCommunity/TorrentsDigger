@@ -17,9 +17,17 @@ class SearchBarWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.appColors.searchBarBackgroundColor,
         borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: context.appColors.generalTextColor.withValues(alpha: 0.18),
+          width: 1,
+        ),
       ),
-
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      padding: const EdgeInsets.only(
+        left: 16.0,
+        right: 4.0,
+        top: 2.0,
+        bottom: 2.0,
+      ),
       child: Row(
         children: [
           Text(
@@ -29,7 +37,7 @@ class SearchBarWidget extends StatelessWidget {
               fontSize: 20,
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 8),
           Expanded(
             child: TextField(
               controller: searchController,
@@ -43,17 +51,20 @@ class SearchBarWidget extends StatelessWidget {
                   color: context.appColors.searchBarPlaceholderColor,
                 ),
                 border: InputBorder.none,
+                isDense: true,
+                contentPadding: const EdgeInsets.symmetric(vertical: 12.0),
               ),
             ),
           ),
-          SizedBox(width: 12),
-          // Search Button that blends into search bar widget
-          GestureDetector(
-            onTap: onSearchPressed,
-            child: Icon(
+          const SizedBox(width: 4),
+          // Search Button with generous touch target & ripple feedback
+          IconButton(
+            onPressed: onSearchPressed,
+            tooltip: 'Search',
+            icon: Icon(
               Icons.search,
               color: context.appColors.generalTextColor,
-              size: 25,
+              size: 26,
             ),
           ),
         ],

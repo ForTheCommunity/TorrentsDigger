@@ -20,7 +20,15 @@ class TorrentCard extends StatelessWidget {
     return Card(
       color: context.appColors.cardColor,
       margin: const EdgeInsets.symmetric(vertical: 8.0),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(
+          color: context.appColors.cardSecondaryTextColor.withValues(
+            alpha: 0.18,
+          ),
+          width: 1,
+        ),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

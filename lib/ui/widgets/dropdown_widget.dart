@@ -25,6 +25,12 @@ class DropdownWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.appColors.sourcesDropdownBackgroundColor,
         borderRadius: BorderRadius.circular(15),
+        border: Border.all(
+          color: context.appColors.dropdownArrowDownColor.withValues(
+            alpha: 0.25,
+          ),
+          width: 1,
+        ),
       ),
 
       child: DropdownButtonHideUnderline(

@@ -52,7 +52,7 @@ class SettingsScreen extends StatelessWidget {
                     ),
                     ListTile(
                       leading: Icon(
-                        color: context.appColors.settingsTextColor,
+                        color: context.appColors.settingsIconsColor,
                         Icons.hub,
                       ),
                       title: Text(

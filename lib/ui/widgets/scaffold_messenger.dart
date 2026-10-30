@@ -23,13 +23,14 @@ void createSnackBar({required String message, required int duration}) {
       orElse: () => LightTheme(),
     );
 
+    scaffoldMessengerKey.currentState!.clearSnackBars();
     scaffoldMessengerKey.currentState!.showSnackBar(
       SnackBar(
         content: Container(
           margin: Platform.isAndroid || Platform.isIOS
               ? const EdgeInsets.only(left: 5, right: 5, bottom: 5)
               : Platform.isWindows || Platform.isLinux || Platform.isMacOS
-              ? const EdgeInsets.only(left:10, right:10, bottom:10)
+              ? const EdgeInsets.only(left: 10, right: 10, bottom: 10)
               : const EdgeInsets.only(left: 5, right: 5, bottom: 5),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: BoxDecoration(
@@ -41,7 +42,10 @@ void createSnackBar({required String message, required int duration}) {
           ),
           child: Text(
             message,
-            style: TextStyle(color: appColors.scaffoldMessengerMessageColor),
+            style: TextStyle(
+              color: appColors.scaffoldMessengerMessageColor,
+              fontSize: 14,
+            ),
           ),
         ),
         duration: Duration(seconds: duration),
