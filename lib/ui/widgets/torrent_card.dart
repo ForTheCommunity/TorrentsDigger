@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:torrents_digger/blocs/bookmark_blocs/bookmark_bloc/bookmark_bloc.dart';
@@ -17,13 +18,14 @@ class TorrentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.appColors;
     return Card(
-      color: context.appColors.cardColor,
+      color: colors.cardColor,
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-          color: context.appColors.cardSecondaryTextColor.withValues(
+          color: colors.cardSecondaryTextColor.withValues(
             alpha: 0.18,
           ),
           width: 1,
@@ -196,7 +198,6 @@ class TorrentCard extends StatelessWidget {
 
                       openUrl(
                         urlType: UrlType.magentLink,
-                        clipboardCopy: true,
                         url: processedMagnetLink,
                       );
                     } catch (e) {
@@ -229,7 +230,6 @@ class TorrentCard extends StatelessWidget {
                         );
                         openUrl(
                           urlType: UrlType.normalLink,
-                          clipboardCopy: false,
                           url: torrent.sourceUrl!,
                         );
                       } catch (e) {
@@ -248,12 +248,214 @@ class TorrentCard extends StatelessWidget {
                     }
                   },
                 ),
+                const Spacer(),
+                PopupMenuButton<String>(
+                  tooltip: 'Copy Options',
+                  icon: Icon(
+                    Icons.copy_rounded,
+                    color: colors.torrentCardCopyButtonIconColor,
+                    size: 22,
+                  ),
+                  color: colors.torrentCardCopyMenuBackgroundColor,
+                  elevation: 6,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    side: BorderSide(
+                      color: colors.torrentCardCopyMenuBorderColor,
+                      width: 1.5,
+                    ),
+                  ),
+                  onSelected: (value) async {
+                    await _handleCopyAction(context, value);
+                  },
+                  itemBuilder: (_) {
+                    final menuTextColor =
+                        colors.torrentCardCopyMenuTextColor;
+                    final menuIconColor =
+                        colors.torrentCardCopyMenuIconColor;
+                    return [
+                      PopupMenuItem<String>(
+                        value: 'name',
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.title_rounded,
+                              size: 18,
+                              color: menuIconColor,
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              'Copy Name',
+                              style: TextStyle(
+                                color: menuTextColor,
+                                fontSize: 13.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      PopupMenuItem<String>(
+                        value: 'magnet',
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.link_rounded,
+                              size: 18,
+                              color: menuIconColor,
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              'Copy Magnet',
+                              style: TextStyle(
+                                color: menuTextColor,
+                                fontSize: 13.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      PopupMenuItem<String>(
+                        value: 'info_hash',
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.tag_rounded,
+                              size: 18,
+                              color: menuIconColor,
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              'Copy Info Hash',
+                              style: TextStyle(
+                                color: menuTextColor,
+                                fontSize: 13.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      if (torrent.sourceUrl != null &&
+                          torrent.sourceUrl!.trim().isNotEmpty)
+                        PopupMenuItem<String>(
+                          value: 'source_url',
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.open_in_new_rounded,
+                                size: 18,
+                                color: menuIconColor,
+                              ),
+                              const SizedBox(width: 12),
+                              Text(
+                                'Copy Source URL',
+                                style: TextStyle(
+                                  color: menuTextColor,
+                                  fontSize: 13.5,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      const PopupMenuDivider(),
+                      PopupMenuItem<String>(
+                        value: 'all_details',
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.copy_all_rounded,
+                              size: 18,
+                              color: menuIconColor,
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              'Copy All Details',
+                              style: TextStyle(
+                                color: menuTextColor,
+                                fontSize: 13.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ];
+                  },
+                ),
               ],
             ),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> _handleCopyAction(BuildContext context, String action) async {
+    try {
+      switch (action) {
+        case 'name':
+          await Clipboard.setData(ClipboardData(text: torrent.name));
+          createSnackBar(
+            message: "Torrent name copied to clipboard",
+            duration: 2,
+          );
+          break;
+
+        case 'magnet':
+          final processedMagnet = await processMagnetLink(
+            unprocessedMagnet: torrent.magnet,
+          );
+          await Clipboard.setData(ClipboardData(text: processedMagnet));
+          createSnackBar(
+            message: "Magnet link copied to clipboard",
+            duration: 2,
+          );
+          break;
+
+        case 'info_hash':
+          await Clipboard.setData(ClipboardData(text: torrent.infoHash));
+          createSnackBar(
+            message: "Info hash copied to clipboard",
+            duration: 2,
+          );
+          break;
+
+        case 'source_url':
+          if (torrent.sourceUrl != null && torrent.sourceUrl!.isNotEmpty) {
+            await Clipboard.setData(ClipboardData(text: torrent.sourceUrl!));
+            createSnackBar(
+              message: "Source URL copied to clipboard",
+              duration: 2,
+            );
+          }
+          break;
+
+        case 'all_details':
+          final processedMagnet = await processMagnetLink(
+            unprocessedMagnet: torrent.magnet,
+          );
+          final buffer = StringBuffer()
+            ..writeln("Name: ${torrent.name}")
+            ..writeln("Size: ${torrent.size}")
+            ..writeln("Created: ${torrent.date}")
+            ..writeln(
+              "Seeders: ${torrent.seeders} | Leechers: ${torrent.leechers}",
+            )
+            ..writeln("Info Hash: ${torrent.infoHash}");
+          if (torrent.sourceUrl != null &&
+              torrent.sourceUrl!.trim().isNotEmpty) {
+            buffer.writeln("Source: ${torrent.sourceUrl}");
+          }
+          buffer.write("Magnet: $processedMagnet");
+
+          await Clipboard.setData(ClipboardData(text: buffer.toString()));
+          createSnackBar(
+            message: "Torrent details copied to clipboard",
+            duration: 2,
+          );
+          break;
+      }
+    } catch (e) {
+      createSnackBar(message: "Failed to copy: $e", duration: 3);
+    }
   }
 
   // Category Picker Dialog

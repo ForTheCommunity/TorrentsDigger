@@ -444,4 +444,15 @@ class MatrixTheme extends AppTheme {
       const Color.fromARGB(255, 0, 234, 255);
   @override
   Color get addTorrentManuallyFormInputTextColor => const Color.fromARGB(255, 255, 255, 255);
+
+  @override
+  Color get torrentCardCopyButtonIconColor => const Color.fromRGBO(0, 255, 0, 1);
+  @override
+  Color get torrentCardCopyMenuBackgroundColor => const Color.fromRGBO(0, 0, 0, 1);
+  @override
+  Color get torrentCardCopyMenuTextColor => const Color.fromRGBO(0, 255, 0, 1);
+  @override
+  Color get torrentCardCopyMenuIconColor => const Color.fromRGBO(0, 255, 0, 1);
+  @override
+  Color get torrentCardCopyMenuBorderColor => const Color.fromRGBO(0, 255, 0, 1);
 }

@@ -6,7 +6,21 @@ import 'package:torrents_digger/themes/app_theme.dart';
 import 'package:torrents_digger/themes/light_theme.dart';
 
 extension AppThemeExtension on BuildContext {
-  AppTheme get appColors => watch<ThemesBloc>().state.maybeWhen(
+  AppTheme get appColors {
+    try {
+      return watch<ThemesBloc>().state.maybeWhen(
+        themeState: (appColors, _, _) => appColors,
+        orElse: () => LightTheme(),
+      );
+    } catch (_) {
+      return read<ThemesBloc>().state.maybeWhen(
+        themeState: (appColors, _, _) => appColors,
+        orElse: () => LightTheme(),
+      );
+    }
+  }
+
+  AppTheme get readAppColors => read<ThemesBloc>().state.maybeWhen(
     themeState: (appColors, _, _) => appColors,
     orElse: () => LightTheme(),
   );

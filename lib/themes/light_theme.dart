@@ -440,4 +440,15 @@ class LightTheme extends AppTheme {
       const Color.fromARGB(255, 4, 0, 255);
   @override
   Color get addTorrentManuallyFormInputTextColor => const Color.fromARGB(255, 0, 0, 0);
+
+  @override
+  Color get torrentCardCopyButtonIconColor => const Color.fromARGB(255, 70, 70, 80);
+  @override
+  Color get torrentCardCopyMenuBackgroundColor => Colors.white;
+  @override
+  Color get torrentCardCopyMenuTextColor => const Color.fromARGB(255, 20, 20, 20);
+  @override
+  Color get torrentCardCopyMenuIconColor => const Color(0xFF2563EB);
+  @override
+  Color get torrentCardCopyMenuBorderColor => const Color.fromARGB(255, 215, 215, 225);
 }

@@ -392,4 +392,15 @@ class AmoledTheme extends AppTheme {
   Color get addTorrentManuallyFormCollapseIconColor => const Color(0xFFFF9F0A);
   @override
   Color get addTorrentManuallyFormInputTextColor => Colors.white;
+
+  @override
+  Color get torrentCardCopyButtonIconColor => const Color(0xFFFF9F0A);
+  @override
+  Color get torrentCardCopyMenuBackgroundColor => const Color(0xFF141414);
+  @override
+  Color get torrentCardCopyMenuTextColor => Colors.white;
+  @override
+  Color get torrentCardCopyMenuIconColor => const Color(0xFFFF9F0A);
+  @override
+  Color get torrentCardCopyMenuBorderColor => const Color(0xFF2C2C2E);
 }

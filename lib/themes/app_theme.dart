@@ -197,4 +197,10 @@ abstract class AppTheme {
   Color get addTorrentManuallyFormExpandIconColor;
   Color get addTorrentManuallyFormCollapseIconColor;
   Color get addTorrentManuallyFormInputTextColor;
+
+  Color get torrentCardCopyButtonIconColor;
+  Color get torrentCardCopyMenuBackgroundColor;
+  Color get torrentCardCopyMenuTextColor;
+  Color get torrentCardCopyMenuIconColor;
+  Color get torrentCardCopyMenuBorderColor;
 }
