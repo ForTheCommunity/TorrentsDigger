@@ -72,7 +72,7 @@ class SettingsScreen extends StatelessWidget {
                     ListTile(
                       leading: Icon(
                         color: context.appColors.settingsIconsColor,
-                        Icons.network_ping,
+                        Icons.settings_ethernet,
                       ),
                       title: Text(
                         'DNS',
@@ -91,7 +91,7 @@ class SettingsScreen extends StatelessWidget {
                     ListTile(
                       leading: Icon(
                         color: context.appColors.settingsIconsColor,
-                        Icons.settings_ethernet,
+                        Icons.network_ping,
                       ),
                       title: Text(
                         'Proxy',

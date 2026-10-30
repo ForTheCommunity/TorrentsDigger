@@ -51,14 +51,14 @@ class CustomDnsScreen extends StatelessWidget {
                           children: [
                             activeCustomDnsResolver == dnsResolverID
                                 ? Icon(
-                                    Icons.network_ping,
+                                    Icons.settings_ethernet,
                                     size: 27,
                                     color: context
                                         .appColors
                                         .activeTrackersListIconColor,
                                   )
                                 : Icon(
-                                    Icons.network_ping,
+                                    Icons.settings_ethernet,
                                     color: context
                                         .appColors
                                         .defaultTrackersIconColor,
