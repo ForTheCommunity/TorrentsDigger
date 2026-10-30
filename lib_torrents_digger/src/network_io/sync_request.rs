@@ -4,11 +4,10 @@ use anyhow::{Result, anyhow};
 
 use regex::Regex;
 use serde::Deserialize;
-use ua_generator::ua::spoof_ua;
 use ureq::{Agent, Body, http::Response, unversioned::transport::DefaultConnector};
 
 use crate::{
-    database::{custom_resolver::get_active_custom_resolver, proxy::Proxy},
+    database::{custom_resolver::get_active_custom_resolver, proxy::Proxy, settings_kvs::fetch_kv},
     network_io::custom_resolver::CustomResolver,
     sources::{
         Pagination, available_sources::AllAvailableSources,
@@ -20,6 +19,21 @@ use crate::{
     static_includes::get_current_version,
     torrent::Torrent,
 };
+
+pub const APP_USER_AGENT: &str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
+
+pub fn extract_domain(url: &str) -> Option<String> {
+    let after_proto = url.split("://").nth(1).unwrap_or(url);
+    let host_port = after_proto.split('/').next()?;
+    let host = host_port.split(':').next()?;
+    if host.is_empty() {
+        None
+    } else {
+        let clean_host = host.to_lowercase();
+        let stripped = clean_host.strip_prefix("www.").unwrap_or(&clean_host);
+        Some(stripped.to_string())
+    }
+}
 
 pub fn fetch_torrents(
     url: &str,
@@ -42,9 +56,6 @@ pub fn fetch_torrents(
 }
 
 pub fn send_request(url: &str) -> Result<Response<Body>> {
-    // random User Agent.
-    let user_agent = spoof_ua();
-
     let agent = match Proxy::fetch_saved_proxy()? {
         Some(proxy_data) => {
             let proxy_url = build_proxy_url(&proxy_data);
@@ -54,7 +65,89 @@ pub fn send_request(url: &str) -> Result<Response<Body>> {
         None => build_agent(None),
     };
 
-    let response = agent?.get(url).header("User-Agent", user_agent).call()?;
+    let mut request = agent?
+            .get(url)
+            .header("User-Agent", APP_USER_AGENT)
+            .header(
+                "Accept",
+                "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            )
+            .header("Accept-Language", "en-US,en;q=0.9")
+            .header("Sec-Fetch-Dest", "document")
+            .header("Sec-Fetch-Mode", "navigate")
+            .header("Sec-Fetch-Site", "none")
+            .header("Sec-Fetch-User", "?1")
+            .header("Upgrade-Insecure-Requests", "1");
+
+    if APP_USER_AGENT.contains("Chrome") {
+        request = request
+            .header(
+                "Sec-Ch-Ua",
+                "\"Chromium\";v=\"130\", \"Google Chrome\";v=\"130\", \"Not?A_Brand\";v=\"99\"",
+            )
+            .header("Sec-Ch-Ua-Mobile", "?0")
+            .header("Sec-Ch-Ua-Platform", "\"Windows\"");
+    }
+
+    let domain_opt = extract_domain(url);
+
+    let mut has_cookie = false;
+    if let Some(ref domain) = domain_opt {
+        let cookie_key = format!("cf_cookie_{}", domain);
+        let www_cookie_key = format!("cf_cookie_www.{}", domain);
+        let mut cookie_val = fetch_kv(&cookie_key).ok().flatten();
+        if cookie_val.is_none() || cookie_val.as_deref() == Some("") {
+            cookie_val = fetch_kv(&www_cookie_key).ok().flatten();
+        }
+        if let Some(cookies) = cookie_val {
+            if !cookies.trim().is_empty() {
+                eprintln!(
+                    "[RUST sync_request] Found saved cookie for {}: {}",
+                    domain, cookies
+                );
+                request = request.header("Cookie", &cookies);
+                has_cookie = true;
+            } else {
+                eprintln!("[RUST sync_request] Cookie for {} is empty in DB", domain);
+            }
+        } else {
+            eprintln!(
+                "[RUST sync_request] No cookie found in DB for keys: {} / {}",
+                cookie_key, www_cookie_key
+            );
+        }
+    }
+
+    let response = match request.call() {
+        Ok(res) => res,
+        Err(err) => {
+            let err_str = err.to_string();
+            eprintln!("[RUST sync_request] Request call error: {}", err_str);
+            if err_str.contains("403") || err_str.contains("503") {
+                eprintln!(
+                    "[RUST sync_request] Status 403/503 caught in error (has_cookie: {})! Triggering CLOUDFLARE_CHALLENGE",
+                    has_cookie
+                );
+                return Err(anyhow!("CLOUDFLARE_CHALLENGE:{}", url));
+            }
+            return Err(err.into());
+        }
+    };
+
+    let status_code = response.status().as_u16();
+    let cf_mitigated = response
+        .headers()
+        .get("cf-mitigated")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("none");
+
+    let is_challenged =
+        cf_mitigated.contains("challenge") || status_code == 403 || status_code == 503;
+
+    if is_challenged {
+        return Err(anyhow!("CLOUDFLARE_CHALLENGE:{}", url));
+    }
+
     Ok(response)
 }
 

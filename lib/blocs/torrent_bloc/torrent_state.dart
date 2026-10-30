@@ -17,3 +17,12 @@ class TorrentSearchFailure extends TorrentState {
   final String error;
   TorrentSearchFailure({required this.error});
 }
+
+class TorrentCloudflareChallengeState extends TorrentState {
+  final String challengeUrl;
+  final SearchTorrents retryEvent;
+  TorrentCloudflareChallengeState({
+    required this.challengeUrl,
+    required this.retryEvent,
+  });
+}

@@ -17,7 +17,6 @@ rusqlite_migration = { version = "2.6.0", features = ["from-directory"] }
 scraper = "0.29.0"
 serde = { version = "1.0.229", features = ["derive"] }
 serde_json = "1.0.154"
-ua_generator = "0.5.87"
 ureq = { version = "3.5.0", features = ["rustls","socks-proxy"] }
 urlencoding = "2.1.3"
 

@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 import 'package:torrents_digger/blocs/pagination_bloc/pagination_bloc.dart';
 import 'package:torrents_digger/dig_torrent/search_torrent.dart';
@@ -35,9 +36,24 @@ class TorrentBloc extends Bloc<TorrentEvents, TorrentState> {
         paginationBloc.add(
           PaginationEvent.initPagination(pagination: pagination),
         );
-        
       } catch (e) {
-        emit(TorrentSearchFailure(error: e.toString()));
+        final errorStr = e.toString();
+
+        if (errorStr.contains('CLOUDFLARE_CHALLENGE:')) {
+          final challengeUrl = errorStr
+              .split('CLOUDFLARE_CHALLENGE:')
+              .last
+              .trim();
+
+          emit(
+            TorrentCloudflareChallengeState(
+              challengeUrl: challengeUrl,
+              retryEvent: event,
+            ),
+          );
+          return;
+        }
+        emit(TorrentSearchFailure(error: errorStr));
       }
     });
   }

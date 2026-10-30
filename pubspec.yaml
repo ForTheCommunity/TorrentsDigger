@@ -45,6 +45,10 @@ dependencies:
   flutter_svg: ^2.3.2
   hydrated_bloc: ^11.0.0
   json_annotation: ^4.12.0
+  webview_all: ^1.4.7
+  webview_all_linux: ^1.4.7
+  webview_all_windows: ^1.4.7
+  path: ^1.9.1
 
 dev_dependencies:
   flutter_test:
