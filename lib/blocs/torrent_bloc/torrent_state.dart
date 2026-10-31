@@ -21,8 +21,11 @@ class TorrentSearchFailure extends TorrentState {
 class TorrentCloudflareChallengeState extends TorrentState {
   final String challengeUrl;
   final SearchTorrents retryEvent;
+  final bool autoPrompt;
+
   TorrentCloudflareChallengeState({
     required this.challengeUrl,
     required this.retryEvent,
+    this.autoPrompt = true,
   });
 }

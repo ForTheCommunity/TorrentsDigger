@@ -45,10 +45,21 @@ class TorrentBloc extends Bloc<TorrentEvents, TorrentState> {
               .last
               .trim();
 
+          final isRetry = event.retryCount > 0;
           emit(
             TorrentCloudflareChallengeState(
               challengeUrl: challengeUrl,
-              retryEvent: event,
+              retryEvent: SearchTorrents(
+                torrentName: event.torrentName,
+                sourceIndex: event.sourceIndex,
+                categoryIndex: event.categoryIndex,
+                filterIndex: event.filterIndex,
+                sortingIndex: event.sortingIndex,
+                sortingOrderIndex: event.sortingOrderIndex,
+                page: event.page,
+                retryCount: event.retryCount + 1,
+              ),
+              autoPrompt: !isRetry,
             ),
           );
           return;

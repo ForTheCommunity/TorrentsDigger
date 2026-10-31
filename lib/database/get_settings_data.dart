@@ -17,22 +17,20 @@ Future<void> saveDomainCookie(String domain, String cookies) async {
   final cleanDomain = domain.toLowerCase().replaceFirst(RegExp(r'^www\.'), '');
 
   await insertOrUpdateKv(key: "cf_cookie_$cleanDomain", value: cookies);
-  if (cleanDomain != domain.toLowerCase()) {
-    await insertOrUpdateKv(
-      key: "cf_cookie_${domain.toLowerCase()}",
-      value: cookies,
-    );
-  }
+  await insertOrUpdateKv(key: "cf_cookie_www.$cleanDomain", value: cookies);
 }
 
 Future<String?> getDomainCookie(String domain) async {
-  final val = await getASettingsKv(key: "cf_cookie_${domain.toLowerCase()}");
+  final cleanDomain = domain.toLowerCase().replaceFirst(RegExp(r'^www\.'), '');
+  final val = await getASettingsKv(key: "cf_cookie_$cleanDomain");
 
   return val;
 }
 
 Future<void> clearDomainCookie(String domain) async {
-  await insertOrUpdateKv(key: "cf_cookie_${domain.toLowerCase()}", value: "");
+  final cleanDomain = domain.toLowerCase().replaceFirst(RegExp(r'^www\.'), '');
+  await insertOrUpdateKv(key: "cf_cookie_$cleanDomain", value: "");
+  await insertOrUpdateKv(key: "cf_cookie_www.$cleanDomain", value: "");
 }
 
 Future<void> setAppUserAgent(String ua) async {

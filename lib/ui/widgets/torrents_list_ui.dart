@@ -14,18 +14,14 @@ class TorrentsListUi extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<TorrentBloc, TorrentState>(
       listener: (context, state) {
-        if (state is TorrentCloudflareChallengeState) {
-
+        if (state is TorrentCloudflareChallengeState && state.autoPrompt) {
           final torrentBloc = context.read<TorrentBloc>();
-          CloudflareSolverDialog.show(context, state.challengeUrl).then((solved) {
-        
+          CloudflareSolverDialog.show(context, state.challengeUrl).then((
+            solved,
+          ) {
             if (!context.mounted) return;
             if (solved == true) {
-          
-               //  Retrying search event after challenge solved...
               torrentBloc.add(state.retryEvent);
-            } else {
-               // Solver closed without solving (solved != true)
             }
           });
         }
@@ -63,46 +59,55 @@ class TorrentsListUi extends StatelessWidget {
                   );
           case TorrentCloudflareChallengeState():
             return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.security_outlined,
-                    size: 48,
-                    color: context.appColors.circularProgressIndicatorColor,
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    "Cloudflare verification required",
-                    style: TextStyle(
-                      color: context.appColors.generalTextColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.security_outlined,
+                      size: 48,
+                      color: context.appColors.circularProgressIndicatorColor,
                     ),
-                  ),
-                  const SizedBox(height: 12),
-                  ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          context.appColors.circularProgressIndicatorColor,
-                      foregroundColor: context.appColors.scaffoldColor,
+                    const SizedBox(height: 12),
+                    Text(
+                      state.autoPrompt
+                          ? "Cloudflare verification required"
+                          : "Verification failed or expired. Please solve again.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: context.appColors.generalTextColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
-                    icon: const Icon(Icons.open_in_browser),
-                    label: const Text("Solve Verification Challenge"),
-                    onPressed: () {
-                      final torrentBloc = context.read<TorrentBloc>();
-                      CloudflareSolverDialog.show(context, state.challengeUrl)
-                          .then((solved) {
-                        if (!context.mounted) return;
-                        if (solved == true) {
-                          torrentBloc.add(state.retryEvent);
-                        }
-                      });
-                    },
-                  ),
-                ],
+                    const SizedBox(height: 12),
+                    ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            context.appColors.circularProgressIndicatorColor,
+                        foregroundColor: context.appColors.scaffoldColor,
+                      ),
+                      icon: const Icon(Icons.open_in_browser),
+                      label: const Text("Solve Verification Challenge"),
+                      onPressed: () {
+                        final torrentBloc = context.read<TorrentBloc>();
+                        CloudflareSolverDialog.show(
+                          context,
+                          state.challengeUrl,
+                        ).then((solved) {
+                          if (!context.mounted) return;
+                          if (solved == true) {
+                            torrentBloc.add(state.retryEvent);
+                          }
+                        });
+                      },
+                    ),
+                  ],
+                ),
               ),
             );
+
           case TorrentSearchFailure():
             return Center(
               child: Text(

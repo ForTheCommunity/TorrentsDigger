@@ -11,6 +11,7 @@ class SearchTorrents extends TorrentEvents {
   final int sortingIndex;
   final int sortingOrderIndex;
   final int? page;
+  final int retryCount;
 
   SearchTorrents({
     required this.torrentName,
@@ -20,5 +21,6 @@ class SearchTorrents extends TorrentEvents {
     required this.sortingIndex,
     required this.sortingOrderIndex,
     this.page,
+    this.retryCount = 0,
   });
 }

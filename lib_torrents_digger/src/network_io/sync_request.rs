@@ -7,7 +7,11 @@ use serde::Deserialize;
 use ureq::{Agent, Body, http::Response, unversioned::transport::DefaultConnector};
 
 use crate::{
-    database::{custom_resolver::get_active_custom_resolver, proxy::Proxy, settings_kvs::fetch_kv},
+    database::{
+        custom_resolver::get_active_custom_resolver,
+        proxy::Proxy,
+        settings_kvs::{fetch_kv, insert_update_kv},
+    },
     network_io::custom_resolver::CustomResolver,
     sources::{
         Pagination, available_sources::AllAvailableSources,
@@ -65,9 +69,15 @@ pub fn send_request(url: &str) -> Result<Response<Body>> {
         None => build_agent(None),
     };
 
+    let user_agent = fetch_kv("app_user_agent")
+        .ok()
+        .flatten()
+        .filter(|ua| !ua.trim().is_empty())
+        .unwrap_or_else(|| APP_USER_AGENT.to_string());
+
     let mut request = agent?
             .get(url)
-            .header("User-Agent", APP_USER_AGENT)
+            .header("User-Agent", &user_agent)
             .header(
                 "Accept",
                 "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
@@ -79,19 +89,33 @@ pub fn send_request(url: &str) -> Result<Response<Body>> {
             .header("Sec-Fetch-User", "?1")
             .header("Upgrade-Insecure-Requests", "1");
 
-    if APP_USER_AGENT.contains("Chrome") {
+    if user_agent.contains("Chrome") || user_agent.contains("Chromium") {
+        let platform = if user_agent.contains("Linux") || user_agent.contains("X11") {
+            "\"Linux\""
+        } else if user_agent.contains("Android") {
+            "\"Android\""
+        } else if user_agent.contains("Macintosh") || user_agent.contains("Mac OS") {
+            "\"macOS\""
+        } else {
+            "\"Windows\""
+        };
+        let is_mobile = if user_agent.contains("Mobile") {
+            "?1"
+        } else {
+            "?0"
+        };
+
         request = request
             .header(
                 "Sec-Ch-Ua",
                 "\"Chromium\";v=\"130\", \"Google Chrome\";v=\"130\", \"Not?A_Brand\";v=\"99\"",
             )
-            .header("Sec-Ch-Ua-Mobile", "?0")
-            .header("Sec-Ch-Ua-Platform", "\"Windows\"");
+            .header("Sec-Ch-Ua-Mobile", is_mobile)
+            .header("Sec-Ch-Ua-Platform", platform);
     }
 
     let domain_opt = extract_domain(url);
 
-    let mut has_cookie = false;
     if let Some(ref domain) = domain_opt {
         let cookie_key = format!("cf_cookie_{}", domain);
         let www_cookie_key = format!("cf_cookie_www.{}", domain);
@@ -101,20 +125,8 @@ pub fn send_request(url: &str) -> Result<Response<Body>> {
         }
         if let Some(cookies) = cookie_val {
             if !cookies.trim().is_empty() {
-                eprintln!(
-                    "[RUST sync_request] Found saved cookie for {}: {}",
-                    domain, cookies
-                );
                 request = request.header("Cookie", &cookies);
-                has_cookie = true;
-            } else {
-                eprintln!("[RUST sync_request] Cookie for {} is empty in DB", domain);
             }
-        } else {
-            eprintln!(
-                "[RUST sync_request] No cookie found in DB for keys: {} / {}",
-                cookie_key, www_cookie_key
-            );
         }
     }
 
@@ -122,12 +134,14 @@ pub fn send_request(url: &str) -> Result<Response<Body>> {
         Ok(res) => res,
         Err(err) => {
             let err_str = err.to_string();
-            eprintln!("[RUST sync_request] Request call error: {}", err_str);
+            // eprintln!("[RUST sync_request] Request call error: {}", err_str);
             if err_str.contains("403") || err_str.contains("503") {
-                eprintln!(
-                    "[RUST sync_request] Status 403/503 caught in error (has_cookie: {})! Triggering CLOUDFLARE_CHALLENGE",
-                    has_cookie
-                );
+                if let Some(ref domain) = domain_opt {
+                    let cookie_key = format!("cf_cookie_{}", domain);
+                    let www_cookie_key = format!("cf_cookie_www.{}", domain);
+                    let _ = insert_update_kv(&cookie_key, "");
+                    let _ = insert_update_kv(&www_cookie_key, "");
+                }
                 return Err(anyhow!("CLOUDFLARE_CHALLENGE:{}", url));
             }
             return Err(err.into());
@@ -145,6 +159,12 @@ pub fn send_request(url: &str) -> Result<Response<Body>> {
         cf_mitigated.contains("challenge") || status_code == 403 || status_code == 503;
 
     if is_challenged {
+        if let Some(ref domain) = domain_opt {
+            let cookie_key = format!("cf_cookie_{}", domain);
+            let www_cookie_key = format!("cf_cookie_www.{}", domain);
+            let _ = insert_update_kv(&cookie_key, "");
+            let _ = insert_update_kv(&www_cookie_key, "");
+        }
         return Err(anyhow!("CLOUDFLARE_CHALLENGE:{}", url));
     }
 

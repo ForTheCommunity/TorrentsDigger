@@ -15,31 +15,38 @@ class CloudflareSolverDialog extends StatefulWidget {
     required this.onSolved,
   });
 
-  static Future<bool?> show(BuildContext context, String challengeUrl) {
-    // Open modal bottom sheet for Cloudflare challenge
-    return showModalBottomSheet<bool>(
-      context: context,
-      isScrollControlled: true,
-      isDismissible: true,
-      enableDrag: false,
-      backgroundColor: Colors.transparent,
-      builder: (sheetContext) => Container(
-        height: MediaQuery.of(sheetContext).size.height * 0.85,
-        decoration: BoxDecoration(
-          color: sheetContext.appColors.scaffoldColor,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+  static bool _isShowing = false;
+
+  static Future<bool?> show(BuildContext context, String challengeUrl) async {
+    if (_isShowing) return null;
+    _isShowing = true;
+    try {
+      return await showModalBottomSheet<bool>(
+        context: context,
+        isScrollControlled: true,
+        isDismissible: true,
+        enableDrag: false,
+        backgroundColor: Colors.transparent,
+        builder: (sheetContext) => Container(
+          height: MediaQuery.of(sheetContext).size.height * 0.85,
+          decoration: BoxDecoration(
+            color: sheetContext.appColors.scaffoldColor,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+          ),
+          child: CloudflareSolverDialog(
+            challengeUrl: challengeUrl,
+            onSolved: () {
+              // Challenge solved, dismiss modal bottom sheet
+              if (Navigator.of(sheetContext).canPop()) {
+                Navigator.of(sheetContext).pop(true);
+              }
+            },
+          ),
         ),
-        child: CloudflareSolverDialog(
-          challengeUrl: challengeUrl,
-          onSolved: () {
-            // Challenge solved, dismiss modal bottom sheet
-            if (Navigator.of(sheetContext).canPop()) {
-              Navigator.of(sheetContext).pop(true);
-            }
-          },
-        ),
-      ),
-    );
+      );
+    } finally {
+      _isShowing = false;
+    }
   }
 
   @override
@@ -86,6 +93,11 @@ class _CloudflareSolverDialogState extends State<CloudflareSolverDialog> {
   }
 
   Future<void> _initWebView() async {
+    // Clear existing cookies so old expired tokens don't falsely trigger solve
+    try {
+      await _cookieManager.clearCookies();
+    } catch (_) {}
+
     // Initializing WebView for target URI
     final WebViewController controller = WebViewController();
     _controller = controller;
@@ -202,6 +214,22 @@ class _CloudflareSolverDialogState extends State<CloudflareSolverDialog> {
       final hasClearance = cookieMap.containsKey('cf_clearance');
 
       if (hasClearance) {
+        // Verify that the page is not still sitting on the Cloudflare challenge page
+        String? title;
+        try {
+          title = await _controller?.getTitle();
+        } catch (_) {}
+
+        final isStillChallenging = title != null && (
+          title.toLowerCase().contains('just a moment') ||
+          title.toLowerCase().contains('attention required') ||
+          title.toLowerCase().contains('checking your browser')
+        );
+
+        if (isStillChallenging) {
+          return;
+        }
+
         _pollTimer?.cancel();
         createSnackBar(message: 'Verification successful!', duration: 2);
         await _saveAndFinish(cookieMap);
@@ -214,6 +242,7 @@ class _CloudflareSolverDialogState extends State<CloudflareSolverDialog> {
   Future<void> _saveAndFinish(Map<String, String> cookieMap) async {
     if (_isSaving) return;
     _isSaving = true;
+    _pollTimer?.cancel();
 
     if (mounted) {
       setState(() {
@@ -227,6 +256,7 @@ class _CloudflareSolverDialogState extends State<CloudflareSolverDialog> {
           .join('; ');
       final domain = _targetUri.host;
 
+      await _syncUserAgent();
       // Saving cookies for domain
       await saveDomainCookie(domain, cookieHeader);
 
@@ -255,16 +285,16 @@ class _CloudflareSolverDialogState extends State<CloudflareSolverDialog> {
       // Manual Done tapped
       final cookieMap = await _extractCookies();
 
-      if (cookieMap.isEmpty) {
+      if (cookieMap.isEmpty || !cookieMap.containsKey('cf_clearance')) {
         createSnackBar(
           message:
-              'No verification cookies found yet. Please check the box first.',
+              'No clearance cookie found yet. Please complete the verification checkbox first.',
           duration: 3,
         );
         if (mounted) {
           setState(() {
             _isSaving = false;
-            _statusText = 'No cookies found yet. Please check the box first.';
+            _statusText = 'No clearance cookie found yet. Please complete verification first.';
           });
         }
         return;
