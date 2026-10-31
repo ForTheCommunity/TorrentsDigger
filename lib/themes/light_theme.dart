@@ -156,11 +156,10 @@ class LightTheme extends AppTheme {
   Color get settingsFloatingActionButtonForegroundColor =>
       const Color.fromARGB(255, 0, 0, 0);
   @override
-  Color get settingsFloatingActionButtonBackgroundColor =>
-      const Color.fromARGB(255, 255, 255, 255);
+  Color get settingsFloatingActionButtonBackgroundColor => Colors.transparent;
   @override
   Color get settingsFloatingActionButtonHoverBackgroundColor =>
-      const Color.fromARGB(255, 255, 255, 255);
+      Colors.transparent;
 
   @override
   Color get circularProgressIndicatorColor => Colors.blue;
@@ -222,8 +221,7 @@ class LightTheme extends AppTheme {
       const Color.fromARGB(255, 255, 255, 255);
 
   @override
-  Color get scrollToTopButtonBackgroundColor =>
-      const Color.fromARGB(212, 255, 255, 255);
+  Color get scrollToTopButtonBackgroundColor => Colors.transparent;
   @override
   Color get scrollToTopButtonIconColor =>
       const Color.fromARGB(255, 226, 27, 173);

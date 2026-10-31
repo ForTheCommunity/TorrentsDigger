@@ -38,6 +38,10 @@ class FloatingActionsButtons extends StatelessWidget {
           FloatingActionButton(
             heroTag: "Add Torrent",
             mini: true,
+            elevation: 0,
+            focusElevation: 0,
+            hoverElevation: 0,
+            highlightElevation: 0,
             tooltip: "Add Torrent",
             foregroundColor:
                 context.appColors.settingsFloatingActionButtonForegroundColor,
@@ -58,6 +62,10 @@ class FloatingActionsButtons extends StatelessWidget {
           FloatingActionButton(
             heroTag: "customs",
             mini: true,
+            elevation: 0,
+            focusElevation: 0,
+            hoverElevation: 0,
+            highlightElevation: 0,
             tooltip: 'Customs',
             foregroundColor:
                 context.appColors.settingsFloatingActionButtonForegroundColor,
@@ -83,6 +91,10 @@ class FloatingActionsButtons extends StatelessWidget {
           FloatingActionButton(
             heroTag: "bookmarks",
             mini: true,
+            elevation: 0,
+            focusElevation: 0,
+            hoverElevation: 0,
+            highlightElevation: 0,
             tooltip: 'Bookmarks',
             foregroundColor:
                 context.appColors.settingsFloatingActionButtonForegroundColor,
@@ -107,6 +119,10 @@ class FloatingActionsButtons extends StatelessWidget {
         if (enableSettings) ...[
           FloatingActionButton(
             tooltip: 'Settings',
+            elevation: 0,
+            focusElevation: 0,
+            hoverElevation: 0,
+            highlightElevation: 0,
             foregroundColor:
                 context.appColors.settingsFloatingActionButtonForegroundColor,
             backgroundColor:

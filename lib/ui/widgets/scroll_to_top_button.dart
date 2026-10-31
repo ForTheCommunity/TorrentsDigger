@@ -45,6 +45,10 @@ class _ScrollToTopButtonState extends State<ScrollToTopButton> {
   Widget build(BuildContext context) {
     if (!_isVisible) return const SizedBox.shrink();
     return FloatingActionButton(
+      elevation: 0,
+      focusElevation: 0,
+      hoverElevation: 0,
+      highlightElevation: 0,
       backgroundColor: context.appColors.scrollToTopButtonBackgroundColor,
       mini: true,
       heroTag: null,
