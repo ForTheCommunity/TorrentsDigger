@@ -105,7 +105,8 @@ class DarkTheme extends AppTheme {
   @override
   Color get defaultTrackersTextColor => Colors.white;
   @override
-  Color get defaultTrackersIconColor => const Color.fromARGB(255, 236, 237, 238);
+  Color get defaultTrackersIconColor =>
+      const Color.fromARGB(255, 236, 237, 238);
   @override
   Color get defaultTrackersInfoDialogBackgroundColor => const Color(0xFF1A1D24);
   @override
@@ -116,7 +117,8 @@ class DarkTheme extends AppTheme {
   @override
   Color get defaultTrackersInfoIconColor => const Color(0xFF60A5FA);
   @override
-  Color get activeTrackersListIconColor => const Color.fromARGB(255, 0, 81, 255);
+  Color get activeTrackersListIconColor =>
+      const Color.fromARGB(255, 0, 81, 255);
 
   @override
   Color get paginationCurrentTextColor => Colors.white;
@@ -142,8 +144,7 @@ class DarkTheme extends AppTheme {
   @override
   Color get settingsFloatingActionButtonForegroundColor => Colors.white;
   @override
-  Color get settingsFloatingActionButtonBackgroundColor =>
-      Colors.transparent;
+  Color get settingsFloatingActionButtonBackgroundColor => Colors.transparent;
   @override
   Color get settingsFloatingActionButtonHoverBackgroundColor =>
       Colors.transparent;
@@ -199,7 +200,7 @@ class DarkTheme extends AppTheme {
       const Color(0xFF2563EB);
 
   @override
-  Color get scrollToTopButtonBackgroundColor => const Color(0xFF2563EB);
+  Color get scrollToTopButtonBackgroundColor => Colors.transparent;
   @override
   Color get scrollToTopButtonIconColor => Colors.white;
 
@@ -338,8 +339,7 @@ class DarkTheme extends AppTheme {
   @override
   Color get tagPickerDialogCloseButtonTextColor => Colors.white;
   @override
-  Color get tagPickerDialogDoneButtonBackgroundColor =>
-      const Color(0xFF2563EB);
+  Color get tagPickerDialogDoneButtonBackgroundColor => const Color(0xFF2563EB);
   @override
   Color get tagPickerDialogDoneButtonTextColor => Colors.white;
   @override

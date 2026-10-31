@@ -25,9 +25,7 @@ class TorrentCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-          color: colors.cardSecondaryTextColor.withValues(
-            alpha: 0.18,
-          ),
+          color: colors.cardSecondaryTextColor.withValues(alpha: 0.18),
           width: 1,
         ),
       ),
@@ -248,7 +246,9 @@ class TorrentCard extends StatelessWidget {
                     }
                   },
                 ),
-                const Spacer(),
+
+                const SizedBox(width: 10),
+
                 PopupMenuButton<String>(
                   tooltip: 'Copy Options',
                   icon: Icon(
@@ -269,10 +269,8 @@ class TorrentCard extends StatelessWidget {
                     await _handleCopyAction(context, value);
                   },
                   itemBuilder: (_) {
-                    final menuTextColor =
-                        colors.torrentCardCopyMenuTextColor;
-                    final menuIconColor =
-                        colors.torrentCardCopyMenuIconColor;
+                    final menuTextColor = colors.torrentCardCopyMenuTextColor;
+                    final menuIconColor = colors.torrentCardCopyMenuIconColor;
                     return [
                       PopupMenuItem<String>(
                         value: 'name',
@@ -412,10 +410,7 @@ class TorrentCard extends StatelessWidget {
 
         case 'info_hash':
           await Clipboard.setData(ClipboardData(text: torrent.infoHash));
-          createSnackBar(
-            message: "Info hash copied to clipboard",
-            duration: 2,
-          );
+          createSnackBar(message: "Info hash copied to clipboard", duration: 2);
           break;
 
         case 'source_url':

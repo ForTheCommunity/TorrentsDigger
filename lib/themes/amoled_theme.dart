@@ -199,9 +199,9 @@ class AmoledTheme extends AppTheme {
       const Color.fromARGB(255, 49, 49, 49);
 
   @override
-  Color get scrollToTopButtonBackgroundColor => const Color(0xFFFF9F0A);
+  Color get scrollToTopButtonBackgroundColor => Colors.transparent;
   @override
-  Color get scrollToTopButtonIconColor => Colors.black;
+  Color get scrollToTopButtonIconColor => const Color(0xFFFF9F0A);
 
   @override
   Color get scaffoldMessengerMessageColor => Colors.white;
