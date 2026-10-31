@@ -223,8 +223,7 @@ class LightTheme extends AppTheme {
   @override
   Color get scrollToTopButtonBackgroundColor => Colors.transparent;
   @override
-  Color get scrollToTopButtonIconColor =>
-      const Color.fromARGB(255, 226, 27, 173);
+  Color get scrollToTopButtonIconColor => Colors.black;
 
   @override
   Color get scaffoldMessengerMessageColor => const Color.fromARGB(255, 0, 0, 0);
@@ -437,16 +436,20 @@ class LightTheme extends AppTheme {
   Color get addTorrentManuallyFormCollapseIconColor =>
       const Color.fromARGB(255, 4, 0, 255);
   @override
-  Color get addTorrentManuallyFormInputTextColor => const Color.fromARGB(255, 0, 0, 0);
+  Color get addTorrentManuallyFormInputTextColor =>
+      const Color.fromARGB(255, 0, 0, 0);
 
   @override
-  Color get torrentCardCopyButtonIconColor => const Color.fromARGB(255, 70, 70, 80);
+  Color get torrentCardCopyButtonIconColor =>
+      const Color.fromARGB(255, 70, 70, 80);
   @override
   Color get torrentCardCopyMenuBackgroundColor => Colors.white;
   @override
-  Color get torrentCardCopyMenuTextColor => const Color.fromARGB(255, 20, 20, 20);
+  Color get torrentCardCopyMenuTextColor =>
+      const Color.fromARGB(255, 20, 20, 20);
   @override
   Color get torrentCardCopyMenuIconColor => const Color(0xFF2563EB);
   @override
-  Color get torrentCardCopyMenuBorderColor => const Color.fromARGB(255, 215, 215, 225);
+  Color get torrentCardCopyMenuBorderColor =>
+      const Color.fromARGB(255, 215, 215, 225);
 }
