@@ -118,7 +118,7 @@ build_appimage:
 
     # Build AppImage
     # installing dependencies
-    - apt-get install curl git unzip xz-utils zip libglu1-mesa build-essential libgtk-3-dev clang lld llvm cmake ninja-build pkg-config liblzma-dev -y
+    - apt-get install curl git unzip xz-utils zip libglu1-mesa build-essential libgtk-3-dev libwebkit2gtk-4.1-dev clang lld llvm cmake ninja-build pkg-config liblzma-dev -y
     - apt install file fuse -y
     # creating temporary dir for downloading/saving appimagetool and this is ignored in VCS.
     # Downloading AppImageToolKit
@@ -176,17 +176,17 @@ build_flatpak:
     - apt install flatpak flatpak-builder -y
     # Adding Flathub Repo.
     - flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-    # Installing Free Desktop Platform.
-    - flatpak install flathub org.freedesktop.Platform//25.08 -y
-    # Installing Free Desktop SDK
-    - flatpak install flathub org.freedesktop.Sdk//25.08 -y
+    # Installing GNOME Platform.
+    - flatpak install flathub org.gnome.Platform//50 -y
+    # Installing GNOME SDK.
+    - flatpak install flathub org.gnome.Sdk//50 -y
     # Installing Rust Stable Latest
     - flatpak install org.freedesktop.Sdk.Extension.rust-stable//25.08 -y
     # Installing Free Desktop LLVM.
     - flatpak install flathub org.freedesktop.Sdk.Extension.llvm20//25.08 -y
     - cd flatpak
     # Building App
-    - flatpak-builder --repo=repo --force-clean build-dir io.gitlab.ForTheCommunity.torrentsdigger.yml
+    - flatpak-builder --install-deps-from=flathub --repo=repo --force-clean build-dir io.gitlab.ForTheCommunity.torrentsdigger.yml
     # Packaging .flatpak file
     - flatpak build-bundle repo $FLATPAK_FILENAME io.gitlab.ForTheCommunity.torrentsdigger
     - mv $FLATPAK_FILENAME ../releases/
@@ -228,7 +228,7 @@ build_linux_bundle:
     - export LINUX_BUNDLE_CHECKSUM_FILENAME="Linux_Bundle_sha256_Checksum.txt"
 
     # Install Linux build dependencies
-    - apt-get install curl git unzip xz-utils zip libglu1-mesa build-essential libgtk-3-dev clang lld llvm cmake ninja-build pkg-config liblzma-dev -y
+    - apt-get install curl git unzip xz-utils zip libglu1-mesa build-essential libgtk-3-dev libwebkit2gtk-4.1-dev clang lld llvm cmake ninja-build pkg-config liblzma-dev -y
 
     # Flutter Build release for linux
     - flutter config --enable-linux-desktop
