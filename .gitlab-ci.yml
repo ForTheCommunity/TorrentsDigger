@@ -150,20 +150,14 @@ build_appimage:
 
 build_flatpak:
   stage: build
-  image: forthecommunity/flutter:3.47.9
+  image: ubuntu:latest
+  variables:
+    DEBIAN_FRONTEND: noninteractive
   rules:
     - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+\+\d+$/
   script:
-    # Install Rust
-    - apt update -y && apt upgrade -y
-    - apt install -y curl git wget unzip
-    - curl https://sh.rustup.rs -sSf | sh -s -- -y
-    - source "$HOME/.cargo/env"
-
-    # Creating essential dirs
     - mkdir -p releases
 
-    # Creating AppImage
     # Grepping App Name & Version.
     - export APP_NAME=$(grep 'name:' pubspec.yaml | head -1 | awk '{print $2}' | sed 's/-/_/g' | sed 's/\r//g')
     - export APP_VERSION=$(grep 'version:' pubspec.yaml | head -1 | awk '{print $2}' | cut -c1-3);
@@ -172,8 +166,10 @@ build_flatpak:
     # Checksum File
     - export FLATPAK_CHECKSUM_FILENAME="Flatpak_sha256_Checksum.txt"
 
-    # Installing flatpak & flatpak-builder.
-    - apt install flatpak flatpak-builder -y
+    # Installing flatpak, flatpak-builder & git.
+    - apt update -y
+    - apt install -y flatpak flatpak-builder git curl
+    - apt clean && rm -rf /var/lib/apt/lists/*
     # Adding Flathub Repo.
     - flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     # Installing GNOME Platform.
@@ -186,7 +182,7 @@ build_flatpak:
     - flatpak install flathub org.freedesktop.Sdk.Extension.llvm20//25.08 -y
     - cd flatpak
     # Building App
-    - flatpak-builder --install-deps-from=flathub --repo=repo --force-clean build-dir io.gitlab.ForTheCommunity.torrentsdigger.yml
+    - flatpak-builder --install-deps-from=flathub --repo=repo --force-clean --disable-cache build-dir io.gitlab.ForTheCommunity.torrentsdigger.yml
     # Packaging .flatpak file
     - flatpak build-bundle repo $FLATPAK_FILENAME io.gitlab.ForTheCommunity.torrentsdigger
     - mv $FLATPAK_FILENAME ../releases/
