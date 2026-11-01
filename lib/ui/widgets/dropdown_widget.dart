@@ -39,7 +39,8 @@ class DropdownWidget extends StatelessWidget {
             hintText,
             style: TextStyle(
               color: context.appColors.generalTextColor,
-              wordSpacing: 3,
+              fontSize: 14,
+              letterSpacing: 0.2,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -48,9 +49,9 @@ class DropdownWidget extends StatelessWidget {
           isExpanded: true,
           style: TextStyle(
             color: context.appColors.generalTextColor,
-            fontSize: 15,
+            fontSize: 14,
             fontWeight: FontWeight.w600,
-            letterSpacing: 0.9,
+            letterSpacing: 0.2,
           ),
           dropdownColor: context.appColors.sourcesDropdownOpenedBackgroundColor,
           iconEnabledColor: context.appColors.dropdownArrowDownColor,
@@ -59,13 +60,50 @@ class DropdownWidget extends StatelessWidget {
             return items.map((String item) {
               return Align(
                 alignment: Alignment.centerLeft,
-                child: Text(item, maxLines: 1, overflow: TextOverflow.ellipsis),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    return FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: constraints.maxWidth,
+                        ),
+                        child: Text(
+                          item,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: context.appColors.generalTextColor,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.2,
+                            height: 1.15,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
               );
             }).toList();
           },
 
           items: items.map((item) {
-            return DropdownMenuItem(value: item, child: Text(item));
+            return DropdownMenuItem(
+              value: item,
+              child: Text(
+                item,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: context.appColors.generalTextColor,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: 0.2,
+                ),
+              ),
+            );
           }).toList(),
           onChanged: onChanged,
         ),

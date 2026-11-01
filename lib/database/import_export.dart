@@ -20,8 +20,9 @@ Future<void> importDatabase() async {
 
     String importedFileName = file.name;
 
-    // Database file name should contain databaseFileName
-    if (importedFileName.contains(databaseFileName)) {
+    // Database file name should contain 'torrents_digger' and extension should be 'database'
+    if (importedFileName.contains('torrents_digger') &&
+        file.extension == 'database') {
       Directory databaseDir = await getApplicationSupportDirectory();
       File databaseFile = File("${databaseDir.path}/$databaseFileName");
 
