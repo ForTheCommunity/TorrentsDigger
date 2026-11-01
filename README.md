@@ -112,25 +112,14 @@ appman install torrents_digger
 ## --> Download binaries from [releases](https://gitlab.com/ForTheCommunity/torrentsdigger/-/releases) Page.
 
 
-### TODOS :
-- Save Search History.
-
-- All Source Search.
-
-- Automatically Update Bookmarked Torrent Data (Like seeders, leechers , total downloads) when Researched (opt-in,opt-out).
-
-- Log Screen for showing Execution Logs.
-
-- TUI APP (using Ratatui, basic project structure is made in tui directory).
-
-- NSFW Toogle Button.
-
 
 ## Support
 If you find this project useful, consider supporting its development.
 <br>
 **Monero (XMR):**
-`83eg4LiD5PEWGu6JpU2mfQVmVdNJQfKzGAi5GUGZKBkBdWBaGxxUrifCj1WyiUEtUfLNaxQjcfHDaDtxfZhr7RboPCVvTYf`
+```
+83eg4LiD5PEWGu6JpU2mfQVmVdNJQfKzGAi5GUGZKBkBdWBaGxxUrifCj1WyiUEtUfLNaxQjcfHDaDtxfZhr7RboPCVvTYf
+```
 
 
 ## Disclaimer ->
@@ -142,11 +131,11 @@ Becarefull what you download; ensure you are following your country's law.`
 
 ## License
 
-This project is licensed under the **[Unlicense](https://unlicense.org)**. You can view the full license text in the [UNLICENSE](./UNLICENSE) file.
+This project is licensed under the **[Unlicense](https://unlicense.org)**. You can view the full license text in the [UNLICENSE](https://gitlab.com/ForTheCommunity/torrentsdigger/-/blob/main/UNLICENSE) file.
 
 
 ## Contribute
-See [Contribution Guide](./CONTRIBUTING.md).
+See [Contribution Guide](https://gitlab.com/ForTheCommunity/torrentsdigger/-/blob/main/CONTRIBUTING.md?plain=0).
 
 
 ## Contributors :

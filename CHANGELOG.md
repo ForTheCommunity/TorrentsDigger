@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.2.9] - 2026-11-01
+- added feature to fetch torrent from Clouflare protected sites.
+- added feature to copy torrent's information.
+- made database import/export easy in all supported platforms.
+- added Dark & Amoled themes.
+- added feature to copy torrent's information.
+- redesigned UI.
+- fixed bugs.
+
 ## [1.2.8] - 2026-07-14
 - Added Feature : Add Torrent Manually.
 - Fixed Previous issues.

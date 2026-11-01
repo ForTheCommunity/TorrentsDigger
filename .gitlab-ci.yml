@@ -1,10 +1,11 @@
 stages:
   - build
+  - package_release
   - release
 
 build_android_binaries:
   stage: build
-  image: forthecommunity/flutter:3.44.4
+  image: forthecommunity/flutter:3.47.9
   rules:
     - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+\+\d+$/
   script:
@@ -93,7 +94,7 @@ build_android_binaries:
 
 build_appimage:
   stage: build
-  image: forthecommunity/flutter:3.44.4
+  image: forthecommunity/flutter:3.47.9
   rules:
     - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+\+\d+$/
   script:
@@ -149,7 +150,7 @@ build_appimage:
 
 build_flatpak:
   stage: build
-  image: forthecommunity/flutter:3.44.4
+  image: forthecommunity/flutter:3.47.9
   rules:
     - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+\+\d+$/
   script:
@@ -203,6 +204,131 @@ build_flatpak:
     reports:
       dotenv: flatpak.env
 
+build_linux_bundle:
+  stage: build
+  image: forthecommunity/flutter:3.47.9
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+\+\d+$/
+  script:
+    # Install Rust
+    - apt update -y && apt upgrade -y
+    - apt install -y curl git wget unzip
+    - curl https://sh.rustup.rs -sSf | sh -s -- -y
+    - source "$HOME/.cargo/env"
+
+    # Creating essential dirs
+    - mkdir -p releases
+
+    # Grepping App Name & Version
+    - export APP_NAME=$(grep 'name:' pubspec.yaml | head -1 | awk '{print $2}' | sed 's/-/_/g' | sed 's/\r//g')
+    - export APP_VERSION=$(grep 'version:' pubspec.yaml | head -1 | awk '{print $2}' | cut -d'+' -f1 | sed 's/\r//g')
+    - export LINUX_BUNDLE_NAME="${APP_NAME}_${APP_VERSION}_x86_64_linux.tar.gz"
+
+    # Checksum File
+    - export LINUX_BUNDLE_CHECKSUM_FILENAME="Linux_Bundle_sha256_Checksum.txt"
+
+    # Install Linux build dependencies
+    - apt-get install curl git unzip xz-utils zip libglu1-mesa build-essential libgtk-3-dev clang lld llvm cmake ninja-build pkg-config liblzma-dev -y
+
+    # Flutter Build release for linux
+    - flutter config --enable-linux-desktop
+    - dart run build_runner build
+    - flutter pub get
+    - flutter build linux --release
+
+    # Package Linux bundle
+    - mkdir -p "dist/${APP_NAME}"
+    - cp -r build/linux/x64/release/bundle/* "dist/${APP_NAME}/"
+    - tar -czf "releases/${LINUX_BUNDLE_NAME}" -C dist "${APP_NAME}"
+    - sha256sum releases/$LINUX_BUNDLE_NAME >> releases/$LINUX_BUNDLE_CHECKSUM_FILENAME
+
+    # Save .env for release job
+    - echo "LINUX_BUNDLE_NAME=$LINUX_BUNDLE_NAME" >> linux_bundle.env
+    - echo "LINUX_BUNDLE_CHECKSUM_FILENAME=$LINUX_BUNDLE_CHECKSUM_FILENAME" >> linux_bundle.env
+
+  artifacts:
+    paths:
+      - releases
+      - linux_bundle.env
+    reports:
+      dotenv: linux_bundle.env
+
+fetch_windows_and_unify_release:
+  stage: package_release
+  image: debian:bookworm-slim
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+\+\d+$/
+  needs:
+    - job: build_android_binaries
+      artifacts: true
+    - job: build_appimage
+      artifacts: true
+    - job: build_flatpak
+      artifacts: true
+    - job: build_linux_bundle
+      artifacts: true
+  script:
+    - apt update -y && apt install -y curl
+    - mkdir -p releases
+
+    # GitHub release info for Windows
+    - export GITHUB_REPO="${GITHUB_REPO:-ForTheCommunity/torrentsdigger}"
+    - export GITHUB_RELEASE_URL="https://github.com/${GITHUB_REPO}/releases/download/${CI_COMMIT_TAG}"
+    - echo "Fetching Windows release from ${GITHUB_RELEASE_URL}..."
+
+    # Polling GitHub Release for Windows installer and checksum (every 1 min up to 10 mins)
+    - MAX_ATTEMPTS=10
+    - ATTEMPT=0
+    - WINDOWS_EXE=""
+
+    - |
+      while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
+        HTTP_STATUS=$(curl -sL -w "%{http_code}" -o "releases/windows_checksum.txt" "${GITHUB_RELEASE_URL}/checksum_sha256.txt")
+        if [ "$HTTP_STATUS" -eq 200 ] && [ -s "releases/windows_checksum.txt" ]; then
+          WINDOWS_EXE=$(awk '{print $2}' releases/windows_checksum.txt | tr -d '\r' | sed 's|.*/||')
+          echo "Found Windows checksum for $WINDOWS_EXE on GitHub. Downloading binary..."
+          curl -sL -f -o "releases/${WINDOWS_EXE}" "${GITHUB_RELEASE_URL}/${WINDOWS_EXE}"
+          if [ -f "releases/${WINDOWS_EXE}" ] && [ -s "releases/${WINDOWS_EXE}" ]; then
+            echo "Successfully downloaded Windows installer: ${WINDOWS_EXE}"
+            break
+          fi
+        fi
+        ATTEMPT=$((ATTEMPT + 1))
+        if [ $ATTEMPT -lt $MAX_ATTEMPTS ]; then
+          echo "Attempt $ATTEMPT/$MAX_ATTEMPTS: Windows release not ready on GitHub yet. Rechecking in 1 minute..."
+          sleep 60
+        fi
+      done
+
+    - |
+      if [ -z "$WINDOWS_EXE" ] || [ ! -s "releases/${WINDOWS_EXE}" ]; then
+        echo "Error: Windows release was not ready on GitHub after 10 minutes."
+        exit 1
+      fi
+
+    # Unify all checksums into a single clean SHA256SUMS.txt
+    - |
+      cat \
+        releases/*Android*Checksum*.txt \
+        releases/*AppImage*Checksum*.txt \
+        releases/*Flatpak*Checksum*.txt \
+        releases/*Linux*Bundle*Checksum*.txt \
+        releases/windows_checksum.txt \
+        | sed 's| releases/| |' | sed 's|releases/||' | tr -d '\r' > releases/SHA256SUMS.txt
+
+    - echo "Unified checksum file content:"
+    - cat releases/SHA256SUMS.txt
+
+    # Export variables for Release Job
+    - echo "WINDOWS_INSTALLER_NAME=${WINDOWS_EXE}" >> unified_release.env
+
+  artifacts:
+    paths:
+      - releases
+      - unified_release.env
+    reports:
+      dotenv: unified_release.env
+
 create-release:
   stage: release
   image: registry.gitlab.com/gitlab-org/release-cli:latest
@@ -212,6 +338,10 @@ create-release:
     - job: build_appimage
       artifacts: true
     - job: build_flatpak
+      artifacts: true
+    - job: build_linux_bundle
+      artifacts: true
+    - job: fetch_windows_and_unify_release
       artifacts: true
   rules:
     - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+\+\d+$/
@@ -235,18 +365,18 @@ create-release:
         # Android x86_64-release
         - name: "$X86_64_APK_NAME"
           url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$X86_64_APK_NAME?job=build_android_binaries"
-        # SHA-256 Android Binaries Checksums
-        - name: "$ANDROID_CHECKSUM_FILENAME"
-          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$ANDROID_CHECKSUM_FILENAME?job=build_android_binaries"
         # AppImage
         - name: "$NEW_APPIMAGE_NAME"
           url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$NEW_APPIMAGE_NAME?job=build_appimage"
-        # SHA-256 AppImage Checksum
-        - name: "$APPIMAGE_CHECKSUM_FILENAME"
-          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$APPIMAGE_CHECKSUM_FILENAME?job=build_appimage"
         # Flatpak
         - name: "$FLATPAK_FILENAME"
           url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$FLATPAK_FILENAME?job=build_flatpak"
-        # SHA-256 Flatpak Checksum
-        - name: "$FLATPAK_CHECKSUM_FILENAME"
-          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$FLATPAK_CHECKSUM_FILENAME?job=build_flatpak"
+        # Linux Bundle
+        - name: "$LINUX_BUNDLE_NAME"
+          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$LINUX_BUNDLE_NAME?job=build_linux_bundle"
+        # Windows Installer
+        - name: "$WINDOWS_INSTALLER_NAME"
+          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$WINDOWS_INSTALLER_NAME?job=fetch_windows_and_unify_release"
+        # Unified SHA-256 Checksums (Android, Linux, Windows)
+        - name: "SHA256SUMS.txt"
+          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/SHA256SUMS.txt?job=fetch_windows_and_unify_release"

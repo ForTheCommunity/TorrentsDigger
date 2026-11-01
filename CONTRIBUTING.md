@@ -43,13 +43,13 @@ just --list
 
 ## 2. Install Required Platform Extensions:
 ```
-flatpak install flathub org.freedesktop.Sdk//25.08 org.freedesktop.Platform//25.08 org.freedesktop.Sdk.Extension.llvm20/x86_64/25.08
+flatpak install flathub org.gnome.Platform//50 org.gnome.Sdk//50 org.freedesktop.Sdk.Extension.llvm20/x86_64/25.08 --user -y
 ```
 
 ## 3. Compiling App & Preparing Local Repository.
 
 ```
-flatpak-builder --repo=repo --force-clean --sandbox --user build io.gitlab.ForTheCommunity.torrentsdigger.yml
+flatpak-builder --repo=repo --force-clean --sandbox --user build io.gitlab.ForTheCommunity.torrentsdigger.yml --disable-rofiles-fuse 
 ```
 
 ## 4. Building .flatpak package.
@@ -59,7 +59,7 @@ flatpak build-bundle repo torrents_digger.flatpak io.gitlab.ForTheCommunity.torr
 
 ## 5. Install Generated Flatpak (in Userspace).
 ```
- flatpak install --user ./torrents_digger.flatpak
+flatpak install ./torrents_digger.flatpak --user -y
 ```
 
 ## 6. Run Installed Flatpak.
@@ -69,7 +69,7 @@ flatpak run io.gitlab.ForTheCommunity.torrentsdigger
 
 ## 7. Installing Flatpak-Builder.
 ```
-flatpak install flathub org.flatpak.Builder
+flatpak install flathub org.flatpak.Builder --user -y
 ```
 
 ## 8. Manifest Lint Check.
@@ -96,12 +96,12 @@ flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/fl
 
 ## 2. Install Required Platform Extensions:
 ```
-flatpak install flathub org.freedesktop.Sdk//25.08 org.freedesktop.Platform//25.08 org.freedesktop.Sdk.Extension.llvm20/x86_64/25.08
+flatpak install flathub org.gnome.Platform//50 org.gnome.Sdk//50 org.freedesktop.Sdk.Extension.llvm20/x86_64/25.08 --user -y
 ```
 
 ## 3. Install Flathub Builder Tool
 ```
-flatpak install -y flathub org.flatpak.Builder
+flatpak install flathub org.flatpak.Builder --user -y
 ```
 
 ## 4. Build and Install Flatpak Package

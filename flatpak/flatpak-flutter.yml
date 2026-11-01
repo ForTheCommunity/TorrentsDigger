@@ -1,7 +1,7 @@
 id: io.gitlab.ForTheCommunity.torrentsdigger
-runtime: org.freedesktop.Platform
-runtime-version: "25.08"
-sdk: org.freedesktop.Sdk
+runtime: org.gnome.Platform
+runtime-version: "50"
+sdk: org.gnome.Sdk
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.llvm20
   - org.freedesktop.Sdk.Extension.rust-stable
@@ -49,5 +49,5 @@ modules:
         url: https://gitlab.com/ForTheCommunity/torrentsdigger.git
       - type: git
         url: https://github.com/flutter/flutter.git
-        tag: 3.44.4
+        tag: 3.47.9
         dest: flutter

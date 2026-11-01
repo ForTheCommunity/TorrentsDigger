@@ -1,0 +1,7 @@
+- added feature to fetch torrent from Clouflare protected sites.
+- added feature to copy torrent's information.
+- made database import/export easy in all supported platforms.
+- added Dark & Amoled themes.
+- added feature to copy torrent's information.
+- redesigned UI.
+- fixed bugs.
