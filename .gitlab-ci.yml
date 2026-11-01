@@ -86,6 +86,7 @@ build_android_binaries:
     - echo "ANDROID_CHECKSUM_FILENAME=$ANDROID_CHECKSUM_FILENAME" >> android.env
 
   artifacts:
+    expire_in: 1 hour
     paths:
       - releases
       - android.env
@@ -142,6 +143,7 @@ build_appimage:
     - echo "APPIMAGE_CHECKSUM_FILENAME=$APPIMAGE_CHECKSUM_FILENAME" >> appimage.env
 
   artifacts:
+    expire_in: 1 hour
     paths:
       - releases
       - appimage.env
@@ -182,7 +184,7 @@ build_flatpak:
     - flatpak install flathub org.freedesktop.Sdk.Extension.llvm20//25.08 -y
     - cd flatpak
     # Ensure flatpak builds the current release commit
-    - sed -i "s/commit: .*/commit: $CI_COMMIT_SHA/" io.gitlab.ForTheCommunity.torrentsdigger.yml
+    - 'sed -i "s/commit: .*/commit: $CI_COMMIT_SHA/" io.gitlab.ForTheCommunity.torrentsdigger.yml'
     # Building App
     - flatpak-builder --install-deps-from=flathub --repo=repo --force-clean --disable-cache build-dir io.gitlab.ForTheCommunity.torrentsdigger.yml
     # Packaging .flatpak file
@@ -196,6 +198,7 @@ build_flatpak:
     - echo "FLATPAK_CHECKSUM_FILENAME=$FLATPAK_CHECKSUM_FILENAME" >> flatpak.env
 
   artifacts:
+    expire_in: 1 hour
     paths:
       - releases
       - flatpak.env
@@ -245,6 +248,7 @@ build_linux_bundle:
     - echo "LINUX_BUNDLE_CHECKSUM_FILENAME=$LINUX_BUNDLE_CHECKSUM_FILENAME" >> linux_bundle.env
 
   artifacts:
+    expire_in: 1 hour
     paths:
       - releases
       - linux_bundle.env
@@ -316,8 +320,10 @@ fetch_windows_and_unify_release:
 
     - echo "Unified checksum file content:"
     - cat releases/SHA256SUMS.txt
+    - rm -f releases/*checksum*.txt releases/*Checksum*.txt
 
     # Export variables for Release Job
+    - cat android.env appimage.env flatpak.env linux_bundle.env >> unified_release.env
     - echo "WINDOWS_INSTALLER_NAME=${WINDOWS_EXE}" >> unified_release.env
 
   artifacts:
@@ -331,14 +337,6 @@ create-release:
   stage: release
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   needs:
-    - job: build_android_binaries
-      artifacts: true
-    - job: build_appimage
-      artifacts: true
-    - job: build_flatpak
-      artifacts: true
-    - job: build_linux_bundle
-      artifacts: true
     - job: fetch_windows_and_unify_release
       artifacts: true
   rules:
@@ -353,25 +351,25 @@ create-release:
       links:
         # Android Universal Apk
         - name: "$UNIVERSAL_APK_NAME"
-          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$UNIVERSAL_APK_NAME?job=build_android_binaries"
+          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$UNIVERSAL_APK_NAME?job=fetch_windows_and_unify_release"
         # Android armeabi-v7a-release
         - name: "$ARMEABI_V7A_APK_NAME"
-          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$ARMEABI_V7A_APK_NAME?job=build_android_binaries"
+          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$ARMEABI_V7A_APK_NAME?job=fetch_windows_and_unify_release"
         # Android arm64-v8a-release
         - name: "$ARM64_V8A_APK_NAME"
-          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$ARM64_V8A_APK_NAME?job=build_android_binaries"
+          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$ARM64_V8A_APK_NAME?job=fetch_windows_and_unify_release"
         # Android x86_64-release
         - name: "$X86_64_APK_NAME"
-          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$X86_64_APK_NAME?job=build_android_binaries"
+          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$X86_64_APK_NAME?job=fetch_windows_and_unify_release"
         # AppImage
         - name: "$NEW_APPIMAGE_NAME"
-          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$NEW_APPIMAGE_NAME?job=build_appimage"
+          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$NEW_APPIMAGE_NAME?job=fetch_windows_and_unify_release"
         # Flatpak
         - name: "$FLATPAK_FILENAME"
-          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$FLATPAK_FILENAME?job=build_flatpak"
+          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$FLATPAK_FILENAME?job=fetch_windows_and_unify_release"
         # Linux Bundle
         - name: "$LINUX_BUNDLE_NAME"
-          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$LINUX_BUNDLE_NAME?job=build_linux_bundle"
+          url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$LINUX_BUNDLE_NAME?job=fetch_windows_and_unify_release"
         # Windows Installer
         - name: "$WINDOWS_INSTALLER_NAME"
           url: "https://gitlab.com/$CI_PROJECT_PATH/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/releases/$WINDOWS_INSTALLER_NAME?job=fetch_windows_and_unify_release"
