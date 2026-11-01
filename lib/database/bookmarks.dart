@@ -54,3 +54,10 @@ Future<Uint16List> getAllTagsOfaTorrent({required String infoHash}) async {
   var allTags = await getTagsOfTorrent(infoHash: infoHash);
   return allTags;
 }
+
+Future<void> updateBookmarkTags({
+  required String infoHash,
+  required List<int> tagIds,
+}) async {
+  await updateTorrentTags(infoHash: infoHash, tagIds: tagIds);
+}

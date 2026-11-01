@@ -601,7 +601,6 @@ class TorrentCard extends StatelessWidget {
 
     if (!context.mounted) return;
 
-    final tagsBloc = context.read<TagsBloc>();
     final bookmarkBloc = context.read<BookmarkBloc>();
 
     final Set<int> selectedTagIds = assignedTagIds.toSet();
@@ -740,22 +739,31 @@ class TorrentCard extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
-                            onPressed: () {
-                              tagsBloc.add(
-                                TagsEvent.updateTags(
-                                  infoHash: infoHash,
-                                  selectedTagIds: selectedTagIds.toList(),
-                                ),
-                              );
-
-                              bookmarkBloc.add(
-                                BookmarkEvent.loadBookmarks(
-                                  categoryID: bookmarkBloc.currentCategoryId,
-                                  tagID: bookmarkBloc.currentTagId,
-                                ),
-                              );
-
+                            onPressed: () async {
                               Navigator.pop(dialogContext);
+
+                              try {
+                                await updateBookmarkTags(
+                                  infoHash: infoHash,
+                                  tagIds: selectedTagIds.toList(),
+                                );
+                                createSnackBar(
+                                  message: "Tag Updated...",
+                                  duration: 1,
+                                );
+
+                                bookmarkBloc.add(
+                                  BookmarkEvent.loadBookmarks(
+                                    categoryID: bookmarkBloc.currentCategoryId,
+                                    tagID: bookmarkBloc.currentTagId,
+                                  ),
+                                );
+                              } catch (e) {
+                                createSnackBar(
+                                  message: "Error : ${e.toString()}",
+                                  duration: 5,
+                                );
+                              }
                             },
                             child: Text(
                               'Done',
