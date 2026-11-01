@@ -29,7 +29,7 @@ build_android_binaries:
 
     # Get app name and version
     - export APP_NAME=$(grep 'name:' pubspec.yaml | head -1 | awk '{print $2}' | sed 's/-/_/g' | sed 's/\r//g')
-    - export APP_VERSION=$(grep 'version:' pubspec.yaml | head -1 | awk '{print $2}' | sed 's/+//' | sed 's/ /_/g' | sed 's/\r//g')
+    - export APP_VERSION=$(grep 'version:' pubspec.yaml | head -1 | awk '{print $2}' | cut -d'+' -f1 | sed 's/\r//g')
 
     # Checksum File
     - export ANDROID_CHECKSUM_FILENAME="Android_Binaries_sha256_Checksums.txt"
@@ -110,7 +110,7 @@ build_appimage:
     # Creating AppImage
     # Grepping App Name & Version.
     - export APP_NAME=$(grep 'name:' pubspec.yaml | head -1 | awk '{print $2}' | sed 's/-/_/g' | sed 's/\r//g')
-    - export APPIMAGE_VERSION=$(grep 'version:' pubspec.yaml | head -1 | awk '{print $2}' | cut -c1-3);
+    - export APPIMAGE_VERSION=$(grep 'version:' pubspec.yaml | head -1 | awk '{print $2}' | cut -d'+' -f1 | sed 's/\r//g')
     - export NEW_APPIMAGE_NAME="${APP_NAME}_${APPIMAGE_VERSION}_x86_64_linux.AppImage"
 
     # Checksum File
@@ -160,7 +160,7 @@ build_flatpak:
 
     # Grepping App Name & Version.
     - export APP_NAME=$(grep 'name:' pubspec.yaml | head -1 | awk '{print $2}' | sed 's/-/_/g' | sed 's/\r//g')
-    - export APP_VERSION=$(grep 'version:' pubspec.yaml | head -1 | awk '{print $2}' | cut -c1-3);
+    - export APP_VERSION=$(grep 'version:' pubspec.yaml | head -1 | awk '{print $2}' | cut -d'+' -f1 | sed 's/\r//g')
     - export FLATPAK_FILENAME="${APP_NAME}_${APP_VERSION}.flatpak"
 
     # Checksum File
@@ -181,6 +181,8 @@ build_flatpak:
     # Installing Free Desktop LLVM.
     - flatpak install flathub org.freedesktop.Sdk.Extension.llvm20//25.08 -y
     - cd flatpak
+    # Ensure flatpak builds the current release commit
+    - sed -i "s/commit: .*/commit: $CI_COMMIT_SHA/" io.gitlab.ForTheCommunity.torrentsdigger.yml
     # Building App
     - flatpak-builder --install-deps-from=flathub --repo=repo --force-clean --disable-cache build-dir io.gitlab.ForTheCommunity.torrentsdigger.yml
     # Packaging .flatpak file
