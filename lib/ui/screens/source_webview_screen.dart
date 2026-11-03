@@ -172,9 +172,21 @@ class _SourceWebViewScreenState extends State<SourceWebViewScreen> {
   }
 
   Future<void> _openExternal() async {
-    final uri = Uri.tryParse(_currentUrl);
+    String target = _currentUrl;
+    try {
+      final current = await _controller?.currentUrl();
+      if (current != null && current.isNotEmpty) {
+        target = current;
+      }
+    } catch (_) {}
+
+    final uri = Uri.tryParse(target);
     if (uri != null) {
       try {
+        createSnackBar(
+          message: "Opening in external browser...",
+          duration: 2,
+        );
         await launchUrl(uri, mode: LaunchMode.externalApplication);
       } catch (e) {
         createSnackBar(message: "Unable to open in browser: $e", duration: 3);
@@ -183,7 +195,15 @@ class _SourceWebViewScreenState extends State<SourceWebViewScreen> {
   }
 
   Future<void> _copyUrl() async {
-    await Clipboard.setData(ClipboardData(text: _currentUrl));
+    String target = _currentUrl;
+    try {
+      final current = await _controller?.currentUrl();
+      if (current != null && current.isNotEmpty) {
+        target = current;
+      }
+    } catch (_) {}
+
+    await Clipboard.setData(ClipboardData(text: target));
     createSnackBar(message: "URL copied to clipboard", duration: 2);
   }
 
@@ -347,7 +367,7 @@ class _SourceWebViewScreenState extends State<SourceWebViewScreen> {
                       ),
                       const SizedBox(width: 12),
                       Text(
-                        'Open in Browser',
+                        'Open in External Browser',
                         style: TextStyle(
                           color: context.appColors.popupMenuTextColor,
                           fontSize: 13.5,
