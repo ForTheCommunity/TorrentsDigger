@@ -100,18 +100,30 @@ impl fmt::Display for SukebeiNyaaCustomListings {
 pub enum KnabenDatabaseCustomListings {
     TrendingMovies,
     TrendingTVShows,
+    AllNew,
+    Anime,
+    Games,
+    Music,
+    Books,
 }
 
 impl KnabenDatabaseCustomListings {
-    const ALL_VARIANTS: &'static [KnabenDatabaseCustomListings] =
-        &[Self::TrendingMovies, Self::TrendingTVShows];
+    const ALL_VARIANTS: &'static [KnabenDatabaseCustomListings] = &[
+        Self::TrendingMovies,
+        Self::TrendingTVShows,
+        Self::AllNew,
+        Self::Anime,
+        Self::Games,
+        Self::Music,
+        Self::Books,
+    ];
 
     pub fn from_index(index: usize) -> Option<&'static KnabenDatabaseCustomListings> {
         Self::ALL_VARIANTS.get(index)
     }
 
     pub fn all_custom_listings() -> Vec<String> {
-        [Self::TrendingMovies, Self::TrendingTVShows]
+        Self::ALL_VARIANTS
             .iter()
             .map(|category| category.to_string())
             .collect()
@@ -122,11 +134,31 @@ impl KnabenDatabaseCustomListings {
     ) -> Result<(Vec<Torrent>, Pagination)> {
         match source {
             Self::TrendingMovies => {
-                let url = "https://knaben.org/browse/3000000/1/seeders";
+                let url = "https://rss.knaben.org//3000000";
                 fetch_torrents(url, AllAvailableSources::KnabenDatabase)
             }
             Self::TrendingTVShows => {
-                let url = "https://knaben.org/browse/2000000/1/seeders";
+                let url = "https://rss.knaben.org//2000000";
+                fetch_torrents(url, AllAvailableSources::KnabenDatabase)
+            }
+            Self::AllNew => {
+                let url = "https://rss.knaben.org";
+                fetch_torrents(url, AllAvailableSources::KnabenDatabase)
+            }
+            Self::Anime => {
+                let url = "https://rss.knaben.org//6000000";
+                fetch_torrents(url, AllAvailableSources::KnabenDatabase)
+            }
+            Self::Games => {
+                let url = "https://rss.knaben.org//4000000|7000000";
+                fetch_torrents(url, AllAvailableSources::KnabenDatabase)
+            }
+            Self::Music => {
+                let url = "https://rss.knaben.org//1000000";
+                fetch_torrents(url, AllAvailableSources::KnabenDatabase)
+            }
+            Self::Books => {
+                let url = "https://rss.knaben.org//9000000";
                 fetch_torrents(url, AllAvailableSources::KnabenDatabase)
             }
         }
@@ -138,6 +170,11 @@ impl fmt::Display for KnabenDatabaseCustomListings {
         match self {
             Self::TrendingMovies => write!(f, "Trending Movies"),
             Self::TrendingTVShows => write!(f, "Trending TV Shows"),
+            Self::AllNew => write!(f, "All New Torrents"),
+            Self::Anime => write!(f, "Anime"),
+            Self::Games => write!(f, "Games / PC"),
+            Self::Music => write!(f, "Music / Audio"),
+            Self::Books => write!(f, "Books / Ebooks"),
         }
     }
 }
