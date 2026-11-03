@@ -94,11 +94,11 @@ class _AdditionalSettingsState extends State<AdditionalSettings> {
               color: context.appColors.settingsIconsColor,
             ),
             title: Text(
-              'In-App Webview',
+              'In-App Browser',
               style: TextStyle(color: context.appColors.settingsTextColor),
             ),
             subtitle: Text(
-              'Open torrent source description pages in an in-app WebView instead of an external browser.',
+              'Open links inside the app using an in-app WebView instead of an external browser.',
               style: TextStyle(
                 color: context.appColors.settingsTextColor,
                 fontSize: 12,

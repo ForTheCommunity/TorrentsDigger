@@ -7,9 +7,7 @@ import 'package:torrents_digger/blocs/bookmark_blocs/category_bloc/category_bloc
 import 'package:torrents_digger/blocs/default_trackers_bloc/default_trackers_bloc.dart';
 import 'package:torrents_digger/configs/extensions.dart';
 import 'package:torrents_digger/database/bookmarks.dart';
-import 'package:torrents_digger/database/get_settings_data.dart';
 import 'package:torrents_digger/src/rust/api/internals.dart';
-import 'package:torrents_digger/ui/screens/source_webview_screen.dart';
 import 'package:torrents_digger/ui/widgets/launch_url.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 
@@ -223,28 +221,12 @@ class TorrentCard extends StatelessWidget {
                   onPressed: () async {
                     if (torrent.sourceUrl != null &&
                         torrent.sourceUrl!.trim().isNotEmpty) {
-                      final useInApp = await getUseInAppBrowser();
-                      if (!context.mounted) return;
-                      if (useInApp) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SourceWebViewScreen(
-                              url: torrent.sourceUrl!,
-                              title: torrent.name,
-                            ),
-                          ),
-                        );
-                      } else {
-                        createSnackBar(
-                          message: "Opening Torrent Description Page....",
-                          duration: 2,
-                        );
-                        openUrl(
-                          urlType: UrlType.normalLink,
-                          url: torrent.sourceUrl!,
-                        );
-                      }
+                      await openUrl(
+                        urlType: UrlType.normalLink,
+                        url: torrent.sourceUrl!,
+                        title: torrent.name,
+                        context: context,
+                      );
                     } else {
                       createSnackBar(
                         message:
@@ -445,14 +427,11 @@ class TorrentCard extends StatelessWidget {
         case 'open_source_page':
           if (torrent.sourceUrl != null &&
               torrent.sourceUrl!.trim().isNotEmpty) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SourceWebViewScreen(
-                  url: torrent.sourceUrl!,
-                  title: torrent.name,
-                ),
-              ),
+            await openUrl(
+              urlType: UrlType.normalLink,
+              url: torrent.sourceUrl!,
+              title: torrent.name,
+              context: context,
             );
           }
           break;

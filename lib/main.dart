@@ -19,6 +19,7 @@ import 'package:torrents_digger/blocs/torrent_bloc/torrent_bloc.dart';
 import 'package:torrents_digger/configs/extensions.dart';
 import 'package:torrents_digger/configs/hydration.dart';
 import 'package:torrents_digger/configs/webview_config.dart';
+import 'package:torrents_digger/ui/widgets/launch_url.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 import 'package:torrents_digger/database/initialize.dart';
 import 'package:torrents_digger/routes/routes.dart';
@@ -90,6 +91,7 @@ class MyApp extends StatelessWidget {
         builder: (context, state) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
+            navigatorKey: navigatorKey,
             scaffoldMessengerKey:
                 scaffoldMessengerKey, // Assigning the global key
             title: "Torrents Digger",

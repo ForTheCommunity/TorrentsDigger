@@ -350,8 +350,8 @@ class _CloudflareSolverDialogState extends State<CloudflareSolverDialog> {
                     Text(
                       _statusText,
                       style: TextStyle(
-                        color: context.appColors.generalTextColor.withOpacity(
-                          0.7,
+                        color: context.appColors.generalTextColor.withValues(
+                          alpha: 0.7,
                         ),
                         fontSize: 11,
                       ),
