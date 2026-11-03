@@ -429,3 +429,104 @@ impl fmt::Display for SubsPleaseCustomListings {
         }
     }
 }
+
+pub enum TheRarBgCustomListings {
+    Trending10All,
+    Trending100Movies,
+    Trending100TV,
+    Trending100Music,
+    Trending100Books,
+    Trending100XXX,
+    Latest100Movies,
+    Movies4K,
+    TopPopularMovies,
+    XXX4K,
+}
+
+impl TheRarBgCustomListings {
+    const ALL_VARIANTS: &'static [TheRarBgCustomListings] = &[
+        Self::Trending10All,
+        Self::Trending100Movies,
+        Self::Trending100TV,
+        Self::Trending100Music,
+        Self::Trending100Books,
+        Self::Trending100XXX,
+        Self::Latest100Movies,
+        Self::Movies4K,
+        Self::TopPopularMovies,
+        Self::XXX4K,
+    ];
+
+    pub fn from_index(index: usize) -> Option<&'static TheRarBgCustomListings> {
+        Self::ALL_VARIANTS.get(index)
+    }
+
+    pub fn all_custom_listings() -> Vec<String> {
+        Self::ALL_VARIANTS
+            .iter()
+            .map(|category| category.to_string())
+            .collect()
+    }
+
+    pub fn fetch_torrents(source: &TheRarBgCustomListings) -> Result<(Vec<Torrent>, Pagination)> {
+        match source {
+            Self::Trending10All => {
+                let url = "https://therarbg.com/trending/10/ALL/1D/";
+                fetch_torrents(url, AllAvailableSources::TheRarBg)
+            }
+            Self::Trending100Movies => {
+                let url = "https://therarbg.com/trending/100/Movies/3D/";
+                fetch_torrents(url, AllAvailableSources::TheRarBg)
+            }
+            Self::Trending100TV => {
+                let url = "https://therarbg.com/trending/100/TV/3D/";
+                fetch_torrents(url, AllAvailableSources::TheRarBg)
+            }
+            Self::Trending100Music => {
+                let url = "https://therarbg.com/trending/100/Music/3D/";
+                fetch_torrents(url, AllAvailableSources::TheRarBg)
+            }
+            Self::Trending100Books => {
+                let url = "https://therarbg.com/trending/100/Books/3D/";
+                fetch_torrents(url, AllAvailableSources::TheRarBg)
+            }
+            Self::Trending100XXX => {
+                let url = "https://therarbg.com/trending/100/XXX/3D/";
+                fetch_torrents(url, AllAvailableSources::TheRarBg)
+            }
+            Self::Latest100Movies => {
+                let url = "https://therarbg.com/top/100/Movies/latest/";
+                fetch_torrents(url, AllAvailableSources::TheRarBg)
+            }
+            Self::Movies4K => {
+                let url = "https://therarbg.com/get-posts/keywords:2160p:category:Movies:time:60D/";
+                fetch_torrents(url, AllAvailableSources::TheRarBg)
+            }
+            Self::TopPopularMovies => {
+                let url = "https://therarbg.com/get-posts/category:Movies:order:-se/";
+                fetch_torrents(url, AllAvailableSources::TheRarBg)
+            }
+            Self::XXX4K => {
+                let url = "https://therarbg.com/top/100/XXX/4K/";
+                fetch_torrents(url, AllAvailableSources::TheRarBg)
+            }
+        }
+    }
+}
+
+impl fmt::Display for TheRarBgCustomListings {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Trending10All => write!(f, "Trending 10 (All Categories)"),
+            Self::Trending100Movies => write!(f, "Trending 100 Movies"),
+            Self::Trending100TV => write!(f, "Trending 100 TV"),
+            Self::Trending100Music => write!(f, "Trending 100 Music"),
+            Self::Trending100Books => write!(f, "Trending 100 Books"),
+            Self::Trending100XXX => write!(f, "Trending 100 XXX"),
+            Self::Latest100Movies => write!(f, "Latest 100 Movies"),
+            Self::Movies4K => write!(f, "4K Movies"),
+            Self::TopPopularMovies => write!(f, "Top 100 Popular Movies"),
+            Self::XXX4K => write!(f, "4K XXX"),
+        }
+    }
+}

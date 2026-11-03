@@ -8,6 +8,7 @@ pub enum AllAvailableCustomSources {
     ThePirateBay,
     Yts,
     SubsPlease,
+    TheRarBg,
 }
 
 impl AllAvailableCustomSources {
@@ -19,6 +20,7 @@ impl AllAvailableCustomSources {
         Self::ThePirateBay,
         Self::Yts,
         Self::SubsPlease,
+        Self::TheRarBg,
     ];
 
     pub fn from_index(index: usize) -> Option<&'static AllAvailableCustomSources> {
@@ -36,6 +38,7 @@ impl fmt::Display for AllAvailableCustomSources {
             Self::ThePirateBay => write!(f, "The Pirate Bay"),
             Self::Yts => write!(f, "YTS"),
             Self::SubsPlease => write!(f, "SubsPlease"),
+            Self::TheRarBg => write!(f, "TheRARBG"),
         }
     }
 }

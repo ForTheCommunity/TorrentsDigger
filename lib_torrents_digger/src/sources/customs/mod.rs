@@ -7,7 +7,7 @@ use crate::sources::{
         custom::{
             KnabenDatabaseCustomListings, NyaaCustomListings, SukebeiNyaaCustomListings,
             ThePirateBayCustomListings, UindexCustomListings, YtsCustomListings,
-            SubsPleaseCustomListings,
+            SubsPleaseCustomListings, TheRarBgCustomListings,
         },
     },
 };
@@ -59,6 +59,11 @@ pub fn search_custom(
                 .ok_or_else(|| anyhow!("Invalid Custom Listing Index: {}", listing_index))?;
             SubsPleaseCustomListings::fetch_torrents(custom_listing_varient)
         }
+        AllAvailableCustomSources::TheRarBg => {
+            let custom_listing_varient = TheRarBgCustomListings::from_index(listing_index)
+                .ok_or_else(|| anyhow!("Invalid Custom Listing Index: {}", listing_index))?;
+            TheRarBgCustomListings::fetch_torrents(custom_listing_varient)
+        }
     }
 }
 
@@ -106,6 +111,12 @@ pub fn get_custom_source_details() -> Vec<CustomSourceDetails> {
         custom_source_listings: SubsPleaseCustomListings::all_custom_listings(),
     };
     custom_sources.push(custom_subsplease);
+
+    let custom_therarbg = CustomSourceDetails {
+        custom_source_name: AllAvailableCustomSources::TheRarBg.to_string(),
+        custom_source_listings: TheRarBgCustomListings::all_custom_listings(),
+    };
+    custom_sources.push(custom_therarbg);
 
     custom_sources
 }

@@ -13,6 +13,7 @@ use crate::sources::{
     o337x::{O337xCategories, O337xSortings},
     yts::{YtsCategories, YtsFilters, YtsSortings},
     subsplease::SubsPleaseCategories,
+    therarbg::{TheRarBgCategories, TheRarBgSortings},
 };
 
 pub mod available_sources;
@@ -26,6 +27,7 @@ pub mod solid_torrents;
 pub mod subsplease;
 pub mod sukebei_nyaa;
 pub mod the_pirate_bay;
+pub mod therarbg;
 pub mod torrents_csv;
 pub mod uindex;
 pub mod yts;
@@ -183,6 +185,19 @@ pub fn get_source_details() -> Vec<Source> {
     sources_details.push(Source {
         source_name: AllAvailableSources::SubsPlease.to_string(),
         source_details: subsplease_source_details,
+    });
+
+    // Inserting TheRARBG
+    let therarbg_source_details = SourceDetails {
+        source_query_options: TheRarBgCategories::get_query_options(),
+        source_categories: TheRarBgCategories::all_categories(),
+        source_filters: vec!["".to_string()],
+        source_sortings: TheRarBgSortings::all_sortings(),
+        source_sorting_orders: vec!["".to_string()],
+    };
+    sources_details.push(Source {
+        source_name: AllAvailableSources::TheRarBg.to_string(),
+        source_details: therarbg_source_details,
     });
 
     sources_details

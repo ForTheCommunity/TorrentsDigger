@@ -19,7 +19,7 @@ use crate::{
         nyaa::NyaaCategories, o337x::O337xCategories, solid_torrents::SolidTorrentsCategories,
         sukebei_nyaa::SukebeiNyaaCategories, the_pirate_bay::ThePirateBayCategories,
         torrents_csv::TorrentsCsvCategories, uindex::UindexCategories,
-        yts::YtsCategories, subsplease::SubsPleaseCategories,
+        yts::YtsCategories, subsplease::SubsPleaseCategories, therarbg::TheRarBgCategories,
     },
     static_includes::get_current_version,
     torrent::Torrent,
@@ -60,6 +60,7 @@ pub fn fetch_torrents(
         AllAvailableSources::O337x => O337xCategories::scrape_and_parse(response),
         AllAvailableSources::Yts => YtsCategories::scrape_and_parse(response),
         AllAvailableSources::SubsPlease => SubsPleaseCategories::scrape_and_parse(response),
+        AllAvailableSources::TheRarBg => TheRarBgCategories::scrape_and_parse(response),
     }
 }
 

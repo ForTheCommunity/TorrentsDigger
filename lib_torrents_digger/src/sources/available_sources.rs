@@ -12,6 +12,7 @@ pub enum AllAvailableSources {
     O337x,
     Yts,
     SubsPlease,
+    TheRarBg,
 }
 
 impl AllAvailableSources {
@@ -27,6 +28,7 @@ impl AllAvailableSources {
         Self::O337x,
         Self::Yts,
         Self::SubsPlease,
+        Self::TheRarBg,
     ];
 
     pub fn from_index(index: usize) -> Option<&'static AllAvailableSources> {
@@ -48,6 +50,7 @@ impl fmt::Display for AllAvailableSources {
             Self::O337x => write!(f, "1337x"),
             Self::Yts => write!(f, "YTS"),
             Self::SubsPlease => write!(f, "SubsPlease"),
+            Self::TheRarBg => write!(f, "TheRARBG"),
         }
     }
 }

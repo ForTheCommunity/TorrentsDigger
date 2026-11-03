@@ -18,6 +18,7 @@ use crate::{
         o337x::{O337xCategories, O337xSortings},
         yts::{YtsCategories, YtsFilters, YtsSortings},
         subsplease::SubsPleaseCategories,
+        therarbg::{TheRarBgCategories, TheRarBgSortings},
     },
 };
 
@@ -203,6 +204,21 @@ pub fn search_torrent(
         AllAvailableSources::SubsPlease => {
             let url = SubsPleaseCategories::request_url_builder(&torrent_name);
             fetch_torrents(&url, AllAvailableSources::SubsPlease)
+        }
+        AllAvailableSources::TheRarBg => {
+            let category = TheRarBgCategories::from_index(category_index)
+                .ok_or_else(|| anyhow!("Invalid Category Index: {}", category_index))?;
+            let sorting = TheRarBgSortings::from_index(sorting_index)
+                .ok_or_else(|| anyhow!("Invalid Sorting Index: {}", sorting_index))?;
+
+            let url = TheRarBgCategories::request_url_builder(
+                &torrent_name,
+                category,
+                sorting,
+                &page.unwrap_or(1),
+            );
+
+            fetch_torrents(&url, AllAvailableSources::TheRarBg)
         }
     }
 }
