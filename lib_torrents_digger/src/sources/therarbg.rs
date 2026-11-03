@@ -232,7 +232,7 @@ impl TheRarBgCategories {
         Ok((all_torrents, pagination))
     }
 
-    pub fn parse_detail_page(content: &str) -> (String, String) {
+    pub fn parse_detail_page_full(content: &str) -> (String, String, String) {
         let trimmed = content.trim();
 
         // 1. Check if the content is JSON
@@ -240,6 +240,7 @@ impl TheRarBgCategories {
             if let Ok(val) = serde_json::from_str::<Value>(trimmed) {
                 let mut magnet = String::new();
                 let mut info_hash = String::new();
+                let mut downloads = String::new();
 
                 if let Some(m) = val.get("magnet").and_then(|v| v.as_str()) {
                     magnet = m.to_string();
@@ -250,9 +251,15 @@ impl TheRarBgCategories {
                 }
 
                 if let Some(h) = val.get("info_hash").and_then(|v| v.as_str()) {
-                    info_hash = h.to_string();
+                    info_hash = h.to_lowercase();
                 } else if let Some(h) = val.get("hash").and_then(|v| v.as_str()) {
-                    info_hash = h.to_string();
+                    info_hash = h.to_lowercase();
+                }
+
+                if let Some(d) = val.get("downloads").and_then(|v| v.as_str()) {
+                    downloads = d.to_string();
+                } else if let Some(d) = val.get("downloads").and_then(|v| v.as_i64()) {
+                    downloads = d.to_string();
                 }
 
                 if info_hash.is_empty() && !magnet.is_empty() {
@@ -262,19 +269,22 @@ impl TheRarBgCategories {
                 }
 
                 if !magnet.is_empty() || !info_hash.is_empty() {
-                    return (magnet, info_hash);
+                    return (magnet, info_hash, downloads);
                 }
             }
         }
 
         // 2. Parse as HTML
         let document = Html::parse_document(content);
-        let magnet_selector = Selector::parse(r#"a[href^="magnet:?"]"#)
-            .or_else(|_| Selector::parse(r#"a[href^="magnet:"]"#))
-            .ok();
+        let magnet_selector = Selector::parse(r#"a[href^="magnet:?"], a[href^="magnet:"]"#).ok();
+        let info_hash_selector = Selector::parse("span.info-hash-value, .info-hash-value").ok();
+        let tr_selector = Selector::parse("table.detailTable tr, table tr").ok();
+        let th_selector = Selector::parse("th").ok();
+        let td_selector = Selector::parse("td").ok();
 
         let mut magnet = String::new();
         let mut info_hash = String::new();
+        let mut downloads = String::new();
 
         if let Some(ref sel) = magnet_selector {
             if let Some(a) = document.select(sel).next() {
@@ -284,19 +294,63 @@ impl TheRarBgCategories {
             }
         }
 
-        // Fallback regex search for magnet URI in HTML
+        if let Some(ref sel) = info_hash_selector {
+            if let Some(span) = document.select(sel).next() {
+                let h = span.text().collect::<String>().trim().to_string();
+                if !h.is_empty() {
+                    info_hash = h.to_lowercase();
+                }
+            }
+        }
+
+        if let (Some(tr_sel), Some(th_sel), Some(td_sel)) =
+            (&tr_selector, &th_selector, &td_selector)
+        {
+            for tr in document.select(tr_sel) {
+                let th_text = tr
+                    .select(th_sel)
+                    .next()
+                    .map(|th| th.text().collect::<String>().trim().to_lowercase())
+                    .unwrap_or_default();
+                if th_text.starts_with("download") {
+                    if let Some(td) = tr.select(td_sel).next() {
+                        let text = td.text().collect::<String>().trim().to_string();
+                        if !text.is_empty() {
+                            downloads = text;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Fallback regex search for magnet URI in HTML (e.g. inside button onclick or text)
         if magnet.is_empty() {
-            if let Ok(re) = Regex::new(r#"magnet:\?xt=urn:btih:[a-zA-Z0-9]+"#) {
+            if let Ok(re) = Regex::new(r#"magnet:\?xt=urn:btih:[a-zA-Z0-9]+[^"'\s<>]*"#) {
                 if let Some(mat) = re.find(content) {
                     magnet = mat.as_str().to_string();
                 }
             }
         }
 
-        if let Ok(hash) = prepare_info_hash(&magnet) {
-            info_hash = hash;
+        if magnet.contains("&amp;") {
+            magnet = magnet.replace("&amp;", "&");
         }
 
+        if info_hash.is_empty() && !magnet.is_empty() {
+            if let Ok(hash) = prepare_info_hash(&magnet) {
+                info_hash = hash;
+            }
+        }
+
+        if magnet.is_empty() && !info_hash.is_empty() {
+            magnet = format!("magnet:?xt=urn:btih:{}", info_hash);
+        }
+
+        (magnet, info_hash, downloads)
+    }
+
+    pub fn parse_detail_page(content: &str) -> (String, String) {
+        let (magnet, info_hash, _) = Self::parse_detail_page_full(content);
         (magnet, info_hash)
     }
 
@@ -314,7 +368,7 @@ impl TheRarBgCategories {
 
         let num_workers = 10.min(torrents.len());
         let (job_tx, job_rx) = std::sync::mpsc::channel::<(usize, String)>();
-        let (result_tx, result_rx) = std::sync::mpsc::channel::<(usize, String, String)>();
+        let (result_tx, result_rx) = std::sync::mpsc::channel::<(usize, String, String, String)>();
         let job_rx = std::sync::Arc::new(std::sync::Mutex::new(job_rx));
 
         for (i, t) in torrents.iter().enumerate() {
@@ -341,8 +395,8 @@ impl TheRarBgCategories {
 
                 if let Ok(mut res) = send_request_with_agent(&agent, &url, &ua, ck.as_deref()) {
                     if let Ok(body) = res.body_mut().read_to_string() {
-                        let (magnet, info_hash) = Self::parse_detail_page(&body);
-                        let _ = r_tx.send((idx, magnet, info_hash));
+                        let (magnet, info_hash, downloads) = Self::parse_detail_page_full(&body);
+                        let _ = r_tx.send((idx, magnet, info_hash, downloads));
                     }
                 }
             });
@@ -350,12 +404,15 @@ impl TheRarBgCategories {
         }
         drop(result_tx);
 
-        for (idx, magnet, info_hash) in result_rx {
+        for (idx, magnet, info_hash, downloads) in result_rx {
             if !magnet.is_empty() {
                 torrents[idx].magnet = magnet;
             }
             if !info_hash.is_empty() {
                 torrents[idx].info_hash = info_hash;
+            }
+            if !downloads.is_empty() && torrents[idx].total_downloads.is_empty() {
+                torrents[idx].total_downloads = downloads;
             }
         }
 
@@ -545,5 +602,46 @@ mod tests {
             info_hash_json,
             "4540fdf6869485bf1b0e2a1c3c012dce9ae3c207"
         );
+
+        let real_html = r#"
+        <table class="detailTable">
+          <tr>
+            <th>Torrent:</th>
+            <td>
+              <div class="download-options">
+                <div class="download-primary">
+                  <a href="magnet:?xt=urn:btih:8742E8D33A59557D9898C0B0AF52E0440902631B&amp;dn=Avengers%20Infinity%20War%202018%202160p&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce" title="Download via magnet link" class="btn-download magnet-btn">
+                    <i class="fa-solid fa-magnet"></i> Magnet Download
+                  </a>
+                  <a href="http://itorrents.org/torrent/8742E8D33A59557D9898C0B0AF52E0440902631B.torrent" class="btn-download torrent-btn">
+                    <i class="fa-solid fa-download"></i> .torrent File
+                  </a>
+                </div>
+                <div class="download-secondary">
+                  <button onclick="copy('magnet:?xt=urn:btih:8742E8D33A59557D9898C0B0AF52E0440902631B...')" class="btn-download copy-magnet-btn">
+                    <i class="fa-regular fa-copy"></i> Copy Magnet
+                  </button>
+                  <div class="torrent-info">
+                    <span class="info-hash-label">Info Hash:</span> <span class="info-hash-value">8742E8D33A59557D9898C0B0AF52E0440902631B</span>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th>Downloads:</th>
+            <td>9260</td>
+          </tr>
+        </table>
+        "#;
+
+        let (real_magnet, real_hash, real_downloads) =
+            TheRarBgCategories::parse_detail_page_full(real_html);
+        assert_eq!(
+            real_magnet,
+            "magnet:?xt=urn:btih:8742E8D33A59557D9898C0B0AF52E0440902631B&dn=Avengers%20Infinity%20War%202018%202160p&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce"
+        );
+        assert_eq!(real_hash, "8742e8d33a59557d9898c0b0af52e0440902631b");
+        assert_eq!(real_downloads, "9260");
     }
 }
