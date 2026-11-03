@@ -60,35 +60,61 @@ pub fn fetch_torrents(
     }
 }
 
-pub fn send_request(url: &str) -> Result<Response<Body>> {
-    let agent = match Proxy::fetch_saved_proxy()? {
+pub fn get_client_agent() -> Result<Agent> {
+    match Proxy::fetch_saved_proxy()? {
         Some(proxy_data) => {
             let proxy_url = build_proxy_url(&proxy_data);
             let proxy = ureq::Proxy::new(&proxy_url)?;
             build_agent(Some(proxy))
         }
         None => build_agent(None),
-    };
+    }
+}
 
-    let user_agent = fetch_kv("app_user_agent")
+pub fn get_app_user_agent() -> String {
+    fetch_kv("app_user_agent")
         .ok()
         .flatten()
         .filter(|ua| !ua.trim().is_empty())
-        .unwrap_or_else(|| APP_USER_AGENT.to_string());
+        .unwrap_or_else(|| APP_USER_AGENT.to_string())
+}
 
-    let mut request = agent?
-            .get(url)
-            .header("User-Agent", &user_agent)
-            .header(
-                "Accept",
-                "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-            )
-            .header("Accept-Language", "en-US,en;q=0.9")
-            .header("Sec-Fetch-Dest", "document")
-            .header("Sec-Fetch-Mode", "navigate")
-            .header("Sec-Fetch-Site", "none")
-            .header("Sec-Fetch-User", "?1")
-            .header("Upgrade-Insecure-Requests", "1");
+pub fn get_domain_cookie(domain: &str) -> Option<String> {
+    let cookie_key = format!("cf_cookie_{}", domain);
+    let www_cookie_key = format!("cf_cookie_www.{}", domain);
+    let mut cookie_val = fetch_kv(&cookie_key).ok().flatten();
+    if cookie_val.is_none() || cookie_val.as_deref() == Some("") {
+        cookie_val = fetch_kv(&www_cookie_key).ok().flatten();
+    }
+    cookie_val
+}
+
+pub fn send_request(url: &str) -> Result<Response<Body>> {
+    let agent = get_client_agent()?;
+    let user_agent = get_app_user_agent();
+    let cookie = extract_domain(url).and_then(|d| get_domain_cookie(&d));
+    send_request_with_agent(&agent, url, &user_agent, cookie.as_deref())
+}
+
+pub fn send_request_with_agent(
+    agent: &Agent,
+    url: &str,
+    user_agent: &str,
+    cookie: Option<&str>,
+) -> Result<Response<Body>> {
+    let mut request = agent
+        .get(url)
+        .header("User-Agent", user_agent)
+        .header(
+            "Accept",
+            "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+        )
+        .header("Accept-Language", "en-US,en;q=0.9")
+        .header("Sec-Fetch-Dest", "document")
+        .header("Sec-Fetch-Mode", "navigate")
+        .header("Sec-Fetch-Site", "none")
+        .header("Sec-Fetch-User", "?1")
+        .header("Upgrade-Insecure-Requests", "1");
 
     if user_agent.contains("Chrome") || user_agent.contains("Chromium") {
         let platform = if user_agent.contains("Linux") || user_agent.contains("X11") {
@@ -117,14 +143,12 @@ pub fn send_request(url: &str) -> Result<Response<Body>> {
 
     let domain_opt = extract_domain(url);
 
-    if let Some(ref domain) = domain_opt {
-        let cookie_key = format!("cf_cookie_{}", domain);
-        let www_cookie_key = format!("cf_cookie_www.{}", domain);
-        let mut cookie_val = fetch_kv(&cookie_key).ok().flatten();
-        if cookie_val.is_none() || cookie_val.as_deref() == Some("") {
-            cookie_val = fetch_kv(&www_cookie_key).ok().flatten();
+    if let Some(cookies) = cookie {
+        if !cookies.trim().is_empty() {
+            request = request.header("Cookie", cookies);
         }
-        if let Some(cookies) = cookie_val {
+    } else if let Some(ref domain) = domain_opt {
+        if let Some(cookies) = get_domain_cookie(domain) {
             if !cookies.trim().is_empty() {
                 request = request.header("Cookie", &cookies);
             }

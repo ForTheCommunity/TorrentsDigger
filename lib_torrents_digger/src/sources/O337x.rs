@@ -4,7 +4,9 @@ use scraper::{Html, Selector};
 use ureq::{Body, http::Response};
 
 use crate::{
-    network_io::sync_request::send_request,
+    network_io::sync_request::{
+        get_app_user_agent, get_client_agent, get_domain_cookie, send_request_with_agent,
+    },
     prepare_info_hash,
     sources::{Pagination, QueryOptions},
     torrent::Torrent,
@@ -90,10 +92,16 @@ impl O337xCategories {
         match (category_val, sorting_val) {
             (None, None) => format!("{}/search/{}/{}/", root_url, torrent_name, page),
             (Some(cat), None) => {
-                format!("{}/category-search/{}/{}/{}/", root_url, torrent_name, cat, page)
+                format!(
+                    "{}/category-search/{}/{}/{}/",
+                    root_url, torrent_name, cat, page
+                )
             }
             (None, Some(sort)) => {
-                format!("{}/sort-search/{}/{}/desc/{}/", root_url, torrent_name, sort, page)
+                format!(
+                    "{}/sort-search/{}/{}/desc/{}/",
+                    root_url, torrent_name, sort, page
+                )
             }
             (Some(cat), Some(sort)) => {
                 format!(
@@ -294,7 +302,14 @@ impl O337xCategories {
             return;
         }
 
-        let num_workers = 4.min(torrents.len());
+        let agent = match get_client_agent() {
+            Ok(a) => std::sync::Arc::new(a),
+            Err(_) => return,
+        };
+        let user_agent = std::sync::Arc::new(get_app_user_agent());
+        let cookie = std::sync::Arc::new(get_domain_cookie("1337x.to"));
+
+        let num_workers = 10.min(torrents.len());
         let (job_tx, job_rx) = std::sync::mpsc::channel::<(usize, String)>();
         let (result_tx, result_rx) = std::sync::mpsc::channel::<(usize, String, String)>();
         let job_rx = std::sync::Arc::new(std::sync::Mutex::new(job_rx));
@@ -310,6 +325,10 @@ impl O337xCategories {
         for _ in 0..num_workers {
             let rx = std::sync::Arc::clone(&job_rx);
             let r_tx = result_tx.clone();
+            let agent = std::sync::Arc::clone(&agent);
+            let ua = std::sync::Arc::clone(&user_agent);
+            let ck = std::sync::Arc::clone(&cookie);
+
             let handle = std::thread::spawn(move || {
                 loop {
                     let job = {
@@ -318,7 +337,7 @@ impl O337xCategories {
                     };
                     let Some((idx, url)) = job else { break };
 
-                    if let Ok(mut res) = send_request(&url) {
+                    if let Ok(mut res) = send_request_with_agent(&agent, &url, &ua, ck.as_deref()) {
                         if let Ok(html) = res.body_mut().read_to_string() {
                             let (magnet, info_hash) = Self::parse_detail_page(&html);
                             let _ = r_tx.send((idx, magnet, info_hash));
@@ -522,7 +541,10 @@ mod tests {
         assert_eq!(torrents.len(), 2);
 
         let t1 = &torrents[0];
-        assert_eq!(t1.name, "[HorribleSubs] Boruto - Naruto Next Generations - 99 [720p].mkv");
+        assert_eq!(
+            t1.name,
+            "[HorribleSubs] Boruto - Naruto Next Generations - 99 [720p].mkv"
+        );
         assert_eq!(t1.info_hash, "3668559");
         assert_eq!(t1.source_url, Some("https://1337x.to/torrent/3668559/HorribleSubs-Boruto-Naruto-Next-Generations-99-720p-mkv/".to_string()));
         assert_eq!(t1.seeders, "631");
@@ -532,7 +554,10 @@ mod tests {
         assert_eq!(t1.total_downloads, "N/A");
 
         let t2 = &torrents[1];
-        assert_eq!(t2.name, "[HorribleSubs] Boruto - Naruto Next Generations - 108 [1080p].mkv");
+        assert_eq!(
+            t2.name,
+            "[HorribleSubs] Boruto - Naruto Next Generations - 108 [1080p].mkv"
+        );
         assert_eq!(t2.info_hash, "3784004");
         assert_eq!(t2.seeders, "471");
         assert_eq!(t2.leechers, "17");
