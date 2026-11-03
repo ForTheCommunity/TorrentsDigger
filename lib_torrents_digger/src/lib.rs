@@ -15,6 +15,7 @@ use crate::{
         the_pirate_bay::{ThePirateBayCategories, ThePirateBaySortingOrders, ThePirateBaySortings},
         torrents_csv::TorrentsCsvCategories,
         uindex::{UindexCategories, UindexSortingOrders, UindexSortings},
+        o337x::{O337xCategories, O337xSortings},
     },
 };
 
@@ -163,6 +164,21 @@ pub fn search_torrent(
             .map_err(|err| anyhow!("Error building Request URL : {}", err))?;
 
             fetch_torrents(&url, AllAvailableSources::ThePirateBay)
+        }
+        AllAvailableSources::O337x => {
+            let category = O337xCategories::from_index(category_index)
+                .ok_or_else(|| anyhow!("Invalid Category Index: {}", category_index))?;
+            let sorting = O337xSortings::from_index(sorting_index)
+                .ok_or_else(|| anyhow!("Invalid Sorting Index: {}", sorting_index))?;
+
+            let url = O337xCategories::request_url_builder(
+                &torrent_name,
+                category,
+                sorting,
+                &page.unwrap_or(1),
+            );
+
+            fetch_torrents(&url, AllAvailableSources::O337x)
         }
     }
 }

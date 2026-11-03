@@ -10,6 +10,7 @@ use crate::sources::{
     the_pirate_bay::{ThePirateBayCategories, ThePirateBaySortingOrders, ThePirateBaySortings},
     torrents_csv::TorrentsCsvCategories,
     uindex::{UindexCategories, UindexSortingOrders, UindexSortings},
+    o337x::{O337xCategories, O337xSortings},
 };
 
 pub mod available_sources;
@@ -17,6 +18,8 @@ pub mod customs;
 pub mod knaben_database;
 pub mod lime_torrents;
 pub mod nyaa;
+#[path = "O337x.rs"]
+pub mod o337x;
 pub mod solid_torrents;
 pub mod sukebei_nyaa;
 pub mod the_pirate_bay;
@@ -137,6 +140,19 @@ pub fn get_source_details() -> Vec<Source> {
     sources_details.push(Source {
         source_name: AllAvailableSources::ThePirateBay.to_string(),
         source_details: the_pirate_bay_source_details,
+    });
+
+    // Inserting One-337x (1337x)
+    let leetx_source_details = SourceDetails {
+        source_query_options: O337xCategories::get_query_options(),
+        source_categories: O337xCategories::all_categories(),
+        source_filters: vec!["".to_string()],
+        source_sortings: O337xSortings::all_leetx_sortings(),
+        source_sorting_orders: vec!["".to_string()],
+    };
+    sources_details.push(Source {
+        source_name: AllAvailableSources::O337x.to_string(),
+        source_details: leetx_source_details,
     });
 
     sources_details

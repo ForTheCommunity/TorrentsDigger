@@ -16,7 +16,7 @@ use crate::{
     sources::{
         Pagination, available_sources::AllAvailableSources,
         knaben_database::KnabenDatabaseCategories, lime_torrents::LimeTorrentsCategories,
-        nyaa::NyaaCategories, solid_torrents::SolidTorrentsCategories,
+        nyaa::NyaaCategories, o337x::O337xCategories, solid_torrents::SolidTorrentsCategories,
         sukebei_nyaa::SukebeiNyaaCategories, the_pirate_bay::ThePirateBayCategories,
         torrents_csv::TorrentsCsvCategories, uindex::UindexCategories,
     },
@@ -56,6 +56,7 @@ pub fn fetch_torrents(
         AllAvailableSources::SolidTorrents => SolidTorrentsCategories::scrape_and_parse(response),
         AllAvailableSources::KnabenDatabase => KnabenDatabaseCategories::scrape_and_parse(response),
         AllAvailableSources::ThePirateBay => ThePirateBayCategories::scrape_and_parse(response),
+        AllAvailableSources::O337x => O337xCategories::scrape_and_parse(response),
     }
 }
 
