@@ -46,3 +46,18 @@ Future<String> getAppUserAgent() async {
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
   return defaultUa;
 }
+
+Future<void> setUseInAppBrowser(bool value) async {
+  await insertOrUpdateKv(
+    key: "use_in_app_browser",
+    value: value ? "true" : "false",
+  );
+}
+
+Future<bool> getUseInAppBrowser() async {
+  final val = await getASettingsKv(key: "use_in_app_browser");
+  if (val == null || val.trim().isEmpty) {
+    return true;
+  }
+  return val == "true" || val == "1";
+}
