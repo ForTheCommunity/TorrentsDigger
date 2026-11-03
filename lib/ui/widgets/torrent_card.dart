@@ -4,11 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:torrents_digger/blocs/bookmark_blocs/bookmark_bloc/bookmark_bloc.dart';
 import 'package:torrents_digger/blocs/bookmark_blocs/category_bloc/category_bloc.dart';
-import 'package:torrents_digger/blocs/bookmark_blocs/tags_bloc/tags_bloc.dart';
 import 'package:torrents_digger/blocs/default_trackers_bloc/default_trackers_bloc.dart';
 import 'package:torrents_digger/configs/extensions.dart';
 import 'package:torrents_digger/database/bookmarks.dart';
 import 'package:torrents_digger/src/rust/api/internals.dart';
+import 'package:torrents_digger/ui/screens/source_webview_screen.dart';
 import 'package:torrents_digger/ui/widgets/launch_url.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 
@@ -219,24 +219,18 @@ class TorrentCard extends StatelessWidget {
                           Icons.link,
                           color: context.appColors.sourceUrlUnAvailableColor,
                         ),
-                  onPressed: () async {
-                    if (torrent.sourceUrl != null) {
-                      try {
-                        createSnackBar(
-                          message: "Opening Torrent Description Page....",
-                          duration: 2,
-                        );
-                        openUrl(
-                          urlType: UrlType.normalLink,
-                          url: torrent.sourceUrl!,
-                        );
-                      } catch (e) {
-                        createSnackBar(
-                          message:
-                              "Error Opening Source URL...\nError: ${e.toString}",
-                          duration: 10,
-                        );
-                      }
+                  onPressed: () {
+                    if (torrent.sourceUrl != null &&
+                        torrent.sourceUrl!.trim().isNotEmpty) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SourceWebViewScreen(
+                            url: torrent.sourceUrl!,
+                            title: torrent.name,
+                          ),
+                        ),
+                      );
                     } else {
                       createSnackBar(
                         message:
@@ -333,13 +327,33 @@ class TorrentCard extends StatelessWidget {
                         ),
                       ),
                       if (torrent.sourceUrl != null &&
-                          torrent.sourceUrl!.trim().isNotEmpty)
+                          torrent.sourceUrl!.trim().isNotEmpty) ...[
+                        PopupMenuItem<String>(
+                          value: 'open_source_page',
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.language_rounded,
+                                size: 18,
+                                color: menuIconColor,
+                              ),
+                              const SizedBox(width: 12),
+                              Text(
+                                'Open Source Page',
+                                style: TextStyle(
+                                  color: menuTextColor,
+                                  fontSize: 13.5,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                         PopupMenuItem<String>(
                           value: 'source_url',
                           child: Row(
                             children: [
                               Icon(
-                                Icons.open_in_new_rounded,
+                                Icons.copy_rounded,
                                 size: 18,
                                 color: menuIconColor,
                               ),
@@ -354,6 +368,7 @@ class TorrentCard extends StatelessWidget {
                             ],
                           ),
                         ),
+                      ],
                       const PopupMenuDivider(),
                       PopupMenuItem<String>(
                         value: 'all_details',
@@ -411,6 +426,21 @@ class TorrentCard extends StatelessWidget {
         case 'info_hash':
           await Clipboard.setData(ClipboardData(text: torrent.infoHash));
           createSnackBar(message: "Info hash copied to clipboard", duration: 2);
+          break;
+
+        case 'open_source_page':
+          if (torrent.sourceUrl != null &&
+              torrent.sourceUrl!.trim().isNotEmpty) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SourceWebViewScreen(
+                  url: torrent.sourceUrl!,
+                  title: torrent.name,
+                ),
+              ),
+            );
+          }
           break;
 
         case 'source_url':

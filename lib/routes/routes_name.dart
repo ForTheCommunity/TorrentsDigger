@@ -12,4 +12,5 @@ class RoutesName {
   static const String customDNSScreen = "custom_dns_screen";
   static const String bookmarkStatsScreen = "bookmark_stats_screen";
   static const String addTorrentScreen = "add_torrent_screen";
+  static const String sourceWebViewScreen = "source_webview_screen";
 }
