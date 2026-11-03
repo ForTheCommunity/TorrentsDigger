@@ -13,10 +13,12 @@ Future<void> openUrl({
   required String url,
   String? title,
   BuildContext? context,
+  bool forceExternal = false,
   @Deprecated('Clipboard copy is removed from openUrl')
   bool? clipboardCopy,
 }) async {
-  if (urlType == UrlType.normalLink) {
+  final isMatrixLink = url.contains("matrix.to") || url.startsWith("matrix:");
+  if (urlType == UrlType.normalLink && !forceExternal && !isMatrixLink) {
     try {
       final useInApp = await getUseInAppBrowser();
       if (useInApp) {

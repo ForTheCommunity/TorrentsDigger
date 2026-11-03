@@ -137,6 +137,7 @@ class AboutAlertDialog extends StatelessWidget {
               onPressed: () async {
                 openUrl(
                   urlType: UrlType.normalLink,
+                  forceExternal: true,
                   clipboardCopy: false,
                   url: "https://matrix.to/#/#forthecommunity_space:matrix.org",
                 );

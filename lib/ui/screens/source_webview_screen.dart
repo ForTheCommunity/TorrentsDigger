@@ -108,6 +108,20 @@ class _SourceWebViewScreenState extends State<SourceWebViewScreen> {
               );
               return NavigationDecision.prevent;
             }
+            // Intercept Matrix links and open in external browser / matrix app
+            if (request.url.startsWith('matrix:') ||
+                request.url.contains('matrix.to')) {
+              openUrl(
+                urlType: UrlType.normalLink,
+                forceExternal: true,
+                url: request.url,
+              );
+              createSnackBar(
+                message: "Opening Matrix link in external browser...",
+                duration: 2,
+              );
+              return NavigationDecision.prevent;
+            }
             return NavigationDecision.navigate;
           },
         ),
@@ -319,6 +333,24 @@ class _SourceWebViewScreenState extends State<SourceWebViewScreen> {
                 _controller?.reload();
               },
             ),
+            IconButton(
+              icon: Icon(
+                Icons.copy_rounded,
+                size: 20,
+                color: context.appColors.appBarTextColor,
+              ),
+              tooltip: 'Copy Link',
+              onPressed: _copyUrl,
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.open_in_browser_rounded,
+                size: 21,
+                color: context.appColors.appBarTextColor,
+              ),
+              tooltip: 'Open in External Browser',
+              onPressed: _openExternal,
+            ),
             PopupMenuButton<String>(
               icon: Icon(
                 Icons.more_vert,
@@ -336,7 +368,7 @@ class _SourceWebViewScreenState extends State<SourceWebViewScreen> {
                 }
               },
               itemBuilder: (context) => [
-                PopupMenuItem(
+                PopupMenuItem<String>(
                   value: 'copy_url',
                   child: Row(
                     children: [
@@ -356,7 +388,7 @@ class _SourceWebViewScreenState extends State<SourceWebViewScreen> {
                     ],
                   ),
                 ),
-                PopupMenuItem(
+                PopupMenuItem<String>(
                   value: 'open_external',
                   child: Row(
                     children: [
