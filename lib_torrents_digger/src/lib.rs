@@ -16,6 +16,8 @@ use crate::{
         torrents_csv::TorrentsCsvCategories,
         uindex::{UindexCategories, UindexSortingOrders, UindexSortings},
         o337x::{O337xCategories, O337xSortings},
+        yts::{YtsCategories, YtsFilters, YtsSortings},
+        subsplease::SubsPleaseCategories,
     },
 };
 
@@ -179,6 +181,28 @@ pub fn search_torrent(
             );
 
             fetch_torrents(&url, AllAvailableSources::O337x)
+        }
+        AllAvailableSources::Yts => {
+            let category = YtsCategories::from_index(category_index)
+                .ok_or_else(|| anyhow!("Invalid Category Index: {}", category_index))?;
+            let filter = YtsFilters::from_index(filter_index)
+                .ok_or_else(|| anyhow!("Invalid Filter Index: {}", filter_index))?;
+            let sorting = YtsSortings::from_index(sorting_index)
+                .ok_or_else(|| anyhow!("Invalid Sorting Index: {}", sorting_index))?;
+
+            let url = YtsCategories::request_url_builder(
+                &torrent_name,
+                filter,
+                category,
+                sorting,
+                &page.unwrap_or(1),
+            );
+
+            fetch_torrents(&url, AllAvailableSources::Yts)
+        }
+        AllAvailableSources::SubsPlease => {
+            let url = SubsPleaseCategories::request_url_builder(&torrent_name);
+            fetch_torrents(&url, AllAvailableSources::SubsPlease)
         }
     }
 }

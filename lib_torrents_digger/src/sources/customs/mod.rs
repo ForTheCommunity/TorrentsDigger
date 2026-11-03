@@ -6,7 +6,8 @@ use crate::sources::{
         available_custom_sources::AllAvailableCustomSources,
         custom::{
             KnabenDatabaseCustomListings, NyaaCustomListings, SukebeiNyaaCustomListings,
-            ThePirateBayCustomListings, UindexCustomListings,
+            ThePirateBayCustomListings, UindexCustomListings, YtsCustomListings,
+            SubsPleaseCustomListings,
         },
     },
 };
@@ -48,6 +49,16 @@ pub fn search_custom(
                 .ok_or_else(|| anyhow!("Invalid Custom Listing Index: {}", listing_index))?;
             ThePirateBayCustomListings::fetch_torrents(custom_listing_varient)
         }
+        AllAvailableCustomSources::Yts => {
+            let custom_listing_varient = YtsCustomListings::from_index(listing_index)
+                .ok_or_else(|| anyhow!("Invalid Custom Listing Index: {}", listing_index))?;
+            YtsCustomListings::fetch_torrents(custom_listing_varient)
+        }
+        AllAvailableCustomSources::SubsPlease => {
+            let custom_listing_varient = SubsPleaseCustomListings::from_index(listing_index)
+                .ok_or_else(|| anyhow!("Invalid Custom Listing Index: {}", listing_index))?;
+            SubsPleaseCustomListings::fetch_torrents(custom_listing_varient)
+        }
     }
 }
 
@@ -83,6 +94,18 @@ pub fn get_custom_source_details() -> Vec<CustomSourceDetails> {
         custom_source_listings: ThePirateBayCustomListings::all_custom_listings(),
     };
     custom_sources.push(custom_pirate_bay);
+
+    let custom_yts = CustomSourceDetails {
+        custom_source_name: AllAvailableCustomSources::Yts.to_string(),
+        custom_source_listings: YtsCustomListings::all_custom_listings(),
+    };
+    custom_sources.push(custom_yts);
+
+    let custom_subsplease = CustomSourceDetails {
+        custom_source_name: AllAvailableCustomSources::SubsPlease.to_string(),
+        custom_source_listings: SubsPleaseCustomListings::all_custom_listings(),
+    };
+    custom_sources.push(custom_subsplease);
 
     custom_sources
 }

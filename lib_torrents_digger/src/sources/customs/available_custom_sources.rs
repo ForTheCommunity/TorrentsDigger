@@ -6,6 +6,8 @@ pub enum AllAvailableCustomSources {
     Uindex,
     KnabenDatabase,
     ThePirateBay,
+    Yts,
+    SubsPlease,
 }
 
 impl AllAvailableCustomSources {
@@ -15,6 +17,8 @@ impl AllAvailableCustomSources {
         Self::Uindex,
         Self::KnabenDatabase,
         Self::ThePirateBay,
+        Self::Yts,
+        Self::SubsPlease,
     ];
 
     pub fn from_index(index: usize) -> Option<&'static AllAvailableCustomSources> {
@@ -30,6 +34,8 @@ impl fmt::Display for AllAvailableCustomSources {
             Self::Uindex => write!(f, "Uindex"),
             Self::KnabenDatabase => write!(f, "Knaben Database"),
             Self::ThePirateBay => write!(f, "The Pirate Bay"),
+            Self::Yts => write!(f, "YTS"),
+            Self::SubsPlease => write!(f, "SubsPlease"),
         }
     }
 }

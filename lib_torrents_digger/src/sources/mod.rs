@@ -11,6 +11,8 @@ use crate::sources::{
     torrents_csv::TorrentsCsvCategories,
     uindex::{UindexCategories, UindexSortingOrders, UindexSortings},
     o337x::{O337xCategories, O337xSortings},
+    yts::{YtsCategories, YtsFilters, YtsSortings},
+    subsplease::SubsPleaseCategories,
 };
 
 pub mod available_sources;
@@ -21,10 +23,12 @@ pub mod nyaa;
 #[path = "O337x.rs"]
 pub mod o337x;
 pub mod solid_torrents;
+pub mod subsplease;
 pub mod sukebei_nyaa;
 pub mod the_pirate_bay;
 pub mod torrents_csv;
 pub mod uindex;
+pub mod yts;
 
 #[derive(Debug)]
 pub struct QueryOptions {
@@ -153,6 +157,32 @@ pub fn get_source_details() -> Vec<Source> {
     sources_details.push(Source {
         source_name: AllAvailableSources::O337x.to_string(),
         source_details: leetx_source_details,
+    });
+
+    // Inserting YTS
+    let yts_source_details = SourceDetails {
+        source_query_options: YtsCategories::get_query_options(),
+        source_categories: YtsCategories::all_categories(),
+        source_filters: YtsFilters::all_filters(),
+        source_sortings: YtsSortings::all_yts_sortings(),
+        source_sorting_orders: vec!["".to_string()],
+    };
+    sources_details.push(Source {
+        source_name: AllAvailableSources::Yts.to_string(),
+        source_details: yts_source_details,
+    });
+
+    // Inserting SubsPlease
+    let subsplease_source_details = SourceDetails {
+        source_query_options: SubsPleaseCategories::get_query_options(),
+        source_categories: SubsPleaseCategories::all_categories(),
+        source_filters: vec!["".to_string()],
+        source_sortings: vec!["".to_string()],
+        source_sorting_orders: vec!["".to_string()],
+    };
+    sources_details.push(Source {
+        source_name: AllAvailableSources::SubsPlease.to_string(),
+        source_details: subsplease_source_details,
     });
 
     sources_details

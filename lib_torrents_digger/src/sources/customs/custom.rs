@@ -341,3 +341,91 @@ impl fmt::Display for UindexCustomListings {
         }
     }
 }
+
+pub enum YtsCustomListings {
+    TrendingMovies,
+    Latest4K,
+    MostSeeded4K,
+}
+
+impl YtsCustomListings {
+    const ALL_VARIANTS: &'static [YtsCustomListings] = &[
+        Self::TrendingMovies,
+        Self::Latest4K,
+        Self::MostSeeded4K,
+    ];
+
+    pub fn from_index(index: usize) -> Option<&'static YtsCustomListings> {
+        Self::ALL_VARIANTS.get(index)
+    }
+
+    pub fn all_custom_listings() -> Vec<String> {
+        Self::ALL_VARIANTS
+            .iter()
+            .map(|category| category.to_string())
+            .collect()
+    }
+
+    pub fn fetch_torrents(source: &YtsCustomListings) -> Result<(Vec<Torrent>, Pagination)> {
+        match source {
+            Self::TrendingMovies => {
+                let url = "https://yts.gg/trending-movies";
+                fetch_torrents(url, AllAvailableSources::Yts)
+            }
+            Self::Latest4K => {
+                let url = "https://yts.gg/browse-movies/0/2160p/all/0/latest/0/all";
+                fetch_torrents(url, AllAvailableSources::Yts)
+            }
+            Self::MostSeeded4K => {
+                let url = "https://yts.gg/browse-movies/0/2160p/all/0/seeds/0/all";
+                fetch_torrents(url, AllAvailableSources::Yts)
+            }
+        }
+    }
+}
+
+impl fmt::Display for YtsCustomListings {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::TrendingMovies => write!(f, "Trending Movies"),
+            Self::Latest4K => write!(f, "Latest 4K"),
+            Self::MostSeeded4K => write!(f, "Most Seeded 4K"),
+        }
+    }
+}
+
+pub enum SubsPleaseCustomListings {
+    LatestReleases,
+}
+
+impl SubsPleaseCustomListings {
+    const ALL_VARIANTS: &'static [SubsPleaseCustomListings] = &[Self::LatestReleases];
+
+    pub fn from_index(index: usize) -> Option<&'static SubsPleaseCustomListings> {
+        Self::ALL_VARIANTS.get(index)
+    }
+
+    pub fn all_custom_listings() -> Vec<String> {
+        Self::ALL_VARIANTS
+            .iter()
+            .map(|category| category.to_string())
+            .collect()
+    }
+
+    pub fn fetch_torrents(source: &SubsPleaseCustomListings) -> Result<(Vec<Torrent>, Pagination)> {
+        match source {
+            Self::LatestReleases => {
+                let url = "https://subsplease.org/api/?f=latest&tz=$";
+                fetch_torrents(url, AllAvailableSources::SubsPlease)
+            }
+        }
+    }
+}
+
+impl fmt::Display for SubsPleaseCustomListings {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::LatestReleases => write!(f, "Latest Releases"),
+        }
+    }
+}

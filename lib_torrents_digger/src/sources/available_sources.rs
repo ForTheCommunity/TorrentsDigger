@@ -10,6 +10,8 @@ pub enum AllAvailableSources {
     KnabenDatabase,
     ThePirateBay,
     O337x,
+    Yts,
+    SubsPlease,
 }
 
 impl AllAvailableSources {
@@ -23,6 +25,8 @@ impl AllAvailableSources {
         Self::KnabenDatabase,
         Self::ThePirateBay,
         Self::O337x,
+        Self::Yts,
+        Self::SubsPlease,
     ];
 
     pub fn from_index(index: usize) -> Option<&'static AllAvailableSources> {
@@ -42,6 +46,8 @@ impl fmt::Display for AllAvailableSources {
             Self::KnabenDatabase => write!(f, "Knaben Database"),
             Self::ThePirateBay => write!(f, "The Pirate Bay"),
             Self::O337x => write!(f, "1337x"),
+            Self::Yts => write!(f, "YTS"),
+            Self::SubsPlease => write!(f, "SubsPlease"),
         }
     }
 }
