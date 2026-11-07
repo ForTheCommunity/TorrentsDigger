@@ -5,19 +5,8 @@ import 'package:torrents_digger/configs/extensions.dart';
 import 'package:torrents_digger/themes/themes.dart';
 import 'package:torrents_digger/ui/widgets/circular_progress_bar_widget.dart';
 
-class ThemesScreen extends StatefulWidget {
+class ThemesScreen extends StatelessWidget {
   const ThemesScreen({super.key});
-
-  @override
-  State<ThemesScreen> createState() => _ThemesScreenState();
-}
-
-class _ThemesScreenState extends State<ThemesScreen> {
-  @override
-  void initState() {
-    super.initState();
-    context.read<ThemesBloc>().add(const ThemesEvent.loadTheme());
-  }
 
   String _getThemeDescription(String themeCode) {
     switch (themeCode) {
@@ -50,7 +39,10 @@ class _ThemesScreenState extends State<ThemesScreen> {
       body: BlocBuilder<ThemesBloc, ThemesState>(
         builder: (context, state) {
           return state.when(
-            initial: () => const Center(child: CircularProgressBarWidget()),
+            initial: () {
+              context.read<ThemesBloc>().add(const ThemesEvent.loadTheme());
+              return const Center(child: CircularProgressBarWidget());
+            },
             loading: () => const Center(child: CircularProgressBarWidget()),
             themeState:
                 (currentAppTheme, currentAppThemeName, currentAppThemeCode) {

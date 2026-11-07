@@ -12,12 +12,30 @@ import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 import 'package:torrents_digger/ui/widgets/search_bar_widget.dart';
 import 'package:torrents_digger/ui/widgets/torrents_list_ui.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
   @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final TextEditingController searchController = TextEditingController();
+    final torrentState = context.watch<TorrentBloc>().state;
+    final bool hasTorrents =
+        torrentState is TorrentSearchSuccess && torrentState.torrents.isNotEmpty;
+
     return Scaffold(
       floatingActionButton: FloatingActionsButtons(
         scrollToTop: true,
@@ -25,13 +43,18 @@ class MainScreen extends StatelessWidget {
         enableBookmarks: true,
         enableCustoms: true,
         enableSettings: true,
+        activeScreen: ActiveScreen.search,
+        scrollController: _scrollController,
+        hasTorrents: hasTorrents,
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
 
       backgroundColor: context.appColors.scaffoldColor,
       body: SafeArea(
         child: Scrollbar(
+          controller: _scrollController,
           child: SingleChildScrollView(
-            primary: true,
+            controller: _scrollController,
             child: Padding(
               padding: EdgeInsets.symmetric(
                 vertical: 0,
@@ -48,9 +71,9 @@ class MainScreen extends StatelessWidget {
                   const SizedBox(height: 16),
                   // SearchBar Widget
                   SearchBarWidget(
-                    searchController: searchController,
+                    searchController: _searchController,
                     onSearchPressed: () {
-                      String torrentName = searchController.text.trim();
+                      String torrentName = _searchController.text.trim();
                       final sourceState = context.read<SourceBloc>().state;
 
                       // resetting pagination

@@ -151,6 +151,12 @@ class _ExpandableTorrentCardState extends State<ExpandableTorrentCard> {
                   ],
                 ),
               ),
+              const SizedBox(width: 8),
+              Icon(
+                Icons.unfold_more,
+                size: 18,
+                color: colors.cardSecondaryTextColor.withValues(alpha: 0.6),
+              ),
             ],
           ),
         ),

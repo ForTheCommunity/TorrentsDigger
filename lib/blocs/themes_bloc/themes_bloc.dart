@@ -15,7 +15,13 @@ class ThemesBloc extends Bloc<ThemesEvent, ThemesState> {
   }
 
   Future<void> _loadColors(_LoadTheme event, Emitter<ThemesState> emit) async {
-    emit(ThemesState.loading());
+    // If a theme is already loaded, avoid emitting loading and re-querying DB,
+    // which causes full MaterialApp rebuilds and route transition jank.
+    if (state is _ThemeState) {
+      return;
+    }
+
+    emit(const ThemesState.loading());
     try {
       // checking saved theme in database..
       var theme = await getASettingsKv(key: "theme");
@@ -40,15 +46,13 @@ class ThemesBloc extends Bloc<ThemesEvent, ThemesState> {
     }
   }
 
-  void _changeTheme(_ChangeTheme event, Emitter<ThemesState> emit) async {
-    emit(ThemesState.loading());
-    var themeCode = event.appTheme.themeCode;
+  Future<void> _changeTheme(
+    _ChangeTheme event,
+    Emitter<ThemesState> emit,
+  ) async {
+    final AppTheme newAppTheme = event.appTheme;
 
-    // updating themeCode in database..
-    await insertOrUpdateKv(key: "theme", value: themeCode);
-
-    final AppTheme newAppTheme = getThemeByCode(themeCode);
-
+    // Apply the selected theme immediately with zero flicker or spinner
     emit(
       ThemesState.themeState(
         currentAppTheme: newAppTheme,
@@ -56,5 +60,15 @@ class ThemesBloc extends Bloc<ThemesEvent, ThemesState> {
         currentAppThemeCode: newAppTheme.themeCode,
       ),
     );
+
+    try {
+      // updating themeCode in database asynchronously
+      await insertOrUpdateKv(key: "theme", value: newAppTheme.themeCode);
+    } catch (e) {
+      createSnackBar(
+        message: "Error saving theme: ${e.toString()}",
+        duration: 3,
+      );
+    }
   }
 }

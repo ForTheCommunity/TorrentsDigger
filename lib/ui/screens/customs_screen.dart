@@ -23,6 +23,7 @@ class CustomsScreen extends StatefulWidget {
 class _CustomsScreenState extends State<CustomsScreen> {
   late final CustomsTorrentsBloc _customsTorrentsBloc;
   late final CustomsBloc _customsBloc;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -33,6 +34,7 @@ class _CustomsScreenState extends State<CustomsScreen> {
 
   @override
   void dispose() {
+    _scrollController.dispose();
     _customsTorrentsBloc.add(const CustomsTorrentsEvent.reset());
     _customsBloc.add(const CustomsEvent.reset());
     super.dispose();
@@ -40,6 +42,12 @@ class _CustomsScreenState extends State<CustomsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final customsTorrentsState = context.watch<CustomsTorrentsBloc>().state;
+    final bool hasTorrents = customsTorrentsState.maybeWhen(
+      loaded: (torrents) => torrents.isNotEmpty,
+      orElse: () => false,
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -63,14 +71,19 @@ class _CustomsScreenState extends State<CustomsScreen> {
         scrollToTop: true,
         enableAddTorrent: false,
         enableBookmarks: true,
-        enableCustoms: false,
+        enableCustoms: true,
         enableSettings: true,
+        activeScreen: ActiveScreen.customs,
+        scrollController: _scrollController,
+        hasTorrents: hasTorrents,
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
 
       body: SafeArea(
         child: Scrollbar(
+          controller: _scrollController,
           child: SingleChildScrollView(
-            primary: true,
+            controller: _scrollController,
             child: Padding(
               padding: EdgeInsets.symmetric(
                 vertical: 0,

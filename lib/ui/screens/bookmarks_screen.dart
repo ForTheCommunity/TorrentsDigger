@@ -119,6 +119,11 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
       child: LayoutBuilder(
         builder: (context, constraints) {
           final isWide = constraints.maxWidth >= 600;
+          final bookmarkState = context.watch<BookmarkBloc>().state;
+          final bool hasTorrents = bookmarkState.maybeWhen(
+            loaded: (torrents, _, _, _) => torrents.isNotEmpty,
+            orElse: () => false,
+          );
 
           return Scaffold(
             key: _scaffoldKey,
@@ -135,11 +140,15 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
             floatingActionButton: FloatingActionsButtons(
               scrollToTop: true,
               enableAddTorrent: true,
-              enableBookmarks: false,
+              enableBookmarks: true,
               enableCustoms: true,
               enableSettings: true,
+              activeScreen: ActiveScreen.bookmarks,
               scrollController: _scrollController,
+              hasTorrents: hasTorrents,
             ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
             body: SafeArea(
               child: isWide
                   ? Row(
@@ -913,7 +922,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                                   Platform.isMacOS
                               ? 12
                               : 6,
-                          bottom: 80,
+                          bottom: 70.0,
                         ),
                         itemCount: torrents.length + (hasMore ? 1 : 0),
                         itemBuilder: (context, index) {
