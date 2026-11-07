@@ -13,4 +13,5 @@ class RoutesName {
   static const String bookmarkStatsScreen = "bookmark_stats_screen";
   static const String addTorrentScreen = "add_torrent_screen";
   static const String sourceWebViewScreen = "source_webview_screen";
+  static const String sourcesSettingsScreen = "sources_settings_screen";
 }

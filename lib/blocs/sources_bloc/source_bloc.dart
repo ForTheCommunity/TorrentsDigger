@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:torrents_digger/blocs/sources_bloc/get_source_details_data.dart';
+import 'package:torrents_digger/configs/nsfw_helper.dart';
 import 'package:torrents_digger/src/rust/api/internals.dart';
 
 part 'source_bloc.freezed.dart';
@@ -17,6 +18,10 @@ class SourceBloc extends HydratedBloc<SourceWidgetEvents, SourceState> {
     on<SelectSorting>(_onSelectSorting);
     on<SelectSortingOrder>(_onSelectSortingOrder);
     on<ToggleRememberSelections>(_onToggleRememberSelections);
+    on<ToggleHideNsfw>(_onToggleHideNsfw);
+    on<ToggleSource>(_onToggleSource);
+    on<EnableAllSources>(_onEnableAllSources);
+    on<DisableAllSources>(_onDisableAllSources);
   }
 
   Future<void> _onLoadSources(
@@ -36,6 +41,42 @@ class SourceBloc extends HydratedBloc<SourceWidgetEvents, SourceState> {
         state.copyWith(rememberSelections: event.isEnabled),
       ),
     );
+  }
+
+  void _onToggleHideNsfw(
+    ToggleHideNsfw event,
+    Emitter<SourceState> emit,
+  ) {
+    emit(state.copyWith(hideNsfw: event.isEnabled));
+  }
+
+  void _onToggleSource(
+    ToggleSource event,
+    Emitter<SourceState> emit,
+  ) {
+    final updated = List<String>.from(state.disabledSources);
+    if (event.isEnabled) {
+      updated.remove(event.sourceName);
+    } else {
+      if (!updated.contains(event.sourceName)) {
+        updated.add(event.sourceName);
+      }
+    }
+    emit(state.copyWith(disabledSources: updated));
+  }
+
+  void _onEnableAllSources(
+    EnableAllSources event,
+    Emitter<SourceState> emit,
+  ) {
+    emit(state.copyWith(disabledSources: []));
+  }
+
+  void _onDisableAllSources(
+    DisableAllSources event,
+    Emitter<SourceState> emit,
+  ) {
+    emit(state.copyWith(disabledSources: List<String>.from(event.allSources)));
   }
 
   void _onSelectSource(SelectSource event, Emitter<SourceState> emit) {

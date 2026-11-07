@@ -17,9 +17,11 @@ abstract class SourceState with _$SourceState {
     String? selectedSorting,
     String? selectedSortingOrder,
     // this is used to toogle between SourceState & HydratedSourceState.
-    // by default it is 'false' means it is disabled by default.
+    // by default it is 'true' means it is enabled by default.
     // since this state is hydrated, this setting will also be hydrated.
-    @Default(false) bool rememberSelections,
+    @Default(true) bool rememberSelections,
+    @Default(false) bool hideNsfw,
+    @Default([]) List<String> disabledSources,
 
     // This holds the memory of selectedCategory, selectedFilter, selectedSorting,
     // selectedSortingOrder for ALL sources, not just the active one.
@@ -30,6 +32,13 @@ abstract class SourceState with _$SourceState {
   // to be loaded from hive database/box by HydratedBloc.
   factory SourceState.fromJson(Map<String, dynamic> json) =>
       _$SourceStateFromJson(json);
+
+  bool isSourceEnabled(String sourceName) {
+    if (hideNsfw && NsfwHelper.isNsfwSource(sourceName)) {
+      return false;
+    }
+    return !disabledSources.contains(sourceName);
+  }
 
   InternalSourceDetails? get selectedDetails {
     if (selectedSource == null) {

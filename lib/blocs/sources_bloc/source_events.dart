@@ -34,3 +34,21 @@ class ToggleRememberSelections extends SourceWidgetEvents {
   final bool isEnabled;
   ToggleRememberSelections(this.isEnabled);
 }
+
+class ToggleHideNsfw extends SourceWidgetEvents {
+  final bool isEnabled;
+  ToggleHideNsfw(this.isEnabled);
+}
+
+class ToggleSource extends SourceWidgetEvents {
+  final String sourceName;
+  final bool isEnabled;
+  ToggleSource({required this.sourceName, required this.isEnabled});
+}
+
+class EnableAllSources extends SourceWidgetEvents {}
+
+class DisableAllSources extends SourceWidgetEvents {
+  final List<String> allSources;
+  DisableAllSources(this.allSources);
+}

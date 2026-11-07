@@ -53,6 +53,24 @@ class SettingsScreen extends StatelessWidget {
                     ListTile(
                       leading: Icon(
                         color: context.appColors.settingsIconsColor,
+                        Icons.tune,
+                      ),
+                      title: Text(
+                        'Torrent Sources',
+                        style: TextStyle(
+                          color: context.appColors.settingsTextColor,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          RoutesName.sourcesSettingsScreen,
+                        );
+                      },
+                    ),
+                    ListTile(
+                      leading: Icon(
+                        color: context.appColors.settingsIconsColor,
                         Icons.hub,
                       ),
                       title: Text(

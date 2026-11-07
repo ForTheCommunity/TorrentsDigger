@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/customs_blocs/customs_dropdown_bloc/customs_bloc.dart';
 import 'package:torrents_digger/blocs/customs_blocs/customs_torrents/customs_torrents_bloc.dart';
+import 'package:torrents_digger/blocs/sources_bloc/source_bloc.dart';
 import 'package:torrents_digger/configs/extensions.dart';
+import 'package:torrents_digger/configs/nsfw_helper.dart';
 import 'package:torrents_digger/src/rust/api/internals.dart';
 import 'package:torrents_digger/ui/widgets/circular_progress_bar_widget.dart';
 import 'package:torrents_digger/ui/widgets/dropdown_widget.dart';
@@ -134,6 +136,37 @@ class _CustomsScreenState extends State<CustomsScreen> {
                                   );
                                 }
                               }
+                              final sourceState =
+                                  context.watch<SourceBloc>().state;
+                              final visibleCustomSources =
+                                  customListingSourceDetails.where((sourceDetail) {
+                                if (sourceState.hideNsfw &&
+                                    NsfwHelper.isNsfwSource(
+                                      sourceDetail.customSourceName,
+                                    )) {
+                                  return false;
+                                }
+                                if (sourceState.disabledSources.contains(
+                                  sourceDetail.customSourceName,
+                                )) {
+                                  return false;
+                                }
+                                return true;
+                              }).map((s) => s.customSourceName).toList();
+
+                              final selectedSourceValue =
+                                  visibleCustomSources.contains(selectedCustomSource)
+                                      ? selectedCustomSource
+                                      : null;
+
+                              final visibleListings = currentSourceListings.where((l) {
+                                if (sourceState.hideNsfw &&
+                                    NsfwHelper.isNsfwCategory(l)) {
+                                  return false;
+                                }
+                                return true;
+                              }).toList();
+
                               return Column(
                                 children: [
                                   Row(
@@ -141,12 +174,7 @@ class _CustomsScreenState extends State<CustomsScreen> {
                                       Expanded(
                                         child: DropdownWidget(
                                           hintText: "Select Source",
-                                          items: customListingSourceDetails
-                                              .map(
-                                                (sourceDetail) => sourceDetail
-                                                    .customSourceName,
-                                              )
-                                              .toList(),
+                                          items: visibleCustomSources,
                                           onChanged: (value) {
                                             if (value != null) {
                                               List<String> customSources =
@@ -184,17 +212,17 @@ class _CustomsScreenState extends State<CustomsScreen> {
                                               );
                                             }
                                           },
-                                          selectedValue: selectedCustomSource,
+                                          selectedValue: selectedSourceValue,
                                         ),
                                       ),
 
                                       SizedBox(width: 5),
 
-                                      if (currentSourceListings.isNotEmpty) ...[
+                                      if (visibleListings.isNotEmpty) ...[
                                         Expanded(
                                           child: DropdownWidget(
                                             hintText: "Select Listing",
-                                            items: currentSourceListings,
+                                            items: visibleListings,
                                             onChanged: (value) {
                                               int selectedListingIndex =
                                                   currentSourceListings.indexOf(
@@ -219,7 +247,7 @@ class _CustomsScreenState extends State<CustomsScreen> {
                                               );
                                             },
                                             selectedValue:
-                                                currentSourceListings.contains(
+                                                visibleListings.contains(
                                                   selectedCustomSourceListing,
                                                 )
                                                 ? selectedCustomSourceListing

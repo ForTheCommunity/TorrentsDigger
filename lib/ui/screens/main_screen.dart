@@ -5,6 +5,7 @@ import 'package:torrents_digger/blocs/pagination_bloc/pagination_bloc.dart';
 import 'package:torrents_digger/blocs/sources_bloc/source_bloc.dart';
 import 'package:torrents_digger/blocs/torrent_bloc/torrent_bloc.dart';
 import 'package:torrents_digger/configs/extensions.dart';
+import 'package:torrents_digger/configs/nsfw_helper.dart';
 import 'package:torrents_digger/ui/widgets/dropdowns_ui.dart';
 import 'package:torrents_digger/ui/widgets/floating_action_buttons.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
@@ -59,6 +60,29 @@ class MainScreen extends StatelessWidget {
 
                       if (torrentName.isNotEmpty) {
                         if (sourceState.selectedSource != null) {
+                          if (!sourceState
+                              .isSourceEnabled(sourceState.selectedSource!)) {
+                            createSnackBar(
+                              message:
+                                  "Selected source is disabled in settings.",
+                              duration: 2,
+                            );
+                            return;
+                          }
+
+                          if (sourceState.hideNsfw &&
+                              sourceState.selectedCategory != null &&
+                              NsfwHelper.isNsfwCategory(
+                                sourceState.selectedCategory!,
+                              )) {
+                            createSnackBar(
+                              message:
+                                  "Selected category is hidden by NSFW filter.",
+                              duration: 2,
+                            );
+                            return;
+                          }
+
                           final details = sourceState.selectedDetails!;
                           final bool categoriesOk =
                               !details.queryOptions.categories ||

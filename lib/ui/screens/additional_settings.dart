@@ -57,34 +57,65 @@ class _AdditionalSettingsState extends State<AdditionalSettings> {
         children: [
           BlocBuilder<SourceBloc, SourceState>(
             builder: (context, state) {
-              return SwitchListTile(
-                secondary: Icon(
-                  Icons.manage_history_outlined,
-                  color: context.appColors.settingsIconsColor,
-                ),
-                title: Text(
-                  'Remember Selections',
-                  style: TextStyle(color: context.appColors.settingsTextColor),
-                ),
-                subtitle: Text(
-                  'Remember selected category, filter, etc for each source.',
-                  style: TextStyle(
-                    color: context.appColors.settingsTextColor,
-                    fontSize: 12,
+              return Column(
+                children: [
+                  SwitchListTile(
+                    secondary: Icon(
+                      Icons.explicit_outlined,
+                      color: context.appColors.settingsIconsColor,
+                    ),
+                    title: Text(
+                      'Hide NSFW',
+                      style: TextStyle(color: context.appColors.settingsTextColor),
+                    ),
+                    subtitle: Text(
+                      'Hide adult content sources and categories across the app.',
+                      style: TextStyle(
+                        color: context.appColors.settingsTextColor,
+                        fontSize: 12,
+                      ),
+                    ),
+                    inactiveTrackColor: context
+                        .appColors.settingsSwitchListTileInactiveTrackColor,
+                    inactiveThumbColor: context
+                        .appColors.settingsSwitchListTileInactiveThumbColor,
+                    activeThumbColor: context
+                        .appColors.settingsSwitchListTileActiveThumbColor,
+                    value: state.hideNsfw,
+                    onChanged: (value) {
+                      context.read<SourceBloc>().add(ToggleHideNsfw(value));
+                    },
                   ),
-                ),
-                inactiveTrackColor:
-                    context.appColors.settingsSwitchListTileInactiveTrackColor,
-                inactiveThumbColor:
-                    context.appColors.settingsSwitchListTileInactiveThumbColor,
-                activeThumbColor:
-                    context.appColors.settingsSwitchListTileActiveThumbColor,
-                value: state.rememberSelections,
-                onChanged: (value) {
-                  context.read<SourceBloc>().add(
-                    ToggleRememberSelections(value),
-                  );
-                },
+                  SwitchListTile(
+                    secondary: Icon(
+                      Icons.manage_history_outlined,
+                      color: context.appColors.settingsIconsColor,
+                    ),
+                    title: Text(
+                      'Remember Selections',
+                      style: TextStyle(color: context.appColors.settingsTextColor),
+                    ),
+                    subtitle: Text(
+                      'Remember selected category, filter, etc for each source.',
+                      style: TextStyle(
+                        color: context.appColors.settingsTextColor,
+                        fontSize: 12,
+                      ),
+                    ),
+                    inactiveTrackColor: context
+                        .appColors.settingsSwitchListTileInactiveTrackColor,
+                    inactiveThumbColor: context
+                        .appColors.settingsSwitchListTileInactiveThumbColor,
+                    activeThumbColor: context
+                        .appColors.settingsSwitchListTileActiveThumbColor,
+                    value: state.rememberSelections,
+                    onChanged: (value) {
+                      context.read<SourceBloc>().add(
+                            ToggleRememberSelections(value),
+                          );
+                    },
+                  ),
+                ],
               );
             },
           ),

@@ -10,6 +10,7 @@ import 'package:torrents_digger/ui/screens/database_screen.dart';
 import 'package:torrents_digger/ui/screens/default_trackers_screen.dart';
 import 'package:torrents_digger/ui/screens/proxy_setting_screen.dart';
 import 'package:torrents_digger/ui/screens/settings_screen.dart';
+import 'package:torrents_digger/ui/screens/sources_settings_screen.dart';
 import 'package:torrents_digger/ui/screens/source_webview_screen.dart';
 import 'package:torrents_digger/ui/screens/themes_screen.dart';
 import '../ui/screens/main_screen.dart';
@@ -54,6 +55,11 @@ class Routes {
       case RoutesName.additionalSettingsScreen:
         return MaterialPageRoute(
           builder: (context) => const AdditionalSettings(),
+        );
+
+      case RoutesName.sourcesSettingsScreen:
+        return MaterialPageRoute(
+          builder: (context) => const SourcesSettingsScreen(),
         );
 
       case RoutesName.customDNSScreen:

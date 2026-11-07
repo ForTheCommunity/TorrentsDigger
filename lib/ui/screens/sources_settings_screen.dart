@@ -1,0 +1,209 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:torrents_digger/blocs/sources_bloc/source_bloc.dart';
+import 'package:torrents_digger/configs/extensions.dart';
+import 'package:torrents_digger/configs/nsfw_helper.dart';
+
+class SourcesSettingsScreen extends StatelessWidget {
+  const SourcesSettingsScreen({super.key});
+
+  static const List<String> _fallbackSources = [
+    "Nyaa",
+    "Nyaa Sukebei",
+    "Torrents Csv",
+    "Uindex",
+    "Lime Torrents",
+    "Solid Torrents",
+    "Knaben Database",
+    "The Pirate Bay",
+    "1337x",
+    "YTS",
+    "SubsPlease",
+    "TheRARBG",
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Torrent Sources',
+          style: TextStyle(color: context.appColors.appBarTextColor),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+      body: BlocBuilder<SourceBloc, SourceState>(
+        builder: (context, state) {
+          final allSources = state.sources.isNotEmpty
+              ? state.sources.map((s) => s.sourceName).toList()
+              : _fallbackSources;
+
+          return ListView(
+            children: [
+              const SizedBox(height: 8),
+              // NSFW Toggle
+              SwitchListTile(
+                secondary: Icon(
+                  Icons.explicit_outlined,
+                  color: context.appColors.settingsIconsColor,
+                ),
+                title: Text(
+                  'Hide NSFW',
+                  style: TextStyle(
+                    color: context.appColors.settingsTextColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                subtitle: Text(
+                  'Hide adult content sources and NSFW categories from search and listings.',
+                  style: TextStyle(
+                    color: context.appColors.settingsTextColor,
+                    fontSize: 12,
+                  ),
+                ),
+                inactiveTrackColor:
+                    context.appColors.settingsSwitchListTileInactiveTrackColor,
+                inactiveThumbColor:
+                    context.appColors.settingsSwitchListTileInactiveThumbColor,
+                activeThumbColor:
+                    context.appColors.settingsSwitchListTileActiveThumbColor,
+                value: state.hideNsfw,
+                onChanged: (val) {
+                  context.read<SourceBloc>().add(ToggleHideNsfw(val));
+                },
+              ),
+              const Divider(height: 24),
+
+              // Header with quick actions
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 8.0,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Available Sources',
+                      style: TextStyle(
+                        color: context.appColors.settingsTextColor,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            context.read<SourceBloc>().add(EnableAllSources());
+                          },
+                          child: const Text('Enable All'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            context
+                                .read<SourceBloc>()
+                                .add(DisableAllSources(allSources));
+                          },
+                          child: const Text('Disable All'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              // Sources list
+              ...allSources.map((sourceName) {
+                final isNsfw = NsfwHelper.isNsfwSource(sourceName);
+                final isBlockedByNsfw = state.hideNsfw && isNsfw;
+                final isEnabled =
+                    !isBlockedByNsfw && state.isSourceEnabled(sourceName);
+
+                return SwitchListTile(
+                  secondary: Icon(
+                    isNsfw
+                        ? Icons.warning_amber_rounded
+                        : Icons.cloud_outlined,
+                    color: isBlockedByNsfw
+                        ? Colors.grey
+                        : context.appColors.settingsIconsColor,
+                  ),
+                  title: Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          sourceName,
+                          style: TextStyle(
+                            color: isBlockedByNsfw
+                                ? Colors.grey
+                                : context.appColors.settingsTextColor,
+                          ),
+                        ),
+                      ),
+                      if (isNsfw) ...[
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.redAccent.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(
+                              color: Colors.redAccent.withValues(alpha: 0.6),
+                              width: 0.8,
+                            ),
+                          ),
+                          child: const Text(
+                            'NSFW',
+                            style: TextStyle(
+                              color: Colors.redAccent,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                  subtitle: isBlockedByNsfw
+                      ? const Text(
+                          'Disabled because "Hide NSFW" is enabled',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 11,
+                          ),
+                        )
+                      : null,
+                  inactiveTrackColor: context
+                      .appColors.settingsSwitchListTileInactiveTrackColor,
+                  inactiveThumbColor: context
+                      .appColors.settingsSwitchListTileInactiveThumbColor,
+                  activeThumbColor:
+                      context.appColors.settingsSwitchListTileActiveThumbColor,
+                  value: isEnabled,
+                  onChanged: isBlockedByNsfw
+                      ? null
+                      : (val) {
+                          context.read<SourceBloc>().add(
+                                ToggleSource(
+                                  sourceName: sourceName,
+                                  isEnabled: val,
+                                ),
+                              );
+                        },
+                );
+              }),
+              const SizedBox(height: 24),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
