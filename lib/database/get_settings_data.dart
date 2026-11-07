@@ -33,6 +33,26 @@ Future<void> clearDomainCookie(String domain) async {
   await insertOrUpdateKv(key: "cf_cookie_www.$cleanDomain", value: "");
 }
 
+Future<int> clearAllCloudflareCookies() async {
+  try {
+    final allKv = await getSettingsKv();
+    int count = 0;
+    for (final key in allKv.keys) {
+      if (key.startsWith('cf_cookie_')) {
+        await insertOrUpdateKv(key: key, value: '');
+        count++;
+      }
+    }
+    return count;
+  } catch (_) {
+    return 0;
+  }
+}
+
+Future<void> resetAppUserAgent() async {
+  await insertOrUpdateKv(key: 'app_user_agent', value: '');
+}
+
 Future<void> setAppUserAgent(String ua) async {
   await insertOrUpdateKv(key: "app_user_agent", value: ua);
 }
