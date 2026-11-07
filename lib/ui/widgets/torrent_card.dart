@@ -20,12 +20,13 @@ class TorrentCard extends StatelessWidget {
     final colors = context.appColors;
     return Card(
       color: colors.cardColor,
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      margin: const EdgeInsets.symmetric(vertical: 6.0),
+      elevation: 0,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         side: BorderSide(
-          color: colors.cardSecondaryTextColor.withValues(alpha: 0.18),
-          width: 1,
+          color: colors.cardSecondaryTextColor.withValues(alpha: 0.16),
+          width: 1.2,
         ),
       ),
       child: Padding(
@@ -33,166 +34,163 @@ class TorrentCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 10),
-            Text(
-              torrent.name,
-              style: TextStyle(
-                color: context.appColors.cardPrimaryTextColor,
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 10),
+            // Top Row: Title + Size Capsule Badge
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.folder_outlined,
-                  size: 16,
-                  color: context.appColors.cardSecondaryTextColor,
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  torrent.size,
-                  style: TextStyle(
-                    color: context.appColors.cardSecondaryTextColor,
+                Expanded(
+                  child: Text(
+                    torrent.name,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: colors.cardPrimaryTextColor,
+                      fontSize: 16.5,
+                      fontWeight: FontWeight.w600,
+                      height: 1.35,
+                      letterSpacing: 0.1,
+                    ),
                   ),
                 ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Icon(
-                  Icons.date_range_sharp,
-                  size: 20,
-                  color: context.appColors.cardSecondaryTextColor,
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  'Created at : ${torrent.date}',
-                  style: TextStyle(
-                    color: context.appColors.cardSecondaryTextColor,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Icon(
-                  Icons.upload_sharp,
-                  size: 20,
-                  color: context.appColors.seedersIconColor,
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  'Seeders : ${torrent.seeders}',
-                  style: TextStyle(
-                    color: context.appColors.seedersTextColor,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Icon(
-                  Icons.download,
-                  size: 20,
-                  color: context.appColors.leechersIconColor,
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  'Leechers : ${torrent.leechers}',
-                  style: TextStyle(
-                    color: context.appColors.leechersTextColor,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Icon(
-                  Icons.download_for_offline,
-                  size: 20,
-                  color: context.appColors.cardSecondaryTextColor,
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  'Total Downloads : ${torrent.totalDownloads}',
-                  style: TextStyle(
-                    color: context.appColors.cardSecondaryTextColor,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                BlocBuilder<BookmarkedIhBloc, BookmarkedIhState>(
-                  builder: (context, state) {
-                    bool isBookmarked = false;
-
-                    state.whenOrNull(
-                      loaded: (infoHashes) {
-                        isBookmarked = infoHashes.contains(torrent.infoHash);
-                      },
-                    );
-
-                    return Row(
-                      children: [
-                        IconButton(
-                          icon: Icon(
-                            isBookmarked
-                                ? Icons.bookmark
-                                : Icons.bookmark_border,
-                            color: isBookmarked
-                                ? context.appColors.bookmarkedIconColor
-                                : context.appColors.bookmarkIconColor,
-                            size: 24,
-                          ),
-                          onPressed: () {
-                            if (isBookmarked) {
-                              _bookmarkOptionsDialog(context);
-                            } else {
-                              _categoryPickerDialog(
-                                context,
-                                isBookmarked: isBookmarked,
-                                categoryID: null,
-                              );
-                            }
-                          },
-                        ),
-
-                        if (isBookmarked)
-                          IconButton(
-                            icon: Icon(
-                              Icons.new_label_outlined,
-                              color: context.appColors.addTagIconColor,
-                            ),
-                            onPressed: () {
-                              _tagPickerDialog(
-                                context,
-                                infoHash: torrent.infoHash,
-                              );
-                            },
-                          ),
-                      ],
-                    );
-                  },
-                ),
-
                 const SizedBox(width: 10),
-                IconButton(
-                  icon: const MagnetSVG(),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: colors.bookmarksSidebarSelectedTileBackgroundColor,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: colors.bookmarksSidebarSelectedTileBorderColor
+                          .withValues(alpha: 0.4),
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.folder_open_rounded,
+                        size: 13,
+                        color: colors.bookmarksSidebarSelectedTileTextColor,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        torrent.size,
+                        style: TextStyle(
+                          color: colors.bookmarksSidebarSelectedTileTextColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 12),
+
+            // Metadata Metric Badges
+            Wrap(
+              spacing: 8,
+              runSpacing: 6,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                // Seeders
+                _buildMetricBadge(
+                  icon: Icons.arrow_upward_rounded,
+                  iconColor: Colors.greenAccent[400]!,
+                  label: "${torrent.seeders} seeders",
+                  textColor: Colors.greenAccent[400]!,
+                  backgroundColor: Colors.green.withValues(alpha: 0.12),
+                  borderColor: Colors.green.withValues(alpha: 0.25),
+                ),
+
+                // Leechers
+                _buildMetricBadge(
+                  icon: Icons.arrow_downward_rounded,
+                  iconColor: Colors.redAccent[200]!,
+                  label: "${torrent.leechers} leechers",
+                  textColor: Colors.redAccent[200]!,
+                  backgroundColor: Colors.red.withValues(alpha: 0.12),
+                  borderColor: Colors.red.withValues(alpha: 0.25),
+                ),
+
+                // Downloads (only shown if provided by source and not empty/N/A)
+                if (torrent.totalDownloads.trim().isNotEmpty &&
+                    torrent.totalDownloads != "0" &&
+                    torrent.totalDownloads.toUpperCase() != "N/A")
+                  _buildMetricBadge(
+                    icon: Icons.download_done_rounded,
+                    iconColor: colors.cardSecondaryTextColor,
+                    label: "${torrent.totalDownloads} downloads",
+                    textColor: colors.cardSecondaryTextColor,
+                    backgroundColor:
+                        colors.cardSecondaryTextColor.withValues(alpha: 0.08),
+                    borderColor:
+                        colors.cardSecondaryTextColor.withValues(alpha: 0.15),
+                  ),
+
+                // Date
+                if (torrent.date.isNotEmpty)
+                  _buildMetricBadge(
+                    icon: Icons.calendar_today_rounded,
+                    iconColor: colors.cardSecondaryTextColor,
+                    label: torrent.date,
+                    textColor: colors.cardSecondaryTextColor,
+                    backgroundColor:
+                        colors.cardSecondaryTextColor.withValues(alpha: 0.08),
+                    borderColor:
+                        colors.cardSecondaryTextColor.withValues(alpha: 0.15),
+                  ),
+              ],
+            ),
+
+            const SizedBox(height: 10),
+
+            Divider(
+              height: 18,
+              thickness: 1,
+              color: colors.cardSecondaryTextColor.withValues(alpha: 0.1),
+            ),
+
+            // Bottom Action Bar
+            Row(
+              children: [
+                // Prominent Magnet Button
+                FilledButton.tonalIcon(
+                  style: FilledButton.styleFrom(
+                    backgroundColor:
+                        colors.bookmarksSidebarSelectedTileBackgroundColor,
+                    foregroundColor:
+                        colors.bookmarksSidebarSelectedTileTextColor,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    minimumSize: const Size(0, 36),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      side: BorderSide(
+                        color: colors.bookmarksSidebarSelectedTileBorderColor
+                            .withValues(alpha: 0.4),
+                        width: 1,
+                      ),
+                    ),
+                  ),
+                  icon: const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: MagnetSVG(size: 18),
+                  ),
+                  label: const Text(
+                    "Open Magnet",
+                    style:
+                        TextStyle(fontSize: 12.5, fontWeight: FontWeight.bold),
+                  ),
                   onPressed: () async {
                     try {
-                      // appending Default Tracker List to Magnet link.
                       final processedMagnetLink = await processMagnetLink(
                         unprocessedMagnet: torrent.magnet,
                       );
-
                       openUrl(
                         urlType: UrlType.magentLink,
                         url: processedMagnetLink,
@@ -206,18 +204,81 @@ class TorrentCard extends StatelessWidget {
                     }
                   },
                 ),
-                const SizedBox(width: 10),
-                IconButton(
-                  icon:
-                      torrent.sourceUrl != null && torrent.sourceUrl!.isNotEmpty
-                      ? Icon(
-                          Icons.link,
-                          color: context.appColors.sourceUrlAvailableColor,
-                        )
-                      : Icon(
-                          Icons.link,
-                          color: context.appColors.sourceUrlUnAvailableColor,
+
+                const Spacer(),
+
+                // Bookmark & Tag
+                BlocBuilder<BookmarkedIhBloc, BookmarkedIhState>(
+                  builder: (context, state) {
+                    bool isBookmarked = false;
+                    state.whenOrNull(
+                      loaded: (infoHashes) {
+                        isBookmarked = infoHashes.contains(torrent.infoHash);
+                      },
+                    );
+
+                    return Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            isBookmarked
+                                ? Icons.bookmark_rounded
+                                : Icons.bookmark_border_rounded,
+                            color: isBookmarked
+                                ? colors.bookmarkedIconColor
+                                : colors.bookmarkIconColor,
+                            size: 22,
+                          ),
+                          tooltip: isBookmarked
+                              ? "Bookmark Options"
+                              : "Add to Bookmarks",
+                          onPressed: () {
+                            if (isBookmarked) {
+                              _bookmarkOptionsDialog(context);
+                            } else {
+                              _categoryPickerDialog(
+                                context,
+                                isBookmarked: isBookmarked,
+                                categoryID: null,
+                              );
+                            }
+                          },
                         ),
+                        if (isBookmarked)
+                          IconButton(
+                            icon: Icon(
+                              Icons.new_label_outlined,
+                              color: colors.addTagIconColor,
+                              size: 20,
+                            ),
+                            tooltip: "Manage Tags",
+                            onPressed: () {
+                              _tagPickerDialog(
+                                context,
+                                infoHash: torrent.infoHash,
+                              );
+                            },
+                          ),
+                      ],
+                    );
+                  },
+                ),
+
+                // Source Link
+                IconButton(
+                  icon: Icon(
+                    Icons.open_in_new_rounded,
+                    color: (torrent.sourceUrl != null &&
+                            torrent.sourceUrl!.isNotEmpty)
+                        ? colors.sourceUrlAvailableColor
+                        : colors.sourceUrlUnAvailableColor,
+                    size: 20,
+                  ),
+                  tooltip: (torrent.sourceUrl != null &&
+                          torrent.sourceUrl!.isNotEmpty)
+                      ? "Open Source Webpage"
+                      : "No Source Webpage",
                   onPressed: () async {
                     if (torrent.sourceUrl != null &&
                         torrent.sourceUrl!.trim().isNotEmpty) {
@@ -237,14 +298,13 @@ class TorrentCard extends StatelessWidget {
                   },
                 ),
 
-                const SizedBox(width: 10),
-
+                // Copy Options Popup Menu
                 PopupMenuButton<String>(
                   tooltip: 'Copy Options',
                   icon: Icon(
                     Icons.copy_rounded,
                     color: colors.torrentCardCopyButtonIconColor,
-                    size: 22,
+                    size: 20,
                   ),
                   color: colors.torrentCardCopyMenuBackgroundColor,
                   elevation: 6,
@@ -393,6 +453,42 @@ class TorrentCard extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildMetricBadge({
+    required IconData icon,
+    required String label,
+    required Color iconColor,
+    required Color textColor,
+    Color? backgroundColor,
+    Color? borderColor,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: backgroundColor ?? Colors.transparent,
+        borderRadius: BorderRadius.circular(7),
+        border: Border.all(
+          color: borderColor ?? Colors.transparent,
+          width: 1,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 13, color: iconColor),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: TextStyle(
+              color: textColor,
+              fontSize: 11.5,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -915,15 +1011,16 @@ class TorrentCard extends StatelessWidget {
 }
 
 class MagnetSVG extends StatelessWidget {
-  const MagnetSVG({super.key});
+  final double size;
+  const MagnetSVG({super.key, this.size = 25});
 
   @override
   Widget build(BuildContext context) {
     return SvgPicture.asset(
       "assets/magnet-svgrepo-com.svg",
       semanticsLabel: 'Magnet Link',
-      height: 25,
-      width: 25,
+      height: size,
+      width: size,
       colorFilter: ColorFilter.mode(
         context.appColors.magnetIconColor,
         BlendMode.srcIn,

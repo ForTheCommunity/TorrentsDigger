@@ -47,30 +47,39 @@ class _ExpandableTorrentCardState extends State<ExpandableTorrentCard> {
       );
     }
 
-    // Clean, minimal Compact Row View: clicks expand into full card
+    // Clean, modern Compact Row View: clicks expand into full card
     return Card(
       color: colors.cardColor,
-      margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
+      margin: const EdgeInsets.symmetric(vertical: 3.5, horizontal: 4.0),
+      elevation: 0,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-          color: colors.cardSecondaryTextColor.withValues(alpha: 0.15),
+          color: colors.cardSecondaryTextColor.withValues(alpha: 0.14),
           width: 1,
         ),
       ),
       child: InkWell(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(12),
         onTap: () => setState(() => _isManuallyExpanded = true),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
           child: Row(
             children: [
-              Icon(
-                Icons.description_outlined,
-                size: 20,
-                color: colors.cardSecondaryTextColor,
+              Container(
+                width: 38,
+                height: 38,
+                decoration: BoxDecoration(
+                  color: colors.cardSecondaryTextColor.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(
+                  Icons.folder_zip_outlined,
+                  size: 20,
+                  color: colors.bookmarksSidebarSelectedTileTextColor,
+                ),
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,11 +91,12 @@ class _ExpandableTorrentCardState extends State<ExpandableTorrentCard> {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: colors.cardPrimaryTextColor,
-                        fontSize: 14,
+                        fontSize: 14.5,
                         fontWeight: FontWeight.w600,
+                        letterSpacing: 0.1,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 5),
                     Row(
                       children: [
                         Text(
@@ -94,55 +104,71 @@ class _ExpandableTorrentCardState extends State<ExpandableTorrentCard> {
                           style: TextStyle(
                             color: colors.cardSecondaryTextColor,
                             fontSize: 12,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        Text(
-                          " • ",
-                          style: TextStyle(
-                            color: colors.cardSecondaryTextColor.withValues(alpha: 0.5),
-                            fontSize: 12,
+                        Container(
+                          width: 3,
+                          height: 3,
+                          margin: const EdgeInsets.symmetric(horizontal: 6),
+                          decoration: BoxDecoration(
+                            color: colors.cardSecondaryTextColor
+                                .withValues(alpha: 0.4),
+                            shape: BoxShape.circle,
                           ),
                         ),
-                        const Icon(Icons.arrow_upward, size: 12, color: Colors.green),
+                        Icon(
+                          Icons.arrow_upward_rounded,
+                          size: 13,
+                          color: Colors.greenAccent[400],
+                        ),
                         const SizedBox(width: 2),
                         Text(
                           widget.torrent.seeders,
-                          style: const TextStyle(
-                            color: Colors.green,
+                          style: TextStyle(
+                            color: Colors.greenAccent[400],
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(width: 6),
-                        const Icon(Icons.arrow_downward, size: 12, color: Colors.red),
+                        const SizedBox(width: 8),
+                        Icon(
+                          Icons.arrow_downward_rounded,
+                          size: 13,
+                          color: Colors.redAccent[200],
+                        ),
                         const SizedBox(width: 2),
                         Text(
                           widget.torrent.leechers,
-                          style: const TextStyle(
-                            color: Colors.red,
+                          style: TextStyle(
+                            color: Colors.redAccent[200],
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         if (widget.torrent.date.isNotEmpty) ...[
-                          Text(
-                            " • ",
-                            style: TextStyle(
-                              color: colors.cardSecondaryTextColor.withValues(alpha: 0.5),
-                              fontSize: 12,
+                          Container(
+                            width: 3,
+                            height: 3,
+                            margin: const EdgeInsets.symmetric(horizontal: 6),
+                            decoration: BoxDecoration(
+                              color: colors.cardSecondaryTextColor
+                                  .withValues(alpha: 0.4),
+                              shape: BoxShape.circle,
                             ),
                           ),
                           Icon(
-                            Icons.schedule,
-                            size: 12,
-                            color: colors.cardSecondaryTextColor,
+                            Icons.calendar_today_rounded,
+                            size: 11,
+                            color: colors.cardSecondaryTextColor
+                                .withValues(alpha: 0.8),
                           ),
-                          const SizedBox(width: 2),
+                          const SizedBox(width: 4),
                           Text(
                             widget.torrent.date,
                             style: TextStyle(
                               color: colors.cardSecondaryTextColor,
-                              fontSize: 12,
+                              fontSize: 11.5,
                             ),
                           ),
                         ],
@@ -151,11 +177,19 @@ class _ExpandableTorrentCardState extends State<ExpandableTorrentCard> {
                   ],
                 ),
               ),
-              const SizedBox(width: 8),
-              Icon(
-                Icons.unfold_more,
-                size: 18,
-                color: colors.cardSecondaryTextColor.withValues(alpha: 0.6),
+              const SizedBox(width: 10),
+              Container(
+                width: 28,
+                height: 28,
+                decoration: BoxDecoration(
+                  color: colors.cardSecondaryTextColor.withValues(alpha: 0.06),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.unfold_more_rounded,
+                  size: 18,
+                  color: colors.cardSecondaryTextColor.withValues(alpha: 0.7),
+                ),
               ),
             ],
           ),
