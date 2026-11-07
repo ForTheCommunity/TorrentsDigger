@@ -1,3 +1,5 @@
+use lib_torrents_digger::network_io::trackers::update_default_trackers;
+
 use crate::api::{
     internals::{InternalBookmarkTag, InternalTagStats},
     preludes::*,
@@ -122,6 +124,13 @@ pub fn get_all_default_trackers_list() -> Vec<(usize, String)> {
 pub fn load_default_trackers_string() -> Result<bool, String> {
     match load_trackers_string() {
         Ok(a) => Ok(a),
+        Err(e) => Err(e.to_string()),
+    }
+}
+
+pub fn update_trackers(update_all: bool) -> Result<String, String> {
+    match update_default_trackers(update_all) {
+        Ok(msg) => Ok(msg),
         Err(e) => Err(e.to_string()),
     }
 }

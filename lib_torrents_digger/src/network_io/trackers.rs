@@ -3,7 +3,7 @@ use core::fmt;
 use std::{
     fs::{self, File},
     io::Read,
-    path::Path,
+    path::{Path, PathBuf},
     sync::{LazyLock, Mutex},
 };
 
@@ -173,19 +173,22 @@ impl fmt::Display for DefaultTrackers {
 static TRACKERS_STRING: LazyLock<Mutex<String>> =
     LazyLock::new(|| Mutex::new(String::from("this data will be overwrited....")));
 
+fn get_trackers_dir() -> Result<PathBuf> {
+    if let Some(path) = TRACKERS_DIR_PATH.get() {
+        return Ok(path.clone());
+    }
+    let platform_specific_dir = fetch_kv(PLATFORM_SPECIFIC_DIR_KEY)?
+        .ok_or_else(|| anyhow!("Platform Specific Root Dir Path not found in database."))?;
+    Ok(Path::new(&platform_specific_dir).join(TRACKERS_LISTS_DIR))
+}
+
 pub fn load_trackers_string() -> Result<bool> {
     let active_trackers_list_index = get_active_trackers_list()?.parse::<usize>()?;
     let trackers_list_type = DefaultTrackers::from_index(active_trackers_list_index)
         .ok_or_else(|| anyhow!("Invalid tracker index: {}", active_trackers_list_index))?;
     let file_name = trackers_list_type.get_filename();
 
-    // platform specific root dir
-    let platform_specific_dir = fetch_kv(PLATFORM_SPECIFIC_DIR_KEY)?
-        .ok_or_else(|| anyhow!("Platform Specific Root Dir Path not found in database."))?;
-
-    let file_path = Path::new(&platform_specific_dir)
-        .join(TRACKERS_LISTS_DIR)
-        .join(file_name);
+    let file_path = get_trackers_dir()?.join(file_name);
 
     if !file_path.exists() {
         let _ = trackers_list_type.download_single_list(&file_path);
@@ -213,4 +216,62 @@ pub fn load_trackers_string() -> Result<bool> {
         *data = trackers;
     }
     Ok(true)
+}
+
+pub fn update_active_trackers() -> Result<(String, usize)> {
+    let active_trackers_list_index = get_active_trackers_list()?.parse::<usize>()?;
+    let trackers_list_type = DefaultTrackers::from_index(active_trackers_list_index)
+        .ok_or_else(|| anyhow!("Invalid tracker index: {}", active_trackers_list_index))?;
+    let file_name = trackers_list_type.get_filename();
+    let file_path = get_trackers_dir()?.join(file_name);
+
+    // Force re-download
+    trackers_list_type.download_single_list(&file_path)?;
+
+    // Reload active trackers string
+    load_trackers_string()?;
+
+    // Count trackers
+    let mut file = File::open(file_path)?;
+    let mut content = String::new();
+    file.read_to_string(&mut content)?;
+    let tracker_count = content.lines().filter(|l| !l.trim().is_empty()).count();
+
+    Ok((trackers_list_type.to_string(), tracker_count))
+}
+
+pub fn update_all_trackers() -> Result<usize> {
+    let trackers_dir = get_trackers_dir()?;
+    let mut updated_count = 0;
+    let mut last_err = None;
+
+    for variant in DefaultTrackers::ALL_VARIANTS.iter() {
+        let file_path = trackers_dir.join(variant.get_filename());
+        match variant.download_single_list(&file_path) {
+            Ok(_) => updated_count += 1,
+            Err(e) => last_err = Some(e),
+        }
+    }
+
+    if updated_count == 0 {
+        if let Some(err) = last_err {
+            return Err(anyhow!("Failed to download tracker lists: {}", err));
+        }
+        return Err(anyhow!("Failed to download tracker lists."));
+    }
+
+    // Reload active trackers string with the newly updated list
+    load_trackers_string()?;
+
+    Ok(updated_count)
+}
+
+pub fn update_default_trackers(update_all: bool) -> Result<String> {
+    if update_all {
+        let count = update_all_trackers()?;
+        Ok(format!("Successfully updated {} tracker lists.", count))
+    } else {
+        let (name, count) = update_active_trackers()?;
+        Ok(format!("Successfully updated '{}' ({} trackers).", name, count))
+    }
 }

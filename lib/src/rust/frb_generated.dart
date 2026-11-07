@@ -69,7 +69,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.13.0';
 
   @override
-  int get rustContentHash => -956128425;
+  int get rustContentHash => 378203094;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -239,6 +239,8 @@ abstract class RustLibApi extends BaseApi {
     required String infoHash,
     required List<int> tagIds,
   });
+
+  Future<String> crateApiAppUpdateTrackers({required bool updateAll});
 }
 
 class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
@@ -1665,6 +1667,36 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         debugName: "update_torrent_tags",
         argNames: ["infoHash", "tagIds"],
       );
+
+  @override
+  Future<String> crateApiAppUpdateTrackers({required bool updateAll}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_bool(updateAll, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 45,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_String,
+          decodeErrorData: sse_decode_String,
+        ),
+        constMeta: kCrateApiAppUpdateTrackersConstMeta,
+        argValues: [updateAll],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiAppUpdateTrackersConstMeta => const TaskConstMeta(
+    debugName: "update_trackers",
+    argNames: ["updateAll"],
+  );
 
   @protected
   Map<String, String> dco_decode_Map_String_String_None(dynamic raw) {
