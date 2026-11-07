@@ -1,6 +1,6 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:torrents_digger/configs/extensions.dart';
+import 'package:torrents_digger/themes/app_theme.dart';
 import 'package:torrents_digger/ui/widgets/category_chip.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 
@@ -113,10 +113,12 @@ Future<void> createItemDialog(
       }
 
       final isTag = title.toLowerCase().contains("tag");
-      final IconData headerIcon =
-          isTag ? Icons.local_offer_rounded : Icons.create_new_folder_rounded;
-      final Color accentColor =
-          isTag ? colors.bookmarksStatsIconColor : colors.bookmarkCategoryIconColor;
+      final IconData headerIcon = isTag
+          ? Icons.local_offer_rounded
+          : Icons.create_new_folder_rounded;
+      final Color accentColor = isTag
+          ? colors.bookmarksStatsIconColor
+          : colors.bookmarkCategoryIconColor;
 
       return AlertDialog(
         backgroundColor: colors.createCategoryDialogBackgroundColor,
@@ -138,11 +140,7 @@ Future<void> createItemDialog(
                 color: accentColor.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(
-                headerIcon,
-                color: accentColor,
-                size: 20,
-              ),
+              child: Icon(headerIcon, color: accentColor, size: 20),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -217,8 +215,8 @@ Future<void> createItemDialog(
             children: [
               TextButton(
                 style: TextButton.styleFrom(
-                  backgroundColor: colors
-                      .bookmarkCategoryDialogCloseButtonBackgroundColor,
+                  backgroundColor:
+                      colors.bookmarkCategoryDialogCloseButtonBackgroundColor,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 18,
                     vertical: 10,
@@ -231,8 +229,7 @@ Future<void> createItemDialog(
                 child: Text(
                   'Cancel',
                   style: TextStyle(
-                    color: colors
-                        .bookmarkCategoryDialogCloseButtonTextColor,
+                    color: colors.bookmarkCategoryDialogCloseButtonTextColor,
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
                   ),
@@ -251,8 +248,7 @@ Future<void> createItemDialog(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                     side: BorderSide(
-                      color: colors
-                          .createNewCategoryDialogCreateButtonTextColor
+                      color: colors.createNewCategoryDialogCreateButtonTextColor
                           .withValues(alpha: 0.5),
                       width: 1,
                     ),
@@ -262,8 +258,7 @@ Future<void> createItemDialog(
                 child: Text(
                   'Create',
                   style: TextStyle(
-                    color: colors
-                        .createNewCategoryDialogCreateButtonTextColor,
+                    color: colors.createNewCategoryDialogCreateButtonTextColor,
                     fontSize: 13,
                     fontWeight: FontWeight.bold,
                   ),
@@ -312,8 +307,9 @@ Future<void> renameItemDialog(
       }
 
       final isTag = title.toLowerCase().contains("tag");
-      final Color accentColor =
-          isTag ? colors.bookmarksStatsIconColor : colors.bookmarkCategoryIconColor;
+      final Color accentColor = isTag
+          ? colors.bookmarksStatsIconColor
+          : colors.bookmarkCategoryIconColor;
 
       return AlertDialog(
         backgroundColor: colors.createCategoryDialogBackgroundColor,
@@ -335,11 +331,7 @@ Future<void> renameItemDialog(
                 color: accentColor.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(
-                Icons.edit_rounded,
-                color: accentColor,
-                size: 20,
-              ),
+              child: Icon(Icons.edit_rounded, color: accentColor, size: 20),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -414,8 +406,8 @@ Future<void> renameItemDialog(
             children: [
               TextButton(
                 style: TextButton.styleFrom(
-                  backgroundColor: colors
-                      .bookmarkCategoryDialogCloseButtonBackgroundColor,
+                  backgroundColor:
+                      colors.bookmarkCategoryDialogCloseButtonBackgroundColor,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 18,
                     vertical: 10,
@@ -428,8 +420,7 @@ Future<void> renameItemDialog(
                 child: Text(
                   'Cancel',
                   style: TextStyle(
-                    color: colors
-                        .bookmarkCategoryDialogCloseButtonTextColor,
+                    color: colors.bookmarkCategoryDialogCloseButtonTextColor,
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
                   ),
@@ -448,8 +439,7 @@ Future<void> renameItemDialog(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                     side: BorderSide(
-                      color: colors
-                          .createNewCategoryDialogCreateButtonTextColor
+                      color: colors.createNewCategoryDialogCreateButtonTextColor
                           .withValues(alpha: 0.5),
                       width: 1,
                     ),
@@ -459,8 +449,7 @@ Future<void> renameItemDialog(
                 child: Text(
                   'Rename',
                   style: TextStyle(
-                    color: colors
-                        .createNewCategoryDialogCreateButtonTextColor,
+                    color: colors.createNewCategoryDialogCreateButtonTextColor,
                     fontSize: 13,
                     fontWeight: FontWeight.bold,
                   ),
@@ -480,253 +469,277 @@ Future<void> deleteItemVerificationDialog(
   required String description,
   required void Function() onDelete,
 }) async {
-  // generating random verification code
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz123456789';
-  final random = Random();
-  final verificationCode = String.fromCharCodes(
-    List.generate(6, (_) => chars.codeUnitAt(random.nextInt(chars.length))),
-  );
-
-  final controller = TextEditingController();
-  bool showError = false;
-
   await showDialog(
     context: context,
     builder: (dialogContext) {
       final colors = context.appColors;
+      final dangerColor =
+          colors.deleteCategoryConfirmationDialogDeleteButtonTextColor;
 
-      return StatefulBuilder(
-        builder: (context, setDialogState) {
-          return AlertDialog(
-            backgroundColor: colors.createCategoryDialogBackgroundColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-              side: BorderSide(
-                color: colors.bookmarksStatsBorderColor.withValues(alpha: 0.6),
-                width: 1,
+      return AlertDialog(
+        backgroundColor: colors.createCategoryDialogBackgroundColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: BorderSide(
+            color: colors.bookmarksStatsBorderColor.withValues(alpha: 0.6),
+            width: 1,
+          ),
+        ),
+        titlePadding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+        contentPadding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+        actionsPadding: const EdgeInsets.fromLTRB(20, 10, 20, 18),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: dangerColor.withValues(alpha: 0.14),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: dangerColor.withValues(alpha: 0.3)),
+              ),
+              child: Icon(
+                Icons.delete_forever_rounded,
+                color: dangerColor,
+                size: 20,
               ),
             ),
-            titlePadding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
-            contentPadding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-            actionsPadding: const EdgeInsets.fromLTRB(20, 10, 20, 18),
-            title: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: colors.bookmarkCategoryDialogRemoveIconColor
-                        .withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Icon(
-                    Icons.delete_forever_rounded,
-                    color: colors.bookmarkCategoryDialogRemoveIconColor,
-                    size: 20,
-                  ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(
+                  color: colors.deleteCategoryConfirmationDialogTitleColor,
+                  fontSize: 16.5,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: TextStyle(
-                      color:
-                          colors.deleteCategoryConfirmationDialogTitleColor,
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(
-                    Icons.close_rounded,
-                    color: colors.cardSecondaryTextColor.withValues(alpha: 0.7),
-                    size: 20,
-                  ),
-                  tooltip: 'Close',
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                  onPressed: () => Navigator.pop(dialogContext),
-                ),
-              ],
+              ),
             ),
-            content: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom,
+            IconButton(
+              icon: Icon(
+                Icons.close_rounded,
+                color: colors.cardSecondaryTextColor.withValues(alpha: 0.7),
+                size: 20,
+              ),
+              tooltip: 'Close',
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+              onPressed: () => Navigator.pop(dialogContext),
+            ),
+          ],
+        ),
+        content: SizedBox(
+          width: 390,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Warning Description Banner
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: dangerColor.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: dangerColor.withValues(alpha: 0.22),
+                  ),
                 ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      description,
-                      style: TextStyle(
-                        color:
-                            colors.deleteCategoryConfirmationDialogTextColor,
-                        fontSize: 13,
-                      ),
+                    Icon(
+                      Icons.warning_amber_rounded,
+                      size: 18,
+                      color: dangerColor,
                     ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'Type the code below to confirm:',
-                      style: TextStyle(
-                        color:
-                            colors.deleteCategoryConfirmationDialogTextColor,
-                        fontSize: 13,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      decoration: BoxDecoration(
-                        color: colors.cardColor.withValues(alpha: 0.5),
-                        border: Border.all(
-                          color: colors
-                              .deleteCategoryConfirmationDialogCodeBorderColor,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                    const SizedBox(width: 8),
+                    Expanded(
                       child: Text(
-                        verificationCode,
-                        textAlign: TextAlign.center,
+                        description,
                         style: TextStyle(
-                          color: colors
-                              .deleteCategoryConfirmationDialogCodeColor,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 6,
+                          color:
+                              colors.deleteCategoryConfirmationDialogTextColor,
+                          fontSize: 12.5,
+                          height: 1.35,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 12),
-                    TextField(
-                      controller: controller,
-                      autofocus: false,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: colors
-                            .deleteCategoryConfirmationDialogInputTextColor,
-                        letterSpacing: 4,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: 'Enter code',
-                        hintStyle: TextStyle(
-                          color: colors
-                              .createNewCategoryDialogTextFieldHintColor,
-                          letterSpacing: 1,
-                        ),
-                        filled: true,
-                        fillColor: colors.cardColor.withValues(alpha: 0.5),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 14,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
-                            color: colors
-                                .deleteCategoryConfirmationDialogInputTextfieldInactiveBorderColor,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
-                            color: colors
-                                .deleteCategoryConfirmationDialogInputTextfieldActiveBorderColor,
-                            width: 1.5,
-                          ),
-                        ),
-                        // show error if code doesn't match
-                        errorText: showError ? 'Code did not match' : null,
-                        errorStyle: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: colors
-                              .deleteCategoryConfirmationDialogCodeDoesnotMatchErrorTextColor,
-                        ),
-                      ),
-                      onChanged: (_) {
-                        if (showError) {
-                          setDialogState(() => showError = false);
-                        }
-                      },
                     ),
                   ],
                 ),
               ),
-            ),
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      backgroundColor: colors
-                          .bookmarkCategoryDialogCloseButtonBackgroundColor,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 18,
-                        vertical: 10,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    onPressed: () => Navigator.pop(dialogContext),
-                    child: Text(
-                      'Cancel',
-                      style: TextStyle(
-                        color: colors
-                            .deleteCategoryConfirmationDialogCancelButtonTextColor,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      backgroundColor: colors
-                          .deleteCategoryConfirmationDialogDeleteButtonTextColor
-                          .withValues(alpha: 0.15),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 10,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        side: BorderSide(
-                          color: colors
-                              .deleteCategoryConfirmationDialogDeleteButtonTextColor
-                              .withValues(alpha: 0.5),
-                          width: 1,
-                        ),
-                      ),
-                    ),
-                    onPressed: () {
-                      if (controller.text.trim() == verificationCode) {
-                        onDelete();
-                        Navigator.pop(dialogContext);
-                      } else {
-                        // show error inside dialog
-                        setDialogState(() => showError = true);
-                      }
-                    },
-                    child: Text(
-                      'Delete',
-                      style: TextStyle(
-                        color: colors
-                            .deleteCategoryConfirmationDialogDeleteButtonTextColor,
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
+              const SizedBox(height: 16),
+              Text(
+                "Safety Confirmation",
+                style: TextStyle(
+                  color: colors.deleteCategoryConfirmationDialogTextColor,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                "Press and hold the button below to permanently delete. Releasing early cancels the deletion.",
+                style: TextStyle(
+                  color: colors.cardSecondaryTextColor,
+                  fontSize: 12,
+                  height: 1.35,
+                ),
+              ),
+              const SizedBox(height: 16),
+              _HoldToDeleteButton(
+                colors: colors,
+                onConfirmed: () {
+                  onDelete();
+                  Navigator.pop(dialogContext);
+                },
               ),
             ],
-          );
-        },
+          ),
+        ),
+        actions: [
+          Center(
+            child: TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor:
+                    colors.bookmarkCategoryDialogCloseButtonBackgroundColor,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 10,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              onPressed: () => Navigator.pop(dialogContext),
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  color: colors
+                      .deleteCategoryConfirmationDialogCancelButtonTextColor,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+        ],
       );
     },
   );
+}
+
+// Interactive Hold-to-Delete Gesture Button for Alternative 2
+class _HoldToDeleteButton extends StatefulWidget {
+  final VoidCallback onConfirmed;
+  final AppTheme colors;
+
+  const _HoldToDeleteButton({required this.onConfirmed, required this.colors});
+
+  @override
+  State<_HoldToDeleteButton> createState() => _HoldToDeleteButtonState();
+}
+
+class _HoldToDeleteButtonState extends State<_HoldToDeleteButton>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller =
+        AnimationController(
+          vsync: this,
+          duration: const Duration(milliseconds: 1400),
+        )..addStatusListener((status) {
+          if (status == AnimationStatus.completed) {
+            widget.onConfirmed();
+          }
+        });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final dangerColor =
+        widget.colors.deleteCategoryConfirmationDialogDeleteButtonTextColor;
+
+    return GestureDetector(
+      onTapDown: (_) => _controller.forward(),
+      onTapUp: (_) {
+        if (_controller.status != AnimationStatus.completed) {
+          _controller.reverse();
+        }
+      },
+      onTapCancel: () {
+        if (_controller.status != AnimationStatus.completed) {
+          _controller.reverse();
+        }
+      },
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, child) {
+          final progress = _controller.value;
+          final isHolding = progress > 0;
+
+          return Container(
+            height: 48,
+            decoration: BoxDecoration(
+              color: dangerColor.withValues(alpha: isHolding ? 0.22 : 0.12),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: dangerColor.withValues(alpha: isHolding ? 0.7 : 0.4),
+                width: 1.5,
+              ),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(11),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  // Progress fill
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: FractionallySizedBox(
+                      widthFactor: progress,
+                      heightFactor: 1.0,
+                      child: Container(
+                        color: dangerColor.withValues(alpha: 0.35),
+                      ),
+                    ),
+                  ),
+                  // Button label
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.touch_app_rounded,
+                        size: 18,
+                        color: dangerColor,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        isHolding
+                            ? "Keep holding... ${(progress * 100).toInt()}%"
+                            : "Press & Hold to Delete",
+                        style: TextStyle(
+                          color: dangerColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13.5,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 }
