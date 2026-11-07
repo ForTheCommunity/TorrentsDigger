@@ -30,6 +30,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
 
   final ScrollController _scrollController = ScrollController();
   final ScrollController _sidebarScrollController = ScrollController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   // Search state
   bool _isSearching = false;
@@ -115,52 +116,63 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
           },
         ),
       ],
-      child: Scaffold(
-        appBar: _buildAppBar(context),
-        floatingActionButton: FloatingActionsButtons(
-          scrollToTop: true,
-          enableAddTorrent: true,
-          enableBookmarks: false,
-          enableCustoms: true,
-          enableSettings: true,
-          scrollController: _scrollController,
-        ),
-        body: SafeArea(
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final isWide = constraints.maxWidth >= 600;
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final isWide = constraints.maxWidth >= 600;
 
-              if (!isWide) {
-                // On narrow screens (mobile or very small window)
-                if (_showSidebar) {
-                  return _buildSidebar(context);
-                }
-                return _buildTorrentsPane(context);
-              }
-
-              // Wide screen / Desktop Two-Pane layout
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  if (_showSidebar) ...[
-                    SizedBox(width: 270, child: _buildSidebar(context)),
-                    VerticalDivider(
-                      width: 1,
-                      thickness: 1,
-                      color: context.appColors.bookmarksSidebarDividerColor,
+          return Scaffold(
+            key: _scaffoldKey,
+            appBar: _buildAppBar(context, isWide: isWide),
+            drawer: !isWide
+                ? Drawer(
+                    backgroundColor:
+                        context.appColors.bookmarksSidebarBackgroundColor,
+                    child: SafeArea(
+                      child: _buildSidebar(context, isMobileDrawer: true),
                     ),
-                  ],
-                  Expanded(child: _buildTorrentsPane(context)),
-                ],
-              );
-            },
-          ),
-        ),
+                  )
+                : null,
+            floatingActionButton: FloatingActionsButtons(
+              scrollToTop: true,
+              enableAddTorrent: true,
+              enableBookmarks: false,
+              enableCustoms: true,
+              enableSettings: true,
+              scrollController: _scrollController,
+            ),
+            body: SafeArea(
+              child: isWide
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        if (_showSidebar) ...[
+                          SizedBox(
+                            width: 270,
+                            child:
+                                _buildSidebar(context, isMobileDrawer: false),
+                          ),
+                          VerticalDivider(
+                            width: 1,
+                            thickness: 1,
+                            color:
+                                context.appColors.bookmarksSidebarDividerColor,
+                          ),
+                        ],
+                        Expanded(child: _buildTorrentsPane(context)),
+                      ],
+                    )
+                  : _buildTorrentsPane(context),
+            ),
+          );
+        },
       ),
     );
   }
 
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
+  PreferredSizeWidget _buildAppBar(
+    BuildContext context, {
+    required bool isWide,
+  }) {
     return AppBar(
       leading: IconButton(
         icon: Icon(
@@ -233,17 +245,27 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
           ),
           IconButton(
             icon: Icon(
-              _showSidebar ? Icons.view_sidebar : Icons.view_sidebar_outlined,
+              isWide
+                  ? (_showSidebar
+                      ? Icons.view_sidebar
+                      : Icons.view_sidebar_outlined)
+                  : Icons.view_sidebar_outlined,
               size: 24,
               color: context.appColors.bookmarksViewSidebarIconColor,
             ),
-            tooltip: _showSidebar
-                ? "Hide Categories & Tags"
-                : "Show Categories & Tags",
+            tooltip: isWide
+                ? (_showSidebar
+                    ? "Hide Categories & Tags"
+                    : "Show Categories & Tags")
+                : "Open Library & Tags",
             onPressed: () {
-              setState(() {
-                _showSidebar = !_showSidebar;
-              });
+              if (isWide) {
+                setState(() {
+                  _showSidebar = !_showSidebar;
+                });
+              } else {
+                _scaffoldKey.currentState?.openDrawer();
+              }
             },
           ),
           IconButton(
@@ -291,7 +313,10 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
 
   // ==================== LEFT SIDEBAR: CATEGORIES & TAGS ====================
 
-  Widget _buildSidebar(BuildContext context) {
+  Widget _buildSidebar(
+    BuildContext context, {
+    required bool isMobileDrawer,
+  }) {
     final statsState = context.watch<BookmarksStatsBloc>().state;
     final InternalBookmarksStats? stats = statsState.whenOrNull(
       loaded: (bookmarksStats) => bookmarksStats,
@@ -324,6 +349,40 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
           controller: _sidebarScrollController,
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
           children: [
+            if (isMobileDrawer) ...[
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0, top: 4.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Library & Filters",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color:
+                            context.appColors.bookmarksSidebarHeaderTextColor,
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close, size: 20),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(
+                        minWidth: 28,
+                        minHeight: 28,
+                      ),
+                      color: context.appColors.bookmarksSidebarTileTextColor,
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ],
+                ),
+              ),
+              Divider(
+                height: 12,
+                color: context.appColors.bookmarksSidebarDividerColor,
+              ),
+            ],
+
             // Master tile: "All Bookmarks"
             _buildMasterTile(
               context: context,
@@ -339,6 +398,9 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                   selectedTagId = _allTagsId;
                 });
                 _reloadBookmarks();
+                if (isMobileDrawer) {
+                  Navigator.pop(context);
+                }
               },
             ),
 
@@ -407,6 +469,9 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                               }
                             });
                             _reloadBookmarks();
+                            if (isMobileDrawer) {
+                              Navigator.pop(context);
+                            }
                           },
                           onRename: () => renameItemDialog(
                             context,
@@ -505,6 +570,9 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                               }
                             });
                             _reloadBookmarks();
+                            if (isMobileDrawer) {
+                              Navigator.pop(context);
+                            }
                           },
                           onRename: () => renameItemDialog(
                             context,
