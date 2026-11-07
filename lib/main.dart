@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -40,8 +41,8 @@ Future<void> main() async {
   // Hydration Setup
   await hydrationSetup();
 
-  // loading Active Default TRACKERS_STRING
-  await loadTrackersString();
+  // loading Active Default TRACKERS_STRING in the background
+  unawaited(loadTrackersString());
 
   runApp(const MyApp());
 }

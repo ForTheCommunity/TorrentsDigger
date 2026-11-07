@@ -127,6 +127,21 @@ impl DefaultTrackers {
         Ok(true)
     }
 
+    pub fn download_single_list(&self, file_path: &Path) -> Result<bool> {
+        let url = self.url();
+        let mut response = send_request(url)?;
+        if !response.status().is_success() {
+            return Err(anyhow!(format!(
+                "Request to {} failed with status {}",
+                url,
+                response.status()
+            )));
+        }
+        let response_body_text = response.body_mut().read_to_string()?;
+        fs::write(file_path, response_body_text)?;
+        Ok(true)
+    }
+
     pub fn get_magnet_link(mut magnet: String) -> anyhow::Result<String> {
         let trackers_string = TRACKERS_STRING
             .lock()
@@ -173,27 +188,29 @@ pub fn load_trackers_string() -> Result<bool> {
         .join(file_name);
 
     if !file_path.exists() {
-        DefaultTrackers::download_trackers_lists()?;
+        let _ = trackers_list_type.download_single_list(&file_path);
     }
 
-    let mut file = File::open(file_path)?;
-    let mut trackers_file_content = String::new();
-    file.read_to_string(&mut trackers_file_content)?;
+    if file_path.exists() {
+        let mut file = File::open(file_path)?;
+        let mut trackers_file_content = String::new();
+        file.read_to_string(&mut trackers_file_content)?;
 
-    // String to store trackers.
-    let mut trackers = String::new();
+        // String to store trackers.
+        let mut trackers = String::new();
 
-    for a_tracker in trackers_file_content.lines() {
-        // check for empty lines / gap
-        if !a_tracker.trim().is_empty() {
-            trackers.push_str("&tr=");
-            trackers.push_str(a_tracker);
+        for a_tracker in trackers_file_content.lines() {
+            // check for empty lines / gap
+            if !a_tracker.trim().is_empty() {
+                trackers.push_str("&tr=");
+                trackers.push_str(a_tracker);
+            }
         }
-    }
 
-    let mut data = TRACKERS_STRING
-        .lock()
-        .map_err(|e| anyhow!("Failed to lock TRACKERS_STRING: {}", e))?;
-    *data = trackers;
+        let mut data = TRACKERS_STRING
+            .lock()
+            .map_err(|e| anyhow!("Failed to lock TRACKERS_STRING: {}", e))?;
+        *data = trackers;
+    }
     Ok(true)
 }

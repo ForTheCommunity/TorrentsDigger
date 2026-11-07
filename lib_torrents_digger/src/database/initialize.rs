@@ -12,7 +12,6 @@ use crate::{
         },
         settings_kvs::insert_update_kv,
     },
-    network_io::trackers::DefaultTrackers,
 };
 
 static MIGRATIONS_DIR: Dir = include_dir!("$CARGO_MANIFEST_DIR/src/database/migrations");
@@ -48,9 +47,6 @@ pub fn initialize_database(platform_specific_home_dir: String) -> Result<()> {
             .to_str()
             .ok_or_else(|| anyhow!("Unable to Insert/Update Platform Specific Home Dir"))?,
     )?;
-
-    // downloading trackers lists
-    DefaultTrackers::download_trackers_lists()?;
 
     Ok(())
 }
