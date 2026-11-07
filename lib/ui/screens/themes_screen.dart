@@ -21,8 +21,6 @@ class _ThemesScreenState extends State<ThemesScreen> {
 
   String _getThemeDescription(String themeCode) {
     switch (themeCode) {
-      case lightThemeCode:
-        return "Clean & bright appearance";
       case darkThemeCode:
         return "Modern slate dark theme";
       case matrixThemeCode:

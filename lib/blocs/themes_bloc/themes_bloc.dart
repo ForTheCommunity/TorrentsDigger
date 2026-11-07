@@ -20,10 +20,10 @@ class ThemesBloc extends Bloc<ThemesEvent, ThemesState> {
       // checking saved theme in database..
       var theme = await getASettingsKv(key: "theme");
 
-      if (theme == null) {
-        // setting theme if not available in database..
-        await insertOrUpdateKv(key: "theme", value: lightThemeCode);
-        theme = lightThemeCode;
+      if (theme == null || theme == "light") {
+        // setting theme if not available in database or if previous was light..
+        await insertOrUpdateKv(key: "theme", value: darkThemeCode);
+        theme = darkThemeCode;
       }
 
       final AppTheme appTheme = getThemeByCode(theme);
