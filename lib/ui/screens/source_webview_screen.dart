@@ -351,65 +351,6 @@ class _SourceWebViewScreenState extends State<SourceWebViewScreen> {
               tooltip: 'Open in External Browser',
               onPressed: _openExternal,
             ),
-            PopupMenuButton<String>(
-              icon: Icon(
-                Icons.more_vert,
-                color: context.appColors.appBarTextColor,
-              ),
-              color: context.appColors.popupMenuBackgroundColor,
-              onSelected: (value) {
-                switch (value) {
-                  case 'open_external':
-                    _openExternal();
-                    break;
-                  case 'copy_url':
-                    _copyUrl();
-                    break;
-                }
-              },
-              itemBuilder: (context) => [
-                PopupMenuItem<String>(
-                  value: 'copy_url',
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.copy_rounded,
-                        size: 18,
-                        color: context.appColors.popupMenuTextColor,
-                      ),
-                      const SizedBox(width: 12),
-                      Text(
-                        'Copy Link',
-                        style: TextStyle(
-                          color: context.appColors.popupMenuTextColor,
-                          fontSize: 13.5,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                PopupMenuItem<String>(
-                  value: 'open_external',
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.open_in_browser_rounded,
-                        size: 18,
-                        color: context.appColors.popupMenuTextColor,
-                      ),
-                      const SizedBox(width: 12),
-                      Text(
-                        'Open in External Browser',
-                        style: TextStyle(
-                          color: context.appColors.popupMenuTextColor,
-                          fontSize: 13.5,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
           ],
           bottom: _isLoading
               ? PreferredSize(

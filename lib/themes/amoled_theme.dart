@@ -248,7 +248,7 @@ class AmoledTheme extends AppTheme {
       const Color(0xFF3A3A3C);
   @override
   Color get createNewCategoryDialogCreateButtonTextColor =>
-      const Color(0xFF30D158);
+      const Color(0xFFFF9F0A);
   @override
   Color get createNewCategoryDialogCancelButtonTextColor =>
       const Color(0xFF8E8E93);

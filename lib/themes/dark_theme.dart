@@ -81,9 +81,9 @@ class DarkTheme extends AppTheme {
   Color get magnetIconColor => const Color(0xFFE879F9);
 
   @override
-  Color get bookmarkIconColor => const Color(0xFF60A5FA);
+  Color get bookmarkIconColor => const Color(0xFF94A3B8);
   @override
-  Color get bookmarkedIconColor => const Color(0xFFFBBF24);
+  Color get bookmarkedIconColor => const Color(0xFF60A5FA);
 
   @override
   Color get sourceUrlAvailableColor => const Color(0xFF38BDF8);
@@ -248,7 +248,7 @@ class DarkTheme extends AppTheme {
       const Color(0xFF475569);
   @override
   Color get createNewCategoryDialogCreateButtonTextColor =>
-      const Color(0xFF4ADE80);
+      const Color(0xFF60A5FA);
   @override
   Color get createNewCategoryDialogCancelButtonTextColor =>
       const Color(0xFF94A3B8);

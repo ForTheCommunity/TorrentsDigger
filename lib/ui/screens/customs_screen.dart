@@ -169,6 +169,7 @@ class _CustomsScreenState extends State<CustomsScreen> {
     }
 
     final bool hasTorrents = filteredTorrents.isNotEmpty;
+    final bool isWide = MediaQuery.sizeOf(context).width >= 750;
 
     final customsState = context.watch<CustomsBloc>().state;
     final (selectedSourceIdx, selectedListingIdx) = customsState.maybeWhen(
@@ -177,7 +178,7 @@ class _CustomsScreenState extends State<CustomsScreen> {
     );
 
     PreferredSizeWidget appBar;
-    if (_isSearching) {
+    if (_isSearching && rawTorrents.isNotEmpty) {
       appBar = AppBar(
         automaticallyImplyLeading: false,
         leading: IconButton(
@@ -198,11 +199,14 @@ class _CustomsScreenState extends State<CustomsScreen> {
         title: TextField(
           controller: _searchController,
           autofocus: true,
-          style: const TextStyle(color: Colors.amber, fontSize: 18),
+          style: TextStyle(
+            color: Colors.amber,
+            fontSize: isWide ? 18 : 15,
+          ),
           decoration: InputDecoration(
-            hintText: 'Filter torrents by name...',
+            hintText: isWide ? 'Filter torrents by name...' : 'Filter torrents...',
             hintStyle: TextStyle(
-              fontSize: 16,
+              fontSize: isWide ? 16 : 14,
               color: context.appColors.searchBookmarksPlaceholderTextColor,
             ),
             border: InputBorder.none,
@@ -244,68 +248,70 @@ class _CustomsScreenState extends State<CustomsScreen> {
           ),
         ),
         actions: [
-          IconButton(
-            icon: Icon(
-              Icons.search,
-              size: 26,
-              color: _searchQuery.isNotEmpty
-                  ? context.appColors.bookmarksSidebarSelectedTileTextColor
-                  : context.appColors.searchBookmarksIconColor,
+          if (rawTorrents.isNotEmpty) ...[
+            IconButton(
+              icon: Icon(
+                Icons.search,
+                size: 26,
+                color: _searchQuery.isNotEmpty
+                    ? context.appColors.bookmarksSidebarSelectedTileTextColor
+                    : context.appColors.searchBookmarksIconColor,
+              ),
+              tooltip: "Filter / Search Torrents",
+              onPressed: () {
+                setState(() {
+                  _isSearching = true;
+                });
+              },
             ),
-            tooltip: "Filter / Search Torrents",
-            onPressed: () {
-              setState(() {
-                _isSearching = true;
-              });
-            },
-          ),
-          PopupMenuButton<_CustomsSortOption>(
-            icon: Icon(
-              _sortOption != _CustomsSortOption.none
-                  ? Icons.filter_list_alt
-                  : Icons.sort_rounded,
-              size: 24,
-              color: _sortOption != _CustomsSortOption.none
-                  ? context.appColors.bookmarksSidebarSelectedTileTextColor
-                  : context.appColors.settingsIconsColor,
+            PopupMenuButton<_CustomsSortOption>(
+              icon: Icon(
+                _sortOption != _CustomsSortOption.none
+                    ? Icons.filter_list_alt
+                    : Icons.sort_rounded,
+                size: 24,
+                color: _sortOption != _CustomsSortOption.none
+                    ? context.appColors.bookmarksSidebarSelectedTileTextColor
+                    : context.appColors.settingsIconsColor,
+              ),
+              tooltip: "Sort / Order Torrents",
+              color: context.appColors.aboutDialogBackgroundColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              onSelected: (option) {
+                setState(() {
+                  _sortOption = option;
+                });
+              },
+              itemBuilder: (context) => [
+                _buildSortMenuItem(
+                  context,
+                  _CustomsSortOption.none,
+                  "Default Order",
+                  Icons.format_list_numbered,
+                ),
+                _buildSortMenuItem(
+                  context,
+                  _CustomsSortOption.seedersDesc,
+                  "Most Seeders",
+                  Icons.arrow_upward_rounded,
+                ),
+                _buildSortMenuItem(
+                  context,
+                  _CustomsSortOption.sizeDesc,
+                  "Largest Size",
+                  Icons.data_usage_rounded,
+                ),
+                _buildSortMenuItem(
+                  context,
+                  _CustomsSortOption.nameAsc,
+                  "Name (A-Z)",
+                  Icons.sort_by_alpha_rounded,
+                ),
+              ],
             ),
-            tooltip: "Sort / Order Torrents",
-            color: context.appColors.aboutDialogBackgroundColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            onSelected: (option) {
-              setState(() {
-                _sortOption = option;
-              });
-            },
-            itemBuilder: (context) => [
-              _buildSortMenuItem(
-                context,
-                _CustomsSortOption.none,
-                "Default Order",
-                Icons.format_list_numbered,
-              ),
-              _buildSortMenuItem(
-                context,
-                _CustomsSortOption.seedersDesc,
-                "Most Seeders",
-                Icons.arrow_upward_rounded,
-              ),
-              _buildSortMenuItem(
-                context,
-                _CustomsSortOption.sizeDesc,
-                "Largest Size",
-                Icons.data_usage_rounded,
-              ),
-              _buildSortMenuItem(
-                context,
-                _CustomsSortOption.nameAsc,
-                "Name (A-Z)",
-                Icons.sort_by_alpha_rounded,
-              ),
-            ],
-          ),
+          ],
           if (selectedSourceIdx != null && selectedListingIdx != null)
             IconButton(
               icon: Icon(
@@ -452,6 +458,11 @@ class _CustomsScreenState extends State<CustomsScreen> {
                                           items: visibleCustomSources,
                                           onChanged: (value) {
                                             if (value != null) {
+                                              _searchController.clear();
+                                              setState(() {
+                                                _searchQuery = "";
+                                                _isSearching = false;
+                                              });
                                               List<String> customSources =
                                                   customListingSourceDetails
                                                       .map(
@@ -502,6 +513,7 @@ class _CustomsScreenState extends State<CustomsScreen> {
                                               _searchController.clear();
                                               setState(() {
                                                 _searchQuery = "";
+                                                _isSearching = false;
                                               });
 
                                               int selectedListingIndex =

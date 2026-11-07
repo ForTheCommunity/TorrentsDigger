@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:torrents_digger/blocs/bookmark_blocs/bookmark_bloc/bookmark_bloc.dart';
 import 'package:torrents_digger/configs/extensions.dart';
 import 'package:torrents_digger/src/rust/api/internals.dart';
 import 'package:torrents_digger/ui/widgets/torrent_card.dart';
@@ -66,18 +68,42 @@ class _ExpandableTorrentCardState extends State<ExpandableTorrentCard> {
           padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
           child: Row(
             children: [
-              Container(
-                width: 38,
-                height: 38,
-                decoration: BoxDecoration(
-                  color: colors.cardSecondaryTextColor.withValues(alpha: 0.08),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(
-                  Icons.folder_zip_outlined,
-                  size: 20,
-                  color: colors.bookmarksSidebarSelectedTileTextColor,
-                ),
+              BlocBuilder<BookmarkedIhBloc, BookmarkedIhState>(
+                builder: (context, state) {
+                  final bool isBookmarked = state.maybeWhen(
+                    loaded: (infoHashes) =>
+                        infoHashes.contains(widget.torrent.infoHash),
+                    orElse: () => false,
+                  );
+
+                  return Container(
+                    width: 38,
+                    height: 38,
+                    decoration: BoxDecoration(
+                      color: isBookmarked
+                          ? colors.bookmarkedIconColor.withValues(alpha: 0.16)
+                          : colors.cardSecondaryTextColor
+                              .withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(10),
+                      border: isBookmarked
+                          ? Border.all(
+                              color: colors.bookmarkedIconColor
+                                  .withValues(alpha: 0.35),
+                              width: 1,
+                            )
+                          : null,
+                    ),
+                    child: Icon(
+                      isBookmarked
+                          ? Icons.folder_zip
+                          : Icons.folder_zip_outlined,
+                      size: 20,
+                      color: isBookmarked
+                          ? colors.bookmarkedIconColor
+                          : colors.bookmarksSidebarSelectedTileTextColor,
+                    ),
+                  );
+                },
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -110,7 +136,7 @@ class _ExpandableTorrentCardState extends State<ExpandableTorrentCard> {
                         Container(
                           width: 3,
                           height: 3,
-                          margin: const EdgeInsets.symmetric(horizontal: 6),
+                          margin: const EdgeInsets.symmetric(horizontal: 5),
                           decoration: BoxDecoration(
                             color: colors.cardSecondaryTextColor
                                 .withValues(alpha: 0.4),
@@ -131,7 +157,7 @@ class _ExpandableTorrentCardState extends State<ExpandableTorrentCard> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: 6),
                         Icon(
                           Icons.arrow_downward_rounded,
                           size: 13,
@@ -150,7 +176,7 @@ class _ExpandableTorrentCardState extends State<ExpandableTorrentCard> {
                           Container(
                             width: 3,
                             height: 3,
-                            margin: const EdgeInsets.symmetric(horizontal: 6),
+                            margin: const EdgeInsets.symmetric(horizontal: 5),
                             decoration: BoxDecoration(
                               color: colors.cardSecondaryTextColor
                                   .withValues(alpha: 0.4),
@@ -163,12 +189,16 @@ class _ExpandableTorrentCardState extends State<ExpandableTorrentCard> {
                             color: colors.cardSecondaryTextColor
                                 .withValues(alpha: 0.8),
                           ),
-                          const SizedBox(width: 4),
-                          Text(
-                            widget.torrent.date,
-                            style: TextStyle(
-                              color: colors.cardSecondaryTextColor,
-                              fontSize: 11.5,
+                          const SizedBox(width: 3),
+                          Flexible(
+                            child: Text(
+                              widget.torrent.date,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: colors.cardSecondaryTextColor,
+                                fontSize: 11.5,
+                              ),
                             ),
                           ),
                         ],

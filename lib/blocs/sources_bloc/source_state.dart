@@ -20,7 +20,7 @@ abstract class SourceState with _$SourceState {
     // by default it is 'true' means it is enabled by default.
     // since this state is hydrated, this setting will also be hydrated.
     @Default(true) bool rememberSelections,
-    @Default(false) bool hideNsfw,
+    @Default(true) bool hideNsfw,
     @Default([]) List<String> disabledSources,
 
     // This holds the memory of selectedCategory, selectedFilter, selectedSorting,

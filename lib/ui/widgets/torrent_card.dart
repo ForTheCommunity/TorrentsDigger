@@ -3,11 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:torrents_digger/blocs/bookmark_blocs/bookmark_bloc/bookmark_bloc.dart';
+import 'package:torrents_digger/blocs/bookmark_blocs/bookmarks_stats_bloc/bookmarks_stats_bloc.dart';
 import 'package:torrents_digger/blocs/bookmark_blocs/category_bloc/category_bloc.dart';
+import 'package:torrents_digger/blocs/bookmark_blocs/tags_bloc/tags_bloc.dart';
 import 'package:torrents_digger/blocs/default_trackers_bloc/default_trackers_bloc.dart';
 import 'package:torrents_digger/configs/extensions.dart';
 import 'package:torrents_digger/database/bookmarks.dart';
 import 'package:torrents_digger/src/rust/api/internals.dart';
+import 'package:torrents_digger/ui/widgets/chip_grid_widgets.dart';
 import 'package:torrents_digger/ui/widgets/launch_url.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 
@@ -41,8 +44,6 @@ class TorrentCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     torrent.name,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: colors.cardPrimaryTextColor,
                       fontSize: 16.5,
@@ -572,7 +573,48 @@ class TorrentCard extends StatelessWidget {
     }
   }
 
-  // Category Picker Dialog
+  // ===========================================================================
+  // DIALOGS: Category Picker, Tag Picker, Bookmark Options
+  // ===========================================================================
+
+  Widget _buildDialogEmptyState({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required Color iconColor,
+    required Color titleColor,
+    required Color subtitleColor,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 24),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 42, color: iconColor.withValues(alpha: 0.5)),
+          const SizedBox(height: 12),
+          Text(
+            title,
+            style: TextStyle(
+              color: titleColor,
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            subtitle,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: subtitleColor,
+              fontSize: 12,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 1. Category Picker Dialog (Sheet / Flat style)
   void _categoryPickerDialog(
     BuildContext context, {
     required bool isBookmarked,
@@ -582,119 +624,279 @@ class TorrentCard extends StatelessWidget {
     showDialog(
       context: context,
       builder: (dialogContext) {
+        final colors = context.appColors;
         return BlocBuilder<CategoryBloc, CategoryState>(
           builder: (context, state) {
             final categories = state.whenOrNull(
               loaded: (categoriesList) => categoriesList
-                  // removing All Category
                   .where((c) => c.id != 65535)
                   .toList(),
             );
 
+            void onSelectCategory(InternalBookmarkCategory category) {
+              if (isBookmarked) {
+                int currentlyViewingCategoryID =
+                    context.read<BookmarkBloc>().currentCategoryId;
+
+                context.read<BookmarkBloc>().add(
+                      BookmarkEvent.updateBookmark(
+                        infoHash: torrent.infoHash,
+                        categoryId: category.id,
+                        currenltyViewingCategoryID:
+                            currentlyViewingCategoryID,
+                      ),
+                    );
+                context.read<BookmarksStatsBloc>().add(
+                      const BookmarksStatsEvent.load(),
+                    );
+
+                createSnackBar(
+                  message: 'Moved to "${category.name}"',
+                  duration: 1,
+                );
+              } else {
+                context.read<BookmarkBloc>().add(
+                      BookmarkEvent.bookmark(
+                        torrent: torrent,
+                        categoryID: category.id,
+                      ),
+                    );
+                context.read<BookmarksStatsBloc>().add(
+                      const BookmarksStatsEvent.load(),
+                    );
+                context.read<BookmarkedIhBloc>().add(
+                      BookmarkedIhEvent.addInfoHash(
+                        infoHash: torrent.infoHash,
+                      ),
+                    );
+                createSnackBar(
+                  message: 'Bookmarked under "${category.name}"',
+                  duration: 1,
+                );
+              }
+              Navigator.pop(dialogContext);
+            }
+
             return AlertDialog(
-              backgroundColor:
-                  context.appColors.bookmarkCategoryDialogBackgroundColor,
-              title: Text(
-                'Select Category',
-                style: TextStyle(
-                  color: context.appColors.bookmarkCategoryDialogTextColor,
+              backgroundColor: colors.bookmarkCategoryDialogBackgroundColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+                side: BorderSide(
+                  color: colors.bookmarksStatsBorderColor.withValues(alpha: 0.6),
+                  width: 1,
                 ),
               ),
-              content: categories == null || categories.isEmpty
-                  ? const Text('No Categories Found')
-                  : SizedBox(
-                      width: double.minPositive,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: categories.length,
-                        itemBuilder: (context, index) {
-                          final category = categories[index];
-                          final bool isCurrentCategory =
-                              categoryID == category.id;
-
-                          return ListTile(
-                            leading: Icon(
-                              isCurrentCategory
-                                  ? Icons.folder
-                                  : Icons.folder_open,
-                              color:
-                                  context.appColors.bookmarkCategoryIconColor,
-                            ),
-                            title: Text(category.name),
-                            onTap: () {
-                              // change category / Update
-                              if (isBookmarked) {
-                                int currentlyViewingCategoryID = context
-                                    .read<BookmarkBloc>()
-                                    .currentCategoryId;
-
-                                context.read<BookmarkBloc>().add(
-                                  BookmarkEvent.updateBookmark(
-                                    infoHash: torrent.infoHash,
-                                    categoryId: category.id,
-                                    currenltyViewingCategoryID:
-                                        currentlyViewingCategoryID,
-                                  ),
-                                );
-
-                                createSnackBar(
-                                  message: 'Moved to "${category.name}"',
-                                  duration: 1,
-                                );
-                              }
-                              // add 2 category / Insert
-                              else {
-                                context.read<BookmarkBloc>().add(
-                                  BookmarkEvent.bookmark(
-                                    torrent: torrent,
-                                    categoryID: category.id,
-                                  ),
-                                );
-                                // add info hash
-                                context.read<BookmarkedIhBloc>().add(
-                                  BookmarkedIhEvent.addInfoHash(
-                                    infoHash: torrent.infoHash,
-                                  ),
-                                );
-                                createSnackBar(
-                                  message:
-                                      'Bookmarked under "${category.name}"',
-                                  duration: 1,
-                                );
-                              }
-
-                              Navigator.pop(dialogContext);
-                            },
-                          );
-                        },
-                      ),
+              titlePadding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+              actionsPadding: const EdgeInsets.fromLTRB(20, 14, 20, 18),
+              title: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: colors.bookmarkCategoryIconColor
+                          .withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(10),
                     ),
+                    child: Icon(
+                      Icons.folder_copy_rounded,
+                      color: colors.bookmarkCategoryIconColor,
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Select Category',
+                          style: TextStyle(
+                            color: colors.bookmarkCategoryDialogTextColor,
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          torrent.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 11.5,
+                            color: colors.cardSecondaryTextColor
+                                .withValues(alpha: 0.75),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.close_rounded,
+                      color: colors.cardSecondaryTextColor
+                          .withValues(alpha: 0.7),
+                      size: 20,
+                    ),
+                    tooltip: 'Close',
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    onPressed: () => Navigator.pop(dialogContext),
+                  ),
+                ],
+              ),
+              content: SizedBox(
+                width: 390,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxHeight: 330),
+                  child: categories == null || categories.isEmpty
+                      ? _buildDialogEmptyState(
+                          icon: Icons.folder_off_outlined,
+                          title: 'No Categories Found',
+                          subtitle:
+                              'Create a category below to organize your bookmarks.',
+                          iconColor: colors.cardSecondaryTextColor,
+                          titleColor: colors.bookmarkCategoryDialogTextColor,
+                          subtitleColor: colors.cardSecondaryTextColor,
+                        )
+                      : ListView.separated(
+                          shrinkWrap: true,
+                          padding: const EdgeInsets.symmetric(vertical: 2),
+                          itemCount: categories.length,
+                          separatorBuilder: (_, __) => Divider(
+                            height: 1,
+                            color: colors.bookmarksStatsBorderColor
+                                .withValues(alpha: 0.3),
+                          ),
+                          itemBuilder: (context, index) {
+                            final category = categories[index];
+                            final bool isCurrent =
+                                categoryID == category.id;
+
+                            return InkWell(
+                              borderRadius: BorderRadius.circular(8),
+                              onTap: () => onSelectCategory(category),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 12,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      isCurrent
+                                          ? Icons.folder_rounded
+                                          : Icons.folder_outlined,
+                                      size: 18,
+                                      color: isCurrent
+                                          ? colors.bookmarkCategoryIconColor
+                                          : colors.cardSecondaryTextColor,
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Text(
+                                        category.name,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: isCurrent
+                                              ? FontWeight.bold
+                                              : FontWeight.w500,
+                                          color: colors
+                                              .bookmarkCategoryDialogTextColor,
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      width: 18,
+                                      height: 18,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: isCurrent
+                                            ? colors.bookmarkCategoryIconColor
+                                            : Colors.transparent,
+                                        border: Border.all(
+                                          color: isCurrent
+                                              ? colors.bookmarkCategoryIconColor
+                                              : colors.cardSecondaryTextColor
+                                                  .withValues(alpha: 0.5),
+                                          width: 1.5,
+                                        ),
+                                      ),
+                                      child: isCurrent
+                                          ? const Icon(
+                                              Icons.check,
+                                              size: 12,
+                                              color: Colors.black,
+                                            )
+                                          : null,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                ),
+              ),
               actions: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    TextButton(
+                    TextButton.icon(
                       style: TextButton.styleFrom(
-                        backgroundColor: context
-                            .appColors
-                            .bookmarkCategoryDialogCloseButtonBackgroundColor,
+                        foregroundColor: colors.bookmarkCategoryIconColor,
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 10,
+                          horizontal: 12,
+                          vertical: 8,
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                       onPressed: () {
-                        Navigator.pop(dialogContext);
+                        createItemDialog(
+                          context,
+                          title: "New Category",
+                          hintText: "Category Name",
+                          emptyErrorMessage:
+                              "Category Name can't be empty...",
+                          onCreate: (name) =>
+                              context.read<CategoryBloc>().add(
+                                    CategoryEvent.create(
+                                      newCategoryName: name,
+                                    ),
+                                  ),
+                        );
                       },
-                      child: Text(
-                        "Cancel",
+                      icon: const Icon(Icons.add_rounded, size: 18),
+                      label: const Text(
+                        'New Category',
                         style: TextStyle(
-                          color: context
-                              .appColors
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: colors
+                            .bookmarkCategoryDialogCloseButtonBackgroundColor,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 18,
+                          vertical: 9,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      onPressed: () => Navigator.pop(dialogContext),
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(
+                          color: colors
                               .bookmarkCategoryDialogCloseButtonTextColor,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
@@ -708,300 +910,655 @@ class TorrentCard extends StatelessWidget {
     );
   }
 
-  // tag picker dialog
+  // 2. Manage Tags Dialog
   void _tagPickerDialog(
     BuildContext context, {
     required String infoHash,
   }) async {
-    final List<InternalBookmarkTag> allTags = await getAllTags();
     final List<int> assignedTagIds = await getAllTagsOfaTorrent(
       infoHash: infoHash,
     );
 
     if (!context.mounted) return;
 
+    context.read<TagsBloc>().add(const TagsEvent.load());
     final bookmarkBloc = context.read<BookmarkBloc>();
+    final bookmarksStatsBloc = context.read<BookmarksStatsBloc>();
 
     final Set<int> selectedTagIds = assignedTagIds.toSet();
+    String? lastCreatedTagName;
 
     showDialog(
       context: context,
       builder: (dialogContext) {
+        final colors = context.appColors;
+
         return StatefulBuilder(
           builder: (context, setDialogState) {
-            return allTags.isEmpty
-                ? AlertDialog(
-                    backgroundColor:
-                        context.appColors.tagPickerDialogBackgroundColor,
-                    content: SizedBox(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text(
-                            "No tags found. Create tags from the Bookmarks screen.",
-                          ),
-                          const SizedBox(height: 20),
-                          TextButton(
-                            style: TextButton.styleFrom(
-                              backgroundColor: context
-                                  .appColors
-                                  .tagPickerDialogDoneButtonBackgroundColor,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 10,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            onPressed: () {
-                              Navigator.pop(dialogContext);
-                            },
-                            child: Text(
-                              'Close',
-                              style: TextStyle(
-                                color: context
-                                    .appColors
-                                    .tagPickerDialogDoneButtonTextColor,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                // 'No tags found. Create tags from the Bookmarks screen.',
-                : AlertDialog(
-                    backgroundColor:
-                        context.appColors.tagPickerDialogBackgroundColor,
-                    title: Text(
-                      'Manage Tags',
-                      style: TextStyle(
-                        color: context.appColors.tagPickerDialogTitleColor,
-                      ),
-                    ),
-                    content: SizedBox(
-                      width: double.minPositive,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: allTags.length,
-                        itemBuilder: (context, index) {
-                          final tag = allTags[index];
-                          final bool isSelected = selectedTagIds.contains(
-                            tag.id,
+            return BlocConsumer<TagsBloc, TagsState>(
+              listener: (context, state) {
+                state.whenOrNull(
+                  loaded: (tags) {
+                    if (lastCreatedTagName != null) {
+                      final newTag = tags
+                          .cast<InternalBookmarkTag?>()
+                          .firstWhere(
+                            (t) => t?.name == lastCreatedTagName,
+                            orElse: () => null,
                           );
-                          return CheckboxListTile(
-                            title: Text(
-                              tag.name,
-                              style: TextStyle(
-                                color:
-                                    context.appColors.tagPickerDialogTextColor,
-                              ),
-                            ),
-                            value: isSelected,
-                            activeColor:
-                                context.appColors.tagCheckboxActiveColor,
-                            checkColor: context.appColors.tagCheckboxTickColor,
-                            onChanged: (checked) {
-                              setDialogState(() {
-                                if (checked == true) {
-                                  selectedTagIds.add(tag.id);
-                                } else {
-                                  selectedTagIds.remove(tag.id);
-                                }
-                              });
-                            },
-                          );
-                        },
-                      ),
+                      if (newTag != null) {
+                        setDialogState(() {
+                          selectedTagIds.add(newTag.id);
+                        });
+                        lastCreatedTagName = null;
+                      }
+                    }
+                  },
+                );
+              },
+              builder: (context, state) {
+                final allTags = state.whenOrNull(
+                  loaded: (tags) => tags.where((t) => t.id != 65535).toList(),
+                );
+
+                return AlertDialog(
+                  backgroundColor: colors.tagPickerDialogBackgroundColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    side: BorderSide(
+                      color: colors.bookmarksStatsBorderColor
+                          .withValues(alpha: 0.6),
+                      width: 1,
                     ),
-                    actions: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          TextButton(
-                            style: TextButton.styleFrom(
-                              backgroundColor: context
-                                  .appColors
-                                  .tagPickerDialogCloseButtonBackgroundColor,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 10,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            onPressed: () => Navigator.pop(dialogContext),
-                            child: Text(
-                              'Cancel',
+                  ),
+                  titlePadding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                  actionsPadding: const EdgeInsets.fromLTRB(20, 14, 20, 18),
+                  title: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: colors.bookmarksStatsIconColor
+                              .withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Icon(
+                          Icons.local_offer_rounded,
+                          color: colors.bookmarksStatsIconColor,
+                          size: 20,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Manage Tags',
                               style: TextStyle(
-                                color: context
-                                    .appColors
-                                    .tagPickerDialogCloseButtonTextColor,
+                                color: colors.tagPickerDialogTitleColor,
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                          ),
-
-                          const SizedBox(width: 12),
-
-                          TextButton(
-                            style: TextButton.styleFrom(
-                              backgroundColor: context
-                                  .appColors
-                                  .tagPickerDialogDoneButtonBackgroundColor,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 10,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            onPressed: () async {
-                              Navigator.pop(dialogContext);
-
-                              try {
-                                await updateBookmarkTags(
-                                  infoHash: infoHash,
-                                  tagIds: selectedTagIds.toList(),
-                                );
-                                createSnackBar(
-                                  message: "Tag Updated...",
-                                  duration: 1,
-                                );
-
-                                bookmarkBloc.add(
-                                  BookmarkEvent.loadBookmarks(
-                                    categoryID: bookmarkBloc.currentCategoryId,
-                                    tagID: bookmarkBloc.currentTagId,
-                                  ),
-                                );
-                              } catch (e) {
-                                createSnackBar(
-                                  message: "Error : ${e.toString()}",
-                                  duration: 5,
-                                );
-                              }
-                            },
-                            child: Text(
-                              'Done',
+                            const SizedBox(height: 2),
+                            Text(
+                              torrent.name,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                color: context
-                                    .appColors
-                                    .tagPickerDialogDoneButtonTextColor,
+                                fontSize: 11.5,
+                                color: colors.cardSecondaryTextColor
+                                    .withValues(alpha: 0.75),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.close_rounded,
+                          color: colors.cardSecondaryTextColor
+                              .withValues(alpha: 0.7),
+                          size: 20,
+                        ),
+                        tooltip: 'Close',
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        onPressed: () => Navigator.pop(dialogContext),
                       ),
                     ],
-                  );
+                  ),
+                  content: SizedBox(
+                    width: 390,
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxHeight: 330),
+                      child: allTags == null || allTags.isEmpty
+                          ? _buildDialogEmptyState(
+                              icon: Icons.sell_outlined,
+                              title: 'No Tags Found',
+                              subtitle:
+                                  'Create a tag below to attach it to this torrent.',
+                              iconColor: colors.cardSecondaryTextColor,
+                              titleColor: colors.tagPickerDialogTextColor,
+                              subtitleColor: colors.cardSecondaryTextColor,
+                            )
+                          : ListView.separated(
+                              shrinkWrap: true,
+                              padding: const EdgeInsets.symmetric(vertical: 4),
+                              itemCount: allTags.length,
+                              separatorBuilder: (_, __) =>
+                                  const SizedBox(height: 8),
+                              itemBuilder: (context, index) {
+                                final tag = allTags[index];
+                                final bool isSelected =
+                                    selectedTagIds.contains(tag.id);
+
+                                return Material(
+                                  color: isSelected
+                                      ? colors.bookmarksStatsIconColor
+                                          .withValues(alpha: 0.12)
+                                      : colors.cardColor
+                                          .withValues(alpha: 0.5),
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(12),
+                                    onTap: () {
+                                      setDialogState(() {
+                                        if (isSelected) {
+                                          selectedTagIds.remove(tag.id);
+                                        } else {
+                                          selectedTagIds.add(tag.id);
+                                        }
+                                      });
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 14,
+                                        vertical: 12,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(12),
+                                        border: Border.all(
+                                          color: isSelected
+                                              ? colors.bookmarksStatsIconColor
+                                              : colors
+                                                  .bookmarksStatsBorderColor
+                                                  .withValues(alpha: 0.4),
+                                          width: isSelected ? 1.5 : 1,
+                                        ),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.label_rounded,
+                                            color: isSelected
+                                                ? colors
+                                                    .bookmarksStatsIconColor
+                                                : colors
+                                                    .cardSecondaryTextColor,
+                                            size: 20,
+                                          ),
+                                          const SizedBox(width: 12),
+                                          Expanded(
+                                            child: Text(
+                                              tag.name,
+                                              style: TextStyle(
+                                                fontSize: 14.5,
+                                                fontWeight: isSelected
+                                                    ? FontWeight.bold
+                                                    : FontWeight.w500,
+                                                color: colors
+                                                    .tagPickerDialogTextColor,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                          Container(
+                                            width: 22,
+                                            height: 22,
+                                            decoration: BoxDecoration(
+                                              color: isSelected
+                                                  ? colors
+                                                      .tagCheckboxActiveColor
+                                                  : Colors.transparent,
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
+                                              border: Border.all(
+                                                color: isSelected
+                                                    ? colors
+                                                        .tagCheckboxActiveColor
+                                                    : colors
+                                                        .cardSecondaryTextColor
+                                                        .withValues(alpha: 0.5),
+                                                width: 1.5,
+                                              ),
+                                            ),
+                                            child: isSelected
+                                                ? Icon(
+                                                    Icons.check_rounded,
+                                                    size: 16,
+                                                    color: colors
+                                                        .tagCheckboxTickColor,
+                                                  )
+                                                : null,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                    ),
+                  ),
+                  actions: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton.icon(
+                          style: TextButton.styleFrom(
+                            foregroundColor: colors.bookmarksStatsIconColor,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 8,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          onPressed: () {
+                            createItemDialog(
+                              context,
+                              title: "New Tag",
+                              hintText: "Tag Name",
+                              emptyErrorMessage:
+                                  "Tag Name can't be empty...",
+                              onCreate: (name) {
+                                lastCreatedTagName = name;
+                                context.read<TagsBloc>().add(
+                                      TagsEvent.create(newTagName: name),
+                                    );
+                              },
+                            );
+                          },
+                          icon: const Icon(Icons.add_rounded, size: 18),
+                          label: const Text(
+                            'New Tag',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                backgroundColor: colors
+                                    .tagPickerDialogCloseButtonBackgroundColor,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 14,
+                                  vertical: 9,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              onPressed: () => Navigator.pop(dialogContext),
+                              child: Text(
+                                'Cancel',
+                                style: TextStyle(
+                                  color: colors
+                                      .tagPickerDialogCloseButtonTextColor,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                backgroundColor: colors
+                                    .tagPickerDialogDoneButtonBackgroundColor,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 9,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              onPressed: () async {
+                                Navigator.pop(dialogContext);
+
+                                try {
+                                  await updateBookmarkTags(
+                                    infoHash: infoHash,
+                                    tagIds: selectedTagIds.toList(),
+                                  );
+                                  createSnackBar(
+                                    message: "Tags Updated...",
+                                    duration: 1,
+                                  );
+
+                                  bookmarkBloc.add(
+                                    BookmarkEvent.loadBookmarks(
+                                      categoryID:
+                                          bookmarkBloc.currentCategoryId,
+                                      tagID: bookmarkBloc.currentTagId,
+                                    ),
+                                  );
+                                  bookmarksStatsBloc.add(
+                                    const BookmarksStatsEvent.load(),
+                                  );
+                                } catch (e) {
+                                  createSnackBar(
+                                    message: "Error : ${e.toString()}",
+                                    duration: 5,
+                                  );
+                                }
+                              },
+                              child: Text(
+                                'Done',
+                                style: TextStyle(
+                                  color: colors
+                                      .tagPickerDialogDoneButtonTextColor,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              },
+            );
           },
         );
       },
     );
   }
 
-  // Bookmark Options Dialog
+  // 3. Bookmark Options Dialog
   void _bookmarkOptionsDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (dialogContext) {
+        final colors = context.appColors;
+
+        void onChangeCategory() async {
+          var catID = await getCategoryID(infoHash: torrent.infoHash);
+
+          if (!dialogContext.mounted) return;
+
+          Navigator.pop(dialogContext);
+          _categoryPickerDialog(
+            dialogContext,
+            isBookmarked: true,
+            categoryID: catID,
+          );
+        }
+
+        void onRemoveBookmark() {
+          context.read<BookmarkBloc>().add(
+                BookmarkEvent.removeBookmark(infoHash: torrent.infoHash),
+              );
+          context.read<BookmarksStatsBloc>().add(
+                const BookmarksStatsEvent.load(),
+              );
+          context.read<BookmarkedIhBloc>().add(
+                BookmarkedIhEvent.removeInfoHash(
+                  infoHash: torrent.infoHash,
+                ),
+              );
+          createSnackBar(message: 'Bookmark Removed', duration: 1);
+          Navigator.pop(dialogContext);
+        }
+
         return AlertDialog(
-          backgroundColor:
-              context.appColors.bookmarkCategoryDialogBackgroundColor,
-          title: Text(
-            'Bookmark Options',
-            style: TextStyle(
-              color: context.appColors.bookmarkCategoryDialogTextColor,
+          backgroundColor: colors.bookmarkCategoryDialogBackgroundColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+            side: BorderSide(
+              color: colors.bookmarksStatsBorderColor.withValues(alpha: 0.6),
+              width: 1,
             ),
           ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
+          titlePadding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+          actionsPadding: const EdgeInsets.fromLTRB(20, 14, 20, 18),
+          title: Row(
             children: [
-              ListTile(
-                leading: Icon(
-                  Icons.folder_open,
-                  color: context.appColors.bookmarkCategoryIconColor,
-                ),
-                title: Text(
-                  'Change Category',
-                  style: TextStyle(
-                    color: context.appColors.bookmarkCategoryDialogTextColor,
-                  ),
-                ),
-                onTap: () async {
-                  var catID = await getCategoryID(infoHash: torrent.infoHash);
-
-                  if (!dialogContext.mounted) return;
-
-                  Navigator.pop(dialogContext);
-                  _categoryPickerDialog(
-                    dialogContext,
-                    isBookmarked: true,
-                    categoryID: catID,
-                  );
-                },
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.delete,
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
                   color:
-                      context.appColors.bookmarkCategoryDialogRemoveIconColor,
+                      colors.bookmarkCategoryIconColor.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                title: Text(
-                  'Remove Bookmark',
-                  style: TextStyle(
-                    color: context.appColors.bookmarkCategoryDialogTextColor,
-                  ),
+                child: Icon(
+                  Icons.bookmark_rounded,
+                  color: colors.bookmarkCategoryIconColor,
+                  size: 20,
                 ),
-                onTap: () {
-                  context.read<BookmarkBloc>().add(
-                    BookmarkEvent.removeBookmark(infoHash: torrent.infoHash),
-                  );
-                  // remove info hash
-                  context.read<BookmarkedIhBloc>().add(
-                    BookmarkedIhEvent.removeInfoHash(
-                      infoHash: torrent.infoHash,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Bookmark Options',
+                      style: TextStyle(
+                        color: colors.bookmarkCategoryDialogTextColor,
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  );
-                  createSnackBar(message: 'Bookmark Removed', duration: 1);
-                  Navigator.pop(dialogContext);
-                },
+                    const SizedBox(height: 2),
+                    Text(
+                      torrent.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 11.5,
+                        color: colors.cardSecondaryTextColor
+                            .withValues(alpha: 0.75),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.close_rounded,
+                  color: colors.cardSecondaryTextColor.withValues(alpha: 0.7),
+                  size: 20,
+                ),
+                tooltip: 'Close',
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                onPressed: () => Navigator.pop(dialogContext),
               ),
             ],
           ),
-          actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+          content: SizedBox(
+            width: 390,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                TextButton(
-                  style: TextButton.styleFrom(
-                    backgroundColor: context
-                        .appColors
-                        .bookmarkCategoryDialogCloseButtonBackgroundColor,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 10,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                Material(
+                  color: colors.cardColor.withValues(alpha: 0.5),
+                  borderRadius: BorderRadius.circular(14),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(14),
+                    onTap: onChangeCategory,
+                    child: Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(
+                          color: colors.bookmarksStatsBorderColor
+                              .withValues(alpha: 0.5),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: colors.bookmarkCategoryIconColor
+                                  .withValues(alpha: 0.12),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Icon(
+                              Icons.folder_open_rounded,
+                              size: 20,
+                              color: colors.bookmarkCategoryIconColor,
+                            ),
+                          ),
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Change Category',
+                                  style: TextStyle(
+                                    fontSize: 14.5,
+                                    fontWeight: FontWeight.bold,
+                                    color:
+                                        colors.bookmarkCategoryDialogTextColor,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  'Move this torrent to another folder',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: colors.cardSecondaryTextColor
+                                        .withValues(alpha: 0.8),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Icon(
+                            Icons.chevron_right_rounded,
+                            size: 20,
+                            color: colors.cardSecondaryTextColor
+                                .withValues(alpha: 0.6),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  onPressed: () {
-                    Navigator.pop(dialogContext);
-                  },
-                  child: Text(
-                    'Cancel',
-                    style: TextStyle(
-                      color: context
-                          .appColors
-                          .bookmarkCategoryDialogCloseButtonTextColor,
+                ),
+                const SizedBox(height: 10),
+                Material(
+                  color: colors.bookmarkCategoryDialogRemoveIconColor
+                      .withValues(alpha: 0.05),
+                  borderRadius: BorderRadius.circular(14),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(14),
+                    onTap: onRemoveBookmark,
+                    child: Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(
+                          color: colors.bookmarkCategoryDialogRemoveIconColor
+                              .withValues(alpha: 0.35),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: colors
+                                  .bookmarkCategoryDialogRemoveIconColor
+                                  .withValues(alpha: 0.12),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Icon(
+                              Icons.delete_outline_rounded,
+                              size: 20,
+                              color: colors
+                                  .bookmarkCategoryDialogRemoveIconColor,
+                            ),
+                          ),
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Remove Bookmark',
+                                  style: TextStyle(
+                                    fontSize: 14.5,
+                                    fontWeight: FontWeight.bold,
+                                    color: colors
+                                        .bookmarkCategoryDialogRemoveIconColor,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  'Delete from your saved library',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: colors.cardSecondaryTextColor
+                                        .withValues(alpha: 0.8),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Icon(
+                            Icons.close_rounded,
+                            size: 18,
+                            color: colors.bookmarkCategoryDialogRemoveIconColor
+                                .withValues(alpha: 0.7),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ],
+            ),
+          ),
+          actions: [
+            Center(
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: colors
+                      .bookmarkCategoryDialogCloseButtonBackgroundColor,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 10,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                onPressed: () => Navigator.pop(dialogContext),
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    color: colors.bookmarkCategoryDialogCloseButtonTextColor,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
             ),
           ],
         );

@@ -99,6 +99,8 @@ Future<void> createItemDialog(
   await showDialog(
     context: context,
     builder: (dialogContext) {
+      final colors = context.appColors;
+
       void handleCreate() {
         final newName = controller.text.trim();
         if (newName.isEmpty) {
@@ -110,101 +112,160 @@ Future<void> createItemDialog(
         Navigator.pop(dialogContext);
       }
 
+      final isTag = title.toLowerCase().contains("tag");
+      final IconData headerIcon =
+          isTag ? Icons.local_offer_rounded : Icons.create_new_folder_rounded;
+      final Color accentColor =
+          isTag ? colors.bookmarksStatsIconColor : colors.bookmarkCategoryIconColor;
+
       return AlertDialog(
-        backgroundColor: context.appColors.createCategoryDialogBackgroundColor,
-        title: Text(
-          title,
-          style: TextStyle(
-            color: context.appColors.createNewCategoryDialogTitleTextColor,
+        backgroundColor: colors.createCategoryDialogBackgroundColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: BorderSide(
+            color: colors.bookmarksStatsBorderColor.withValues(alpha: 0.6),
+            width: 1,
           ),
         ),
-
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          onSubmitted: (_) => handleCreate(),
-          style: TextStyle(
-            color: context
-                .appColors
-                .createNewCategoryDialogTextFieldInputTextColor,
-          ),
-
-          decoration: InputDecoration(
-            hintText: hintText,
-            hintStyle: TextStyle(
-              color:
-                  context.appColors.createNewCategoryDialogTextFieldHintColor,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: context
-                    .appColors
-                    .createNewCategoryDialogTextFieldInputInactiveBorderColor,
+        titlePadding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+        contentPadding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+        actionsPadding: const EdgeInsets.fromLTRB(20, 10, 20, 18),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: accentColor.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                headerIcon,
+                color: accentColor,
+                size: 20,
               ),
             ),
-
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: context
-                    .appColors
-                    .createNewCategoryDialogTextFieldInputActiveBorderColor,
-                width: 2,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(
+                  color: colors.createNewCategoryDialogTitleTextColor,
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.close_rounded,
+                color: colors.cardSecondaryTextColor.withValues(alpha: 0.7),
+                size: 20,
+              ),
+              tooltip: 'Close',
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+              onPressed: () => Navigator.pop(dialogContext),
+            ),
+          ],
+        ),
+        content: SizedBox(
+          width: 390,
+          child: TextField(
+            controller: controller,
+            autofocus: true,
+            onSubmitted: (_) => handleCreate(),
+            style: TextStyle(
+              color: colors.createNewCategoryDialogTextFieldInputTextColor,
+              fontSize: 15,
+              fontWeight: FontWeight.w500,
+            ),
+            decoration: InputDecoration(
+              hintText: hintText,
+              hintStyle: TextStyle(
+                color: colors.createNewCategoryDialogTextFieldHintColor,
+                fontSize: 14,
+              ),
+              filled: true,
+              fillColor: colors.cardColor.withValues(alpha: 0.5),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 14,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: colors
+                      .createNewCategoryDialogTextFieldInputInactiveBorderColor
+                      .withValues(alpha: 0.7),
+                  width: 1,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: colors
+                      .createNewCategoryDialogTextFieldInputActiveBorderColor,
+                  width: 1.5,
+                ),
               ),
             ),
           ),
         ),
         actions: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
               TextButton(
                 style: TextButton.styleFrom(
-                  backgroundColor: context
-                      .appColors
-                      .deleteCategoryConfirmationDialogCancelButtonBackgroundColor,
+                  backgroundColor: colors
+                      .bookmarkCategoryDialogCloseButtonBackgroundColor,
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
+                    horizontal: 18,
                     vertical: 10,
                   ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                onPressed: () {
-                  Navigator.pop(dialogContext);
-                },
+                onPressed: () => Navigator.pop(dialogContext),
                 child: Text(
                   'Cancel',
                   style: TextStyle(
-                    color: context
-                        .appColors
-                        .createNewCategoryDialogCancelButtonTextColor,
+                    color: colors
+                        .bookmarkCategoryDialogCloseButtonTextColor,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
-
-              const Spacer(),
-
+              const SizedBox(width: 10),
               TextButton(
                 style: TextButton.styleFrom(
-                  backgroundColor: context
-                      .appColors
-                      .deleteCategoryConfirmationDialogCancelButtonBackgroundColor,
+                  backgroundColor: colors
+                      .createNewCategoryDialogCreateButtonTextColor
+                      .withValues(alpha: 0.15),
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
+                    horizontal: 20,
                     vertical: 10,
                   ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(10),
+                    side: BorderSide(
+                      color: colors
+                          .createNewCategoryDialogCreateButtonTextColor
+                          .withValues(alpha: 0.5),
+                      width: 1,
+                    ),
                   ),
                 ),
-
                 onPressed: handleCreate,
                 child: Text(
                   'Create',
                   style: TextStyle(
-                    color: context
-                        .appColors
+                    color: colors
                         .createNewCategoryDialogCreateButtonTextColor,
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -229,6 +290,8 @@ Future<void> renameItemDialog(
   await showDialog(
     context: context,
     builder: (dialogContext) {
+      final colors = context.appColors;
+
       void handleRename() {
         final newName = textController.text.trim();
 
@@ -248,99 +311,158 @@ Future<void> renameItemDialog(
         Navigator.pop(dialogContext);
       }
 
+      final isTag = title.toLowerCase().contains("tag");
+      final Color accentColor =
+          isTag ? colors.bookmarksStatsIconColor : colors.bookmarkCategoryIconColor;
+
       return AlertDialog(
-        backgroundColor: context.appColors.createCategoryDialogBackgroundColor,
-        title: Text(
-          title,
-          style: TextStyle(
-            color: context.appColors.createNewCategoryDialogTitleTextColor,
+        backgroundColor: colors.createCategoryDialogBackgroundColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: BorderSide(
+            color: colors.bookmarksStatsBorderColor.withValues(alpha: 0.6),
+            width: 1,
           ),
         ),
-        content: TextField(
-          style: TextStyle(
-            color: context
-                .appColors
-                .createNewCategoryDialogTextFieldInputTextColor,
-          ),
-
-          decoration: InputDecoration(
-            hintText: currentName,
-            hintStyle: TextStyle(
-              color:
-                  context.appColors.createNewCategoryDialogTextFieldHintColor,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: context
-                    .appColors
-                    .createNewCategoryDialogTextFieldInputInactiveBorderColor,
+        titlePadding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+        contentPadding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+        actionsPadding: const EdgeInsets.fromLTRB(20, 10, 20, 18),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: accentColor.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                Icons.edit_rounded,
+                color: accentColor,
+                size: 20,
               ),
             ),
-
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: context
-                    .appColors
-                    .createNewCategoryDialogTextFieldInputActiveBorderColor,
-                width: 2,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(
+                  color: colors.createNewCategoryDialogTitleTextColor,
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.close_rounded,
+                color: colors.cardSecondaryTextColor.withValues(alpha: 0.7),
+                size: 20,
+              ),
+              tooltip: 'Close',
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+              onPressed: () => Navigator.pop(dialogContext),
+            ),
+          ],
+        ),
+        content: SizedBox(
+          width: 390,
+          child: TextField(
+            controller: textController,
+            autofocus: true,
+            onSubmitted: (_) => handleRename(),
+            style: TextStyle(
+              color: colors.createNewCategoryDialogTextFieldInputTextColor,
+              fontSize: 15,
+              fontWeight: FontWeight.w500,
+            ),
+            decoration: InputDecoration(
+              hintText: currentName,
+              hintStyle: TextStyle(
+                color: colors.createNewCategoryDialogTextFieldHintColor,
+                fontSize: 14,
+              ),
+              filled: true,
+              fillColor: colors.cardColor.withValues(alpha: 0.5),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 14,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: colors
+                      .createNewCategoryDialogTextFieldInputInactiveBorderColor
+                      .withValues(alpha: 0.7),
+                  width: 1,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: colors
+                      .createNewCategoryDialogTextFieldInputActiveBorderColor,
+                  width: 1.5,
+                ),
               ),
             ),
           ),
-          controller: textController,
-          autofocus: true,
-          onSubmitted: (_) => handleRename(),
         ),
         actions: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
               TextButton(
                 style: TextButton.styleFrom(
-                  backgroundColor: context
-                      .appColors
-                      .deleteCategoryConfirmationDialogCancelButtonBackgroundColor,
+                  backgroundColor: colors
+                      .bookmarkCategoryDialogCloseButtonBackgroundColor,
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
+                    horizontal: 18,
                     vertical: 10,
                   ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                onPressed: () {
-                  Navigator.pop(dialogContext);
-                },
+                onPressed: () => Navigator.pop(dialogContext),
                 child: Text(
-                  "Cancel",
+                  'Cancel',
                   style: TextStyle(
-                    color: context
-                        .appColors
-                        .createNewCategoryDialogCancelButtonTextColor,
+                    color: colors
+                        .bookmarkCategoryDialogCloseButtonTextColor,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
-
-              const Spacer(),
-
+              const SizedBox(width: 10),
               TextButton(
                 style: TextButton.styleFrom(
-                  backgroundColor: context
-                      .appColors
-                      .deleteCategoryConfirmationDialogCancelButtonBackgroundColor,
+                  backgroundColor: colors
+                      .createNewCategoryDialogCreateButtonTextColor
+                      .withValues(alpha: 0.15),
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
+                    horizontal: 20,
                     vertical: 10,
                   ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(10),
+                    side: BorderSide(
+                      color: colors
+                          .createNewCategoryDialogCreateButtonTextColor
+                          .withValues(alpha: 0.5),
+                      width: 1,
+                    ),
                   ),
                 ),
                 onPressed: handleRename,
                 child: Text(
-                  "Rename",
+                  'Rename',
                   style: TextStyle(
-                    color: context
-                        .appColors
+                    color: colors
                         .createNewCategoryDialogCreateButtonTextColor,
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -371,18 +493,61 @@ Future<void> deleteItemVerificationDialog(
   await showDialog(
     context: context,
     builder: (dialogContext) {
+      final colors = context.appColors;
+
       return StatefulBuilder(
         builder: (context, setDialogState) {
           return AlertDialog(
-            backgroundColor:
-                context.appColors.createCategoryDialogBackgroundColor,
-            title: Text(
-              title,
-              style: TextStyle(
-                color: context
-                    .appColors
-                    .deleteCategoryConfirmationDialogTitleColor,
+            backgroundColor: colors.createCategoryDialogBackgroundColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+              side: BorderSide(
+                color: colors.bookmarksStatsBorderColor.withValues(alpha: 0.6),
+                width: 1,
               ),
+            ),
+            titlePadding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+            contentPadding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+            actionsPadding: const EdgeInsets.fromLTRB(20, 10, 20, 18),
+            title: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: colors.bookmarkCategoryDialogRemoveIconColor
+                        .withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(
+                    Icons.delete_forever_rounded,
+                    color: colors.bookmarkCategoryDialogRemoveIconColor,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      color:
+                          colors.deleteCategoryConfirmationDialogTitleColor,
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(
+                    Icons.close_rounded,
+                    color: colors.cardSecondaryTextColor.withValues(alpha: 0.7),
+                    size: 20,
+                  ),
+                  tooltip: 'Close',
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  onPressed: () => Navigator.pop(dialogContext),
+                ),
+              ],
             ),
             content: SingleChildScrollView(
               child: Padding(
@@ -396,44 +561,37 @@ Future<void> deleteItemVerificationDialog(
                     Text(
                       description,
                       style: TextStyle(
-                        color: context
-                            .appColors
-                            .deleteCategoryConfirmationDialogTextColor,
+                        color:
+                            colors.deleteCategoryConfirmationDialogTextColor,
                         fontSize: 13,
                       ),
                     ),
-
                     const SizedBox(height: 16),
-
                     Text(
                       'Type the code below to confirm:',
                       style: TextStyle(
-                        color: context
-                            .appColors
-                            .deleteCategoryConfirmationDialogTextColor,
+                        color:
+                            colors.deleteCategoryConfirmationDialogTextColor,
                         fontSize: 13,
                       ),
                     ),
-
                     const SizedBox(height: 8),
-
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       decoration: BoxDecoration(
+                        color: colors.cardColor.withValues(alpha: 0.5),
                         border: Border.all(
-                          color: context
-                              .appColors
+                          color: colors
                               .deleteCategoryConfirmationDialogCodeBorderColor,
                         ),
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: Text(
                         verificationCode,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: context
-                              .appColors
+                          color: colors
                               .deleteCategoryConfirmationDialogCodeColor,
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
@@ -442,46 +600,48 @@ Future<void> deleteItemVerificationDialog(
                       ),
                     ),
                     const SizedBox(height: 12),
-
                     TextField(
                       controller: controller,
                       autofocus: false,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: context
-                            .appColors
+                        color: colors
                             .deleteCategoryConfirmationDialogInputTextColor,
                         letterSpacing: 4,
                       ),
                       decoration: InputDecoration(
                         hintText: 'Enter code',
                         hintStyle: TextStyle(
-                          color: context
-                              .appColors
+                          color: colors
                               .createNewCategoryDialogTextFieldHintColor,
                           letterSpacing: 1,
                         ),
+                        filled: true,
+                        fillColor: colors.cardColor.withValues(alpha: 0.5),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
                         enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide(
-                            color: context
-                                .appColors
+                            color: colors
                                 .deleteCategoryConfirmationDialogInputTextfieldInactiveBorderColor,
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide(
-                            color: context
-                                .appColors
+                            color: colors
                                 .deleteCategoryConfirmationDialogInputTextfieldActiveBorderColor,
-                            width: 2,
+                            width: 1.5,
                           ),
                         ),
                         // show error if code doesn't match
-                        errorText: showError ? 'Code did not matched' : null,
+                        errorText: showError ? 'Code did not match' : null,
                         errorStyle: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: context
-                              .appColors
+                          color: colors
                               .deleteCategoryConfirmationDialogCodeDoesnotMatchErrorTextColor,
                         ),
                       ),
@@ -497,43 +657,49 @@ Future<void> deleteItemVerificationDialog(
             ),
             actions: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
                     style: TextButton.styleFrom(
-                      backgroundColor: context
-                          .appColors
-                          .deleteCategoryConfirmationDialogCancelButtonBackgroundColor,
+                      backgroundColor: colors
+                          .bookmarkCategoryDialogCloseButtonBackgroundColor,
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
+                        horizontal: 18,
                         vertical: 10,
                       ),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
                     onPressed: () => Navigator.pop(dialogContext),
                     child: Text(
                       'Cancel',
                       style: TextStyle(
-                        color: context
-                            .appColors
+                        color: colors
                             .deleteCategoryConfirmationDialogCancelButtonTextColor,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
-                  const Spacer(),
-
+                  const SizedBox(width: 10),
                   TextButton(
                     style: TextButton.styleFrom(
-                      backgroundColor: context
-                          .appColors
-                          .deleteCategoryConfirmationDialogCancelButtonBackgroundColor,
+                      backgroundColor: colors
+                          .deleteCategoryConfirmationDialogDeleteButtonTextColor
+                          .withValues(alpha: 0.15),
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
+                        horizontal: 20,
                         vertical: 10,
                       ),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(10),
+                        side: BorderSide(
+                          color: colors
+                              .deleteCategoryConfirmationDialogDeleteButtonTextColor
+                              .withValues(alpha: 0.5),
+                          width: 1,
+                        ),
                       ),
                     ),
                     onPressed: () {
@@ -548,9 +714,9 @@ Future<void> deleteItemVerificationDialog(
                     child: Text(
                       'Delete',
                       style: TextStyle(
-                        color: context
-                            .appColors
+                        color: colors
                             .deleteCategoryConfirmationDialogDeleteButtonTextColor,
+                        fontSize: 13,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

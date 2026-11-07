@@ -82,14 +82,14 @@ class _FloatingActionsButtonsState extends State<FloatingActionsButtons> {
         _attachedController ??
         widget.scrollController ??
         PrimaryScrollController.maybeOf(context);
-    if (controller != null && controller.hasClients) {
+    if (controller != null && controller.hasClients && controller.positions.length == 1) {
       final bool isScrolled = controller.offset > widget.showScrollToTopOffset;
       if (isScrolled != _isScrolledDown) {
         setState(() {
           _isScrolledDown = isScrolled;
         });
       }
-    } else if (_isScrolledDown) {
+    } else if (_isScrolledDown && (controller == null || !controller.hasClients)) {
       setState(() {
         _isScrolledDown = false;
       });
@@ -101,7 +101,7 @@ class _FloatingActionsButtonsState extends State<FloatingActionsButtons> {
         _attachedController ??
         widget.scrollController ??
         PrimaryScrollController.maybeOf(context);
-    if (controller != null && controller.hasClients) {
+    if (controller != null && controller.hasClients && controller.positions.length == 1) {
       controller.animateTo(
         0,
         duration: const Duration(milliseconds: 350),

@@ -54,6 +54,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
   void _onScroll() {
     // Fire when within 200px of the bottom
     if (_scrollController.hasClients &&
+        _scrollController.positions.length == 1 &&
         _scrollController.position.pixels >=
             _scrollController.position.maxScrollExtent - 200) {
       context.read<BookmarkBloc>().add(const BookmarkEvent.loadMoreBookmarks());
@@ -115,10 +116,21 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
             );
           },
         ),
+        BlocListener<BookmarkBloc, BookmarkState>(
+          listener: (context, state) {
+            state.whenOrNull(
+              loaded: (_, __, ___, ____) {
+                context
+                    .read<BookmarksStatsBloc>()
+                    .add(const BookmarksStatsEvent.load());
+              },
+            );
+          },
+        ),
       ],
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final isWide = constraints.maxWidth >= 600;
+          final isWide = constraints.maxWidth >= 750;
           final bookmarkState = context.watch<BookmarkBloc>().state;
           final bool hasTorrents = bookmarkState.maybeWhen(
             loaded: (torrents, _, _, _) => torrents.isNotEmpty,
@@ -150,27 +162,23 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerFloat,
             body: SafeArea(
-              child: isWide
-                  ? Row(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        if (_showSidebar) ...[
-                          SizedBox(
-                            width: 270,
-                            child:
-                                _buildSidebar(context, isMobileDrawer: false),
-                          ),
-                          VerticalDivider(
-                            width: 1,
-                            thickness: 1,
-                            color:
-                                context.appColors.bookmarksSidebarDividerColor,
-                          ),
-                        ],
-                        Expanded(child: _buildTorrentsPane(context)),
-                      ],
-                    )
-                  : _buildTorrentsPane(context),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (isWide && _showSidebar) ...[
+                    SizedBox(
+                      width: 270,
+                      child: _buildSidebar(context, isMobileDrawer: false),
+                    ),
+                    VerticalDivider(
+                      width: 1,
+                      thickness: 1,
+                      color: context.appColors.bookmarksSidebarDividerColor,
+                    ),
+                  ],
+                  Expanded(child: _buildTorrentsPane(context)),
+                ],
+              ),
             ),
           );
         },
@@ -204,11 +212,16 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
           ? TextField(
               controller: _searchController,
               autofocus: true,
-              style: const TextStyle(color: Colors.amber, fontSize: 18),
+              style: TextStyle(
+                color: Colors.amber,
+                fontSize: isWide ? 18 : 15,
+              ),
               decoration: InputDecoration(
-                hintText: 'Search bookmarks by torrent name or info hash',
+                hintText: isWide
+                    ? 'Search bookmarks by torrent name or info hash'
+                    : 'Search bookmarks...',
                 hintStyle: TextStyle(
-                  fontSize: 18,
+                  fontSize: isWide ? 18 : 15,
                   color: context.appColors.searchBookmarksPlaceholderTextColor,
                 ),
                 border: InputBorder.none,
