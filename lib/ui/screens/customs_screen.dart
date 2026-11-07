@@ -50,6 +50,7 @@ class _CustomsScreenState extends State<CustomsScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(
           'Custom Listings',
           style: TextStyle(
@@ -58,13 +59,6 @@ class _CustomsScreenState extends State<CustomsScreen> {
             fontSize: 25,
             fontWeight: FontWeight.w500,
           ),
-        ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.arrow_back),
-          iconSize: 30,
         ),
       ),
       floatingActionButton: FloatingActionsButtons(

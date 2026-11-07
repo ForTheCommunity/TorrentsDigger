@@ -183,24 +183,23 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
     required bool isWide,
   }) {
     return AppBar(
-      leading: IconButton(
-        icon: Icon(
-          _isSearching ? Icons.close : Icons.arrow_back,
-          color: context.appColors.appBarBackButtonIconColor,
-        ),
-        iconSize: 28,
-        onPressed: () {
-          if (_isSearching) {
-            setState(() {
-              _isSearching = false;
-              _searchController.clear();
-            });
-            _reloadBookmarks();
-          } else {
-            Navigator.pop(context);
-          }
-        },
-      ),
+      automaticallyImplyLeading: false,
+      leading: _isSearching
+          ? IconButton(
+              icon: Icon(
+                Icons.close,
+                color: context.appColors.appBarBackButtonIconColor,
+              ),
+              iconSize: 28,
+              onPressed: () {
+                setState(() {
+                  _isSearching = false;
+                  _searchController.clear();
+                });
+                _reloadBookmarks();
+              },
+            )
+          : null,
       title: _isSearching
           ? TextField(
               controller: _searchController,

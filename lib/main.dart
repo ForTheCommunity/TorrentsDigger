@@ -99,8 +99,11 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
               pageTransitionsTheme: PageTransitionsTheme(
                 builders: <TargetPlatform, PageTransitionsBuilder>{
-                  TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-                  TargetPlatform.linux: CupertinoPageTransitionsBuilder(),
+                  TargetPlatform.android: const ZoomPageTransitionsBuilder(),
+                  TargetPlatform.iOS: const CupertinoPageTransitionsBuilder(),
+                  TargetPlatform.linux: const ZoomPageTransitionsBuilder(),
+                  TargetPlatform.windows: const ZoomPageTransitionsBuilder(),
+                  TargetPlatform.macOS: const CupertinoPageTransitionsBuilder(),
                 },
               ),
               brightness: Brightness.dark,

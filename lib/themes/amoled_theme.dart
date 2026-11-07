@@ -183,7 +183,8 @@ class AmoledTheme extends AppTheme {
   @override
   Color get contributeSourceCodeIconColor => const Color(0xFFFF9F0A);
   @override
-  Color get contributeSupportDevelopmentDonationIconColor => Colors.white;
+  Color get contributeSupportDevelopmentDonationIconColor =>
+      const Color(0xFFFF9F0A);
   @override
   Color get contributeCryptoAddressBorderColor => const Color(0xFFFF9F0A);
   @override

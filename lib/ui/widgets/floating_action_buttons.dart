@@ -192,7 +192,11 @@ class _FloatingActionsButtonsState extends State<FloatingActionsButtons> {
                   if (widget.activeScreen == ActiveScreen.bookmarks) {
                     _scrollToTop();
                   } else {
-                    Navigator.pushNamed(context, RoutesName.bookmarksScreen);
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      RoutesName.bookmarksScreen,
+                      (route) => route.isFirst,
+                    );
                   }
                 },
               ),
