@@ -278,6 +278,25 @@ class AmoledTheme extends AppTheme {
   @override
   Color get bookmarksStatsIconColor => const Color(0xFFFF9F0A);
   @override
+  Color get bookmarksViewSidebarIconColor => const Color(0xFFFF9F0A);
+  @override
+  Color get bookmarksDensityIconColor => const Color(0xFFFF9F0A);
+  @override
+  Color get bookmarksSidebarBackgroundColor => Colors.black;
+  @override
+  Color get bookmarksSidebarDividerColor => const Color(0xFF2C2C2E);
+  @override
+  Color get bookmarksSidebarSelectedTileBackgroundColor =>
+      const Color(0x22FF9F0A);
+  @override
+  Color get bookmarksSidebarSelectedTileBorderColor => const Color(0xFFFF9F0A);
+  @override
+  Color get bookmarksSidebarSelectedTileTextColor => const Color(0xFFFF9F0A);
+  @override
+  Color get bookmarksSidebarTileTextColor => Colors.white;
+  @override
+  Color get bookmarksSidebarHeaderTextColor => const Color(0xFFFF9F0A);
+  @override
   Color get bookmarksStatsBorderColor => const Color(0xFF2C2C2E);
   @override
   Color get bookmarksStatsColumnHeaderTextColor => const Color(0xFFFF9F0A);

@@ -222,6 +222,7 @@ class MainScreen extends StatelessWidget {
 
                   const SizedBox(height: 24),
                   const TorrentsListUi(),
+                  const SizedBox(height: 100),
                 ],
               ),
             ),

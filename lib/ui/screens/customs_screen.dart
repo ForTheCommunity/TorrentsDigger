@@ -292,6 +292,7 @@ class _CustomsScreenState extends State<CustomsScreen> {
                       );
                     },
                   ),
+                  const SizedBox(height: 100),
                 ],
               ),
             ),

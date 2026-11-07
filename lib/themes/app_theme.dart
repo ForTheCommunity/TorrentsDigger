@@ -147,6 +147,15 @@ abstract class AppTheme {
   Brightness get statusBarBrightness;
 
   Color get bookmarksStatsIconColor;
+  Color get bookmarksViewSidebarIconColor;
+  Color get bookmarksDensityIconColor;
+  Color get bookmarksSidebarBackgroundColor;
+  Color get bookmarksSidebarDividerColor;
+  Color get bookmarksSidebarSelectedTileBackgroundColor;
+  Color get bookmarksSidebarSelectedTileBorderColor;
+  Color get bookmarksSidebarSelectedTileTextColor;
+  Color get bookmarksSidebarTileTextColor;
+  Color get bookmarksSidebarHeaderTextColor;
   Color get bookmarksStatsBorderColor;
   Color get bookmarksStatsColumnHeaderTextColor;
   Color get bookmarksStatsTotalTextColor;

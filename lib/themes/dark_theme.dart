@@ -279,6 +279,25 @@ class DarkTheme extends AppTheme {
   @override
   Color get bookmarksStatsIconColor => const Color(0xFF60A5FA);
   @override
+  Color get bookmarksViewSidebarIconColor => const Color(0xFF60A5FA);
+  @override
+  Color get bookmarksDensityIconColor => const Color(0xFF60A5FA);
+  @override
+  Color get bookmarksSidebarBackgroundColor => const Color(0xFF14171E);
+  @override
+  Color get bookmarksSidebarDividerColor => const Color(0xFF334155);
+  @override
+  Color get bookmarksSidebarSelectedTileBackgroundColor =>
+      const Color(0x1F3B82F6);
+  @override
+  Color get bookmarksSidebarSelectedTileBorderColor => const Color(0xFF3B82F6);
+  @override
+  Color get bookmarksSidebarSelectedTileTextColor => const Color(0xFF60A5FA);
+  @override
+  Color get bookmarksSidebarTileTextColor => Colors.white;
+  @override
+  Color get bookmarksSidebarHeaderTextColor => const Color(0xFF60A5FA);
+  @override
   Color get bookmarksStatsBorderColor => const Color(0xFF334155);
   @override
   Color get bookmarksStatsColumnHeaderTextColor => const Color(0xFF60A5FA);

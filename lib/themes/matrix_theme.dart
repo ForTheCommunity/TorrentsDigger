@@ -312,6 +312,32 @@ class MatrixTheme extends AppTheme {
   @override
   Color get bookmarksStatsIconColor => Color.fromRGBO(0, 255, 4, 1);
   @override
+  Color get bookmarksViewSidebarIconColor =>
+      const Color.fromARGB(255, 0, 255, 42);
+  @override
+  Color get bookmarksDensityIconColor =>
+      const Color.fromARGB(255, 0, 255, 42);
+  @override
+  Color get bookmarksSidebarBackgroundColor => Colors.black;
+  @override
+  Color get bookmarksSidebarDividerColor =>
+      const Color.fromRGBO(2, 98, 19, 1);
+  @override
+  Color get bookmarksSidebarSelectedTileBackgroundColor =>
+      const Color.fromRGBO(0, 50, 0, 0.4);
+  @override
+  Color get bookmarksSidebarSelectedTileBorderColor =>
+      const Color.fromRGBO(14, 188, 17, 1);
+  @override
+  Color get bookmarksSidebarSelectedTileTextColor =>
+      const Color.fromRGBO(0, 255, 4, 1);
+  @override
+  Color get bookmarksSidebarTileTextColor =>
+      const Color.fromRGBO(191, 197, 191, 1);
+  @override
+  Color get bookmarksSidebarHeaderTextColor =>
+      const Color.fromRGBO(14, 188, 17, 1);
+  @override
   Color get bookmarksStatsBorderColor => Color.fromRGBO(76, 76, 77, 1);
   @override
   Color get bookmarksStatsColumnHeaderTextColor =>
