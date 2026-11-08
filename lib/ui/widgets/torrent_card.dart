@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +12,7 @@ import 'package:torrents_digger/blocs/default_trackers_bloc/default_trackers_blo
 import 'package:torrents_digger/configs/extensions.dart';
 import 'package:torrents_digger/database/bookmarks.dart';
 import 'package:torrents_digger/src/rust/api/internals.dart';
+import 'package:torrents_digger/themes/app_theme.dart';
 import 'package:torrents_digger/ui/widgets/chip_grid_widgets.dart';
 import 'package:torrents_digger/ui/widgets/launch_url.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
@@ -21,6 +24,11 @@ class TorrentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
+    final isMobile =
+        Platform.isAndroid ||
+        Platform.isIOS ||
+        MediaQuery.sizeOf(context).width < 600;
+
     return Card(
       color: colors.cardColor,
       margin: const EdgeInsets.symmetric(vertical: 6.0),
@@ -37,59 +45,42 @@ class TorrentCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Top Row: Title + Size Capsule Badge
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Text(
-                    torrent.name,
-                    style: TextStyle(
-                      color: colors.cardPrimaryTextColor,
-                      fontSize: 16.5,
-                      fontWeight: FontWeight.w600,
-                      height: 1.35,
-                      letterSpacing: 0.1,
+            if (isMobile) ...[
+              // Full-width title on mobile platforms
+              Text(
+                torrent.name,
+                style: TextStyle(
+                  color: colors.cardPrimaryTextColor,
+                  fontSize: 16.5,
+                  fontWeight: FontWeight.w600,
+                  height: 1.35,
+                  letterSpacing: 0.1,
+                ),
+              ),
+              const SizedBox(height: 10),
+            ] else ...[
+              // Top Row: Title + Size Capsule Badge (Desktop/wider screens)
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Text(
+                      torrent.name,
+                      style: TextStyle(
+                        color: colors.cardPrimaryTextColor,
+                        fontSize: 16.5,
+                        fontWeight: FontWeight.w600,
+                        height: 1.35,
+                        letterSpacing: 0.1,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 10),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: colors.bookmarksSidebarSelectedTileBackgroundColor,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: colors.bookmarksSidebarSelectedTileBorderColor
-                          .withValues(alpha: 0.4),
-                      width: 1,
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.folder_open_rounded,
-                        size: 13,
-                        color: colors.bookmarksSidebarSelectedTileTextColor,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        torrent.size,
-                        style: TextStyle(
-                          color: colors.bookmarksSidebarSelectedTileTextColor,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 12),
+                  const SizedBox(width: 10),
+                  _buildSizeBadge(colors),
+                ],
+              ),
+              const SizedBox(height: 12),
+            ],
 
             // Metadata Metric Badges
             Wrap(
@@ -97,6 +88,7 @@ class TorrentCard extends StatelessWidget {
               runSpacing: 6,
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
+                if (isMobile) _buildSizeBadge(colors),
                 // Seeders
                 _buildMetricBadge(
                   icon: Icons.arrow_upward_rounded,
@@ -454,6 +446,40 @@ class TorrentCard extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildSizeBadge(AppTheme colors) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+      decoration: BoxDecoration(
+        color: colors.bookmarksSidebarSelectedTileBackgroundColor,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: colors.bookmarksSidebarSelectedTileBorderColor
+              .withValues(alpha: 0.4),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.folder_open_rounded,
+            size: 13,
+            color: colors.bookmarksSidebarSelectedTileTextColor,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            torrent.size,
+            style: TextStyle(
+              color: colors.bookmarksSidebarSelectedTileTextColor,
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
       ),
     );
   }
