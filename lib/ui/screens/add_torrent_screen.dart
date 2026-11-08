@@ -6,9 +6,12 @@ import 'package:torrents_digger/blocs/bookmark_blocs/category_bloc/category_bloc
 import 'package:torrents_digger/blocs/bookmark_blocs/tags_bloc/tags_bloc.dart';
 import 'package:torrents_digger/configs/extensions.dart';
 import 'package:torrents_digger/database/bookmarks.dart';
+import 'package:torrents_digger/src/rust/api/database/bookmark.dart';
+import 'package:torrents_digger/src/rust/api/internals.dart';
 import 'package:torrents_digger/themes/app_theme.dart';
 import 'package:torrents_digger/ui/widgets/chip_grid_widgets.dart';
 import 'package:torrents_digger/ui/widgets/circular_progress_bar_widget.dart';
+import 'package:torrents_digger/ui/widgets/expandable_torrent_card.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 
 class AddTorrentScreen extends StatefulWidget {
@@ -41,6 +44,7 @@ class _AddTorrentScreenState extends State<AddTorrentScreen> {
   final Set<int> _selectedTagIds = {};
 
   bool _isSaving = false;
+  bool _isPreviewExpanded = false;
 
   @override
   void initState() {
@@ -54,10 +58,34 @@ class _AddTorrentScreenState extends State<AddTorrentScreen> {
     _leechersController = TextEditingController();
     _downloadsController = TextEditingController();
     _sourceUrlController = TextEditingController();
+
+    _nameController.addListener(_onFieldChanged);
+    _sizeNumberController.addListener(_onFieldChanged);
+    _infoHashController.addListener(_onFieldChanged);
+    _dateController.addListener(_onFieldChanged);
+    _seedersController.addListener(_onFieldChanged);
+    _leechersController.addListener(_onFieldChanged);
+    _downloadsController.addListener(_onFieldChanged);
+    _sourceUrlController.addListener(_onFieldChanged);
+  }
+
+  void _onFieldChanged() {
+    if (mounted && _wizardStep == 2) {
+      setState(() {});
+    }
   }
 
   @override
   void dispose() {
+    _nameController.removeListener(_onFieldChanged);
+    _sizeNumberController.removeListener(_onFieldChanged);
+    _infoHashController.removeListener(_onFieldChanged);
+    _dateController.removeListener(_onFieldChanged);
+    _seedersController.removeListener(_onFieldChanged);
+    _leechersController.removeListener(_onFieldChanged);
+    _downloadsController.removeListener(_onFieldChanged);
+    _sourceUrlController.removeListener(_onFieldChanged);
+
     _nameController.dispose();
     _infoHashController.dispose();
     _magnetController.dispose();
@@ -79,31 +107,95 @@ class _AddTorrentScreenState extends State<AddTorrentScreen> {
     }
   }
 
-  void _parseAndAutofill(String text) {
+  bool _isValidInfoHash(String hash) {
+    final clean = hash.trim();
+    return RegExp(r'^[a-fA-F0-9]{40}$').hasMatch(clean) ||
+        RegExp(r'^[a-zA-Z2-7]{32}$').hasMatch(clean);
+  }
+
+  bool _isHashInDatabase(String hash) {
+    final clean = hash.trim().toLowerCase();
+    if (clean.isEmpty) return false;
+    final state = context.read<BookmarkedIhBloc>().state;
+    return state.maybeWhen(
+      loaded: (hashes) => hashes.any((h) => h.trim().toLowerCase() == clean),
+      orElse: () => false,
+    );
+  }
+
+  Future<bool> _isInfoHashAlreadyInDatabase(String infoHash) async {
+    final clean = infoHash.trim().toLowerCase();
+    if (clean.isEmpty) return false;
+
+    // 1. Check in-memory state
+    if (_isHashInDatabase(clean)) return true;
+
+    // 2. Direct database query check
+    try {
+      final dbHashes = await getAllInfoHashes();
+      return dbHashes.any((h) => h.trim().toLowerCase() == clean);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<({bool success, bool isAlreadyAvailable, String message})>
+  _parseAndAutofill(String text) async {
     final trimmed = text.trim();
-    if (trimmed.isEmpty) return;
+    if (trimmed.isEmpty) {
+      return (
+        success: false,
+        isAlreadyAvailable: false,
+        message: "Clipboard text is empty.",
+      );
+    }
 
+    String? extractedHash;
+
+    // 1. Check if input is a Magnet Link
     if (trimmed.toLowerCase().startsWith('magnet:?')) {
-      _magnetController.text = trimmed;
-
-      // Extract xt parameter (info hash)
       final hashMatch = RegExp(
         r'xt=urn:btih:([a-zA-Z0-9]+)',
         caseSensitive: false,
       ).firstMatch(trimmed);
-      if (hashMatch != null) {
-        final hash = hashMatch.group(1)!;
-        _infoHashController.text = hash;
+
+      if (hashMatch == null) {
+        return (
+          success: false,
+          isAlreadyAvailable: false,
+          message:
+              "Invalid magnet link: missing 'xt=urn:btih:' info hash parameter.",
+        );
       }
 
-      // Extract dn parameter (display name)
+      final hash = hashMatch.group(1)!;
+      if (!_isValidInfoHash(hash)) {
+        return (
+          success: false,
+          isAlreadyAvailable: false,
+          message:
+              "Invalid info hash inside magnet link ($hash). Must be 40-char hex or 32-char Base32.",
+        );
+      }
+
+      extractedHash = hash;
+
+      // Valid magnet link - fill fields!
+      _magnetController.text = trimmed;
+      _infoHashController.text = hash;
+
+      // Extract dn (display name) if present
       final dnMatch = RegExp(r'dn=([^&]+)').firstMatch(trimmed);
       if (dnMatch != null) {
-        final decodedName = Uri.decodeComponent(
-          dnMatch.group(1)!.replaceAll('+', ' '),
-        );
-        if (_nameController.text.trim().isEmpty) {
-          _nameController.text = decodedName;
+        try {
+          final decodedName = Uri.decodeComponent(
+            dnMatch.group(1)!.replaceAll('+', ' '),
+          );
+          if (decodedName.trim().isNotEmpty) {
+            _nameController.text = decodedName.trim();
+          }
+        } catch (_) {
+          _nameController.text = dnMatch.group(1)!.replaceAll('+', ' ');
         }
       }
 
@@ -123,23 +215,59 @@ class _AddTorrentScreenState extends State<AddTorrentScreen> {
           }
         }
       }
-    } else if (RegExp(r'^[a-fA-F0-9]{40}$').hasMatch(trimmed) ||
-        RegExp(r'^[a-zA-Z2-7]{32}$').hasMatch(trimmed)) {
+    } else if (_isValidInfoHash(trimmed)) {
+      extractedHash = trimmed;
       _infoHashController.text = trimmed;
       _updateMagnetLinkFromHash(trimmed);
+    } else {
+      return (
+        success: false,
+        isAlreadyAvailable: false,
+        message:
+            "Clipboard is neither a valid magnet link nor a 40-char info hash.",
+      );
     }
+
+    // Check if the info hash is already bookmarked in database
+    final alreadyExists = await _isInfoHashAlreadyInDatabase(extractedHash);
+    if (alreadyExists) {
+      final shortHash = extractedHash.length > 10
+          ? '${extractedHash.substring(0, 10)}...'
+          : extractedHash;
+      return (
+        success: true,
+        isAlreadyAvailable: true,
+        message:
+            "⚠️ Torrent with info hash '$shortHash' is ALREADY bookmarked in your database!",
+      );
+    }
+
+    return (
+      success: true,
+      isAlreadyAvailable: false,
+      message: trimmed.toLowerCase().startsWith('magnet:?')
+          ? "Valid magnet link! Autofilled torrent details."
+          : "Valid info hash ($extractedHash)! Magnet link generated.",
+    );
   }
 
   Future<void> _pasteFromClipboard() async {
     final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
     final text = clipboardData?.text;
-    if (text != null && text.trim().isNotEmpty) {
-      setState(() {
-        _parseAndAutofill(text.trim());
-      });
-      createSnackBar(message: "Autofilled from clipboard!", duration: 2);
-    } else {
+    if (text == null || text.trim().isEmpty) {
       createSnackBar(message: "Clipboard is empty", duration: 2);
+      return;
+    }
+
+    final result = await _parseAndAutofill(text.trim());
+    if (result.success) {
+      setState(() {});
+      createSnackBar(
+        message: result.message,
+        duration: result.isAlreadyAvailable ? 5 : 3,
+      );
+    } else {
+      createSnackBar(message: result.message, duration: 5);
     }
   }
 
@@ -209,6 +337,18 @@ class _AddTorrentScreenState extends State<AddTorrentScreen> {
       try {
         final name = _nameController.text.trim();
         final hash = _infoHashController.text.trim();
+
+        // Prevent duplicate bookmark insertion
+        final alreadyExists = await _isInfoHashAlreadyInDatabase(hash);
+        if (alreadyExists) {
+          createSnackBar(
+            message: "This torrent is already bookmarked in your database.",
+            duration: 4,
+          );
+          if (mounted) setState(() => _isSaving = false);
+          return;
+        }
+
         final magnet = _magnetController.text.trim().isEmpty
             ? 'magnet:?xt=urn:btih:$hash'
             : _magnetController.text.trim();
@@ -285,8 +425,9 @@ class _AddTorrentScreenState extends State<AddTorrentScreen> {
         fontSize: 14,
       ),
       hintStyle: TextStyle(
-        color: colors.addTorrentManuallyFormTextFieldLabelTextColor
-            .withValues(alpha: 0.5),
+        color: colors.addTorrentManuallyFormTextFieldLabelTextColor.withValues(
+          alpha: 0.5,
+        ),
         fontSize: 13,
       ),
       filled: true,
@@ -352,14 +493,6 @@ class _AddTorrentScreenState extends State<AddTorrentScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
-        actions: [
-          IconButton(
-            tooltip: 'Paste & Autofill',
-            icon: const Icon(Icons.content_paste_go_rounded),
-            color: colors.bookmarksSidebarSelectedTileBorderColor,
-            onPressed: _pasteFromClipboard,
-          ),
-        ],
       ),
       body: SafeArea(
         child: Column(
@@ -372,7 +505,10 @@ class _AddTorrentScreenState extends State<AddTorrentScreen> {
               child: Form(
                 key: _formKey,
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 6,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -433,7 +569,7 @@ class _AddTorrentScreenState extends State<AddTorrentScreen> {
                           ],
                         ),
                         const SizedBox(height: 16),
-                        _buildPreviewSummaryCard(colors),
+                        _buildLivePreviewCard(colors),
                       ],
                       const SizedBox(height: 24),
                     ],
@@ -487,9 +623,8 @@ class _AddTorrentScreenState extends State<AddTorrentScreen> {
                     backgroundColor: isDone
                         ? accentColor
                         : isCurrent
-                            ? accentColor.withValues(alpha: 0.25)
-                            : colors.cardSecondaryTextColor
-                                .withValues(alpha: 0.12),
+                        ? accentColor.withValues(alpha: 0.25)
+                        : colors.cardSecondaryTextColor.withValues(alpha: 0.12),
                     child: isDone
                         ? const Icon(Icons.check, size: 14, color: Colors.white)
                         : Icon(
@@ -516,8 +651,9 @@ class _AddTorrentScreenState extends State<AddTorrentScreen> {
                     Icon(
                       Icons.chevron_right_rounded,
                       size: 16,
-                      color: colors.cardSecondaryTextColor
-                          .withValues(alpha: 0.4),
+                      color: colors.cardSecondaryTextColor.withValues(
+                        alpha: 0.4,
+                      ),
                     ),
                   ],
                 ],
@@ -591,7 +727,11 @@ class _AddTorrentScreenState extends State<AddTorrentScreen> {
                           ),
                         ),
                         SizedBox(width: 6),
-                        Icon(Icons.arrow_forward_rounded, size: 18, color: Colors.white),
+                        Icon(
+                          Icons.arrow_forward_rounded,
+                          size: 18,
+                          color: Colors.white,
+                        ),
                       ],
                     ),
                   )
@@ -607,12 +747,14 @@ class _AddTorrentScreenState extends State<AddTorrentScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
-        color: colors.bookmarksSidebarSelectedTileBorderColor
-            .withValues(alpha: 0.1),
+        color: colors.bookmarksSidebarSelectedTileBorderColor.withValues(
+          alpha: 0.1,
+        ),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: colors.bookmarksSidebarSelectedTileBorderColor
-              .withValues(alpha: 0.28),
+          color: colors.bookmarksSidebarSelectedTileBorderColor.withValues(
+            alpha: 0.28,
+          ),
         ),
       ),
       child: Row(
@@ -647,8 +789,7 @@ class _AddTorrentScreenState extends State<AddTorrentScreen> {
           ),
           TextButton.icon(
             style: TextButton.styleFrom(
-              backgroundColor: colors
-                  .bookmarksSidebarSelectedTileBorderColor
+              backgroundColor: colors.bookmarksSidebarSelectedTileBorderColor
                   .withValues(alpha: 0.2),
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               shape: RoundedRectangleBorder(
@@ -770,11 +911,34 @@ class _AddTorrentScreenState extends State<AddTorrentScreen> {
           tooltip: 'Paste Hash',
           onPressed: () async {
             final data = await Clipboard.getData(Clipboard.kTextPlain);
-            if (data?.text != null) {
-              setState(() {
-                _infoHashController.text = data!.text!.trim();
-                _updateMagnetLinkFromHash(data.text!.trim());
-              });
+            final text = data?.text?.trim();
+            if (text != null && text.isNotEmpty) {
+              if (_isValidInfoHash(text)) {
+                final alreadyExists = await _isInfoHashAlreadyInDatabase(text);
+                setState(() {
+                  _infoHashController.text = text;
+                  _updateMagnetLinkFromHash(text);
+                });
+                if (alreadyExists) {
+                  createSnackBar(
+                    message:
+                        "⚠️ This info hash is ALREADY in your bookmarks database!",
+                    duration: 5,
+                  );
+                } else {
+                  createSnackBar(
+                    message: "Valid info hash pasted!",
+                    duration: 2,
+                  );
+                }
+              } else {
+                createSnackBar(
+                  message: "Clipboard text is not a valid 40-char info hash",
+                  duration: 3,
+                );
+              }
+            } else {
+              createSnackBar(message: "Clipboard is empty", duration: 2);
             }
           },
         ),
@@ -785,6 +949,13 @@ class _AddTorrentScreenState extends State<AddTorrentScreen> {
       validator: (val) {
         if (val == null || val.trim().isEmpty) {
           return "Info Hash is required";
+        }
+        final trimmed = val.trim();
+        if (!_isValidInfoHash(trimmed)) {
+          return "Must be 40-char hex or 32-char Base32 info hash";
+        }
+        if (_isHashInDatabase(trimmed)) {
+          return "This torrent is already bookmarked in your database";
         }
         return null;
       },
@@ -811,6 +982,24 @@ class _AddTorrentScreenState extends State<AddTorrentScreen> {
         if (match != null) {
           _infoHashController.text = match.group(1)!;
         }
+      },
+      validator: (val) {
+        if (val == null || val.trim().isEmpty) return null;
+        final trimmed = val.trim();
+        if (!trimmed.toLowerCase().startsWith('magnet:?')) {
+          return "Must start with magnet:?";
+        }
+        final match = RegExp(
+          r'xt=urn:btih:([a-zA-Z0-9]+)',
+          caseSensitive: false,
+        ).firstMatch(trimmed);
+        if (match == null) {
+          return "Missing 'xt=urn:btih:' info hash";
+        }
+        if (!_isValidInfoHash(match.group(1)!)) {
+          return "Contains an invalid info hash";
+        }
+        return null;
       },
     );
   }
@@ -924,8 +1113,9 @@ class _AddTorrentScreenState extends State<AddTorrentScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              backgroundColor:
-                  colors.bookmarkCategoryIconColor.withValues(alpha: 0.12),
+              backgroundColor: colors.bookmarkCategoryIconColor.withValues(
+                alpha: 0.12,
+              ),
               side: BorderSide(
                 color: colors.bookmarkCategoryIconColor.withValues(alpha: 0.3),
               ),
@@ -939,8 +1129,8 @@ class _AddTorrentScreenState extends State<AddTorrentScreen> {
                   hintText: "Category Name",
                   emptyErrorMessage: "Category Name can't be empty...",
                   onCreate: (name) => context.read<CategoryBloc>().add(
-                        CategoryEvent.create(newCategoryName: name),
-                      ),
+                    CategoryEvent.create(newCategoryName: name),
+                  ),
                 );
               },
             ),
@@ -953,8 +1143,9 @@ class _AddTorrentScreenState extends State<AddTorrentScreen> {
               initial: () => const SizedBox.shrink(),
               loading: () => const Center(child: CircularProgressBarWidget()),
               loaded: (categoriesList) {
-                final filtered =
-                    categoriesList.where((c) => c.id != 65535).toList();
+                final filtered = categoriesList
+                    .where((c) => c.id != 65535)
+                    .toList();
 
                 return Wrap(
                   spacing: 10,
@@ -970,13 +1161,14 @@ class _AddTorrentScreenState extends State<AddTorrentScreen> {
                           colors.addTorrentManuallyFormCheckmarkColor,
                       labelStyle: TextStyle(
                         fontSize: 13,
-                        fontWeight:
-                            isSelected ? FontWeight.bold : FontWeight.w500,
+                        fontWeight: isSelected
+                            ? FontWeight.bold
+                            : FontWeight.w500,
                         color: isSelected
                             ? colors
-                                .addTorrentManuallyFormSelectedCategoryNameTextColor
+                                  .addTorrentManuallyFormSelectedCategoryNameTextColor
                             : colors
-                                .addTorrentManuallyFormUnSelectedCategoryNameTextColor,
+                                  .addTorrentManuallyFormUnSelectedCategoryNameTextColor,
                       ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -1026,8 +1218,9 @@ class _AddTorrentScreenState extends State<AddTorrentScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              backgroundColor:
-                  colors.bookmarksStatsIconColor.withValues(alpha: 0.12),
+              backgroundColor: colors.bookmarksStatsIconColor.withValues(
+                alpha: 0.12,
+              ),
               side: BorderSide(
                 color: colors.bookmarksStatsIconColor.withValues(alpha: 0.3),
               ),
@@ -1041,8 +1234,8 @@ class _AddTorrentScreenState extends State<AddTorrentScreen> {
                   hintText: "Tag Name",
                   emptyErrorMessage: "Tag Name can't be empty...",
                   onCreate: (name) => context.read<TagsBloc>().add(
-                        TagsEvent.create(newTagName: name),
-                      ),
+                    TagsEvent.create(newTagName: name),
+                  ),
                 );
               },
             ),
@@ -1055,8 +1248,7 @@ class _AddTorrentScreenState extends State<AddTorrentScreen> {
               initial: () => const SizedBox.shrink(),
               loading: () => const Center(child: CircularProgressBarWidget()),
               loaded: (tagsList) {
-                final filtered =
-                    tagsList.where((t) => t.id != 65535).toList();
+                final filtered = tagsList.where((t) => t.id != 65535).toList();
 
                 if (filtered.isEmpty) {
                   return Text(
@@ -1082,13 +1274,14 @@ class _AddTorrentScreenState extends State<AddTorrentScreen> {
                           colors.addTorrentManuallyFormCheckmarkColor,
                       labelStyle: TextStyle(
                         fontSize: 13,
-                        fontWeight:
-                            isSelected ? FontWeight.bold : FontWeight.w500,
+                        fontWeight: isSelected
+                            ? FontWeight.bold
+                            : FontWeight.w500,
                         color: isSelected
                             ? colors
-                                .addTorrentManuallyFormSelectedTagNameTextColor
+                                  .addTorrentManuallyFormSelectedTagNameTextColor
                             : colors
-                                .addTorrentManuallyFormUnSelectedTagNameTextColor,
+                                  .addTorrentManuallyFormUnSelectedTagNameTextColor,
                       ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -1234,58 +1427,314 @@ class _AddTorrentScreenState extends State<AddTorrentScreen> {
     );
   }
 
-  Widget _buildPreviewSummaryCard(AppTheme colors) {
+  Widget _buildLivePreviewCard(AppTheme colors) {
+    final name = _nameController.text.trim().isEmpty
+        ? 'Untitled Torrent'
+        : _nameController.text.trim();
+    final hash = _infoHashController.text.trim().isEmpty
+        ? '0000000000000000000000000000000000000000'
+        : _infoHashController.text.trim();
+    final magnet = _magnetController.text.trim().isEmpty
+        ? 'magnet:?xt=urn:btih:$hash'
+        : _magnetController.text.trim();
+    final size = _formatSize().isEmpty ? '0 B' : _formatSize();
+    final date = _dateController.text.trim().isEmpty
+        ? ''
+        : _dateController.text.trim();
+    final seeders = _seedersController.text.trim().isEmpty
+        ? '0'
+        : _seedersController.text.trim();
+    final leechers = _leechersController.text.trim().isEmpty
+        ? '0'
+        : _leechersController.text.trim();
+    final downloads = _downloadsController.text.trim().isEmpty
+        ? '0'
+        : _downloadsController.text.trim();
+    final sourceUrl = _sourceUrlController.text.trim().isEmpty
+        ? null
+        : _sourceUrlController.text.trim();
+
+    final previewTorrent = InternalTorrent(
+      infoHash: hash,
+      name: name,
+      magnet: magnet,
+      size: size,
+      date: date,
+      seeders: seeders,
+      leechers: leechers,
+      totalDownloads: downloads,
+      sourceUrl: sourceUrl,
+    );
+
+    // Selected Category name
+    String categoryName = 'None';
+    final categoryState = context.read<CategoryBloc>().state;
+    categoryState.whenOrNull(
+      loaded: (cats) {
+        final matching = cats.where((c) => c.id == _selectedCategoryID);
+        if (matching.isNotEmpty) categoryName = matching.first.name;
+      },
+    );
+
+    // Selected Tag names
+    final List<String> selectedTagNames = [];
+    final tagState = context.read<TagsBloc>().state;
+    tagState.whenOrNull(
+      loaded: (tags) {
+        for (final tag in tags) {
+          if (_selectedTagIds.contains(tag.id)) {
+            selectedTagNames.add(tag.name);
+          }
+        }
+      },
+    );
+
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: colors.cardColor,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: colors.bookmarksSidebarSelectedTileBorderColor
-              .withValues(alpha: 0.3),
+          color: colors.bookmarksSidebarSelectedTileBorderColor.withValues(
+            alpha: 0.35,
+          ),
+          width: 1.2,
         ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Header with View Toggle
           Row(
             children: [
-              Icon(
-                Icons.check_circle_outline_rounded,
-                size: 18,
-                color: colors.bookmarksSidebarSelectedTileBorderColor,
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: colors.bookmarksSidebarSelectedTileBorderColor
+                      .withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  Icons.preview_rounded,
+                  size: 18,
+                  color: colors.bookmarksSidebarSelectedTileBorderColor,
+                ),
               ),
               const SizedBox(width: 8),
-              Text(
-                "Review Summary",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: colors.cardPrimaryTextColor,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Bookmark Preview",
+                      style: TextStyle(
+                        fontSize: 14.5,
+                        fontWeight: FontWeight.bold,
+                        color: colors.cardPrimaryTextColor,
+                      ),
+                    ),
+                    Text(
+                      "Live preview of how it looks in your library",
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: colors.cardSecondaryTextColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // View Switcher: Row vs Expanded
+              Container(
+                padding: const EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                  color: colors.cardSecondaryTextColor.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: colors.cardSecondaryTextColor.withValues(
+                      alpha: 0.15,
+                    ),
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildPreviewToggleOption(
+                      icon: Icons.view_headline_rounded,
+                      label: "Compact",
+                      isSelected: !_isPreviewExpanded,
+                      colors: colors,
+                      onTap: () {
+                        setState(() => _isPreviewExpanded = false);
+                      },
+                    ),
+                    const SizedBox(width: 3),
+                    _buildPreviewToggleOption(
+                      icon: Icons.crop_landscape_rounded,
+                      label: "Expanded",
+                      isSelected: _isPreviewExpanded,
+                      colors: colors,
+                      onTap: () {
+                        setState(() => _isPreviewExpanded = true);
+                      },
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 10),
-          Text(
-            "Title: ${_nameController.text.trim().isEmpty ? '(None)' : _nameController.text.trim()}",
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 12.5,
-              fontWeight: FontWeight.w600,
-              color: colors.cardPrimaryTextColor,
+
+          const SizedBox(height: 12),
+
+          // Organization target tags (Category & Tags)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+            decoration: BoxDecoration(
+              color: colors.cardSecondaryTextColor.withValues(alpha: 0.05),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.folder_special_rounded,
+                  size: 14,
+                  color: colors.bookmarksSidebarSelectedTileBorderColor,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  "Assigned to: ",
+                  style: TextStyle(
+                    fontSize: 11.5,
+                    fontWeight: FontWeight.w500,
+                    color: colors.cardSecondaryTextColor,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 1.5,
+                  ),
+                  decoration: BoxDecoration(
+                    color: colors.bookmarkCategoryIconColor.withValues(
+                      alpha: 0.14,
+                    ),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    categoryName,
+                    style: TextStyle(
+                      fontSize: 11.5,
+                      fontWeight: FontWeight.bold,
+                      color: colors.bookmarkCategoryIconColor,
+                    ),
+                  ),
+                ),
+                if (selectedTagNames.isNotEmpty) ...[
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: selectedTagNames.map((tag) {
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 4),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                                vertical: 1.5,
+                              ),
+                              decoration: BoxDecoration(
+                                color: colors.bookmarksStatsIconColor
+                                    .withValues(alpha: 0.12),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                "#$tag",
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                  color: colors.bookmarksStatsIconColor,
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                ],
+              ],
             ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            "Size: ${_formatSize().isEmpty ? '(Not set)' : _formatSize()}  •  Hash: ${_infoHashController.text.trim().isEmpty ? '(None)' : _infoHashController.text.trim().substring(0, (_infoHashController.text.trim().length > 12 ? 12 : _infoHashController.text.trim().length))}...",
-            style: TextStyle(
-              fontSize: 12,
-              color: colors.cardSecondaryTextColor,
+
+          const SizedBox(height: 12),
+
+          // The Live Expandable Torrent Card
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: ExpandableTorrentCard(
+              key: ValueKey(
+                'preview_${previewTorrent.infoHash}_${previewTorrent.name}_${previewTorrent.size}_${previewTorrent.seeders}_${previewTorrent.leechers}_$_isPreviewExpanded',
+              ),
+              torrent: previewTorrent,
+              forceExpanded: _isPreviewExpanded,
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildPreviewToggleOption({
+    required IconData icon,
+    required String label,
+    required bool isSelected,
+    required AppTheme colors,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(7),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? colors.bookmarksSidebarSelectedTileBorderColor.withValues(
+                  alpha: 0.22,
+                )
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(7),
+          border: isSelected
+              ? Border.all(
+                  color: colors.bookmarksSidebarSelectedTileBorderColor
+                      .withValues(alpha: 0.4),
+                  width: 1,
+                )
+              : null,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 13,
+              color: isSelected
+                  ? colors.bookmarksSidebarSelectedTileBorderColor
+                  : colors.cardSecondaryTextColor,
+            ),
+            const SizedBox(width: 4),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 11.5,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                color: isSelected
+                    ? colors.cardPrimaryTextColor
+                    : colors.cardSecondaryTextColor,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -1301,9 +1750,7 @@ class _AddTorrentScreenState extends State<AddTorrentScreen> {
           color: colors.addTorrentManuallyFormAddTorrentButtonBorderColor,
           width: 1.5,
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         elevation: 0,
       ),
       child: _isSaving
