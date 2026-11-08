@@ -6,11 +6,15 @@ import 'package:torrents_digger/blocs/sources_bloc/source_bloc.dart';
 import 'package:torrents_digger/blocs/torrent_bloc/torrent_bloc.dart';
 import 'package:torrents_digger/configs/extensions.dart';
 import 'package:torrents_digger/configs/nsfw_helper.dart';
+import 'package:torrents_digger/database/get_settings_data.dart';
+import 'package:torrents_digger/services/version_service.dart';
 import 'package:torrents_digger/ui/widgets/dropdowns_ui.dart';
 import 'package:torrents_digger/ui/widgets/floating_action_buttons.dart';
+import 'package:torrents_digger/ui/widgets/launch_url.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 import 'package:torrents_digger/ui/widgets/search_bar_widget.dart';
 import 'package:torrents_digger/ui/widgets/torrents_list_ui.dart';
+import 'package:torrents_digger/ui/widgets/update_dialog.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -20,8 +24,46 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  static bool _hasCheckedUpdateOnStartup = false;
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkUpdateOnStartup();
+    });
+  }
+
+  Future<void> _checkUpdateOnStartup() async {
+    if (_hasCheckedUpdateOnStartup) return;
+    _hasCheckedUpdateOnStartup = true;
+
+    try {
+      final autoCheck = await getAutoCheckUpdates();
+      if (!autoCheck) return;
+
+      // Allow initial UI render to settle smoothly
+      await Future.delayed(const Duration(milliseconds: 1500));
+      if (!mounted) return;
+
+      final updateCode = await checkNewUpdate();
+      if (updateCode == 0 && mounted) {
+        String? currentVer;
+        try {
+          currentVer = await getAppCurrentVersion();
+        } catch (_) {}
+
+        if (mounted) {
+          final targetContext = navigatorKey.currentContext ?? context;
+          showUpdateDialog(targetContext, currentVersion: currentVer);
+        }
+      }
+    } catch (_) {
+      // Silently ignore network or offline errors during startup check
+    }
+  }
 
   @override
   void dispose() {

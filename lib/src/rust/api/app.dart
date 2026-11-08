@@ -30,12 +30,6 @@ Future<(List<InternalTorrent>, InternalPagination)> digTorrent({
 
 Future<String> getIpDetails() => RustLib.instance.api.crateApiAppGetIpDetails();
 
-Future<int> checkNewUpdate() =>
-    RustLib.instance.api.crateApiAppCheckNewUpdate();
-
-Future<String> getAppCurrentVersion() =>
-    RustLib.instance.api.crateApiAppGetAppCurrentVersion();
-
 Future<List<(BigInt, String)>> getAllDefaultTrackersList() =>
     RustLib.instance.api.crateApiAppGetAllDefaultTrackersList();
 

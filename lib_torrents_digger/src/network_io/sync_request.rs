@@ -2,8 +2,6 @@ use std::net::IpAddr;
 
 use anyhow::{Result, anyhow};
 
-use regex::Regex;
-use serde::Deserialize;
 use ureq::{Agent, Body, http::Response, unversioned::transport::DefaultConnector};
 
 use crate::{
@@ -17,11 +15,10 @@ use crate::{
         Pagination, available_sources::AllAvailableSources,
         knaben_database::KnabenDatabaseCategories, lime_torrents::LimeTorrentsCategories,
         nyaa::NyaaCategories, o337x::O337xCategories, solid_torrents::SolidTorrentsCategories,
-        sukebei_nyaa::SukebeiNyaaCategories, the_pirate_bay::ThePirateBayCategories,
-        torrents_csv::TorrentsCsvCategories, uindex::UindexCategories,
-        yts::YtsCategories, subsplease::SubsPleaseCategories, therarbg::TheRarBgCategories,
+        subsplease::SubsPleaseCategories, sukebei_nyaa::SukebeiNyaaCategories,
+        the_pirate_bay::ThePirateBayCategories, therarbg::TheRarBgCategories,
+        torrents_csv::TorrentsCsvCategories, uindex::UindexCategories, yts::YtsCategories,
     },
-    static_includes::get_current_version,
     torrent::Torrent,
 };
 
@@ -318,36 +315,4 @@ pub fn extract_ip_details() -> Result<String> {
     }
 
     Err(anyhow!("All endpoints failed: {}", errors.join(", ")))
-}
-
-pub fn check_for_update() -> Result<u8> {
-    // https://gitlab.com/api/v4/projects/73090806/repository/tags
-
-    let url: &'static str = "https://gitlab.com/api/v4/projects/73090806/repository/tags";
-    let mut response = send_request(url)?;
-    let response_body = response.body_mut().read_to_string()?;
-
-    // Deserializing
-    let tags: Vec<Tag> = serde_json::from_str(&response_body)?;
-
-    let regex = Regex::new(r"^v\d+\.\d+\.\d+\+\d+$")?;
-
-    // Filter to find the first tag that matches our specific format
-    let latest_valid_tag = tags
-        .iter()
-        .find(|t| regex.is_match(&t.name))
-        .ok_or_else(|| anyhow!("No valid version tags found!"))?;
-
-    let current_version_full = get_current_version()?;
-
-    if latest_valid_tag.name.trim() == current_version_full {
-        Ok(1)
-    } else {
-        Ok(0)
-    }
-}
-
-#[derive(Debug, Deserialize)]
-struct Tag {
-    name: String,
 }

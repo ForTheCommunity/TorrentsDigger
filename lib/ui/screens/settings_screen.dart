@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/settings_bloc/settings_bloc.dart';
 import 'package:torrents_digger/configs/extensions.dart';
 import 'package:torrents_digger/routes/routes_name.dart';
+import 'package:torrents_digger/services/version_service.dart';
 import 'package:torrents_digger/ui/widgets/about_widget.dart';
 import 'package:torrents_digger/ui/widgets/circular_progress_bar_widget.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
+import 'package:torrents_digger/ui/widgets/update_dialog.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -162,10 +164,18 @@ class SettingsScreen extends StatelessWidget {
                     BlocConsumer<SettingsBloc, SettingsState>(
                       listener: (context, state) {
                         state.whenOrNull(
-                          updateAvailable: () => createSnackBar(
-                            message: "New Version is Available.",
-                            duration: 2,
-                          ),
+                          updateAvailable: () async {
+                            String? version;
+                            try {
+                              version = await getAppCurrentVersion();
+                            } catch (_) {}
+                            if (context.mounted) {
+                              showUpdateDialog(
+                                context,
+                                currentVersion: version,
+                              );
+                            }
+                          },
                           latestVersion: () => createSnackBar(
                             message: "You are using latest version...",
                             duration: 2,

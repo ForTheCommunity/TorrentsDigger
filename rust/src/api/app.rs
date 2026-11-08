@@ -103,20 +103,6 @@ pub fn get_ip_details() -> Result<String, String> {
     }
 }
 
-pub fn check_new_update() -> Result<u8, String> {
-    match check_for_update() {
-        Ok(a) => Ok(a),
-        Err(e) => Err(e.to_string()),
-    }
-}
-
-pub fn get_app_current_version() -> String {
-    match get_current_version() {
-        Ok(a) => a,
-        Err(e) => e.to_string(),
-    }
-}
-
 pub fn get_all_default_trackers_list() -> Vec<(usize, String)> {
     DefaultTrackers::get_default_trackers_list()
 }

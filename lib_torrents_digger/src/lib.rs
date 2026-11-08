@@ -25,7 +25,6 @@ use crate::{
 pub mod database;
 pub mod network_io;
 pub mod sources;
-pub mod static_includes;
 pub mod torrent;
 
 pub fn search_torrent(

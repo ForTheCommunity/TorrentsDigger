@@ -1,11 +1,5 @@
 import 'package:torrents_digger/src/rust/api/database/get_settings_kv.dart';
 
-// void getSettingsValues() async {
-//   Map<String, String> settings_kv = await getSettingsKv();
-//   var _ = settings_kv.length;
-//   // TODO LATER
-// }
-
 Future<String?> getAppRootDir() async {
   // getting Platform Specific App Root Dir
   // from Settings KeyValue Store(Sqlite Database).
@@ -76,6 +70,21 @@ Future<void> setUseInAppBrowser(bool value) async {
 
 Future<bool> getUseInAppBrowser() async {
   final val = await getASettingsKv(key: "use_in_app_browser");
+  if (val == null || val.trim().isEmpty) {
+    return true;
+  }
+  return val == "true" || val == "1";
+}
+
+Future<void> setAutoCheckUpdates(bool value) async {
+  await insertOrUpdateKv(
+    key: "auto_check_updates",
+    value: value ? "true" : "false",
+  );
+}
+
+Future<bool> getAutoCheckUpdates() async {
+  final val = await getASettingsKv(key: "auto_check_updates");
   if (val == null || val.trim().isEmpty) {
     return true;
   }

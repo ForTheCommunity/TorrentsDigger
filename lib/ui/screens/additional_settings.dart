@@ -17,6 +17,7 @@ class AdditionalSettings extends StatefulWidget {
 
 class _AdditionalSettingsState extends State<AdditionalSettings> {
   bool _useInAppBrowser = true;
+  bool _checkUpdatesOnStartup = true;
   bool _isLoading = true;
   bool _isUpdatingTrackers = false;
 
@@ -28,9 +29,11 @@ class _AdditionalSettingsState extends State<AdditionalSettings> {
 
   Future<void> _loadSettings() async {
     final val = await getUseInAppBrowser();
+    final autoUpdateVal = await getAutoCheckUpdates();
     if (mounted) {
       setState(() {
         _useInAppBrowser = val;
+        _checkUpdatesOnStartup = autoUpdateVal;
         _isLoading = false;
       });
     }
@@ -41,6 +44,13 @@ class _AdditionalSettingsState extends State<AdditionalSettings> {
       _useInAppBrowser = value;
     });
     await setUseInAppBrowser(value);
+  }
+
+  Future<void> _toggleCheckUpdatesOnStartup(bool value) async {
+    setState(() {
+      _checkUpdatesOnStartup = value;
+    });
+    await setAutoCheckUpdates(value);
   }
 
   Future<void> _handleUpdateTrackers() async {
@@ -351,6 +361,31 @@ class _AdditionalSettingsState extends State<AdditionalSettings> {
                 context.appColors.settingsSwitchListTileActiveThumbColor,
             value: _useInAppBrowser,
             onChanged: _isLoading ? null : _toggleInAppBrowser,
+          ),
+          SwitchListTile(
+            secondary: Icon(
+              Icons.update_outlined,
+              color: context.appColors.settingsIconsColor,
+            ),
+            title: Text(
+              'Check Updates on Startup',
+              style: TextStyle(color: context.appColors.settingsTextColor),
+            ),
+            subtitle: Text(
+              'Automatically check if a new version is available when opening the app.',
+              style: TextStyle(
+                color: context.appColors.settingsTextColor,
+                fontSize: 12,
+              ),
+            ),
+            inactiveTrackColor:
+                context.appColors.settingsSwitchListTileInactiveTrackColor,
+            inactiveThumbColor:
+                context.appColors.settingsSwitchListTileInactiveThumbColor,
+            activeThumbColor:
+                context.appColors.settingsSwitchListTileActiveThumbColor,
+            value: _checkUpdatesOnStartup,
+            onChanged: _isLoading ? null : _toggleCheckUpdatesOnStartup,
           ),
           const Divider(),
           ListTile(

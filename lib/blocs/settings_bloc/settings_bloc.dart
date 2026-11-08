@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:torrents_digger/src/rust/api/app.dart';
+import 'package:torrents_digger/services/version_service.dart';
 
 part 'settings_event.dart';
 part 'settings_state.dart';
