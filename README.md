@@ -43,40 +43,59 @@
 
 ## --> Screenshots
 
-<details>
+<details open>
 <summary><b>Android Screenshots</b></summary>
 
 <br>
 
 <p align="center">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_1.jpg" width="180">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_2.jpg" width="180">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_3.jpg" width="180">
-  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_4.jpg" width="180">
+  <a href="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_1.jpg">
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_1.jpg" alt="Android Screenshot 1" width="300">
+  </a>
+  &nbsp;&nbsp;
+  <a href="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_2.jpg">
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_2.jpg" alt="Android Screenshot 2" width="300">
+  </a>
+  <br><br><br><br>
+  <a href="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_3.jpg">
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_3.jpg" alt="Android Screenshot 3" width="300">
+  </a>
+  &nbsp;&nbsp;
+  <a href="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_4.jpg">
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_4.jpg" alt="Android Screenshot 4" width="300">
+  </a>
+  <br><br><br><br>
+  <a href="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_5.jpg">
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_5.jpg" alt="Android Screenshot 5" width="300">
+  </a>
+  &nbsp;&nbsp;
+  <a href="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_6.jpg">
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/screenshot_6.jpg" alt="Android Screenshot 6" width="300">
+  </a>
 </p>
 
 </details>
 
-<details>
+<details open>
 <summary><b>Linux Screenshots</b></summary>
 
 <br>
 
 <p align="center">
-  <a href="flatpak/screenshots/1.png">
-    <img src="flatpak/screenshots/1.png" width="350">
+  <a href="flatpak/screenshots/screenshot_1.png">
+    <img src="flatpak/screenshots/screenshot_1.png" alt="Main Screen" width="700">
   </a>
-
-  <a href="flatpak/screenshots/2.png">
-    <img src="flatpak/screenshots/2.png" width="350">
+  <br><br>
+  <a href="flatpak/screenshots/screenshot_2.png">
+    <img src="flatpak/screenshots/screenshot_2.png" alt="Bookmarks Screen" width="700">
   </a>
-
-  <a href="flatpak/screenshots/3.png">
-    <img src="flatpak/screenshots/3.png" width="350">
+  <br><br>
+  <a href="flatpak/screenshots/screenshot_3.png">
+    <img src="flatpak/screenshots/screenshot_3.png" alt="Trending Torrents Screen" width="700">
   </a>
-
-  <a href="flatpak/screenshots/4.png">
-    <img src="flatpak/screenshots/4.png" width="350">
+  <br><br>
+  <a href="flatpak/screenshots/screenshot_4.png">
+    <img src="flatpak/screenshots/screenshot_4.png" alt="Sources Settings Screen" width="700">
   </a>
 </p>
 
