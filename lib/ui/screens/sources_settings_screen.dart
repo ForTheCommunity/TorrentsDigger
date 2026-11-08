@@ -77,7 +77,7 @@ class SourcesSettingsScreen extends StatelessWidget {
               ),
               const Divider(height: 24),
 
-              // Header with quick actions
+              // actions dropdown
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16.0,
@@ -86,54 +86,121 @@ class SourcesSettingsScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Available Sources',
-                          style: TextStyle(
-                            color: context.appColors.settingsTextColor,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Available Sources',
+                            style: TextStyle(
+                              color: context.appColors.settingsTextColor,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          'Default sources enabled out of the box',
-                          style: TextStyle(
-                            color: context.appColors.settingsTextColor
-                                .withValues(alpha: 0.6),
-                            fontSize: 11.5,
+                          const SizedBox(height: 2),
+                          Text(
+                            'Default sources enabled out of the box',
+                            style: TextStyle(
+                              color: context.appColors.settingsTextColor
+                                  .withValues(alpha: 0.6),
+                              fontSize: 11.5,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            context
-                                .read<SourceBloc>()
-                                .add(EnableDefaultSources());
-                          },
-                          child: const Text('Defaults'),
+                    const SizedBox(width: 8),
+                    PopupMenuButton<String>(
+                      tooltip: 'Quick Actions',
+                      onSelected: (val) {
+                        if (val == 'defaults') {
+                          context
+                              .read<SourceBloc>()
+                              .add(EnableDefaultSources());
+                        } else if (val == 'all') {
+                          context.read<SourceBloc>().add(EnableAllSources());
+                        } else if (val == 'none') {
+                          context
+                              .read<SourceBloc>()
+                              .add(DisableAllSources(allSources));
+                        }
+                      },
+                      itemBuilder: (context) => [
+                        const PopupMenuItem(
+                          value: 'defaults',
+                          child: Row(
+                            children: [
+                              Icon(Icons.restart_alt, size: 20),
+                              SizedBox(width: 12),
+                              Text('Enable Defaults'),
+                            ],
+                          ),
                         ),
-                        TextButton(
-                          onPressed: () {
-                            context.read<SourceBloc>().add(EnableAllSources());
-                          },
-                          child: const Text('All'),
+                        const PopupMenuItem(
+                          value: 'all',
+                          child: Row(
+                            children: [
+                              Icon(Icons.check_circle_outline, size: 20),
+                              SizedBox(width: 12),
+                              Text('Enable All'),
+                            ],
+                          ),
                         ),
-                        TextButton(
-                          onPressed: () {
-                            context
-                                .read<SourceBloc>()
-                                .add(DisableAllSources(allSources));
-                          },
-                          child: const Text('None'),
+                        const PopupMenuItem(
+                          value: 'none',
+                          child: Row(
+                            children: [
+                              Icon(Icons.remove_circle_outline, size: 20),
+                              SizedBox(width: 12),
+                              Text('Disable All'),
+                            ],
+                          ),
                         ),
                       ],
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .primary
+                                .withValues(alpha: 0.35),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.bolt_outlined,
+                              size: 16,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              'Actions',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            ),
+                            Icon(
+                              Icons.arrow_drop_down,
+                              size: 18,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ),
