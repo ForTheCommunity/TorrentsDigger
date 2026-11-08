@@ -35,6 +35,7 @@ class DropdownWidget extends StatelessWidget {
 
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
+          menuMaxHeight: 320,
           hint: Text(
             hintText,
             style: TextStyle(

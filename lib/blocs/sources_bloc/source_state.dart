@@ -37,6 +37,14 @@ abstract class SourceState with _$SourceState {
     if (hideNsfw && NsfwHelper.isNsfwSource(sourceName)) {
       return false;
     }
+    // When disabledSources is empty (default state), only enable the default clean sources
+    if (disabledSources.isEmpty) {
+      return SourcesConfig.isDefaultEnabled(sourceName);
+    }
+    // Sentinel when user explicitly enables all sources
+    if (disabledSources.contains('__ALL_ENABLED__')) {
+      return true;
+    }
     return !disabledSources.contains(sourceName);
   }
 

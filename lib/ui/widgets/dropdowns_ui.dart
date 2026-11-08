@@ -17,19 +17,13 @@ class DropdownsUi extends StatelessWidget {
         }
 
         final visibleSources = state.sources.where((source) {
-          if (state.hideNsfw && NsfwHelper.isNsfwSource(source.sourceName)) {
-            return false;
-          }
-          if (state.disabledSources.contains(source.sourceName)) {
-            return false;
-          }
-          return true;
+          return state.isSourceEnabled(source.sourceName);
         }).map((s) => s.sourceName).toList();
 
         final selectedSource = (state.selectedSource != null &&
                 visibleSources.contains(state.selectedSource))
             ? state.selectedSource
-            : null;
+            : (visibleSources.isNotEmpty ? visibleSources.first : null);
 
         return LayoutBuilder(
           builder: (context, constraints) {

@@ -21,6 +21,7 @@ class SourceBloc extends HydratedBloc<SourceWidgetEvents, SourceState> {
     on<ToggleHideNsfw>(_onToggleHideNsfw);
     on<ToggleSource>(_onToggleSource);
     on<EnableAllSources>(_onEnableAllSources);
+    on<EnableDefaultSources>(_onEnableDefaultSources);
     on<DisableAllSources>(_onDisableAllSources);
   }
 
@@ -54,10 +55,25 @@ class SourceBloc extends HydratedBloc<SourceWidgetEvents, SourceState> {
     ToggleSource event,
     Emitter<SourceState> emit,
   ) {
-    final updated = List<String>.from(state.disabledSources);
+    List<String> updated;
+    if (state.disabledSources.isEmpty) {
+      final allNames = state.sources.map((s) => s.sourceName).toList();
+      updated = allNames
+          .where((s) => !SourcesConfig.isDefaultEnabled(s))
+          .toList();
+    } else if (state.disabledSources.contains('__ALL_ENABLED__')) {
+      updated = [];
+    } else {
+      updated = List<String>.from(state.disabledSources);
+    }
+
     if (event.isEnabled) {
       updated.remove(event.sourceName);
+      if (updated.isEmpty) {
+        updated.add('__ALL_ENABLED__');
+      }
     } else {
+      updated.remove('__ALL_ENABLED__');
       if (!updated.contains(event.sourceName)) {
         updated.add(event.sourceName);
       }
@@ -67,6 +83,13 @@ class SourceBloc extends HydratedBloc<SourceWidgetEvents, SourceState> {
 
   void _onEnableAllSources(
     EnableAllSources event,
+    Emitter<SourceState> emit,
+  ) {
+    emit(state.copyWith(disabledSources: ['__ALL_ENABLED__']));
+  }
+
+  void _onEnableDefaultSources(
+    EnableDefaultSources event,
     Emitter<SourceState> emit,
   ) {
     emit(state.copyWith(disabledSources: []));

@@ -7,7 +7,7 @@ import 'package:torrents_digger/configs/nsfw_helper.dart';
 class SourcesSettingsScreen extends StatelessWidget {
   const SourcesSettingsScreen({super.key});
 
-  static const List<String> _fallbackSources = [
+  static const List<String> fallbackSources = [
     "Nyaa",
     "Nyaa Sukebei",
     "Torrents Csv",
@@ -39,7 +39,7 @@ class SourcesSettingsScreen extends StatelessWidget {
         builder: (context, state) {
           final allSources = state.sources.isNotEmpty
               ? state.sources.map((s) => s.sourceName).toList()
-              : _fallbackSources;
+              : fallbackSources;
 
           return ListView(
             children: [
@@ -81,26 +81,49 @@ class SourcesSettingsScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16.0,
-                  vertical: 8.0,
+                  vertical: 4.0,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Available Sources',
-                      style: TextStyle(
-                        color: context.appColors.settingsTextColor,
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Available Sources',
+                          style: TextStyle(
+                            color: context.appColors.settingsTextColor,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          'Default sources enabled out of the box',
+                          style: TextStyle(
+                            color: context.appColors.settingsTextColor
+                                .withValues(alpha: 0.6),
+                            fontSize: 11.5,
+                          ),
+                        ),
+                      ],
                     ),
                     Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
+                        TextButton(
+                          onPressed: () {
+                            context
+                                .read<SourceBloc>()
+                                .add(EnableDefaultSources());
+                          },
+                          child: const Text('Defaults'),
+                        ),
                         TextButton(
                           onPressed: () {
                             context.read<SourceBloc>().add(EnableAllSources());
                           },
-                          child: const Text('Enable All'),
+                          child: const Text('All'),
                         ),
                         TextButton(
                           onPressed: () {
@@ -108,7 +131,7 @@ class SourcesSettingsScreen extends StatelessWidget {
                                 .read<SourceBloc>()
                                 .add(DisableAllSources(allSources));
                           },
-                          child: const Text('Disable All'),
+                          child: const Text('None'),
                         ),
                       ],
                     ),
@@ -119,6 +142,7 @@ class SourcesSettingsScreen extends StatelessWidget {
               // Sources list
               ...allSources.map((sourceName) {
                 final isNsfw = NsfwHelper.isNsfwSource(sourceName);
+                final isDefault = SourcesConfig.isDefaultEnabled(sourceName);
                 final isBlockedByNsfw = state.hideNsfw && isNsfw;
                 final isEnabled =
                     !isBlockedByNsfw && state.isSourceEnabled(sourceName);
@@ -144,6 +168,31 @@ class SourcesSettingsScreen extends StatelessWidget {
                           ),
                         ),
                       ),
+                      if (isDefault) ...[
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.blueAccent.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(
+                              color: Colors.blueAccent.withValues(alpha: 0.5),
+                              width: 0.8,
+                            ),
+                          ),
+                          child: const Text(
+                            'DEFAULT',
+                            style: TextStyle(
+                              color: Colors.blueAccent,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
                       if (isNsfw) ...[
                         const SizedBox(width: 8),
                         Container(

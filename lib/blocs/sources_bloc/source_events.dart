@@ -48,6 +48,8 @@ class ToggleSource extends SourceWidgetEvents {
 
 class EnableAllSources extends SourceWidgetEvents {}
 
+class EnableDefaultSources extends SourceWidgetEvents {}
+
 class DisableAllSources extends SourceWidgetEvents {
   final List<String> allSources;
   DisableAllSources(this.allSources);

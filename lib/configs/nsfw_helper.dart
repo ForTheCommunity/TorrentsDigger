@@ -18,3 +18,18 @@ class NsfwHelper {
         lower.contains('adult');
   }
 }
+
+class SourcesConfig {
+  /// sources enabled by default.
+  static const Set<String> defaultEnabledSources = {
+    '1337x',
+    'YTS',
+    'The Pirate Bay',
+    'Nyaa',
+  };
+
+  /// Returns true if the source is one of the default clean sources
+  static bool isDefaultEnabled(String sourceName) {
+    return defaultEnabledSources.contains(sourceName.trim());
+  }
+}
