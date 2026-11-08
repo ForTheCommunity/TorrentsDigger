@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.3.0] - 2026-11-08
+- Added new torrent sources: 1337x, TheRARBG, YTS, and SubsPlease (with custom listings).
+- Added Source Management settings: enable/disable individual sources and toggle NSFW sources.
+- Added dedicated In-App WebView browser for viewing torrent source webpages with option to toggle between in-app browser and external browser.
+- Added feature to update default trackers lists directly within the app.
+- Improved trackers downloading, caching, and loading mechanism.
+- Added feature to reset Cloudflare clearance tokens.
+- Improved app update checking mechanism and update dialog.
+- UI responsiveness improvements and bug fixes.
+
 ## [1.2.9] - 2026-11-01
 - added feature to fetch torrent from Clouflare protected sites.
 - added feature to copy torrent's information.

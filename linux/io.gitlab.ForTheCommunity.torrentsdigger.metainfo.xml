@@ -52,24 +52,24 @@
   <launchable type="desktop-id">io.gitlab.ForTheCommunity.torrentsdigger.desktop</launchable>
   <screenshots>
     <screenshot type="default">
-      <image type="source">https://gitlab.com/ForTheCommunity/torrentsdigger/-/raw/7e5d3fa835ee529bbd96e12efb896afc6debfd91/flatpak/screenshots/1.png</image>
+      <image type="source">https://gitlab.com/ForTheCommunity/torrentsdigger/-/raw/7da481339c66b5c44fbe3ff3a006edf2b991ecb7/flatpak/screenshots/screenshot_1.png</image>
       <caption>Main Screen</caption>
     </screenshot>
     <screenshot>
-      <image type="source">https://gitlab.com/ForTheCommunity/torrentsdigger/-/raw/7e5d3fa835ee529bbd96e12efb896afc6debfd91/flatpak/screenshots/2.png</image>
+      <image type="source">https://gitlab.com/ForTheCommunity/torrentsdigger/-/raw/7da481339c66b5c44fbe3ff3a006edf2b991ecb7/flatpak/screenshots/screenshot_2.png</image>
       <caption>Bookmarks Screen</caption>
     </screenshot>
     <screenshot>
-      <image type="source">https://gitlab.com/ForTheCommunity/torrentsdigger/-/raw/7e5d3fa835ee529bbd96e12efb896afc6debfd91/flatpak/screenshots/3.png</image>
+      <image type="source">https://gitlab.com/ForTheCommunity/torrentsdigger/-/raw/7da481339c66b5c44fbe3ff3a006edf2b991ecb7/flatpak/screenshots/screenshot_3.png</image>
       <caption>Custom Listings Screen</caption>
     </screenshot>
     <screenshot>
-      <image type="source">https://gitlab.com/ForTheCommunity/torrentsdigger/-/raw/7e5d3fa835ee529bbd96e12efb896afc6debfd91/flatpak/screenshots/4.png</image>
+      <image type="source">https://gitlab.com/ForTheCommunity/torrentsdigger/-/raw/7da481339c66b5c44fbe3ff3a006edf2b991ecb7/flatpak/screenshots/screenshot_4.png</image>
       <caption>Settings Screen</caption>
     </screenshot>
   </screenshots>
   <releases>
-    <release version="1.2.9" date="2026-11-01">
+    <release version="1.3.0" date="2026-11-08">
       <url type="details">https://gitlab.com/ForTheCommunity/torrentsdigger/-/blob/main/CHANGELOG.md</url>
     </release>
   </releases>
