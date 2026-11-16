@@ -19,6 +19,9 @@ class PaginationWidget extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
+    final isTorrentLoading =
+        context.watch<TorrentBloc>().state is TorrentSearchLoading;
+
     return BlocBuilder<PaginationBloc, PaginationState>(
       builder: (context, state) {
         return state.maybeWhen(
@@ -39,43 +42,69 @@ class PaginationWidget extends StatelessWidget {
               return const SizedBox.shrink();
             }
 
+            final hasPrevious = previousPage != null && !isTorrentLoading;
+            final hasNext = nextPage != null && !isTorrentLoading;
+
             return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
+              padding: const EdgeInsets.symmetric(vertical: 12),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  if (previousPage != null)
-                    IconButton(
-                      onPressed: () => _onPageChange(context, previousPage),
-                      icon: Icon(
-                        Icons.arrow_back_ios_new,
-                        color: context
-                            .appColors
-                            .paginationPreviousButtonBackgroundColor,
-                      ),
+                  IconButton(
+                    onPressed: hasPrevious
+                        ? () => _onPageChange(context, previousPage)
+                        : null,
+                    splashRadius: 20,
+                    icon: Icon(
+                      Icons.arrow_back_ios_new_rounded,
+                      size: 18,
+                      color: hasPrevious
+                          ? context
+                              .appColors
+                              .paginationPreviousButtonBackgroundColor
+                          : context.appColors.cardSecondaryTextColor
+                              .withValues(alpha: 0.2),
                     ),
-                  if (currentPage != null)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      child: Text(
-                        "$currentPage",
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: RichText(
+                      text: TextSpan(
                         style: TextStyle(
-                          color: context.appColors.paginationCurrentTextColor,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                          color: context.appColors.cardSecondaryTextColor,
                         ),
+                        children: [
+                          const TextSpan(text: "Page "),
+                          TextSpan(
+                            text: "$currentPage",
+                            style: TextStyle(
+                              color:
+                                  context.appColors.paginationCurrentTextColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  if (nextPage != null)
-                    IconButton(
-                      onPressed: () => _onPageChange(context, nextPage),
-                      icon: Icon(
-                        Icons.arrow_forward_ios,
-                        color: context
-                            .appColors
-                            .paginationNextButtonBackgroundColor,
-                      ),
+                  ),
+                  IconButton(
+                    onPressed: hasNext
+                        ? () => _onPageChange(context, nextPage)
+                        : null,
+                    splashRadius: 20,
+                    icon: Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: 18,
+                      color: hasNext
+                          ? context
+                              .appColors
+                              .paginationNextButtonBackgroundColor
+                          : context.appColors.cardSecondaryTextColor
+                              .withValues(alpha: 0.2),
                     ),
+                  ),
                 ],
               ),
             );
@@ -87,8 +116,10 @@ class PaginationWidget extends StatelessWidget {
   }
 
   void _onPageChange(BuildContext context, int page) {
-    final sourceState = context.read<SourceBloc>().state;
     final torrentState = context.read<TorrentBloc>().state;
+    if (torrentState is TorrentSearchLoading) return;
+
+    final sourceState = context.read<SourceBloc>().state;
 
     if (torrentState is TorrentSearchSuccess) {
       final String torrentName = torrentState.torrentName;
