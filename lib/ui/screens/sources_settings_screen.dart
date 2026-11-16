@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/sources_bloc/source_bloc.dart';
 import 'package:torrents_digger/configs/extensions.dart';
@@ -115,15 +115,15 @@ class SourcesSettingsScreen extends StatelessWidget {
                       tooltip: 'Quick Actions',
                       onSelected: (val) {
                         if (val == 'defaults') {
-                          context
-                              .read<SourceBloc>()
-                              .add(EnableDefaultSources());
+                          context.read<SourceBloc>().add(
+                            EnableDefaultSources(),
+                          );
                         } else if (val == 'all') {
                           context.read<SourceBloc>().add(EnableAllSources());
                         } else if (val == 'none') {
-                          context
-                              .read<SourceBloc>()
-                              .add(DisableAllSources(allSources));
+                          context.read<SourceBloc>().add(
+                            DisableAllSources(allSources),
+                          );
                         }
                       },
                       itemBuilder: (context) => [
@@ -164,16 +164,14 @@ class SourcesSettingsScreen extends StatelessWidget {
                           vertical: 6,
                         ),
                         decoration: BoxDecoration(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .primary
-                              .withValues(alpha: 0.12),
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.primary.withValues(alpha: 0.12),
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .primary
-                                .withValues(alpha: 0.35),
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.primary.withValues(alpha: 0.35),
                           ),
                         ),
                         child: Row(
@@ -216,9 +214,7 @@ class SourcesSettingsScreen extends StatelessWidget {
 
                 return SwitchListTile(
                   secondary: Icon(
-                    isNsfw
-                        ? Icons.warning_amber_rounded
-                        : Icons.cloud_outlined,
+                    isNsfw ? Icons.warning_amber_rounded : Icons.cloud_outlined,
                     color: isBlockedByNsfw
                         ? Colors.grey
                         : context.appColors.settingsIconsColor,
@@ -290,16 +286,15 @@ class SourcesSettingsScreen extends StatelessWidget {
                   subtitle: isBlockedByNsfw
                       ? const Text(
                           'Disabled because "Hide NSFW" is enabled',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 11,
-                          ),
+                          style: TextStyle(color: Colors.grey, fontSize: 11),
                         )
                       : null,
                   inactiveTrackColor: context
-                      .appColors.settingsSwitchListTileInactiveTrackColor,
+                      .appColors
+                      .settingsSwitchListTileInactiveTrackColor,
                   inactiveThumbColor: context
-                      .appColors.settingsSwitchListTileInactiveThumbColor,
+                      .appColors
+                      .settingsSwitchListTileInactiveThumbColor,
                   activeThumbColor:
                       context.appColors.settingsSwitchListTileActiveThumbColor,
                   value: isEnabled,
@@ -307,11 +302,11 @@ class SourcesSettingsScreen extends StatelessWidget {
                       ? null
                       : (val) {
                           context.read<SourceBloc>().add(
-                                ToggleSource(
-                                  sourceName: sourceName,
-                                  isEnabled: val,
-                                ),
-                              );
+                            ToggleSource(
+                              sourceName: sourceName,
+                              isEnabled: val,
+                            ),
+                          );
                         },
                 );
               }),

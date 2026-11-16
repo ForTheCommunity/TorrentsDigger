@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/bookmark_blocs/bookmark_bloc/bookmark_bloc.dart';
 import 'package:torrents_digger/configs/extensions.dart';
@@ -82,13 +82,15 @@ class _ExpandableTorrentCardState extends State<ExpandableTorrentCard> {
                     decoration: BoxDecoration(
                       color: isBookmarked
                           ? colors.bookmarkedIconColor.withValues(alpha: 0.16)
-                          : colors.cardSecondaryTextColor
-                              .withValues(alpha: 0.08),
+                          : colors.cardSecondaryTextColor.withValues(
+                              alpha: 0.08,
+                            ),
                       borderRadius: BorderRadius.circular(10),
                       border: isBookmarked
                           ? Border.all(
-                              color: colors.bookmarkedIconColor
-                                  .withValues(alpha: 0.35),
+                              color: colors.bookmarkedIconColor.withValues(
+                                alpha: 0.35,
+                              ),
                               width: 1,
                             )
                           : null,
@@ -138,8 +140,9 @@ class _ExpandableTorrentCardState extends State<ExpandableTorrentCard> {
                           height: 3,
                           margin: const EdgeInsets.symmetric(horizontal: 5),
                           decoration: BoxDecoration(
-                            color: colors.cardSecondaryTextColor
-                                .withValues(alpha: 0.4),
+                            color: colors.cardSecondaryTextColor.withValues(
+                              alpha: 0.4,
+                            ),
                             shape: BoxShape.circle,
                           ),
                         ),
@@ -178,16 +181,18 @@ class _ExpandableTorrentCardState extends State<ExpandableTorrentCard> {
                             height: 3,
                             margin: const EdgeInsets.symmetric(horizontal: 5),
                             decoration: BoxDecoration(
-                              color: colors.cardSecondaryTextColor
-                                  .withValues(alpha: 0.4),
+                              color: colors.cardSecondaryTextColor.withValues(
+                                alpha: 0.4,
+                              ),
                               shape: BoxShape.circle,
                             ),
                           ),
                           Icon(
                             Icons.calendar_today_rounded,
                             size: 11,
-                            color: colors.cardSecondaryTextColor
-                                .withValues(alpha: 0.8),
+                            color: colors.cardSecondaryTextColor.withValues(
+                              alpha: 0.8,
+                            ),
                           ),
                           const SizedBox(width: 3),
                           Flexible(

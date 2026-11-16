@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:torrents_digger/database/get_settings_data.dart';
 import 'package:torrents_digger/ui/screens/source_webview_screen.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';

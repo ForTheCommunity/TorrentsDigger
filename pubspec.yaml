@@ -49,6 +49,8 @@ dependencies:
   webview_all_linux: ^1.4.7
   webview_all_windows: ^1.4.7
   path: ^1.9.1
+  material_ui: ^1.11.0
+  cupertino_ui: ^1.1.6
 
 dev_dependencies:
   flutter_test:

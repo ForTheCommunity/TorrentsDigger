@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/ip_info_bloc/ip_details_bloc.dart';
 import 'package:torrents_digger/configs/extensions.dart';

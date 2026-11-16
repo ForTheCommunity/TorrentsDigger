@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:torrents_digger/configs/extensions.dart';
 import 'package:torrents_digger/database/import_export.dart';
 
@@ -45,8 +45,9 @@ class DatabaseScreen extends StatelessWidget {
             child: Text(
               'Cancel',
               style: TextStyle(
-                color:
-                    context.appColors.settingsTextColor.withValues(alpha: 0.7),
+                color: context.appColors.settingsTextColor.withValues(
+                  alpha: 0.7,
+                ),
               ),
             ),
           ),
@@ -189,8 +190,9 @@ class DatabaseScreen extends StatelessWidget {
                             ),
                             Icon(
                               Icons.chevron_right_rounded,
-                              color: colors.settingsIconsColor
-                                  .withValues(alpha: 0.5),
+                              color: colors.settingsIconsColor.withValues(
+                                alpha: 0.5,
+                              ),
                             ),
                           ],
                         ),
@@ -257,8 +259,9 @@ class DatabaseScreen extends StatelessWidget {
                             ),
                             Icon(
                               Icons.chevron_right_rounded,
-                              color: colors.settingsIconsColor
-                                  .withValues(alpha: 0.5),
+                              color: colors.settingsIconsColor.withValues(
+                                alpha: 0.5,
+                              ),
                             ),
                           ],
                         ),
@@ -277,7 +280,9 @@ class DatabaseScreen extends StatelessWidget {
                       color: colors.settingsIconsColor.withValues(alpha: 0.06),
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
-                        color: colors.settingsIconsColor.withValues(alpha: 0.12),
+                        color: colors.settingsIconsColor.withValues(
+                          alpha: 0.12,
+                        ),
                       ),
                     ),
                     child: Row(
@@ -295,8 +300,9 @@ class DatabaseScreen extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 11.5,
                               height: 1.3,
-                              color: colors.settingsTextColor
-                                  .withValues(alpha: 0.75),
+                              color: colors.settingsTextColor.withValues(
+                                alpha: 0.75,
+                              ),
                             ),
                           ),
                         ),

@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:torrents_digger/configs/extensions.dart';
 import 'package:torrents_digger/database/get_settings_data.dart';
@@ -83,10 +83,7 @@ Future<String> _fetchUrl(HttpClient client, Uri uri) async {
   final request = await client.getUrl(uri);
   request.followRedirects = true;
   request.maxRedirects = 5;
-  request.headers.set(
-    HttpHeaders.userAgentHeader,
-    userAgent,
-  );
+  request.headers.set(HttpHeaders.userAgentHeader, userAgent);
   final response = await request.close().timeout(const Duration(seconds: 8));
   if (response.statusCode >= 200 && response.statusCode < 300) {
     return await response.transform(utf8.decoder).join();
@@ -99,10 +96,7 @@ String _cleanVersion(String v) {
   return match != null ? match.group(1)! : v.trim();
 }
 
-List<ChangelogEntry> parseChangelog(
-  String markdown, {
-  String? currentVersion,
-}) {
+List<ChangelogEntry> parseChangelog(String markdown, {String? currentVersion}) {
   final pattern = RegExp(
     r'^##\s*\[?([0-9a-zA-Z\.\-]+)\]?(?:\s*-\s*([0-9\-]+))?',
     multiLine: true,
@@ -110,8 +104,9 @@ List<ChangelogEntry> parseChangelog(
   final matches = pattern.allMatches(markdown).toList();
   if (matches.isEmpty) return [];
 
-  final String? installedClean =
-      currentVersion != null ? _cleanVersion(currentVersion) : null;
+  final String? installedClean = currentVersion != null
+      ? _cleanVersion(currentVersion)
+      : null;
 
   final List<ChangelogEntry> entries = [];
 
@@ -128,8 +123,9 @@ List<ChangelogEntry> parseChangelog(
     }
 
     final int start = match.end;
-    final int end =
-        (i + 1 < matches.length) ? matches[i + 1].start : markdown.length;
+    final int end = (i + 1 < matches.length)
+        ? matches[i + 1].start
+        : markdown.length;
     final rawSection = markdown.substring(start, end).trim();
 
     final List<String> bulletPoints = [];
@@ -620,7 +616,10 @@ class _UpdateAvailableDialogState extends State<UpdateAvailableDialog> {
                   foregroundColor: accentColor,
                 ),
                 icon: const Icon(Icons.refresh_rounded, size: 14),
-                label: const Text('Retry changelog', style: TextStyle(fontSize: 12)),
+                label: const Text(
+                  'Retry changelog',
+                  style: TextStyle(fontSize: 12),
+                ),
                 onPressed: _loadChangelog,
               ),
           ],
@@ -701,7 +700,10 @@ class _UpdateAvailableDialogState extends State<UpdateAvailableDialog> {
               borderRadius: BorderRadius.circular(8),
               onTap: () => setState(() => _selectedTabIndex = 1),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
                   color: accentColor.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(8),
@@ -711,7 +713,11 @@ class _UpdateAvailableDialogState extends State<UpdateAvailableDialog> {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.info_outline_rounded, size: 14, color: accentColor),
+                    Icon(
+                      Icons.info_outline_rounded,
+                      size: 14,
+                      color: accentColor,
+                    ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(

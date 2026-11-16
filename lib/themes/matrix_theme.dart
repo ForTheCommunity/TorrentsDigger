@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:torrents_digger/themes/app_theme.dart';
 
 const String matrixThemeCode = "matrix";
@@ -315,13 +315,11 @@ class MatrixTheme extends AppTheme {
   Color get bookmarksViewSidebarIconColor =>
       const Color.fromARGB(255, 0, 255, 42);
   @override
-  Color get bookmarksDensityIconColor =>
-      const Color.fromARGB(255, 0, 255, 42);
+  Color get bookmarksDensityIconColor => const Color.fromARGB(255, 0, 255, 42);
   @override
   Color get bookmarksSidebarBackgroundColor => Colors.black;
   @override
-  Color get bookmarksSidebarDividerColor =>
-      const Color.fromRGBO(2, 98, 19, 1);
+  Color get bookmarksSidebarDividerColor => const Color.fromRGBO(2, 98, 19, 1);
   @override
   Color get bookmarksSidebarSelectedTileBackgroundColor =>
       const Color.fromRGBO(0, 50, 0, 0.4);
@@ -469,16 +467,20 @@ class MatrixTheme extends AppTheme {
   Color get addTorrentManuallyFormCollapseIconColor =>
       const Color.fromARGB(255, 0, 234, 255);
   @override
-  Color get addTorrentManuallyFormInputTextColor => const Color.fromARGB(255, 255, 255, 255);
+  Color get addTorrentManuallyFormInputTextColor =>
+      const Color.fromARGB(255, 255, 255, 255);
 
   @override
-  Color get torrentCardCopyButtonIconColor => const Color.fromRGBO(0, 255, 0, 1);
+  Color get torrentCardCopyButtonIconColor =>
+      const Color.fromRGBO(0, 255, 0, 1);
   @override
-  Color get torrentCardCopyMenuBackgroundColor => const Color.fromRGBO(0, 0, 0, 1);
+  Color get torrentCardCopyMenuBackgroundColor =>
+      const Color.fromRGBO(0, 0, 0, 1);
   @override
   Color get torrentCardCopyMenuTextColor => const Color.fromRGBO(0, 255, 0, 1);
   @override
   Color get torrentCardCopyMenuIconColor => const Color.fromRGBO(0, 255, 0, 1);
   @override
-  Color get torrentCardCopyMenuBorderColor => const Color.fromRGBO(0, 255, 0, 1);
+  Color get torrentCardCopyMenuBorderColor =>
+      const Color.fromRGBO(0, 255, 0, 1);
 }

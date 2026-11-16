@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/pagination_bloc/pagination_bloc.dart';
 import 'package:torrents_digger/blocs/sources_bloc/source_bloc.dart';

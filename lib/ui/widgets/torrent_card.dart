@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -118,10 +118,12 @@ class TorrentCard extends StatelessWidget {
                     iconColor: colors.cardSecondaryTextColor,
                     label: "${torrent.totalDownloads} downloads",
                     textColor: colors.cardSecondaryTextColor,
-                    backgroundColor:
-                        colors.cardSecondaryTextColor.withValues(alpha: 0.08),
-                    borderColor:
-                        colors.cardSecondaryTextColor.withValues(alpha: 0.15),
+                    backgroundColor: colors.cardSecondaryTextColor.withValues(
+                      alpha: 0.08,
+                    ),
+                    borderColor: colors.cardSecondaryTextColor.withValues(
+                      alpha: 0.15,
+                    ),
                   ),
 
                 // Date
@@ -131,10 +133,12 @@ class TorrentCard extends StatelessWidget {
                     iconColor: colors.cardSecondaryTextColor,
                     label: torrent.date,
                     textColor: colors.cardSecondaryTextColor,
-                    backgroundColor:
-                        colors.cardSecondaryTextColor.withValues(alpha: 0.08),
-                    borderColor:
-                        colors.cardSecondaryTextColor.withValues(alpha: 0.15),
+                    backgroundColor: colors.cardSecondaryTextColor.withValues(
+                      alpha: 0.08,
+                    ),
+                    borderColor: colors.cardSecondaryTextColor.withValues(
+                      alpha: 0.15,
+                    ),
                   ),
               ],
             ),
@@ -157,8 +161,10 @@ class TorrentCard extends StatelessWidget {
                         colors.bookmarksSidebarSelectedTileBackgroundColor,
                     foregroundColor:
                         colors.bookmarksSidebarSelectedTileTextColor,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 8,
+                    ),
                     minimumSize: const Size(0, 36),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -176,8 +182,10 @@ class TorrentCard extends StatelessWidget {
                   ),
                   label: const Text(
                     "Open Magnet",
-                    style:
-                        TextStyle(fontSize: 12.5, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   onPressed: () async {
                     try {
@@ -262,13 +270,15 @@ class TorrentCard extends StatelessWidget {
                 IconButton(
                   icon: Icon(
                     Icons.open_in_new_rounded,
-                    color: (torrent.sourceUrl != null &&
+                    color:
+                        (torrent.sourceUrl != null &&
                             torrent.sourceUrl!.isNotEmpty)
                         ? colors.sourceUrlAvailableColor
                         : colors.sourceUrlUnAvailableColor,
                     size: 20,
                   ),
-                  tooltip: (torrent.sourceUrl != null &&
+                  tooltip:
+                      (torrent.sourceUrl != null &&
                           torrent.sourceUrl!.isNotEmpty)
                       ? "Open Source Webpage"
                       : "No Source Webpage",
@@ -457,8 +467,9 @@ class TorrentCard extends StatelessWidget {
         color: colors.bookmarksSidebarSelectedTileBackgroundColor,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: colors.bookmarksSidebarSelectedTileBorderColor
-              .withValues(alpha: 0.4),
+          color: colors.bookmarksSidebarSelectedTileBorderColor.withValues(
+            alpha: 0.4,
+          ),
           width: 1,
         ),
       ),
@@ -497,10 +508,7 @@ class TorrentCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: backgroundColor ?? Colors.transparent,
         borderRadius: BorderRadius.circular(7),
-        border: Border.all(
-          color: borderColor ?? Colors.transparent,
-          width: 1,
-        ),
+        border: Border.all(color: borderColor ?? Colors.transparent, width: 1),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -630,10 +638,7 @@ class TorrentCard extends StatelessWidget {
           Text(
             subtitle,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              color: subtitleColor,
-              fontSize: 12,
-            ),
+            style: TextStyle(color: subtitleColor, fontSize: 12),
           ),
         ],
       ),
@@ -654,27 +659,26 @@ class TorrentCard extends StatelessWidget {
         return BlocBuilder<CategoryBloc, CategoryState>(
           builder: (context, state) {
             final categories = state.whenOrNull(
-              loaded: (categoriesList) => categoriesList
-                  .where((c) => c.id != 65535)
-                  .toList(),
+              loaded: (categoriesList) =>
+                  categoriesList.where((c) => c.id != 65535).toList(),
             );
 
             void onSelectCategory(InternalBookmarkCategory category) {
               if (isBookmarked) {
-                int currentlyViewingCategoryID =
-                    context.read<BookmarkBloc>().currentCategoryId;
+                int currentlyViewingCategoryID = context
+                    .read<BookmarkBloc>()
+                    .currentCategoryId;
 
                 context.read<BookmarkBloc>().add(
-                      BookmarkEvent.updateBookmark(
-                        infoHash: torrent.infoHash,
-                        categoryId: category.id,
-                        currenltyViewingCategoryID:
-                            currentlyViewingCategoryID,
-                      ),
-                    );
+                  BookmarkEvent.updateBookmark(
+                    infoHash: torrent.infoHash,
+                    categoryId: category.id,
+                    currenltyViewingCategoryID: currentlyViewingCategoryID,
+                  ),
+                );
                 context.read<BookmarksStatsBloc>().add(
-                      const BookmarksStatsEvent.load(),
-                    );
+                  const BookmarksStatsEvent.load(),
+                );
 
                 createSnackBar(
                   message: 'Moved to "${category.name}"',
@@ -682,19 +686,17 @@ class TorrentCard extends StatelessWidget {
                 );
               } else {
                 context.read<BookmarkBloc>().add(
-                      BookmarkEvent.bookmark(
-                        torrent: torrent,
-                        categoryID: category.id,
-                      ),
-                    );
+                  BookmarkEvent.bookmark(
+                    torrent: torrent,
+                    categoryID: category.id,
+                  ),
+                );
                 context.read<BookmarksStatsBloc>().add(
-                      const BookmarksStatsEvent.load(),
-                    );
+                  const BookmarksStatsEvent.load(),
+                );
                 context.read<BookmarkedIhBloc>().add(
-                      BookmarkedIhEvent.addInfoHash(
-                        infoHash: torrent.infoHash,
-                      ),
-                    );
+                  BookmarkedIhEvent.addInfoHash(infoHash: torrent.infoHash),
+                );
                 createSnackBar(
                   message: 'Bookmarked under "${category.name}"',
                   duration: 1,
@@ -708,7 +710,9 @@ class TorrentCard extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
                 side: BorderSide(
-                  color: colors.bookmarksStatsBorderColor.withValues(alpha: 0.6),
+                  color: colors.bookmarksStatsBorderColor.withValues(
+                    alpha: 0.6,
+                  ),
                   width: 1,
                 ),
               ),
@@ -720,8 +724,9 @@ class TorrentCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: colors.bookmarkCategoryIconColor
-                          .withValues(alpha: 0.15),
+                      color: colors.bookmarkCategoryIconColor.withValues(
+                        alpha: 0.15,
+                      ),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(
@@ -750,8 +755,9 @@ class TorrentCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 11.5,
-                            color: colors.cardSecondaryTextColor
-                                .withValues(alpha: 0.75),
+                            color: colors.cardSecondaryTextColor.withValues(
+                              alpha: 0.75,
+                            ),
                           ),
                         ),
                       ],
@@ -760,8 +766,9 @@ class TorrentCard extends StatelessWidget {
                   IconButton(
                     icon: Icon(
                       Icons.close_rounded,
-                      color: colors.cardSecondaryTextColor
-                          .withValues(alpha: 0.7),
+                      color: colors.cardSecondaryTextColor.withValues(
+                        alpha: 0.7,
+                      ),
                       size: 20,
                     ),
                     tooltip: 'Close',
@@ -791,13 +798,13 @@ class TorrentCard extends StatelessWidget {
                           itemCount: categories.length,
                           separatorBuilder: (_, __) => Divider(
                             height: 1,
-                            color: colors.bookmarksStatsBorderColor
-                                .withValues(alpha: 0.3),
+                            color: colors.bookmarksStatsBorderColor.withValues(
+                              alpha: 0.3,
+                            ),
                           ),
                           itemBuilder: (context, index) {
                             final category = categories[index];
-                            final bool isCurrent =
-                                categoryID == category.id;
+                            final bool isCurrent = categoryID == category.id;
 
                             return InkWell(
                               borderRadius: BorderRadius.circular(8),
@@ -844,7 +851,7 @@ class TorrentCard extends StatelessWidget {
                                           color: isCurrent
                                               ? colors.bookmarkCategoryIconColor
                                               : colors.cardSecondaryTextColor
-                                                  .withValues(alpha: 0.5),
+                                                    .withValues(alpha: 0.5),
                                           width: 1.5,
                                         ),
                                       ),
@@ -884,14 +891,10 @@ class TorrentCard extends StatelessWidget {
                           context,
                           title: "New Category",
                           hintText: "Category Name",
-                          emptyErrorMessage:
-                              "Category Name can't be empty...",
-                          onCreate: (name) =>
-                              context.read<CategoryBloc>().add(
-                                    CategoryEvent.create(
-                                      newCategoryName: name,
-                                    ),
-                                  ),
+                          emptyErrorMessage: "Category Name can't be empty...",
+                          onCreate: (name) => context.read<CategoryBloc>().add(
+                            CategoryEvent.create(newCategoryName: name),
+                          ),
                         );
                       },
                       icon: const Icon(Icons.add_rounded, size: 18),
@@ -919,8 +922,8 @@ class TorrentCard extends StatelessWidget {
                       child: Text(
                         'Cancel',
                         style: TextStyle(
-                          color: colors
-                              .bookmarkCategoryDialogCloseButtonTextColor,
+                          color:
+                              colors.bookmarkCategoryDialogCloseButtonTextColor,
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
                         ),
@@ -992,8 +995,9 @@ class TorrentCard extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                     side: BorderSide(
-                      color: colors.bookmarksStatsBorderColor
-                          .withValues(alpha: 0.6),
+                      color: colors.bookmarksStatsBorderColor.withValues(
+                        alpha: 0.6,
+                      ),
                       width: 1,
                     ),
                   ),
@@ -1005,8 +1009,9 @@ class TorrentCard extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: colors.bookmarksStatsIconColor
-                              .withValues(alpha: 0.15),
+                          color: colors.bookmarksStatsIconColor.withValues(
+                            alpha: 0.15,
+                          ),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Icon(
@@ -1035,8 +1040,9 @@ class TorrentCard extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontSize: 11.5,
-                                color: colors.cardSecondaryTextColor
-                                    .withValues(alpha: 0.75),
+                                color: colors.cardSecondaryTextColor.withValues(
+                                  alpha: 0.75,
+                                ),
                               ),
                             ),
                           ],
@@ -1045,8 +1051,9 @@ class TorrentCard extends StatelessWidget {
                       IconButton(
                         icon: Icon(
                           Icons.close_rounded,
-                          color: colors.cardSecondaryTextColor
-                              .withValues(alpha: 0.7),
+                          color: colors.cardSecondaryTextColor.withValues(
+                            alpha: 0.7,
+                          ),
                           size: 20,
                         ),
                         tooltip: 'Close',
@@ -1078,15 +1085,15 @@ class TorrentCard extends StatelessWidget {
                                   const SizedBox(height: 8),
                               itemBuilder: (context, index) {
                                 final tag = allTags[index];
-                                final bool isSelected =
-                                    selectedTagIds.contains(tag.id);
+                                final bool isSelected = selectedTagIds.contains(
+                                  tag.id,
+                                );
 
                                 return Material(
                                   color: isSelected
                                       ? colors.bookmarksStatsIconColor
-                                          .withValues(alpha: 0.12)
-                                      : colors.cardColor
-                                          .withValues(alpha: 0.5),
+                                            .withValues(alpha: 0.12)
+                                      : colors.cardColor.withValues(alpha: 0.5),
                                   borderRadius: BorderRadius.circular(12),
                                   child: InkWell(
                                     borderRadius: BorderRadius.circular(12),
@@ -1105,14 +1112,12 @@ class TorrentCard extends StatelessWidget {
                                         vertical: 12,
                                       ),
                                       decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(12),
+                                        borderRadius: BorderRadius.circular(12),
                                         border: Border.all(
                                           color: isSelected
                                               ? colors.bookmarksStatsIconColor
-                                              : colors
-                                                  .bookmarksStatsBorderColor
-                                                  .withValues(alpha: 0.4),
+                                              : colors.bookmarksStatsBorderColor
+                                                    .withValues(alpha: 0.4),
                                           width: isSelected ? 1.5 : 1,
                                         ),
                                       ),
@@ -1121,10 +1126,8 @@ class TorrentCard extends StatelessWidget {
                                           Icon(
                                             Icons.label_rounded,
                                             color: isSelected
-                                                ? colors
-                                                    .bookmarksStatsIconColor
-                                                : colors
-                                                    .cardSecondaryTextColor,
+                                                ? colors.bookmarksStatsIconColor
+                                                : colors.cardSecondaryTextColor,
                                             size: 20,
                                           ),
                                           const SizedBox(width: 12),
@@ -1148,17 +1151,19 @@ class TorrentCard extends StatelessWidget {
                                             decoration: BoxDecoration(
                                               color: isSelected
                                                   ? colors
-                                                      .tagCheckboxActiveColor
+                                                        .tagCheckboxActiveColor
                                                   : Colors.transparent,
                                               borderRadius:
                                                   BorderRadius.circular(6),
                                               border: Border.all(
                                                 color: isSelected
                                                     ? colors
-                                                        .tagCheckboxActiveColor
+                                                          .tagCheckboxActiveColor
                                                     : colors
-                                                        .cardSecondaryTextColor
-                                                        .withValues(alpha: 0.5),
+                                                          .cardSecondaryTextColor
+                                                          .withValues(
+                                                            alpha: 0.5,
+                                                          ),
                                                 width: 1.5,
                                               ),
                                             ),
@@ -1200,13 +1205,12 @@ class TorrentCard extends StatelessWidget {
                               context,
                               title: "New Tag",
                               hintText: "Tag Name",
-                              emptyErrorMessage:
-                                  "Tag Name can't be empty...",
+                              emptyErrorMessage: "Tag Name can't be empty...",
                               onCreate: (name) {
                                 lastCreatedTagName = name;
                                 context.read<TagsBloc>().add(
-                                      TagsEvent.create(newTagName: name),
-                                    );
+                                  TagsEvent.create(newTagName: name),
+                                );
                               },
                             );
                           },
@@ -1291,8 +1295,8 @@ class TorrentCard extends StatelessWidget {
                               child: Text(
                                 'Done',
                                 style: TextStyle(
-                                  color: colors
-                                      .tagPickerDialogDoneButtonTextColor,
+                                  color:
+                                      colors.tagPickerDialogDoneButtonTextColor,
                                   fontSize: 13,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -1334,16 +1338,14 @@ class TorrentCard extends StatelessWidget {
 
         void onRemoveBookmark() {
           context.read<BookmarkBloc>().add(
-                BookmarkEvent.removeBookmark(infoHash: torrent.infoHash),
-              );
+            BookmarkEvent.removeBookmark(infoHash: torrent.infoHash),
+          );
           context.read<BookmarksStatsBloc>().add(
-                const BookmarksStatsEvent.load(),
-              );
+            const BookmarksStatsEvent.load(),
+          );
           context.read<BookmarkedIhBloc>().add(
-                BookmarkedIhEvent.removeInfoHash(
-                  infoHash: torrent.infoHash,
-                ),
-              );
+            BookmarkedIhEvent.removeInfoHash(infoHash: torrent.infoHash),
+          );
           createSnackBar(message: 'Bookmark Removed', duration: 1);
           Navigator.pop(dialogContext);
         }
@@ -1365,8 +1367,9 @@ class TorrentCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color:
-                      colors.bookmarkCategoryIconColor.withValues(alpha: 0.15),
+                  color: colors.bookmarkCategoryIconColor.withValues(
+                    alpha: 0.15,
+                  ),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
@@ -1395,8 +1398,9 @@ class TorrentCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 11.5,
-                        color: colors.cardSecondaryTextColor
-                            .withValues(alpha: 0.75),
+                        color: colors.cardSecondaryTextColor.withValues(
+                          alpha: 0.75,
+                        ),
                       ),
                     ),
                   ],
@@ -1431,8 +1435,9 @@ class TorrentCard extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(
-                          color: colors.bookmarksStatsBorderColor
-                              .withValues(alpha: 0.5),
+                          color: colors.bookmarksStatsBorderColor.withValues(
+                            alpha: 0.5,
+                          ),
                         ),
                       ),
                       child: Row(
@@ -1479,8 +1484,9 @@ class TorrentCard extends StatelessWidget {
                           Icon(
                             Icons.chevron_right_rounded,
                             size: 20,
-                            color: colors.cardSecondaryTextColor
-                                .withValues(alpha: 0.6),
+                            color: colors.cardSecondaryTextColor.withValues(
+                              alpha: 0.6,
+                            ),
                           ),
                         ],
                       ),
@@ -1517,8 +1523,8 @@ class TorrentCard extends StatelessWidget {
                             child: Icon(
                               Icons.delete_outline_rounded,
                               size: 20,
-                              color: colors
-                                  .bookmarkCategoryDialogRemoveIconColor,
+                              color:
+                                  colors.bookmarkCategoryDialogRemoveIconColor,
                             ),
                           ),
                           const SizedBox(width: 14),
@@ -1565,8 +1571,8 @@ class TorrentCard extends StatelessWidget {
             Center(
               child: TextButton(
                 style: TextButton.styleFrom(
-                  backgroundColor: colors
-                      .bookmarkCategoryDialogCloseButtonBackgroundColor,
+                  backgroundColor:
+                      colors.bookmarkCategoryDialogCloseButtonBackgroundColor,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 24,
                     vertical: 10,

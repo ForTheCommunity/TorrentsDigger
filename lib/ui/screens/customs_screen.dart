@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/customs_blocs/customs_dropdown_bloc/customs_bloc.dart';
 import 'package:torrents_digger/blocs/customs_blocs/customs_torrents/customs_torrents_bloc.dart';
@@ -13,12 +13,7 @@ import 'package:torrents_digger/ui/widgets/floating_action_buttons.dart';
 import 'package:torrents_digger/ui/widgets/scaffold_messenger.dart';
 import 'package:torrents_digger/ui/widgets/torrent_list_widget.dart';
 
-enum _CustomsSortOption {
-  none,
-  seedersDesc,
-  sizeDesc,
-  nameAsc,
-}
+enum _CustomsSortOption { none, seedersDesc, sizeDesc, nameAsc }
 
 class CustomsScreen extends StatefulWidget {
   const CustomsScreen({super.key});
@@ -199,12 +194,11 @@ class _CustomsScreenState extends State<CustomsScreen> {
         title: TextField(
           controller: _searchController,
           autofocus: true,
-          style: TextStyle(
-            color: Colors.amber,
-            fontSize: isWide ? 18 : 15,
-          ),
+          style: TextStyle(color: Colors.amber, fontSize: isWide ? 18 : 15),
           decoration: InputDecoration(
-            hintText: isWide ? 'Filter torrents by name...' : 'Filter torrents...',
+            hintText: isWide
+                ? 'Filter torrents by name...'
+                : 'Filter torrents...',
             hintStyle: TextStyle(
               fontSize: isWide ? 16 : 14,
               color: context.appColors.searchBookmarksPlaceholderTextColor,
@@ -417,36 +411,45 @@ class _CustomsScreenState extends State<CustomsScreen> {
                                   );
                                 }
                               }
-                              final sourceState =
-                                  context.watch<SourceBloc>().state;
+                              final sourceState = context
+                                  .watch<SourceBloc>()
+                                  .state;
                               final visibleCustomSources =
-                                  customListingSourceDetails.where((sourceDetail) {
-                                if (sourceState.hideNsfw &&
-                                    NsfwHelper.isNsfwSource(
-                                      sourceDetail.customSourceName,
-                                    )) {
-                                  return false;
-                                }
-                                if (sourceState.disabledSources.contains(
-                                  sourceDetail.customSourceName,
-                                )) {
-                                  return false;
-                                }
-                                return true;
-                              }).map((s) => s.customSourceName).toList();
+                                  customListingSourceDetails
+                                      .where((sourceDetail) {
+                                        if (sourceState.hideNsfw &&
+                                            NsfwHelper.isNsfwSource(
+                                              sourceDetail.customSourceName,
+                                            )) {
+                                          return false;
+                                        }
+                                        if (sourceState.disabledSources
+                                            .contains(
+                                              sourceDetail.customSourceName,
+                                            )) {
+                                          return false;
+                                        }
+                                        return true;
+                                      })
+                                      .map((s) => s.customSourceName)
+                                      .toList();
 
                               final selectedSourceValue =
-                                  visibleCustomSources.contains(selectedCustomSource)
-                                      ? selectedCustomSource
-                                      : null;
+                                  visibleCustomSources.contains(
+                                    selectedCustomSource,
+                                  )
+                                  ? selectedCustomSource
+                                  : null;
 
-                              final visibleListings = currentSourceListings.where((l) {
-                                if (sourceState.hideNsfw &&
-                                    NsfwHelper.isNsfwCategory(l)) {
-                                  return false;
-                                }
-                                return true;
-                              }).toList();
+                              final visibleListings = currentSourceListings
+                                  .where((l) {
+                                    if (sourceState.hideNsfw &&
+                                        NsfwHelper.isNsfwCategory(l)) {
+                                      return false;
+                                    }
+                                    return true;
+                                  })
+                                  .toList();
 
                               return Column(
                                 children: [
@@ -613,8 +616,7 @@ class _CustomsScreenState extends State<CustomsScreen> {
                                     children: [
                                       if (_searchQuery.isNotEmpty)
                                         InputChip(
-                                          visualDensity:
-                                              VisualDensity.compact,
+                                          visualDensity: VisualDensity.compact,
                                           label: Text(
                                             'Query: "$_searchQuery"',
                                             style: TextStyle(
@@ -640,8 +642,7 @@ class _CustomsScreenState extends State<CustomsScreen> {
                                       if (_sortOption !=
                                           _CustomsSortOption.none)
                                         InputChip(
-                                          visualDensity:
-                                              VisualDensity.compact,
+                                          visualDensity: VisualDensity.compact,
                                           label: Text(
                                             _sortOptionLabel(_sortOption),
                                             style: TextStyle(
@@ -710,8 +711,7 @@ class _CustomsScreenState extends State<CustomsScreen> {
                                             Icons.clear,
                                             size: 16,
                                           ),
-                                          label:
-                                              const Text("Clear filter"),
+                                          label: const Text("Clear filter"),
                                           onPressed: () {
                                             setState(() {
                                               _searchController.clear();
@@ -724,9 +724,7 @@ class _CustomsScreenState extends State<CustomsScreen> {
                                   ),
                                 )
                               else
-                                TorrentListWidget(
-                                  torrents: filteredTorrents,
-                                ),
+                                TorrentListWidget(torrents: filteredTorrents),
                             ],
                           );
                         },

@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:torrents_digger/configs/extensions.dart';
 import 'package:torrents_digger/database/get_settings_data.dart';
@@ -12,11 +12,7 @@ class SourceWebViewScreen extends StatefulWidget {
   final String url;
   final String? title;
 
-  const SourceWebViewScreen({
-    super.key,
-    required this.url,
-    this.title,
-  });
+  const SourceWebViewScreen({super.key, required this.url, this.title});
 
   @override
   State<SourceWebViewScreen> createState() => _SourceWebViewScreenState();
@@ -197,10 +193,7 @@ class _SourceWebViewScreenState extends State<SourceWebViewScreen> {
     final uri = Uri.tryParse(target);
     if (uri != null) {
       try {
-        createSnackBar(
-          message: "Opening in external browser...",
-          duration: 2,
-        );
+        createSnackBar(message: "Opening in external browser...", duration: 2);
         await launchUrl(uri, mode: LaunchMode.externalApplication);
       } catch (e) {
         createSnackBar(message: "Unable to open in browser: $e", duration: 3);

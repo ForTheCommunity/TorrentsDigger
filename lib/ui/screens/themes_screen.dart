@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/themes_bloc/themes_bloc.dart';
 import 'package:torrents_digger/configs/extensions.dart';
@@ -27,10 +27,7 @@ class ThemesScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Themes',
-          style: TextStyle(color: colors.appBarTextColor),
-        ),
+        title: Text('Themes', style: TextStyle(color: colors.appBarTextColor)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
@@ -109,13 +106,9 @@ class ThemesScreen extends StatelessWidget {
                                         children: [
                                           _colorDot(theme.cardColor),
                                           const SizedBox(width: 3),
-                                          _colorDot(
-                                            theme.settingsIconsColor,
-                                          ),
+                                          _colorDot(theme.settingsIconsColor),
                                           const SizedBox(width: 3),
-                                          _colorDot(
-                                            theme.seedersIconColor,
-                                          ),
+                                          _colorDot(theme.seedersIconColor),
                                         ],
                                       ),
                                     ),

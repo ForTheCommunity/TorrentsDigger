@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:torrents_digger/configs/extensions.dart';
 
 class SearchBarWidget extends StatelessWidget {

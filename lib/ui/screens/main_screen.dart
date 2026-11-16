@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/pagination_bloc/pagination_bloc.dart';
 import 'package:torrents_digger/blocs/sources_bloc/source_bloc.dart';
@@ -76,7 +76,8 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     final torrentState = context.watch<TorrentBloc>().state;
     final bool hasTorrents =
-        torrentState is TorrentSearchSuccess && torrentState.torrents.isNotEmpty;
+        torrentState is TorrentSearchSuccess &&
+        torrentState.torrents.isNotEmpty;
 
     return Scaffold(
       floatingActionButton: FloatingActionsButtons(
@@ -125,8 +126,9 @@ class _MainScreenState extends State<MainScreen> {
 
                       if (torrentName.isNotEmpty) {
                         if (sourceState.selectedSource != null) {
-                          if (!sourceState
-                              .isSourceEnabled(sourceState.selectedSource!)) {
+                          if (!sourceState.isSourceEnabled(
+                            sourceState.selectedSource!,
+                          )) {
                             createSnackBar(
                               message:
                                   "Selected source is disabled in settings.",

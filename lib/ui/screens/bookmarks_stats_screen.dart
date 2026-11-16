@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/bookmark_blocs/bookmarks_stats_bloc/bookmarks_stats_bloc.dart';
 import 'package:torrents_digger/configs/extensions.dart';
@@ -82,16 +82,16 @@ class _BookmarksStatsScreenState extends State<BookmarksStatsScreen> {
         break;
       case StatsSortOption.largestSize:
         copy.sort(
-          (a, b) => _parseSizeToBytes(b.categoryTotalSize).compareTo(
-            _parseSizeToBytes(a.categoryTotalSize),
-          ),
+          (a, b) => _parseSizeToBytes(
+            b.categoryTotalSize,
+          ).compareTo(_parseSizeToBytes(a.categoryTotalSize)),
         );
         break;
       case StatsSortOption.alphabetical:
         copy.sort(
           (a, b) => a.category.name.toLowerCase().compareTo(
-                b.category.name.toLowerCase(),
-              ),
+            b.category.name.toLowerCase(),
+          ),
         );
         break;
     }
@@ -109,9 +109,9 @@ class _BookmarksStatsScreenState extends State<BookmarksStatsScreen> {
         break;
       case StatsSortOption.largestSize:
         copy.sort(
-          (a, b) => _parseSizeToBytes(b.tagTotalSize).compareTo(
-            _parseSizeToBytes(a.tagTotalSize),
-          ),
+          (a, b) => _parseSizeToBytes(
+            b.tagTotalSize,
+          ).compareTo(_parseSizeToBytes(a.tagTotalSize)),
         );
         break;
       case StatsSortOption.alphabetical:
@@ -188,11 +188,12 @@ class _BookmarksStatsScreenState extends State<BookmarksStatsScreen> {
                         'Sort by ${option.label}',
                         style: TextStyle(
                           fontSize: 13.5,
-                          fontWeight:
-                              isSelected ? FontWeight.bold : FontWeight.normal,
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.normal,
                           color: isSelected
-                            ? colors.bookmarksStatsColumnHeaderTextColor
-                            : colors.cardPrimaryTextColor,
+                              ? colors.bookmarksStatsColumnHeaderTextColor
+                              : colors.cardPrimaryTextColor,
                         ),
                       ),
                     ],
@@ -212,8 +213,8 @@ class _BookmarksStatsScreenState extends State<BookmarksStatsScreen> {
             tooltip: 'Refresh statistics',
             onPressed: () {
               context.read<BookmarksStatsBloc>().add(
-                    const BookmarksStatsEvent.load(),
-                  );
+                const BookmarksStatsEvent.load(),
+              );
             },
           ),
           const SizedBox(width: 8),
@@ -233,8 +234,8 @@ class _BookmarksStatsScreenState extends State<BookmarksStatsScreen> {
                 return _EmptyStatsView(
                   onRefresh: () {
                     context.read<BookmarksStatsBloc>().add(
-                          const BookmarksStatsEvent.load(),
-                        );
+                      const BookmarksStatsEvent.load(),
+                    );
                   },
                 );
               }
@@ -244,10 +245,7 @@ class _BookmarksStatsScreenState extends State<BookmarksStatsScreen> {
                 rawCategories,
                 _currentSortOption,
               );
-              final tagsStats = _sortTags(
-                rawTags,
-                _currentSortOption,
-              );
+              final tagsStats = _sortTags(rawTags, _currentSortOption);
 
               return Center(
                 child: ConstrainedBox(
@@ -366,8 +364,9 @@ class _UnifiedKPISummary extends StatelessWidget {
                 ),
                 Divider(
                   height: 20,
-                  color:
-                      colors.bookmarksStatsBorderColor.withValues(alpha: 0.4),
+                  color: colors.bookmarksStatsBorderColor.withValues(
+                    alpha: 0.4,
+                  ),
                 ),
                 Row(
                   children: [
@@ -534,13 +533,8 @@ class _CategoryDataTable extends StatelessWidget {
         children: [
           // Table Header
           Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 11,
-            ),
-            color: colors.bookmarksStatsBorderColor.withValues(
-              alpha: 0.25,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
+            color: colors.bookmarksStatsBorderColor.withValues(alpha: 0.25),
             child: Row(
               children: [
                 Expanded(
@@ -621,9 +615,7 @@ class _CategoryDataTable extends StatelessWidget {
                 ),
                 color: index.isEven
                     ? Colors.transparent
-                    : colors.bookmarksStatsBorderColor.withValues(
-                        alpha: 0.08,
-                      ),
+                    : colors.bookmarksStatsBorderColor.withValues(alpha: 0.08),
                 child: Row(
                   children: [
                     Expanded(
@@ -697,18 +689,14 @@ class _CategoryDataTable extends StatelessWidget {
           ),
           // Table Total Footer
           Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 12,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              color: colors.bookmarksStatsBorderColor.withValues(
-                alpha: 0.2,
-              ),
+              color: colors.bookmarksStatsBorderColor.withValues(alpha: 0.2),
               border: Border(
                 top: BorderSide(
-                  color:
-                      colors.bookmarksStatsBorderColor.withValues(alpha: 0.4),
+                  color: colors.bookmarksStatsBorderColor.withValues(
+                    alpha: 0.4,
+                  ),
                 ),
               ),
             ),
@@ -795,13 +783,8 @@ class _TagDataTable extends StatelessWidget {
         children: [
           // Header
           Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 11,
-            ),
-            color: colors.bookmarksStatsBorderColor.withValues(
-              alpha: 0.25,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
+            color: colors.bookmarksStatsBorderColor.withValues(alpha: 0.25),
             child: Row(
               children: [
                 Expanded(
@@ -864,9 +847,7 @@ class _TagDataTable extends StatelessWidget {
                 ),
                 color: index.isEven
                     ? Colors.transparent
-                    : colors.bookmarksStatsBorderColor.withValues(
-                        alpha: 0.08,
-                      ),
+                    : colors.bookmarksStatsBorderColor.withValues(alpha: 0.08),
                 child: Row(
                   children: [
                     Expanded(
@@ -1037,8 +1018,9 @@ class _EmptyStatsView extends StatelessWidget {
               style: OutlinedButton.styleFrom(
                 foregroundColor: colors.bookmarksStatsIconColor,
                 side: BorderSide(
-                  color:
-                      colors.bookmarksStatsBorderColor.withValues(alpha: 0.8),
+                  color: colors.bookmarksStatsBorderColor.withValues(
+                    alpha: 0.8,
+                  ),
                 ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/sources_bloc/source_bloc.dart';
 import 'package:torrents_digger/configs/extensions.dart';
@@ -64,8 +64,9 @@ class _AdditionalSettingsState extends State<AdditionalSettings> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
             side: BorderSide(
-              color: dialogContext.appColors.settingsIconsColor
-                  .withValues(alpha: 0.2),
+              color: dialogContext.appColors.settingsIconsColor.withValues(
+                alpha: 0.2,
+              ),
               width: 1,
             ),
           ),
@@ -96,8 +97,9 @@ class _AdditionalSettingsState extends State<AdditionalSettings> {
               Text(
                 'Fetch the latest tracker lists from upstream. Which lists would you like to update?',
                 style: TextStyle(
-                  color: dialogContext.appColors.settingsTextColor
-                      .withValues(alpha: 0.85),
+                  color: dialogContext.appColors.settingsTextColor.withValues(
+                    alpha: 0.85,
+                  ),
                   fontSize: 13.5,
                   height: 1.4,
                 ),
@@ -105,8 +107,10 @@ class _AdditionalSettingsState extends State<AdditionalSettings> {
               const SizedBox(height: 16),
               InkWell(
                 borderRadius: BorderRadius.circular(10),
-                onTap: () =>
-                    Navigator.pop(dialogContext, TrackerUpdateChoice.activeOnly),
+                onTap: () => Navigator.pop(
+                  dialogContext,
+                  TrackerUpdateChoice.activeOnly,
+                ),
                 child: Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
@@ -118,11 +122,7 @@ class _AdditionalSettingsState extends State<AdditionalSettings> {
                   ),
                   child: Row(
                     children: [
-                      const Icon(
-                        Icons.bolt,
-                        color: Colors.amber,
-                        size: 24,
-                      ),
+                      const Icon(Icons.bolt, color: Colors.amber, size: 24),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Column(
@@ -131,7 +131,8 @@ class _AdditionalSettingsState extends State<AdditionalSettings> {
                             Text(
                               'Active List Only',
                               style: TextStyle(
-                                color: dialogContext.appColors.settingsTextColor,
+                                color:
+                                    dialogContext.appColors.settingsTextColor,
                                 fontWeight: FontWeight.w600,
                                 fontSize: 14,
                               ),
@@ -181,7 +182,8 @@ class _AdditionalSettingsState extends State<AdditionalSettings> {
                             Text(
                               'All Tracker Lists',
                               style: TextStyle(
-                                color: dialogContext.appColors.settingsTextColor,
+                                color:
+                                    dialogContext.appColors.settingsTextColor,
                                 fontWeight: FontWeight.w600,
                                 fontSize: 14,
                               ),
@@ -210,8 +212,9 @@ class _AdditionalSettingsState extends State<AdditionalSettings> {
               child: Text(
                 'Cancel',
                 style: TextStyle(
-                  color: dialogContext.appColors.settingsTextColor
-                      .withValues(alpha: 0.7),
+                  color: dialogContext.appColors.settingsTextColor.withValues(
+                    alpha: 0.7,
+                  ),
                 ),
               ),
             ),
@@ -242,10 +245,7 @@ class _AdditionalSettingsState extends State<AdditionalSettings> {
       }
     } catch (e) {
       if (mounted) {
-        createSnackBar(
-          message: 'Failed to update trackers: $e',
-          duration: 5,
-        );
+        createSnackBar(message: 'Failed to update trackers: $e', duration: 5);
       }
     } finally {
       if (mounted) {
@@ -284,7 +284,9 @@ class _AdditionalSettingsState extends State<AdditionalSettings> {
                     ),
                     title: Text(
                       'Hide NSFW',
-                      style: TextStyle(color: context.appColors.settingsTextColor),
+                      style: TextStyle(
+                        color: context.appColors.settingsTextColor,
+                      ),
                     ),
                     subtitle: Text(
                       'Hide adult content sources and categories across the app.',
@@ -294,11 +296,14 @@ class _AdditionalSettingsState extends State<AdditionalSettings> {
                       ),
                     ),
                     inactiveTrackColor: context
-                        .appColors.settingsSwitchListTileInactiveTrackColor,
+                        .appColors
+                        .settingsSwitchListTileInactiveTrackColor,
                     inactiveThumbColor: context
-                        .appColors.settingsSwitchListTileInactiveThumbColor,
+                        .appColors
+                        .settingsSwitchListTileInactiveThumbColor,
                     activeThumbColor: context
-                        .appColors.settingsSwitchListTileActiveThumbColor,
+                        .appColors
+                        .settingsSwitchListTileActiveThumbColor,
                     value: state.hideNsfw,
                     onChanged: (value) {
                       context.read<SourceBloc>().add(ToggleHideNsfw(value));
@@ -311,7 +316,9 @@ class _AdditionalSettingsState extends State<AdditionalSettings> {
                     ),
                     title: Text(
                       'Remember Selections',
-                      style: TextStyle(color: context.appColors.settingsTextColor),
+                      style: TextStyle(
+                        color: context.appColors.settingsTextColor,
+                      ),
                     ),
                     subtitle: Text(
                       'Remember selected category, filter, etc for each source.',
@@ -321,16 +328,19 @@ class _AdditionalSettingsState extends State<AdditionalSettings> {
                       ),
                     ),
                     inactiveTrackColor: context
-                        .appColors.settingsSwitchListTileInactiveTrackColor,
+                        .appColors
+                        .settingsSwitchListTileInactiveTrackColor,
                     inactiveThumbColor: context
-                        .appColors.settingsSwitchListTileInactiveThumbColor,
+                        .appColors
+                        .settingsSwitchListTileInactiveThumbColor,
                     activeThumbColor: context
-                        .appColors.settingsSwitchListTileActiveThumbColor,
+                        .appColors
+                        .settingsSwitchListTileActiveThumbColor,
                     value: state.rememberSelections,
                     onChanged: (value) {
                       context.read<SourceBloc>().add(
-                            ToggleRememberSelections(value),
-                          );
+                        ToggleRememberSelections(value),
+                      );
                     },
                   ),
                 ],

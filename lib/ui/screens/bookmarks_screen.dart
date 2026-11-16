@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/bookmark_blocs/bookmark_bloc/bookmark_bloc.dart';
 import 'package:torrents_digger/blocs/bookmark_blocs/bookmarks_stats_bloc/bookmarks_stats_bloc.dart';
@@ -120,9 +120,9 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
           listener: (context, state) {
             state.whenOrNull(
               loaded: (_, __, ___, ____) {
-                context
-                    .read<BookmarksStatsBloc>()
-                    .add(const BookmarksStatsEvent.load());
+                context.read<BookmarksStatsBloc>().add(
+                  const BookmarksStatsEvent.load(),
+                );
               },
             );
           },
@@ -212,10 +212,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
           ? TextField(
               controller: _searchController,
               autofocus: true,
-              style: TextStyle(
-                color: Colors.amber,
-                fontSize: isWide ? 18 : 15,
-              ),
+              style: TextStyle(color: Colors.amber, fontSize: isWide ? 18 : 15),
               decoration: InputDecoration(
                 hintText: isWide
                     ? 'Search bookmarks by torrent name or info hash'
@@ -268,16 +265,16 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
             icon: Icon(
               isWide
                   ? (_showSidebar
-                      ? Icons.view_sidebar
-                      : Icons.view_sidebar_outlined)
+                        ? Icons.view_sidebar
+                        : Icons.view_sidebar_outlined)
                   : Icons.view_sidebar_outlined,
               size: 24,
               color: context.appColors.bookmarksViewSidebarIconColor,
             ),
             tooltip: isWide
                 ? (_showSidebar
-                    ? "Hide Categories & Tags"
-                    : "Show Categories & Tags")
+                      ? "Hide Categories & Tags"
+                      : "Show Categories & Tags")
                 : "Open Library & Tags",
             onPressed: () {
               if (isWide) {
@@ -334,10 +331,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
 
   // ==================== LEFT SIDEBAR: CATEGORIES & TAGS ====================
 
-  Widget _buildSidebar(
-    BuildContext context, {
-    required bool isMobileDrawer,
-  }) {
+  Widget _buildSidebar(BuildContext context, {required bool isMobileDrawer}) {
     final statsState = context.watch<BookmarksStatsBloc>().state;
     final InternalBookmarksStats? stats = statsState.whenOrNull(
       loaded: (bookmarksStats) => bookmarksStats,

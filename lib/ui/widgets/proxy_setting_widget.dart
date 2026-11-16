@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:torrents_digger/blocs/proxy_settings_bloc/proxy_settings_bloc.dart';
 import 'package:torrents_digger/ui/widgets/circular_progress_bar_widget.dart';

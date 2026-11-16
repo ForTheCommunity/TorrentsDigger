@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:torrents_digger/configs/extensions.dart';
 import 'package:torrents_digger/src/rust/api/internals.dart';
 import 'package:torrents_digger/ui/widgets/expandable_torrent_card.dart';
@@ -18,7 +18,8 @@ class TorrentListWidget extends StatefulWidget {
 }
 
 class _TorrentListWidgetState extends State<TorrentListWidget> {
-  bool _allCardsView = false; // false = compact rows (expand on click), true = full cards
+  bool _allCardsView =
+      false; // false = compact rows (expand on click), true = full cards
 
   @override
   Widget build(BuildContext context) {
@@ -51,9 +52,7 @@ class _TorrentListWidgetState extends State<TorrentListWidget> {
                     size: 22,
                     color: context.appColors.bookmarksDensityIconColor,
                   ),
-                  tooltip: _allCardsView
-                      ? "Contract"
-                      : "Expand",
+                  tooltip: _allCardsView ? "Contract" : "Expand",
                   onPressed: () {
                     setState(() {
                       _allCardsView = !_allCardsView;
